@@ -1,0 +1,25 @@
+<div class="modal fade" id="modelbuilder_importmodel" tabindex="-1" role="dialog">
+<div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Import Model</h4>
+        </div>
+        <div class="modal-body">
+            <h4>Upload Model from Device</h4>
+            <form id="uploadModelForm" role="form" method="POST" enctype="multipart/form-data"
+            	action="{{ url_for('uploadFile') }}">
+            	<div class="well well-sm">
+            		<input type="file" id="uploadModelFile" name="uploadFile">
+            	</div>
+
+            	<input type="submit" value="Upload">
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="importModel()">Ok</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

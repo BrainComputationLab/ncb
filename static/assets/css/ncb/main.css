@@ -1,0 +1,21 @@
+body {
+    padding-top: 26px;
+}
+.navbar-brand {
+    background: url('/assets/img/ncs_logo.png');
+    background-position: 16px 6px;
+    background-size: 32px 32px;
+    background-repeat:no-repeat;
+    padding-left:56px;
+}
+.footer {
+    color:#CCC;
+    padding-top: 8px;
+    border-top:1px solid #CCC;
+}
+#pages {
+    min-height:600px;
+}
+.page {
+    height:100%;
+}

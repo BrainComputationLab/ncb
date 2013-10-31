@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="University of Nevada Brain Computation Lab">
+
+        <title>Neo-Cortical Builder</title>
+
+        <link rel="icon" type="image/png" href="/assets/ico/ncs_favicon.png">
+
+        <link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/css/ncb/main.css" rel="stylesheet">
+        <link href="assets/css/ncb/modelbuilder.css" rel="stylesheet">
+    </head>
+
+    <body>
+    {% include 'global/header.html' %}
+
+    <div id="pages">
+        {% include 'pages/brainbuilder/brainbuilder.html' %}
+        {% include 'pages/simbuilder/simbuilder.html' %}
+        {% include 'pages/reports/reports.html' %}
+        {% include 'pages/database/database.html' %}
+    </div>
+
+    <div class="container footer">
+        <p>© University of Nevada {{ year }}</p>
+    </div>
+
+    <!-- Load the scripts via Require.js -->
+    <!--<script src="assets/js/lib/require.js" data-main="assets/js/ncb/main"></script>-->
+    <script src="assets/js/lib/jquery.js"></script>
+    <script src="assets/js/lib/angular.js"></script>
+    <script src="assets/js/lib/bootstrap.js"></script>
+    <script src="assets/js/lib/respond.js"></script>
+    <script src="assets/js/lib/store.js"></script>
+    <script src="assets/js/lib/html5shiv.js"></script>
+    <script src="assets/js/lib/underscore.js"></script>
+
+    <script src="assets/js/ncb/init.js"></script>
+
+    <!-- Load Controllers -->
+    <script src="assets/js/ncb/controllers/modelcontroller.js"></script>
+
+    </body>
+</html>
