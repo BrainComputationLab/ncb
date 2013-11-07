@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, redirect, request, url_for
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for, jsonify
 from werkzeug import secure_filename
 import datetime, os
 
@@ -16,7 +16,7 @@ app.config['UPLOAD_FOLDER'] = uploadFolder
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1] in allowedFileExtensions
 
-@app.route('/uploads', methods=['GET', 'POST'])
+@app.route('/uploads', methods=['POST'])
 def uploadFile():
     if request.method == 'POST':
         file = request.files['uploadFile']
@@ -25,9 +25,9 @@ def uploadFile():
             print os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print "File Found!"
-            return True
+            return jsonify({"success" : True})
 
-	return False
+	return jsonify({"success" : False})
 
 # function to view / download an uploaded file
 @app.route('/uploads/<filename>')

@@ -8,17 +8,24 @@
         <div class="modal-body">
             <h4>Upload Model from Device</h4>
             <form id="uploadModelForm" role="form" method="POST" enctype="multipart/form-data"
-            	action="{{ url_for('uploadFile') }}">
+            	>
             	<div class="well well-sm">
             		<input type="file" id="uploadModelFile" name="uploadFile">
             	</div>
 
-            	<input type="submit" value="Upload">
+            	<!--<input type="submit" value="Upload">-->
             </form>
+
+            <div class="progress progress-striped">
+            	<div id="uploadProgress" class="progress-bar" role="progressbar"
+            	aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+            		<span class="sr-only">0% Complete</span>
+            	</div>
+            </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="importModel()">Ok</button>
+          <button type="button" class="btn btn-default importButtons" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success importButtons" ng-click="importModel()">Ok</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
