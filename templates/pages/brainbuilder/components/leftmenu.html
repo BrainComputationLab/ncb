@@ -1,0 +1,19 @@
+<div class="col-lg-3"> <!-- LEFT MENU -->
+	<div id="loadedModelList" class="panel panel-default">
+		<div class="panel-heading">
+			Loaded Models
+        	<a href="#modelbuilder_importmodel" data-toggle="modal" class="btn btn-info btn-xs pull-right" style="margin-right:5px;">+ Import Model</a>
+		</div>
+		<div class="panel-body" ng-controller="myModelsList">
+			<div class="form-group"> <!-- Filter -->
+				<label for="modelbuilder_modelselector_filterinput">Search Models</label>
+				<input type="text" class="form-control" id="modelbuilder_filterinput" placeholder="Search" data-ng-model="modelText">
+			</div> <!-- End Filter -->
+
+
+			<ul id="modelList" class="list-group" >
+				<li ng-repeat="model in list | filter: modelText | orderBy: 'model'"> {{ '{{ model.name }}'  }} </li>
+			</ul>
+		</div>
+	</div>
+</div>  <!-- LEFT MENU END -->

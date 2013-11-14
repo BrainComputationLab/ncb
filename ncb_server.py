@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.debug = True
 
 uploadFolder = 'uploads'
-allowedFileExtension = set(['json','py'])
+allowedFileExtensions = set(['json','py'])
 
 app.config['UPLOAD_FOLDER'] = uploadFolder
 
@@ -20,7 +20,7 @@ def allowed_file(filename):
 def uploadFile():
     if request.method == 'POST':
         file = request.files['uploadFile']
-        if file:
+        if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             print os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
