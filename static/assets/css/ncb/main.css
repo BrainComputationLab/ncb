@@ -13,9 +13,54 @@ body {
     padding-top: 8px;
     border-top:1px solid #CCC;
 }
-#pages {
-    min-height:600px;
-}
+
 .page {
     height:100%;
 }
+
+.highlight {
+    background-color:blue;
+    filter: alpha(opacity=20);
+          opacity: 0.20;
+}
+
+#modelList {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height:400px;
+}
+
+#modelList2 {
+    overflow-x: hidden;
+    //overflow-y: scroll;
+    max-height:400px;
+}
+
+#loadModelDropdown {
+    position: relative;
+}
+
+#centerView {
+    //border: 1px solid gray;
+    min-height:400px;
+}
+
+#collapse1 {
+	position: relative;
+	right: -7px;
+}
+
+#collapse2 {
+	position: relative;
+	right: -7px;
+}
+
+#paramid a {
+	position: relative;
+
+}
+
+#paramval a{
+	position: relative;
+	right: 31px;
+}	

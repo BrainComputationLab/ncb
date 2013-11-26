@@ -110,4 +110,8 @@ function ModelBuilderController($scope, $routeParams) {
     	//progressBar.removeClass("active");
     	//$("#modelbuilder_importmodel").modal("hide");
     };
+
+    $scope.clickBreadCrumb = function() {
+    	alert($(this).attr("id"));
+    };
 }

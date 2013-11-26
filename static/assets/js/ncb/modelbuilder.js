@@ -1,4 +1,4 @@
-function model(name, type, a, b, c, d, u, v, threshold) {
+function model(name, type, a, b, c, d, u, v, threshold, paramNames) {
 	this.name = name;
 	this.type = type;//izhikevich, ncs, rectangular_current, flat, etc.
 	this.a = a;
@@ -66,24 +66,22 @@ var myModels2 = [
 var container1 = new Array();
 var container2 = new Array();
 var lastActive;
-var selectedValue;
-
-//$.fn.editable.defaults.mode = 'inline';
+var selectedValue = 1;
 
 function myModelsList($scope) {
   $scope.list = myModels;
 }
 
 $().ready( function() {
-
-  //$('#confirmAddFromDatabase').click(populateModels);
-  $('#addFromDatabaseBody a').click(setActiveDatabase);
-  $('#modelP').click(popModelP);
+    $('#addFromDatabaseBody a').click(setActiveDatabase);
+    $('#modelP').click(popModelP);
+	$('#cellP').click(showValues);
+    $('#p1').hide();
+    $('#p2').hide();
 
   $.fn.editable.defaults.mode = 'popup';
-  $('#cellGroupName').editable();
-    $('#cellGroupName2').editable();
 
+  populateModels();
 });
 
 
@@ -113,19 +111,23 @@ function populateContainers() {
 	$('#collapse1').html('');
 		for(var i=0; i<container1.length; i++) {
 			$("#collapse1").append('<a id="' + i + '" href="#" class="list-group-item">' + container1[i].cellGroup.name + '</a>');
-				$("#collapse1").on("mousedown", "a:not(.active)", function ( event ) {
+				$("#collapse1").on("click", "a:not(.active)", function ( event ) {
 		  		$(".active", event.delegateTarget).removeClass("active");
 		 			$(this).addClass("active");
-		 			showValues($(this).attr('id'), 0);
+					lastActive.id = $(this).attr('id');
+					lastActive.cont = 0;
+		 			showValues();
 				});
 		}
 	$('#collapse2').html('');
 		for(var i=0; i<container2.length; i++) {
 			$("#collapse2").append('<a id="' + i + '" href="#" class="list-group-item">' + container2[i].cellGroup.name + '</a>');
-				$("#collapse2").on("mousedown", "a:not(.active)", function ( event ) {
+				$("#collapse2").on("click", "a:not(.active)", function ( event ) {
 		  		$(".active", event.delegateTarget).removeClass("active");
 		 			$(this).addClass("active");
-		 			showValues($(this).attr('id'), 1);
+					lastActive.id = $(this).attr('id');
+					lastActive.cont = 1;
+		 			showValues();
 				});
 		}
 }
@@ -170,55 +172,63 @@ $().ready(function() {
 			}
 		}
 	});
-
 });
 
-function showValues(num, num2) {
-	$('#centerView').html('');
-	if(num2 == 0) {
-		$("#centerView").append('<a id="cellGroupName" data-type="text" data-pk="1" data-url="/post" data-title="Enter Name" class="list-group-item"> CellGroup Name: ' + container1[num].cellGroup.name +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Model Name: ' + container1[num].cellGroup.model.name +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Quantity: ' + container1[num].cellGroup.num +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Geometry: ' + container1[num].cellGroup.geometry +'</a>');
-		lastActive.cont = num2;
-		lastActive.id = num;
+function showValues() {
+	$('#p1').show();
+    $('#p2').hide();
+	$('#paramval').html('');
+	num = lastActive.id;
+	if(lastActive.cont == 0) {
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.name +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.name +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.num +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.geometry +'</a>');
 	}
-	if(num2 == 1) {
-		$("#centerView").append('<a class="list-group-item"> CellGroup Name: ' + container2[num].cellGroup.name +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Model Name: ' + container2[num].cellGroup.model.name +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Quantity: ' + container2[num].cellGroup.num +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Geometry: ' + container2[num].cellGroup.geometry +'</a>');
-		lastActive.cont = num2;
-		lastActive.id = num;
+	if(lastActive.cont == 1) {
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.name +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.name +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.num +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.geometry +'</a>');
 	}
+	$('#paramval a').editable({
+		type: 'text',
+		validate : function(value) {
+			if(isNaN(value)) {
+				return "Number Required";
+			}
+		}
+	});
 }
 
 function popModelP() {
-	$('#centerView').html('');
+	$('#p1').hide();
+    $('#p2').show();
+	$('#paramval').html('');
 	num = lastActive.id;
 	if(lastActive.cont == 0) {
-		$("#centerView").append('<a class="list-group-item"> Model Name: ' + container1[num].cellGroup.model.name +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Model Type: ' + container1[num].cellGroup.model.type +'</a>');
-		$("#centerView").append('<a class="list-group-item"> A: ' + container1[num].cellGroup.model.a +'</a>');
-		$("#centerView").append('<a class="list-group-item"> B: ' + container1[num].cellGroup.model.b +'</a>');
-		$("#centerView").append('<a class="list-group-item"> C: ' + container1[num].cellGroup.model.c +'</a>');
-		$("#centerView").append('<a class="list-group-item"> D: ' + container1[num].cellGroup.model.d +'</a>');
-		$("#centerView").append('<a class="list-group-item"> U: ' + container1[num].cellGroup.model.u +'</a>');
-		$("#centerView").append('<a class="list-group-item"> V: ' + container1[num].cellGroup.model.v +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Threshold: ' + container1[num].cellGroup.model.threshold +'</a>');
+		$("#paramval").append('<a href="#" class="list-group-item">' + container1[num].cellGroup.model.name +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.type +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.a +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.b +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.c +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.d +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.u +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.v +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container1[num].cellGroup.model.threshold +'</a>');
 	}
 	if(lastActive.cont == 1) {
-		$("#centerView").append('<a class="list-group-item"> Model Name: ' + container2[num].cellGroup.model.name +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Model Type: ' + container2[num].cellGroup.model.type +'</a>');
-		$("#centerView").append('<a class="list-group-item"> A: ' + container2[num].cellGroup.model.a +'</a>');
-		$("#centerView").append('<a class="list-group-item"> B: ' + container2[num].cellGroup.model.b +'</a>');
-		$("#centerView").append('<a class="list-group-item"> C: ' + container2[num].cellGroup.model.c +'</a>');
-		$("#centerView").append('<a class="list-group-item"> D: ' + container2[num].cellGroup.model.d +'</a>');
-		$("#centerView").append('<a class="list-group-item"> U: ' + container2[num].cellGroup.model.u +'</a>');
-		$("#centerView").append('<a class="list-group-item"> V: ' + container2[num].cellGroup.model.v +'</a>');
-		$("#centerView").append('<a class="list-group-item"> Threshold: ' + container2[num].cellGroup.model.threshold +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.name +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.type +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.a +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.b +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.c +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.d +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.u +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.v +'</a>');
+		$("#paramval").append('<a class="list-group-item">' + container2[num].cellGroup.model.threshold +'</a>');
 	}
+	$('#paramval a').editable();
 }
-
 
 
