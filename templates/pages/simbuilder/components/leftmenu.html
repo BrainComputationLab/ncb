@@ -1,0 +1,42 @@
+<div class="col-lg-4"> <!-- LEFT MENU -->
+	<div id="simulationParameterList" class="panel panel-default">
+		<div class="panel-heading">
+			Simulation Parameters
+        	<a href="#simbuilder_importsim" data-toggle="modal" class="btn btn-info btn-xs pull-right" style="margin-right:5px;">+ Import Simulation</a>
+		</div>
+		<div class="panel-body">
+			<form id="simulationParameterForm">
+				<div class="form-group">
+					<label for="simNameInput">Name</label>
+					<input id="simNameInput" type="text" placeholder="Name" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="simDurationInput">Duration</label>
+					<input id="simDurationInput" type="number" placeholder="Duration" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="simFSVInput">FSV</label>
+					<input id="simFSVInput" type="number" placeholder="FSV" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="simInteractiveInput">Interactive?</label>
+					<select class="form-control" id="simInteractiveInput">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="simSeedInput">Seed</label>
+					<input id="simSeedInput" type="number" placeholder="Seed" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="simDistanceInput">Include Distance?</label>
+					<select class="form-control" id="simDistanceInput">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+					</select>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>  <!-- LEFT MENU END -->
