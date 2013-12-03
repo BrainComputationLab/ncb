@@ -3,14 +3,9 @@
 		<div class="panel-heading">
 			Current Model
 		</div>
-		<div class="panel-body">
+		<div class="panel-body" ng-controller="myModelsList2">
 			<ul id="modelList2" class="list-group">
-				<a id="c1" class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Container 1</a>
-				<div id="collapse1" class="panel-collapse collapse in">
-				</div>
-				<a id="c2" class="list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapse2">Container 2</a>
-				<div id="collapse2" class="panel-collapse collapse in">
-				</div>
+				<a href="" class="list-group-item" ng-repeat="cellGroup in list | filter: modelText | orderBy: 'cellGroup.name'" ng-click="setModel(cellGroup.name)"> {{ '{{ cellGroup.name }}'  }}</a>
 			</ul>
 		</div>
 	</div>

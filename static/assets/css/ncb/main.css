@@ -27,12 +27,13 @@ body {
 #modelList {
     overflow-x: hidden;
     overflow-y: scroll;
+	min-height:200px;
     max-height:400px;
 }
 
 #modelList2 {
     overflow-x: hidden;
-    //overflow-y: scroll;
+	min-height:200px;
     max-height:400px;
 }
 
