@@ -8,11 +8,14 @@
 			<div class="form-group"> <!-- Filter -->
 				<label for="modelbuilder_modelselector_filterinput">Search Models</label>
 				<input type="text" class="form-control" id="modelbuilder_filterinput" placeholder="Search" data-ng-model="modelText">
+				<input type="checkbox" data-ng-model="search.modelType" ng-true-value="Personal" ng-false-value="" /> Personal
+				<input type="checkbox" data-ng-model="search.modelType" ng-true-value="Database" ng-false-value="" /> Database
+				<input type="checkbox" data-ng-model="search.modelType" ng-true-value="All" ng-false-value="" /> All
 			</div> <!-- End Filter -->
 
 
-			<ul id="modelList" class="list-group" >
-				<li ng-repeat="model in list | filter: modelText | orderBy: 'model'"> {{ '{{ model.name }}'  }} </li>
+			<ul id="modelList" class="list-group">
+				<a href="" class="list-group-item" ng-repeat="model in list | filter: modelText | orderBy: 'model.name'" ng-mousedown="setModel(model.name)"> {{ '{{ model.name }}'  }}</a>
 			</ul>
 		</div>
 	</div>

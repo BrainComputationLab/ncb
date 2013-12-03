@@ -45,46 +45,85 @@ var myModels = [
 	new model('Model8'),
 	new model('Model9'),
 	new model('Model10'),
-	new model('Model11'),
-	new model('Model12'),
-	new model('Model13'),
-	new model('Model14'),
-	new model('Model15'),
-	new model('Model16'),
-	new model('Model17'),
-	new model('Model18'),
 ];
 
-var myModels2 = [
-	new model('Modelx'),
-	new model('Modely'),
-	new model('Modelz'),
-	new model('Modelw'),
-
-];
-
-var container1 = new Array();
-var container2 = new Array();
+var inc = 0;
+var myModels2 = [];
+var cellGroupVal = [];
 var lastActive;
-var selectedValue = 1;
+var lastActive2;
+
 
 function myModelsList($scope) {
-  $scope.list = myModels;
+	$scope.currentModel = null;
+	$scope.list = myModels;
+
+	$scope.setModel = function (model){
+		var result = $.grep(myModels, function(e){ return e.name == model; });
+		lastActive = result[0];
+	};
 }
 
+function myModelsList2($scope) {
+	$scope.currentModel = null;
+	$scope.list = cellGroupVal;
+
+	$scope.setModel = function (model){
+		var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
+		lastActive2 = result[0];
+		popCellP();		
+	};
+}
+
+
 $().ready( function() {
-    $('#addFromDatabaseBody a').click(setActiveDatabase);
+    //$('#addFromDatabaseBody a').click(setActiveDatabase);
     $('#modelP').click(popModelP);
-	$('#cellP').click(showValues);
+	$('#cellP').click(popCellP);
     $('#p1').hide();
     $('#p2').hide();
-
-  $.fn.editable.defaults.mode = 'popup';
-
-  populateModels();
+  	$.fn.editable.defaults.mode = 'popup';
+	$('#modelList a').draggable({helper:"clone", appendTo:"body"});
 });
 
+$().ready(function() {
+	$( "#modelList2" ).droppable({
+		hoverClass: "highlight",
+		drop: function( event, ui ) {
+			cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: lastActive, geometry: "box"});
+			inc++;
+		}
+	});
+});
 
+function popCellP() {
+	$('#p2').hide();
+	$('#p1').show();
+	$('#paramval').html('');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.name +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.name +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.num +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.geometry +'</a>');
+	$('#paramval a').editable();
+}
+
+function popModelP() {
+	$('#p1').hide();
+	$('#p2').show();
+	$('#paramval').html('');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.name +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.type +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.a+'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.b +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.c +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.d +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.u +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.v +'</a>');
+	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.threshold +'</a>');
+	$('#paramval a').editable();
+}
+
+/*
 function populateModels() {
 	$('#modelList').html('');
 	if(selectedValue == 1) {
@@ -107,30 +146,6 @@ function populateModels() {
   }
 }
 
-function populateContainers() {
-	$('#collapse1').html('');
-		for(var i=0; i<container1.length; i++) {
-			$("#collapse1").append('<a id="' + i + '" href="#" class="list-group-item">' + container1[i].cellGroup.name + '</a>');
-				$("#collapse1").on("click", "a:not(.active)", function ( event ) {
-		  		$(".active", event.delegateTarget).removeClass("active");
-		 			$(this).addClass("active");
-					lastActive.id = $(this).attr('id');
-					lastActive.cont = 0;
-		 			showValues();
-				});
-		}
-	$('#collapse2').html('');
-		for(var i=0; i<container2.length; i++) {
-			$("#collapse2").append('<a id="' + i + '" href="#" class="list-group-item">' + container2[i].cellGroup.name + '</a>');
-				$("#collapse2").on("click", "a:not(.active)", function ( event ) {
-		  		$(".active", event.delegateTarget).removeClass("active");
-		 			$(this).addClass("active");
-					lastActive.id = $(this).attr('id');
-					lastActive.cont = 1;
-		 			showValues();
-				});
-		}
-}
 
 function setActiveDatabase() {
 	clearDatabaseItems();
@@ -141,39 +156,10 @@ function setActiveDatabase() {
 function clearDatabaseItems() {
 	$("#addFromDatabaseBody a").removeClass("active");
 }
+*/
 
-$().ready(function() {
-	$( "#modelList a" ).draggable({
-		helper: "clone"
-	});
 
-	$( "#modelList2 a" ).droppable({
-		hoverClass: "highlight",
-		drop: function( event, ui ) {
-			if(selectedValue == 1) {
-				var tempGrp = new cellGroup("tmpname", 1, myModels[ui.draggable.attr('id')], "box");
-				if($(this).attr('id') == "c1") {
-					container1.push({cellGroup: tempGrp});
-				}
-				else {
-					container2.push({cellGroup: tempGrp});
-				}
-				populateContainers();
-			}
-			else if(selectedValue == 2) {
-				var tempGrp = new cellGroup("tmpname", 1, myModels2[ui.draggable.attr('id')], "box");
-				if($(this).attr('id') == "c1") {
-					container1.push({cellGroup: tempGrp});
-				}
-				else {
-					container2.push({cellGroup: tempGrp});
-				}
-				populateContainers();
-			}
-		}
-	});
-});
-
+/*
 function showValues() {
 	$('#p1').show();
     $('#p2').hide();
@@ -230,5 +216,5 @@ function popModelP() {
 	}
 	$('#paramval a').editable();
 }
-
+*/
 
