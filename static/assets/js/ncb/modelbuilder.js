@@ -62,6 +62,12 @@ function myModelsList($scope) {
 		var result = $.grep(myModels, function(e){ return e.name == model; });
 		lastActive = result[0];
 	};
+
+	$scope.moveModel = function (model) {
+		var result = $.grep(myModels, function(e){ return e.name == model; });
+		cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box"});
+		inc++;
+	};
 }
 
 function myModelsList2($scope) {
