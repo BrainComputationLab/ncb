@@ -5,7 +5,7 @@
 		</div>
 		<div class="panel-body" ng-controller="myModelsList2">
 			<ul id="modelList2" class="list-group">
-				<a href="" class="list-group-item" ng-repeat="cellGroup in list | filter: modelText | orderBy: 'cellGroup.name'" ng-click="setModel(cellGroup.name)"> {{ '{{ cellGroup.name }}'  }}</a>
+				<a href="" class="list-group-item" ng-repeat="cellGroup in list | filter: modelText | orderBy: 'cellGroup.name'" ng-dblclick="intoModel(cellGroup.name)" ng-mousedown="setModel(cellGroup.name)"> {{ '{{ cellGroup.name }}'  }}</a>
 			</ul>
 		</div>
 	</div>

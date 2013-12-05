@@ -12,11 +12,12 @@ function model(name, type, a, b, c, d, u, v, threshold, paramNames) {
 }
 
 // class representing a cell group
-function cellGroup(name, num, model, geometry) {
+function cellGroup(name, num, model, geometry, subGroup) {
 	this.name = name;
 	this.num = num;
 	this.model = model;
 	this.geometry = geometry;
+	this.subGroup = subGroup;
 }
 
 // class representing a connection group
@@ -61,6 +62,7 @@ var myModels2 = [];
 var cellGroupVal = [];
 var lastActive;
 var lastActive2;
+var test = 0;
 
 
 function myModelsList($scope) {
@@ -74,19 +76,33 @@ function myModelsList($scope) {
 
 	$scope.moveModel = function (model) {
 		var result = $.grep(myModels, function(e){ return e.name == model; });
-		cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box"});
+		cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box", subGroup: []});
 		inc++;
 	};
 }
 
 function myModelsList2($scope) {
 	$scope.currentModel = null;
-	$scope.list = cellGroupVal;
+	if(test == 0) $scope.list = cellGroupVal;
 
 	$scope.setModel = function (model){
 		var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
 		lastActive2 = result[0];
 		popCellP();		
+	};
+	
+	$scope.intoModel = function (model){
+		test = 1;
+		//alert(test);
+		var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
+		var sub = new cellGroup("tempGrp", 1, result[0].model, "box", []);
+		cellGroupVal[0].subGroup.push(sub);
+		alert(cellGroupVal[0].subGroup[0]);
+		
+		if(test == 1) {$scope.list = cellGroupVal[0].subgroup; }
+		//var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
+		//cellGroupVal[0].subGroup.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box"});
+		inc++;
 	};
 }
 
