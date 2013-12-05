@@ -140,7 +140,6 @@ function ModelBuilderController($scope, $routeParams) {
 
 		// otherwise import from dataabase
 		else {
-    		populateModels();
     		$("#modelbuilder_importmodel").modal("hide");
     	}
     };
