@@ -1,3 +1,4 @@
+// class representing an izhikevich model
 function model(name, type, a, b, c, d, u, v, threshold, paramNames) {
 	this.name = name;
 	this.type = type;//izhikevich, ncs, rectangular_current, flat, etc.
@@ -10,6 +11,7 @@ function model(name, type, a, b, c, d, u, v, threshold, paramNames) {
 	this.threshold = threshold;
 }
 
+// class representing a cell group
 function cellGroup(name, num, model, geometry) {
 	this.name = name;
 	this.num = num;
@@ -17,23 +19,29 @@ function cellGroup(name, num, model, geometry) {
 	this.geometry = geometry;
 }
 
+// class representing a connection group
 function connectionGroup(pre, post, prob, model) {
 
 }
 
+// class representing an input group
 function inputGroup() {
 
 }
 
+// class representing a container object
 function container(cellGroup) {
 	this.cellGroup = cellGroup;
 }
 
+// class representing the last active object
 function lastActive(cont, id) {
 	this.cont = cont;
 	this.id = id;
 }
 
+// list of example models
+// temporary for testing
 var myModels = [
 	new model('Model1', 'Izhikevich'),
 	new model('Model2', 'ncs'),
@@ -47,6 +55,7 @@ var myModels = [
 	new model('Model10', 'Izhikevich'),
 ];
 
+// variables needed for implementation
 var inc = 0;
 var myModels2 = [];
 var cellGroupVal = [];

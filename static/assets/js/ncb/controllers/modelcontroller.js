@@ -1,42 +1,61 @@
+// lookup progress bar object once (for performance reasons)
 var progressBar = $("#uploadProgress");
 
+// initialize import modal on show event
 $("#modelbuilder_importmodel").on("show.bs.modal", function() {
+	// set progress bar to 0% and hide it
 	progressBar.attr("style", "width: 0%");
 	progressBar.hide();
+
+	// enable modal control buttons
 	$(".importButtons").prop("disabled", false);
+	
+	// hide possible error message
 	$("#possibleError").hide();
+
+	// reset file input field
 	clearFileInput();
 });
 
+// variables for file upload
 var fileName,
 	fileSize,
 	fileType;
 
+// update file information on change event
 $("#uploadModelFile").change(function() {
 	var file = this.files[0];
 	fileName = file.name;
 	fileSize = file.size;
 	fileType = file.type;
 
+	// check for invalid file extensions
 	if(fileName.indexOf(".json") === -1 && fileName.indexOf(".py") === -1) {
+		// show error if incorrect file type
 		$("#possibleError").show();
+		// disable Ok button
 		$("#importOkButton").prop("disabled", true);
 	}
 
+	// else correct file type
 	else {
+		// hide possible error message
 		$("#possibleError").hide();
+		// enable Ok button
 		$("#importOkButton").prop("disabled", false);
 	}
 });
 
+// variables for upload status
 var request, finished;
 
+// upload file on submit event
 $("#uploadModelForm").submit(function(event) {
-	//console.log("uploading file");
-
 	finished = false;
+	// get the form data
 	var formData = new FormData($(this)[0]);
 
+	// function for determining upload percent
 	var uploadProgress = function(e) {
 		if(e.lengthComputable) {
 			var percentage = (e.loaded / e.totalSize) * 100;
@@ -45,9 +64,14 @@ $("#uploadModelForm").submit(function(event) {
 		}
 	};
 
+	// initiate request
 	request = $.ajax({
+		// route to call
 		url: "/uploads",
+		// type of request
 		type: "POST",
+
+		// function for progress handling
 		xhr: function() {
 			var myXhr = $.ajaxSettings.xhr();
 			if(myXhr.upload) {
@@ -56,18 +80,23 @@ $("#uploadModelForm").submit(function(event) {
 			return myXhr;
 		},
 
+		// data to send
 		data: formData,
+
+		// disable caching an uneeded functions
 		cache: false,
 		contentType: false,
 		processData: false
 	});
 
+	// function callback on successful upload
 	request.done(function(response, textStatus, jqXHR) {
 		console.log("upload complete");
 		$("#modelbuilder_importmodel").modal("hide");
 		progressBar.hide();
 	});
 
+	// function callback on failed upload
 	request.fail(function(jqXHR, textStatus, error) {
 		console.error("Error in upload!");
 		alert("Unable to upload file: " + error);
@@ -76,41 +105,47 @@ $("#uploadModelForm").submit(function(event) {
 
 	});
 
+	// function callback to be called reguardless of success or failure
 	request.always(function() {
-		//inputs.prop("disabled", false);
 	});
 
+	// prevent the default action for this event
 	event.preventDefault();
 });
 
+// function for clearing the input file field
 function clearFileInput()
 {
 	var fileInput = $("#uploadModelFile");
     fileInput.replaceWith(fileInput.clone(true));
 }
 
-// This will be changed to be more specific to a particular task
+// function acting as the Model Controller
 function ModelBuilderController($scope, $routeParams) {
+	// function to create a new model
     $scope.createNewModel = function() {
     	console.log("New Model Selected!");
     };
 
+    // function for imitiating a model import
     $scope.importModel = function() {
     	var value = $("#uploadModelFile").value;
+
+    	// if file selected, trigger an upload
     	if(value !== undefined && value !== "") {
 			progressBar.show();
 			$("#uploadModelForm").trigger("submit");
 			$(".importButtons").prop("disabled", true);
 		}
 
+		// otherwise import from dataabase
 		else {
     		populateModels();
     		$("#modelbuilder_importmodel").modal("hide");
     	}
-    	//progressBar.removeClass("active");
-    	//$("#modelbuilder_importmodel").modal("hide");
     };
 
+    // function for handling breadcrumbs
     $scope.clickBreadCrumb = function() {
     	alert($(this).attr("id"));
     };

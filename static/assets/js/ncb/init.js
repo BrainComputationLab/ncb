@@ -1,10 +1,11 @@
+
+// initialize model page view
 $().ready( function() {
+    hidePages();
     $('#model').show();
-    $('#simulation').hide();
-    $('#reports').hide();
-    $('#database').hide();
 });
 
+// initialize main navigation
 $().ready( function() {
     $('#mainNav a').click( function() {
         var target;
@@ -16,6 +17,7 @@ $().ready( function() {
     });
 });
 
+// function to hide all views
 function hidePages() {
     $('#model').hide();
     $('#simulation').hide();
