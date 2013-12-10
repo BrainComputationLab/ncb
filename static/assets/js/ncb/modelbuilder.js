@@ -22,7 +22,10 @@ function cellGroup(name, num, model, geometry, subGroup) {
 
 // class representing a connection group
 function connectionGroup(pre, post, prob, model) {
-
+	this.pre = pre;
+	this.post = post;
+	this.prob = prob;
+	this.model = model;
 }
 
 // class representing an input group
@@ -44,16 +47,96 @@ function lastActive(cont, id) {
 // list of example models
 // temporary for testing
 var myModels = [
-	new model('Model1', 'Izhikevich'),
-	new model('Model2', 'ncs'),
-	new model('Model3', 'Rectangular_Current'),
-	new model('Model4', 'Flat'),
-	new model('Model5', 'Izhikevich'),
-	new model('Model6', 'Izhikevich'),
-	new model('Model7', 'Flat'),
-	new model('Model8', 'ncs'),
-	new model('Model9', 'Rectangular_Current'),
-	new model('Model10', 'Izhikevich'),
+	new model('Model1', //name
+			  'Izhikevich', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model2', //name
+			  'ncs', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model3', //name
+			  'rectangular_current', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model4', //name
+			  'Flat', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model5', //name
+			  'Izhikevich', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model6', //name
+			  'Izhikevich', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model7', //name
+			  'Flat', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model8', //name
+			  'ncs', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model9', //name
+			  'rectangular_current', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
+	new model('Model10', //name
+			  'Izhikevich', //type
+			  2.5, //a
+			  1.9, //b
+			  0.3, //c
+			  2.6, //d
+			  10.0, //u
+			  1.5, //v
+			  0.5), //threshold
 ];
 
 // variables needed for implementation
@@ -154,7 +237,7 @@ function popModelP() {
 	$('#paramval a').editable();
 }
 
-/*
+
 var bootstrap = angular.module("bootstrap", []);
 
 bootstrap.directive('popOver', function ($compile) {
@@ -192,8 +275,8 @@ bootstrap.directive('popOver', function ($compile) {
             }
         };
     });
-*/
-/*
+
+
 function populateModels() {
 	$('#modelList').html('');
 	if(selectedValue == 1) {
@@ -226,10 +309,8 @@ function setActiveDatabase() {
 function clearDatabaseItems() {
 	$("#addFromDatabaseBody a").removeClass("active");
 }
-*/
 
 
-/*
 function showValues() {
 	$('#p1').show();
     $('#p2').hide();
@@ -257,7 +338,7 @@ function showValues() {
 	});
 }
 
-function popModelP() {
+function popModelP2() {
 	$('#p1').hide();
     $('#p2').show();
 	$('#paramval').html('');
@@ -286,5 +367,3 @@ function popModelP() {
 	}
 	$('#paramval a').editable();
 }
-*/
-
