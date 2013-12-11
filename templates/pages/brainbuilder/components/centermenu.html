@@ -1,12 +1,22 @@
-<div class="col-lg-3"> <!-- CENTER MENU -->
+<!-- CENTER MENU -->
+<div class="col-lg-3"> 
+
+    <!-- Current model list which contains the list of models a user is working on -->
 	<div id="currentModelList" class="panel panel-default">
 		<div class="panel-heading">
 			Current Model
 		</div>
+		
+		<!-- filtering is done here -->
 		<div class="panel-body" ng-controller="myModelsList2">
 			<ul id="modelList2" class="list-group">
 				<a href="" class="list-group-item" ng-repeat="cellGroup in list | filter: modelText | orderBy: 'cellGroup.name'" ng-dblclick="intoModel(cellGroup.name)" ng-mousedown="setModel(cellGroup.name)"> {{ '{{ cellGroup.name }}'  }}</a>
 			</ul>
 		</div>
+		<!-- end filtering -->
+		
 	</div>
-</div>  <!-- CENTER MENU END -->
+	<!-- end current model list -->
+	
+</div>  
+<!-- CENTER MENU END -->

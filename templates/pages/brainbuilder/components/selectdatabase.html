@@ -1,19 +1,30 @@
-<div class="modal" id="addFromDatabase"> <!-- SELECT DATABASE MODAL -->
+<!-- SELECT DATABASE MODAL -->
+<div class="modal" id="addFromDatabase"> 
 	<div class="modal-dialog">
+	    <!-- Main containing div with list of databases and button selections -->
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">Select Database</h4>
 			</div>
+			
+			<!-- list of databases -->
 			<div id="addFromDatabaseBody" class="modal-body list-group">
 				<a id="1" href="#" class="list-group-item">NCB Database</a>
 				<a id="2" href="#" class="list-group-item">Your Previous Saved Models</a>
 				<a id="3" href="#" class="list-group-item">Other Models</a>
 			</div>
+			<!-- End list of databases -->
+			
+			<!-- Close and load model buttons -->
 			<div class="modal-footer">
 				<a href="#" class="btn" data-dismiss="modal">Close</a>
 				<a id="confirmAddFromDatabase" type="button" class="btn btn-primary" data-dismiss="modal">Load Models</a>
 			</div>
+			<!-- End close and load model buttons -->
+			
 		</div>
+		<!-- End Main containing div -->
 	</div>
-</div><!-- SELECT DATABASE MODAL END -->
+</div>
+<!-- SELECT DATABASE MODAL END -->

@@ -1,17 +1,33 @@
+<!-- Start new model modal window-->
 <div class="modal fade" id="modelbuilder_newmodel" tabindex="-1" role="dialog">
-<div class="modal-dialog">
+
+    <!-- actual modal window div -->
+    <div class="modal-dialog">
       <div class="modal-content">
+      
+        <!-- confirm new model -->
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Confirm New Model</h4>
         </div>
+        <!-- end confirm new model -->
+        
         <div class="modal-body">
             <h4 class="text-center">Create a new model and clear all current model elements?</h4>
         </div>
+        
+        <!-- Confirmation buttons: Yes or NO -->
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
           <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="createNewModel()">Yes</button>
         </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        <!-- end buttons -->
+        
+      </div>
+      <!-- /.modal-content -->
+      
+    </div>
+    <!-- /.modal-dialog -->
+    
 </div>
+<!-- end new model modal window -->

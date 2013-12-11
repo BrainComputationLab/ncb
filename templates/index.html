@@ -1,5 +1,7 @@
+<!-- Main HTML Page -->
 <!DOCTYPE html>
 <html lang="en" ng-app>
+    <!-- Loading CSS and Initializing Global MetaTags -->
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,16 +16,19 @@
         <link href="assets/css/ncb/main.css" rel="stylesheet">
         <link href="assets/css/ncb/modelbuilder.css" rel="stylesheet">
     </head>
+    <!-- End Loading CSS and Initialization -->
 
     <body>
     {% include 'global/header.html' %}
 
+    <!-- Modularization of each tab -->
     <div id="pages">
         {% include 'pages/brainbuilder/brainbuilder.html' %}
         {% include 'pages/simbuilder/simbuilder.html' %}
         {% include 'pages/reports/reports.html' %}
         {% include 'pages/database/database.html' %}
     </div>
+    <!-- End Modularization of each tab -->
 
     <div class="container footer">
         <p>© University of Nevada {{ year }}</p>
@@ -43,9 +48,12 @@
 
     <script src="assets/js/ncb/init.js"></script>
 	<script src="assets/js/ncb/modelbuilder.js"></script>
+	
     <!-- Load Controllers -->
     <script src="assets/js/ncb/controllers/modelcontroller.js"></script>
     <script src="assets/js/ncb/controllers/simulationcontroller.js"></script>
+    <!-- End Load Controllers and Scripts -->
 
     </body>
 </html>
+<!-- End Main HTML Page -->
