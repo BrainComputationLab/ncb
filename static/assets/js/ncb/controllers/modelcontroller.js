@@ -105,7 +105,7 @@ $("#uploadModelForm").submit(function(event) {
 
 	});
 
-	// function callback to be called reguardless of success or failure
+	// function callback to be called regardless of success or failure
 	request.always(function() {
 	});
 
@@ -127,7 +127,7 @@ function ModelBuilderController($scope, $routeParams) {
     	console.log("New Model Selected!");
     };
 
-    // function for imitiating a model import
+    // function for initiating a model import
     $scope.importModel = function() {
     	var value = $("#uploadModelFile").value;
 
@@ -138,7 +138,7 @@ function ModelBuilderController($scope, $routeParams) {
 			$(".importButtons").prop("disabled", true);
 		}
 
-		// otherwise import from dataabase
+		// otherwise import from database
 		else {
     		$("#modelbuilder_importmodel").modal("hide");
     	}
