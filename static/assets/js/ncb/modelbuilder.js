@@ -218,7 +218,7 @@ function popCellP() {
 	$('#p2').hide();
 	$('#p1').show();
 	$('#paramval').html('');
-	$("#paramval").append('<a id="n1" onClick="setID(this.id)" class="list-group-item">' + lastActive2.name +'</a>');
+	$("#paramval").append('<a id="n1" class="list-group-item">' + lastActive2.name +'</a>');
 	$("#paramval").append('<a id="n2" class="list-group-item">' + lastActive2.model.name +'</a>');
 	$("#paramval").append('<a id="n3" class="list-group-item">' + lastActive2.num +'</a>');
 	$("#paramval").append('<a id="n4" class="list-group-item">' + lastActive2.geometry +'</a>');
@@ -246,40 +246,52 @@ function popModelP() {
 	$('#p1').hide();
 	$('#p2').show();
 	$('#paramval').html('');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.name +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.type +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.a+'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.b +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.c +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.d +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.u +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.v +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.threshold +'</a>');
+	$("#paramval").append('<a id="n11" class="list-group-item">' + lastActive2.model.name +'</a>');
+	$("#paramval").append('<a id="n22" class="list-group-item">' + lastActive2.model.type +'</a>');
+	$("#paramval").append('<a id="n33" class="list-group-item">' + lastActive2.model.a+'</a>');
+	$("#paramval").append('<a id="n44" class="list-group-item">' + lastActive2.model.b +'</a>');
+	$("#paramval").append('<a id="n55" class="list-group-item">' + lastActive2.model.c +'</a>');
+	$("#paramval").append('<a id="n66" class="list-group-item">' + lastActive2.model.d +'</a>');
+	$("#paramval").append('<a id="n77" class="list-group-item">' + lastActive2.model.u +'</a>');
+	$("#paramval").append('<a id="n88" class="list-group-item">' + lastActive2.model.v +'</a>');
+	$("#paramval").append('<a id="n99" class="list-group-item">' + lastActive2.model.threshold +'</a>');
 	$('#paramval a').editable({
 		success: function(response, newValue) {
-			alert(this.id);
-			cellGroup[0].name = "asdfasdfasdfczxv";
-			alert(cellGroup[0].name);
+			if(this.id == "n11") {
+				lastActive2.model.name = newValue;
+			}
+			if(this.id == "n22") {
+				lastActive2.model.type = newValue;
+			}
+			if(this.id == "n33") {
+				lastActive2.a = newValue;
+			}
+			if(this.id == "n44") {
+				lastActive2.b = newValue;
+			}
+			if(this.id == "n55") {
+				lastActive2.c = newValue;
+			}
+			if(this.id == "n66") {
+				lastActive2.d = newValue;
+			}
+			if(this.id == "n77") {
+				lastActive2.u = newValue;
+			}
+			if(this.id == "n88") {
+				lastActive2.v = newValue;
+			}
+			if(this.id == "n99") {
+				lastActive2.model.threshold = newValue;
+			}
+			var index = cellGroupVal.indexOf(lastActive2.name);
+			cellGroupVal[index] = lastActive2;
 		}
 	});
 }
 
 var bootstrap = angular.module("bootstrap", []);
 
-function setID(id2) {
-	if(id2 == "n1") {
-		lastActive3 = "name";
-	}
-	if(id2 == "n2") {
-		lastActive3 = "model.name";
-	}
-	if(id2 == "n3") {
-		lastActive3 = "num";
-	}
-	if(id2 == "n4") {
-		lastActive3 = "geometry";
-	}	
-}
 
 /*
 bootstrap.directive('popOver', function ($compile) {
