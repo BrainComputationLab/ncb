@@ -145,6 +145,7 @@ var myModels2 = [];
 var cellGroupVal = [];
 var lastActive;
 var lastActive2;
+var lastActive3;
 var test = 0;
 
 
@@ -197,7 +198,10 @@ $().ready( function() {
     $('#p1').hide();
     $('#p2').hide();
   	$.fn.editable.defaults.mode = 'popup';
-	$('#modelList a').draggable({helper:"clone", appendTo:"body"});
+	$('#modelList a').draggable({
+		helper: "clone",
+		appendTo: "body"
+	});
 });
 
 $().ready(function() {
@@ -214,11 +218,28 @@ function popCellP() {
 	$('#p2').hide();
 	$('#p1').show();
 	$('#paramval').html('');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.name +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.name +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.num +'</a>');
-	$("#paramval").append('<a class="list-group-item">' + lastActive2.geometry +'</a>');
-	$('#paramval a').editable();
+	$("#paramval").append('<a id="n1" onClick="setID(this.id)" class="list-group-item">' + lastActive2.name +'</a>');
+	$("#paramval").append('<a id="n2" class="list-group-item">' + lastActive2.model.name +'</a>');
+	$("#paramval").append('<a id="n3" class="list-group-item">' + lastActive2.num +'</a>');
+	$("#paramval").append('<a id="n4" class="list-group-item">' + lastActive2.geometry +'</a>');
+	$('#paramval a').editable({
+		success: function(response, newValue) {
+			if(this.id == "n1") {
+				lastActive2.name = newValue;
+			}
+			if(this.id == "n2") {
+				lastActive2.model.name = newValue;
+			}
+			if(this.id == "n3") {
+				lastActive2.num = newValue;
+			}
+			if(this.id == "n4") {
+				lastActive2.geometry = newValue;
+			}
+			var index = cellGroupVal.indexOf(lastActive2.name);
+			cellGroupVal[index] = lastActive2;
+		}
+	});
 }
 
 function popModelP() {
@@ -234,12 +255,33 @@ function popModelP() {
 	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.u +'</a>');
 	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.v +'</a>');
 	$("#paramval").append('<a class="list-group-item">' + lastActive2.model.threshold +'</a>');
-	$('#paramval a').editable();
+	$('#paramval a').editable({
+		success: function(response, newValue) {
+			alert(this.id);
+			cellGroup[0].name = "asdfasdfasdfczxv";
+			alert(cellGroup[0].name);
+		}
+	});
 }
-
 
 var bootstrap = angular.module("bootstrap", []);
 
+function setID(id2) {
+	if(id2 == "n1") {
+		lastActive3 = "name";
+	}
+	if(id2 == "n2") {
+		lastActive3 = "model.name";
+	}
+	if(id2 == "n3") {
+		lastActive3 = "num";
+	}
+	if(id2 == "n4") {
+		lastActive3 = "geometry";
+	}	
+}
+
+/*
 bootstrap.directive('popOver', function ($compile) {
         var itemsTemplate = "<ul class='unstyled'><li ng-repeat='model in list'>{{ '{{item}}' }}</li></ul>";
         var getTemplate = function (contentType) {
@@ -367,3 +409,5 @@ function popModelP2() {
 	}
 	$('#paramval a').editable();
 }
+*/
+
