@@ -197,7 +197,8 @@ function myModelsList2($scope) {
 		test = 1;
 		
 		if(test == 1) {
-			$scope.list = cellGroupVal[0].subgroup; // this doesnt work it just erases the original cellgroups in the center and doesnt re-populate with the subgroup
+			$scope.currentModel = null;
+			$scope.list = cellGroupVal[0].subGroup; // this doesnt work it just erases the original cellgroups in the center and doesnt re-populate with the subgroup
 			alert(cellGroupVal[0].subGroup[0].name); // this shows the correct name of the subgroup cellgroup name.
 		}
 	};
