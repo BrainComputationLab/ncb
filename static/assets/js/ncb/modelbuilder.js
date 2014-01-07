@@ -148,45 +148,58 @@ var lastActive2;
 var lastActive3;
 var test = 0;
 
-
+//scope for models in the left menu
 function myModelsList($scope) {
 	$scope.currentModel = null;
+
+	//set the scope to point at myModels
 	$scope.list = myModels;
 
+	//sets the lastActive model to the last model the user clicks on
 	$scope.setModel = function (model){
 		var result = $.grep(myModels, function(e){ return e.name == model; });
 		lastActive = result[0];
 	};
 
+	//when the user dblclicks or drags the model from the left menu to the right menu, it pushes the model into the cellgroup variable which represents the center menu.
 	$scope.moveModel = function (model) {
 		var result = $.grep(myModels, function(e){ return e.name == model; });
-		cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box", subGroup: []});
+		var sub = [];
+
+		// push a new cellgroup into the cellGroup variable
+		cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box", subGroup: sub});
+
+		cellGroupVal[0].subGroup.push({name: "test1", num: 1, model: result[0], geometry: "box", subGroup: []}); // testing nesting subgroups in the main cellgroup variable. This part works.
+
+		// increment the counter to make each cellgroup name unique.
 		inc++;
 	};
 }
 
+//scope for the cellgroups in the center menu
 function myModelsList2($scope) {
 	$scope.currentModel = null;
-	if(test == 0) $scope.list = cellGroupVal;
 
+	// if the value is 0 then set the scope to present the original cellgroups at the start of the list.
+	if(test == 0) {
+		$scope.list = cellGroupVal;
+	}
+
+	// set thhe lastActive2 model to the last cellgroup the user clicks on in the middle menu
 	$scope.setModel = function (model){
 		var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
 		lastActive2 = result[0];
 		popCellP();		
 	};
 	
+	// when the user double clicks on a cellgroup it should set the scope to that cellgroups subgroup.
 	$scope.intoModel = function (model){
 		test = 1;
-		//alert(test);
-		var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
-		var sub = new cellGroup("tempGrp", 1, result[0].model, "box", []);
-		cellGroupVal[0].subGroup.push(sub);
-		alert(cellGroupVal[0].subGroup[0]);
 		
-		if(test == 1) {$scope.list = cellGroupVal[0].subgroup; }
-		//var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
-		//cellGroupVal[0].subGroup.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box"});
-		inc++;
+		if(test == 1) {
+			$scope.list = cellGroupVal[0].subgroup; // this doesnt work it just erases the original cellgroups in the center and doesnt re-populate with the subgroup
+			alert(cellGroupVal[0].subGroup[0].name); // this shows the correct name of the subgroup cellgroup name.
+		}
 	};
 }
 
