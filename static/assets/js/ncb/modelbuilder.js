@@ -151,6 +151,10 @@ var pos = 0;
 var value = 0;
 var index1 = 0;
 var temp = new model();
+var indexs = [];
+//indexs[0] = 1;
+//indexs[1] = 2;
+//indexs[2] = 3;
 
 //scope for models in the left menu
 function myModelsList($scope) {
@@ -167,6 +171,7 @@ function myModelsList($scope) {
 	$scope.moveModel = function (model) {
 		var result = $.grep(myModels, function(e){ return e.name == model; });
 		var sub = [];
+		var subStr = "";
 
 		// push a new cellgroup into the cellGroup variable
 		if(pos == 0) {
@@ -174,10 +179,20 @@ function myModelsList($scope) {
 
 		}
 		else {
-			cellGroupVal[index1].subGroup.push({name: "tempGrp"+inc, num: 1, model: clone(result[0]), geometry: "box", subGroup: sub});
+			for(var i=0; i<pos; i++) {
+				//console.log(indexs[i+2]);
+				subStr += ".subGroup";
+				if(indexs[i+1] !== undefined) {
+					subStr += "[" + indexs[i+1] + "]";
+				}
+
+			}
+			eval("cellGroupVal[indexs[0]]" + subStr + ".push({name: 'tempGrp'+inc, num: 1, model: clone(result[0]), geometry: 'box', subGroup: sub})");
+			//console.log(subStr);
+
+			//cellGroupVal[index1].subGroup.push({name: "tempGrp"+inc, num: 1, model: clone(result[0]), geometry: "box", subGroup: sub});
 		}
 
-		console.log(cellGroupVal.length);
 
 		//cellGroupVal[0].subGroup.push({name: "test1", num: 1, model: clone(result[0]), geometry: "box", subGroup: []}); // testing nesting subgroups in the main cellgroup variable. This part works.
 
@@ -193,7 +208,7 @@ function myModelsList2($scope) {
 		$scope.list = cellGroupVal;
 	}
 
-	angular.element($('#b1')).scope().$apply();
+	angular.element($('#b1')).scope();//.$apply();
 
 	// set the lastActive2 model to the last cellgroup the user clicks on in the middle menu
 	$scope.setModel = function (model){
@@ -204,7 +219,18 @@ function myModelsList2($scope) {
 			popCellP();
 		}
 		else {
-			var result = $.grep(cellGroupVal[index1].subGroup, function(e){ return e.name == model; });
+			var subStr = "cellGroupVal[indexs[0]]";
+
+			for(var i=0; i<pos; i++) {
+				subStr += ".subGroup";
+				if(indexs[i+1] !== undefined) {
+					subStr += "[" + indexs[i+1] + "]";
+				}
+			}
+			//console.log(subStr);
+			var result = $.grep(eval(subStr), function(e){ return e.name == model; });
+
+			//var result = $.grep(cellGroupVal[index1].subGroup, function(e){ return e.name == model; });
 			lastActive2 = clone(result[0]);
 			popCellP();	
 		}
@@ -214,23 +240,35 @@ function myModelsList2($scope) {
 	$scope.intoModel = function (){
 		test = 1;
 		pos += 1;
+		indexs.push(index1);
+
+		var subStr = "cellGroupVal[indexs[0]]";
+
+		for(var i=1; i<=pos; i++) {
+			subStr += ".subGroup";
+			if(indexs[i] !== undefined) {
+				subStr += "[" + indexs[i] + "]";
+			}
+		}
 
 		$("#bread").append('<li><a id="bc2" href="#">' + lastActive2.name + '</a></li>');
 
 		if(test == 1) {
-			$scope.list = cellGroupVal[index1].subGroup; 
+			var run = "$scope.list = " + subStr;
+			eval(run); 
 		}
 	};
 
 	$scope.breadGoHome = function () {
 		test = 0;
 		pos = 0;
+		indexs.length = 0;
+		$('#bread').html('');
+		$('#bread').append('<li><a id="bc1" class="active" href="" ng-click="breadGoHome()">Home</a></li>');
 
 		if(test == 0) {
 			$scope.list = cellGroupVal;
-			console.log($scope.list.name);
 		}
-		//console.log(cellGroupVal[0].name);
 	};
 }
 
