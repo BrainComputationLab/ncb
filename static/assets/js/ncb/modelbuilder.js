@@ -143,10 +143,14 @@ var myModels = [
 var inc = 0;
 var myModels2 = [];
 var cellGroupVal = [];
-var lastActive;
-var lastActive2;
+var lastActive = new model();
+var lastActive2 = new cellGroup();
 var lastActive3;
 var test = 0;
+var pos = 0;
+var value = 0;
+var index1 = 0;
+var temp = new model();
 
 //scope for models in the left menu
 function myModelsList($scope) {
@@ -158,7 +162,7 @@ function myModelsList($scope) {
 	//sets the lastActive model to the last model the user clicks on
 	$scope.setModel = function (model){
 		var result = $.grep(myModels, function(e){ return e.name == model; });
-		lastActive = result[0];
+		lastActive = clone(result[0]);
 	};
 
 	//when the user dblclicks or drags the model from the left menu to the right menu, it pushes the model into the cellgroup variable which represents the center menu.
@@ -167,9 +171,15 @@ function myModelsList($scope) {
 		var sub = [];
 
 		// push a new cellgroup into the cellGroup variable
-		cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: result[0], geometry: "box", subGroup: sub});
+		if(pos == 0) {
+			cellGroupVal.push({name: "tempGrp"+inc, num: 1, model: clone(result[0]), geometry: "box", subGroup: sub});
 
-		cellGroupVal[0].subGroup.push({name: "test1", num: 1, model: result[0], geometry: "box", subGroup: []}); // testing nesting subgroups in the main cellgroup variable. This part works.
+		}
+		else {
+			cellGroupVal[index1].subGroup.push({name: "tempGrp"+inc, num: 1, model: clone(result[0]), geometry: "box", subGroup: sub});
+		}
+
+		//cellGroupVal[0].subGroup.push({name: "test1", num: 1, model: clone(result[0]), geometry: "box", subGroup: []}); // testing nesting subgroups in the main cellgroup variable. This part works.
 
 		// increment the counter to make each cellgroup name unique.
 		inc++;
@@ -185,22 +195,40 @@ function myModelsList2($scope) {
 		$scope.list = cellGroupVal;
 	}
 
-	// set thhe lastActive2 model to the last cellgroup the user clicks on in the middle menu
+	// set the lastActive2 model to the last cellgroup the user clicks on in the middle menu
 	$scope.setModel = function (model){
-		var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
-		lastActive2 = result[0];
-		popCellP();		
+		if(pos == 0) {
+			var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
+			lastActive2 = clone(result[0]);
+			index1 = getIndex(cellGroupVal, "name", lastActive2.name);
+			popCellP();	
+		}
+		else {
+			var result = $.grep(cellGroupVal[index1].subGroup, function(e){ return e.name == model; });
+			lastActive2 = clone(result[0]);
+			popCellP();	
+		}
 	};
 	
 	// when the user double clicks on a cellgroup it should set the scope to that cellgroups subgroup.
-	$scope.intoModel = function (model){
+	$scope.intoModel = function (){
 		test = 1;
-		
+		pos += 1;
+
+		console.log(test + "X");
 		if(test == 1) {
-			$scope.currentModel = null;
-			$scope.list = cellGroupVal[0].subGroup; // this doesnt work it just erases the original cellgroups in the center and doesnt re-populate with the subgroup
-			alert(cellGroupVal[0].subGroup[0].name); // this shows the correct name of the subgroup cellgroup name.
+			$scope.list = cellGroupVal[index1].subGroup; // this doesnt work it just erases the original cellgroups in the center and doesnt re-populate with the subgroup
+
 		}
+	};
+
+	$scope.breadGoHome = function () {
+		test = 0;
+		console.log(test + "Z");
+		if(test == 0) {
+			$scope.list = cellGroupVal;
+		}
+		//console.log(cellGroupVal[0].name);
 	};
 }
 
@@ -238,6 +266,8 @@ function popCellP() {
 	$("#paramval").append('<a id="n4" class="list-group-item">' + lastActive2.geometry +'</a>');
 	$('#paramval a').editable({
 		success: function(response, newValue) {
+			var index = getIndex(cellGroupVal, "name", lastActive2.name);
+
 			if(this.id == "n1") {
 				lastActive2.name = newValue;
 			}
@@ -250,8 +280,12 @@ function popCellP() {
 			if(this.id == "n4") {
 				lastActive2.geometry = newValue;
 			}
-			var index = cellGroupVal.indexOf(lastActive2.name);
-			cellGroupVal[index] = lastActive2;
+			if(pos == 0) {
+				cellGroupVal[index] = clone(lastActive2);
+			}
+			else {
+				cellGroupVal[index1].subGroup[index] = clone(lastActive2);
+			}
 		}
 	});
 }
@@ -271,6 +305,8 @@ function popModelP() {
 	$("#paramval").append('<a id="n99" class="list-group-item">' + lastActive2.model.threshold +'</a>');
 	$('#paramval a').editable({
 		success: function(response, newValue) {
+			var index = getIndex(cellGroupVal, "name", lastActive2.name);
+
 			if(this.id == "n11") {
 				lastActive2.model.name = newValue;
 			}
@@ -278,30 +314,53 @@ function popModelP() {
 				lastActive2.model.type = newValue;
 			}
 			if(this.id == "n33") {
-				lastActive2.a = newValue;
+				lastActive2.model.a = newValue;
 			}
 			if(this.id == "n44") {
-				lastActive2.b = newValue;
+				lastActive2.model.b = newValue;
 			}
 			if(this.id == "n55") {
-				lastActive2.c = newValue;
+				lastActive2.model.c = newValue;
 			}
 			if(this.id == "n66") {
-				lastActive2.d = newValue;
+				lastActive2.model.d = newValue;
 			}
 			if(this.id == "n77") {
-				lastActive2.u = newValue;
+				lastActive2.model.u = newValue;
 			}
 			if(this.id == "n88") {
-				lastActive2.v = newValue;
+				lastActive2.model.v = newValue;
 			}
 			if(this.id == "n99") {
 				lastActive2.model.threshold = newValue;
 			}
-			var index = cellGroupVal.indexOf(lastActive2.name);
-			cellGroupVal[index] = lastActive2;
+			if(pos == 0) {
+				cellGroupVal[index] = clone(lastActive2);
+			}
+			else {
+				cellGroupVal[index1].subGroup[index] = clone(lastActive2);
+			}
 		}
 	});
+}
+
+function clone(source) {
+	var clone = {};
+	for( var key in source) {
+		if(source.hasOwnProperty(key)) {
+			clone[key] = source[key];
+		}
+	}
+	
+	return clone;	
+}
+
+function getIndex(source, attr, value) {
+	for(var i=0; i<source.length; i++) {
+		if(source[i][attr] === value) {
+			return i;
+		}
+	}
 }
 
 var bootstrap = angular.module("bootstrap", []);
