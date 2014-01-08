@@ -10,16 +10,15 @@
 		    <!-- Filter -->
 			<div class="form-group"> 
 				<label for="modelbuilder_modelselector_filterinput">Search Models</label>
-				<input type="text" class="form-control" id="modelbuilder_filterinput" placeholder="Search" data-ng-model="modelText">
-				<input type="checkbox" data-ng-model="search.modelType" ng-true-value="Personal" ng-false-value="" /> Personal
-				<input type="checkbox" data-ng-model="search.modelType" ng-true-value="Database" ng-false-value="" /> Database
-				<input type="checkbox" data-ng-model="search.modelType" ng-true-value="All" ng-false-value="" /> All
+				<input type="text" class="form-control" id="modelbuilder_filterinput" placeholder="Search" data-ng-model="searchText">
+				<input type="checkbox" data-ng-model="searchText.dbType" ng-true-value="Personal" ng-false-value="" /> Personal
+				<input type="checkbox" data-ng-model="searchText.dbType" ng-true-value="Database" ng-false-value="" /> Database
 			</div> 
             <!-- End Filter -->
 
 		    <!-- list of model elements -->
 			<ul id="modelList" class="list-group">
-				<a href="" pop-over items="model", title="Type: {{'{{model.type}}'}}" class="list-group-item" ng-repeat="model in list | filter: modelText | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-mousedown="setModel(model.name)"> {{ '{{ model.name }}'  }}</a>
+				<a href="" pop-over items="model", title="Type: {{'{{model.type}}'}}" class="list-group-item" data-ng-repeat="model in list | filter: searchText | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-mousedown="setModel(model.name)"> {{ '{{ model.name }}'  }}</a>
 			</ul>
 	        <!-- end list of model elements -->
 	        

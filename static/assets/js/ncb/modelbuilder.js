@@ -1,5 +1,5 @@
 // class representing an izhikevich model
-function model(name, type, a, b, c, d, u, v, threshold, paramNames) {
+function model(name, type, a, b, c, d, u, v, threshold, paramNames, dbType) {
 	this.name = name;
 	this.type = type;//izhikevich, ncs, rectangular_current, flat, etc.
 	this.a = a;
@@ -9,6 +9,8 @@ function model(name, type, a, b, c, d, u, v, threshold, paramNames) {
 	this.u = u;
 	this.v = v;
 	this.threshold = threshold;
+	this.paramNames = paramNames;
+	this.dbType = dbType;
 }
 
 // class representing a cell group
@@ -55,7 +57,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Database'), 
 	new model('Model2', //name
 			  'ncs', //type
 			  2.5, //a
@@ -64,7 +68,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Personal'),
 	new model('Model3', //name
 			  'rectangular_current', //type
 			  2.5, //a
@@ -73,7 +79,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Personal'),
 	new model('Model4', //name
 			  'Flat', //type
 			  2.5, //a
@@ -82,7 +90,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Database'),
 	new model('Model5', //name
 			  'Izhikevich', //type
 			  2.5, //a
@@ -91,7 +101,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Database'),
 	new model('Model6', //name
 			  'Izhikevich', //type
 			  2.5, //a
@@ -100,7 +112,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Personal'),
 	new model('Model7', //name
 			  'Flat', //type
 			  2.5, //a
@@ -109,7 +123,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Personal'),
 	new model('Model8', //name
 			  'ncs', //type
 			  2.5, //a
@@ -118,7 +134,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Database'),
 	new model('Model9', //name
 			  'rectangular_current', //type
 			  2.5, //a
@@ -127,7 +145,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Personal'),
 	new model('Model10', //name
 			  'Izhikevich', //type
 			  2.5, //a
@@ -136,7 +156,9 @@ var myModels = [
 			  2.6, //d
 			  10.0, //u
 			  1.5, //v
-			  0.5), //threshold
+			  0.5, //threshold
+			  0.0,
+			  'Database'),
 ];
 
 // variables needed for implementation
