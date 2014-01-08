@@ -154,8 +154,6 @@ var temp = new model();
 
 //scope for models in the left menu
 function myModelsList($scope) {
-	$scope.currentModel = null;
-
 	//set the scope to point at myModels
 	$scope.list = myModels;
 
@@ -179,6 +177,8 @@ function myModelsList($scope) {
 			cellGroupVal[index1].subGroup.push({name: "tempGrp"+inc, num: 1, model: clone(result[0]), geometry: "box", subGroup: sub});
 		}
 
+		console.log(cellGroupVal.length);
+
 		//cellGroupVal[0].subGroup.push({name: "test1", num: 1, model: clone(result[0]), geometry: "box", subGroup: []}); // testing nesting subgroups in the main cellgroup variable. This part works.
 
 		// increment the counter to make each cellgroup name unique.
@@ -188,12 +188,12 @@ function myModelsList($scope) {
 
 //scope for the cellgroups in the center menu
 function myModelsList2($scope) {
-	$scope.currentModel = null;
-
 	// if the value is 0 then set the scope to present the original cellgroups at the start of the list.
 	if(test == 0) {
 		$scope.list = cellGroupVal;
 	}
+
+	angular.element($('#b1')).scope().$apply();
 
 	// set the lastActive2 model to the last cellgroup the user clicks on in the middle menu
 	$scope.setModel = function (model){
@@ -201,7 +201,7 @@ function myModelsList2($scope) {
 			var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
 			lastActive2 = clone(result[0]);
 			index1 = getIndex(cellGroupVal, "name", lastActive2.name);
-			popCellP();	
+			popCellP();
 		}
 		else {
 			var result = $.grep(cellGroupVal[index1].subGroup, function(e){ return e.name == model; });
@@ -215,18 +215,20 @@ function myModelsList2($scope) {
 		test = 1;
 		pos += 1;
 
-		console.log(test + "X");
-		if(test == 1) {
-			$scope.list = cellGroupVal[index1].subGroup; // this doesnt work it just erases the original cellgroups in the center and doesnt re-populate with the subgroup
+		$("#bread").append('<li><a id="bc2" href="#">' + lastActive2.name + '</a></li>');
 
+		if(test == 1) {
+			$scope.list = cellGroupVal[index1].subGroup; 
 		}
 	};
 
 	$scope.breadGoHome = function () {
 		test = 0;
-		console.log(test + "Z");
+		pos = 0;
+
 		if(test == 0) {
 			$scope.list = cellGroupVal;
+			console.log($scope.list.name);
 		}
 		//console.log(cellGroupVal[0].name);
 	};
@@ -305,7 +307,7 @@ function popModelP() {
 	$("#paramval").append('<a id="n99" class="list-group-item">' + lastActive2.model.threshold +'</a>');
 	$('#paramval a').editable({
 		success: function(response, newValue) {
-			var index = getIndex(cellGroupVal, "name", lastActive2.name);
+			var index = getIndex(cellGroupVal, "name", lastActive2.model.name);
 
 			if(this.id == "n11") {
 				lastActive2.model.name = newValue;

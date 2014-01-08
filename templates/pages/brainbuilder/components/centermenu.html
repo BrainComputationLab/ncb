@@ -2,15 +2,22 @@
 <div class="col-lg-3"> 
 
     <!-- Current model list which contains the list of models a user is working on -->
-	<div id="currentModelList" class="panel panel-default">
+	<div id="currentModelList" class="panel panel-default" ng-controller="myModelsList2">
 		<div class="panel-heading">
 			Current Model
 		</div>
+		<div>
+			<ol id="bread" class="breadcrumb">
+	  			<li><a id="b1" class="active" href="" ng-click="breadGoHome()">Home</a></li>
+	  			<!-- <li><a id="bc2" href="#">Library</a></li> 
+	  			<li class="active">Data</li> -->
+			</ol>
+		</div>
 		
 		<!-- filtering is done here -->
-		<div class="panel-body" ng-controller="myModelsList2">
+		<div class="panel-body" >
 			<ul id="modelList2" class="list-group">
-				<a href="" class="list-group-item" ng-repeat="cellGroup in list | filter: modelText | orderBy: 'cellGroup.name'" ng-dblclick="intoModel()" ng-mousedown="setModel(cellGroup.name)"> {{ '{{ cellGroup.name }}'  }}</a>
+				<a href="" class="list-group-item" ng-repeat="cellGroup in list | orderBy: 'cellGroup.name'" ng-dblclick="intoModel()" ng-mousedown="setModel(cellGroup.name)"> {{ '{{ cellGroup.name }}'  }}</a>
 			</ul>
 		</div>
 		<!-- end filtering -->
