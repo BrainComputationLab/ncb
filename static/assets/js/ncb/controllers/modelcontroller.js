@@ -83,7 +83,7 @@ $("#uploadModelForm").submit(function(event) {
 		// data to send
 		data: formData,
 
-		// disable caching an uneeded functions
+		// disable caching and uneeded functions
 		cache: false,
 		contentType: false,
 		processData: false

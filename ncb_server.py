@@ -43,6 +43,17 @@ def uploadFile():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/json', methods=['POST'])
+def sendJSON():
+    if request.method == 'POST':
+        json = request.get_json(False,False,False)
+        for key in json:
+            json[key.encode('ascii','ignore')] = json.pop(key)
+
+        print json
+        return jsonify({"success" : True})
+
+    return jsonify({"success" : False})
 # Serves the main application
 @app.route('/')
 def mainPage():
