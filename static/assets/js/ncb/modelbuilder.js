@@ -152,9 +152,6 @@ var value = 0;
 var index1 = 0;
 var temp = new model();
 var indexs = [];
-//indexs[0] = 1;
-//indexs[1] = 2;
-//indexs[2] = 3;
 
 //scope for models in the left menu
 function myModelsList($scope) {
@@ -180,7 +177,6 @@ function myModelsList($scope) {
 		}
 		else {
 			for(var i=0; i<pos; i++) {
-				//console.log(indexs[i+2]);
 				subStr += ".subGroup";
 				if(indexs[i+1] !== undefined) {
 					subStr += "[" + indexs[i+1] + "]";
@@ -188,28 +184,18 @@ function myModelsList($scope) {
 
 			}
 			eval("cellGroupVal[indexs[0]]" + subStr + ".push({name: 'tempGrp'+inc, num: 1, model: clone(result[0]), geometry: 'box', subGroup: sub})");
-			//console.log(subStr);
 
-			//cellGroupVal[index1].subGroup.push({name: "tempGrp"+inc, num: 1, model: clone(result[0]), geometry: "box", subGroup: sub});
 		}
 
-
-		//cellGroupVal[0].subGroup.push({name: "test1", num: 1, model: clone(result[0]), geometry: "box", subGroup: []}); // testing nesting subgroups in the main cellgroup variable. This part works.
-
-		// increment the counter to make each cellgroup name unique.
+		// increment counter to keep names unique
 		inc++;
 	};
 }
 
 //scope for the cellgroups in the center menu
-function myModelsList2($scope) {
-	// if the value is 0 then set the scope to present the original cellgroups at the start of the list.
-	if(test == 0) {
-		$scope.list = cellGroupVal;
-	}
-
-	angular.element($('#b1')).scope();//.$apply();
-
+function myModelsList2($scope, $compile) {	
+	$scope.list = cellGroupVal;
+	
 	// set the lastActive2 model to the last cellgroup the user clicks on in the middle menu
 	$scope.setModel = function (model){
 		if(pos == 0) {
@@ -227,10 +213,8 @@ function myModelsList2($scope) {
 					subStr += "[" + indexs[i+1] + "]";
 				}
 			}
-			//console.log(subStr);
-			var result = $.grep(eval(subStr), function(e){ return e.name == model; });
 
-			//var result = $.grep(cellGroupVal[index1].subGroup, function(e){ return e.name == model; });
+			var result = $.grep(eval(subStr), function(e){ return e.name == model; });
 			lastActive2 = clone(result[0]);
 			popCellP();	
 		}
@@ -238,7 +222,6 @@ function myModelsList2($scope) {
 	
 	// when the user double clicks on a cellgroup it should set the scope to that cellgroups subgroup.
 	$scope.intoModel = function (){
-		test = 1;
 		pos += 1;
 		indexs.push(index1);
 
@@ -253,28 +236,25 @@ function myModelsList2($scope) {
 
 		$("#bread").append('<li><a id="bc2" href="#">' + lastActive2.name + '</a></li>');
 
-		if(test == 1) {
-			var run = "$scope.list = " + subStr;
-			eval(run); 
-		}
+		var run = "$scope.list = " + subStr;
+		eval(run); 
 	};
 
-	$scope.breadGoHome = function () {
-		test = 0;
+	// calling this in the breadcrumb home anchor will just refresh the page for whatever reason. adding javascript: to the href makes the new home button unrecognized by the angular scope?
+	$scope.breadGoHome = function (event) {
 		pos = 0;
 		indexs.length = 0;
-		$('#bread').html('');
-		$('#bread').append('<li><a id="bc1" class="active" href="" ng-click="breadGoHome()">Home</a></li>');
 
-		if(test == 0) {
-			$scope.list = cellGroupVal;
-		}
+		//$('#bread').html('');
+		//$('#bread').append('<li><a id="bc1" class="active" ng-click="breadGoHome()" href="javascript:">Home</a></li>');
+
+		$scope.list = cellGroupVal;
 	};
+
 }
 
 
 $().ready( function() {
-    //$('#addFromDatabaseBody a').click(setActiveDatabase);
     $('#modelP').click(popModelP);
 	$('#cellP').click(popCellP);
     $('#p1').hide();
@@ -403,7 +383,13 @@ function getIndex(source, attr, value) {
 	}
 }
 
-var bootstrap = angular.module("bootstrap", []);
+function resetHome() {
+	$('#bread').html('');
+	$('#bread').append('<li><a id="bc1" class="active" onClick="return resetHome()" href="#">Home</a></li>');
+	return false;
+}
+
+//var bootstrap = angular.module("bootstrap", []);
 
 
 /*

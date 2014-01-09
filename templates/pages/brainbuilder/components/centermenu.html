@@ -1,5 +1,5 @@
 <!-- CENTER MENU -->
-<div class="col-lg-3"> 
+<div class="col-lg-3">
 
     <!-- Current model list which contains the list of models a user is working on -->
 	<div id="currentModelList" class="panel panel-default" ng-controller="myModelsList2">
@@ -7,8 +7,8 @@
 			Current Model
 		</div>
 		<div>
-			<ol id="bread" class="breadcrumb">
-	  			<li><a id="b1" class="active" href="" ng-click="breadGoHome()">Home</a></li>
+			<ol id="bread" class="breadcrumb" ng-breadcrumbs>
+	  			<li><a id="bc1" class="active" ng-click="breadGoHome($event)" href="javascript:">Home</a></li>
 				
 			</ol>
 		</div>
