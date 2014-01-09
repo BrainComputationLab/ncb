@@ -196,6 +196,20 @@ function myModelsList($scope) {
 		// increment the counter to make each cellgroup name unique.
 		inc++;
 	};
+
+	// changes color of model depending on if from personal or database
+	$scope.styleModel = function(dbType) {
+	if(dbType == "Personal")		
+		return {
+				'color': '#0000FF'
+		};
+	else if(dbType == "Database")
+		return {
+				'color': '#009CFF'
+		};
+
+	};
+
 }
 
 //scope for the cellgroups in the center menu
