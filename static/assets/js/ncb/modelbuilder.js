@@ -145,8 +145,6 @@ var myModels2 = [];
 var cellGroupVal = [];
 var lastActive = new model();
 var lastActive2 = new cellGroup();
-var lastActive3;
-var test = 0;
 var pos = 0;
 var value = 0;
 var index1 = 0;
@@ -168,7 +166,7 @@ function myModelsList($scope) {
 	$scope.moveModel = function (model) {
 		var result = $.grep(myModels, function(e){ return e.name == model; });
 		var sub = [];
-		var subStr = "";
+		var subStr = "cellGroupVal[" + indexs[0] + "]";
 
 		// push a new cellgroup into the cellGroup variable
 		if(pos == 0) {
@@ -176,14 +174,13 @@ function myModelsList($scope) {
 
 		}
 		else {
-			for(var i=0; i<pos; i++) {
+			for(var i=1; i<=pos; i++) {
 				subStr += ".subGroup";
-				if(indexs[i+1] !== undefined) {
-					subStr += "[" + indexs[i+1] + "]";
+				if(indexs[i] !== undefined) {
+					subStr += "[" + indexs[i] + "]";
 				}
-
 			}
-			eval("cellGroupVal[indexs[0]]" + subStr + ".push({name: 'tempGrp'+inc, num: 1, model: clone(result[0]), geometry: 'box', subGroup: sub})");
+			eval(subStr + ".push({name: 'tempGrp'+inc, num: 1, model: clone(result[0]), geometry: 'box', subGroup: sub})");
 
 		}
 
@@ -193,40 +190,32 @@ function myModelsList($scope) {
 }
 
 //scope for the cellgroups in the center menu
-function myModelsList2($scope, $compile) {	
+function myModelsList2($scope, $compile) {
+	// show the first layer of cellgroups added
 	$scope.list = cellGroupVal;
 	
 	// set the lastActive2 model to the last cellgroup the user clicks on in the middle menu
 	$scope.setModel = function (model){
+		// if user on home state
 		if(pos == 0) {
+			// search the array for the model the user clicked on
 			var result = $.grep(cellGroupVal, function(e){ return e.name == model; });
+
+			// clone the value in lastActive2
 			lastActive2 = clone(result[0]);
+
+			// find the index of that value
 			index1 = getIndex(cellGroupVal, "name", lastActive2.name);
+
+			// populate the cellgroup parameters on the right corresponding to what the user clicked on
 			popCellP();
+			return;
 		}
-		else {
-			var subStr = "cellGroupVal[indexs[0]]";
 
-			for(var i=0; i<pos; i++) {
-				subStr += ".subGroup";
-				if(indexs[i+1] !== undefined) {
-					subStr += "[" + indexs[i+1] + "]";
-				}
-			}
+		// else create substr of where the user is
+		var subStr = "cellGroupVal[" + indexs[0] + "]";
 
-			var result = $.grep(eval(subStr), function(e){ return e.name == model; });
-			lastActive2 = clone(result[0]);
-			popCellP();	
-		}
-	};
-	
-	// when the user double clicks on a cellgroup it should set the scope to that cellgroups subgroup.
-	$scope.intoModel = function (){
-		pos += 1;
-		indexs.push(index1);
-
-		var subStr = "cellGroupVal[indexs[0]]";
-
+		// a loop that adds subGroups equal to how deep the user is
 		for(var i=1; i<=pos; i++) {
 			subStr += ".subGroup";
 			if(indexs[i] !== undefined) {
@@ -234,20 +223,60 @@ function myModelsList2($scope, $compile) {
 			}
 		}
 
+		// search the subArray and find the name and then the index of that name
+		var result = $.grep(eval(subStr), function(e){ return e.name == model; });
+		lastActive2 = clone(result[0]);
+		index1 = getIndex(eval(subStr), "name", lastActive2.name);
+	
+		// populate the cellgroup parameters on the right corresponding to what the user clicked on
+		popCellP();
+	};
+	
+	// when the user double clicks on a cellgroup it should set the scope to that cellgroups subgroup.
+	$scope.intoModel = function (){
+		// as the user goes deeper into the subarrays then add to this counter
+		pos += 1;
+
+		// when the user double clicks push the index of what they clicked on into the index array
+		indexs.push(index1);
+
+		// start a string of where the user is
+		var subStr = "cellGroupVal[" + indexs[0] + "]";
+
+		// add on the subGroups equal to how deep the user is
+		for(var i=1; i<=pos; i++) {
+			subStr += ".subGroup";
+			if(indexs[i] !== undefined) {
+				subStr += "[" + indexs[i] + "]";
+			}
+		}
+
+		// add breadcrumbs corresponding to what the user clicks on
 		$("#bread").append('<li><a id="bc2" href="#">' + lastActive2.name + '</a></li>');
 
+		// set the scope to the subStr which prints the cellgroups of the level the user is in
 		var run = "$scope.list = " + subStr;
 		eval(run); 
 	};
 
-	// calling this in the breadcrumb home anchor will just refresh the page for whatever reason. adding javascript: to the href makes the new home button unrecognized by the angular scope?
+	// when the user clicks on home it erases the breadcrumbs and resets the scope to the home level
 	$scope.breadGoHome = function (event) {
+		// reset the position to the beginning
 		pos = 0;
+
+		// erase the indexs array
 		indexs.length = 0;
 
-		//$('#bread').html('');
-		//$('#bread').append('<li><a id="bc1" class="active" ng-click="breadGoHome()" href="javascript:">Home</a></li>');
+		// erase all the breadcrumbs
+		$('#bread').html('');
 
+		// recompile the new home breadcrumb because it uses an angular click inside. This is so angular knows it is there.
+		var myStr = $compile('<li><a id="bc1" class="active" ng-click="breadGoHome()" href="javascript:">Home</a></li>')($scope);
+
+		// append the new home button to the breadcrumbs
+		$('#bread').append(myStr);
+
+		// reset the scope to home.
 		$scope.list = cellGroupVal;
 	};
 
@@ -381,12 +410,6 @@ function getIndex(source, attr, value) {
 			return i;
 		}
 	}
-}
-
-function resetHome() {
-	$('#bread').html('');
-	$('#bread').append('<li><a id="bc1" class="active" onClick="return resetHome()" href="#">Home</a></li>');
-	return false;
 }
 
 //var bootstrap = angular.module("bootstrap", []);
