@@ -212,6 +212,9 @@ function myModelsList($scope) {
 
 	};
 
+
+	
+
 }
 
 //scope for the cellgroups in the center menu
@@ -343,6 +346,7 @@ function popModelP() {
 }
 
 var bootstrap = angular.module("bootstrap", []);
+
 
 
 /*
