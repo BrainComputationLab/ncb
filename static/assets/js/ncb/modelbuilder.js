@@ -201,11 +201,13 @@ function myModelsList($scope) {
 	$scope.styleModel = function(dbType) {
 	if(dbType == "Personal")		
 		return {
-				'color': '#0000FF'
+				'color': '#FFFFFF',
+				'background-color': '#00568C'
 		};
 	else if(dbType == "Database")
 		return {
-				'color': '#009CFF'
+				'color': '#FFFFFF',
+				'background-color': '#5d6b74'
 		};
 
 	};
