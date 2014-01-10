@@ -150,6 +150,7 @@ var value = 0;
 var index1 = 0;
 var temp = new model();
 var indexs = [];
+var breadDepth = 1;
 
 //scope for models in the left menu
 function myModelsList($scope) {
@@ -174,16 +175,14 @@ function myModelsList($scope) {
 
 		}
 		else {
-			for(var i=1; i<=pos; i++) {
-				subStr += ".subGroup";
-				if(indexs[i] !== undefined) {
-					subStr += "[" + indexs[i] + "]";
-				}
+			var moveInto = cellGroupVal[indexs[0]];
+			for(i=1; i<pos; i++) {
+				if(moveInto.subGroup.length != 0 ) {
+					moveInto = moveInto.subGroup[indexs[i]];
+				} 
 			}
-			eval(subStr + ".push({name: 'tempGrp'+inc, num: 1, model: clone(result[0]), geometry: 'box', subGroup: sub})");
-
+			moveInto.subGroup.push({name: 'tempGrp'+inc, num: 1, model: clone(result[0]), geometry: 'box', subGroup: sub})
 		}
-
 		// increment counter to keep names unique
 		inc++;
 	};
@@ -212,21 +211,19 @@ function myModelsList2($scope, $compile) {
 			return;
 		}
 
-		// else create substr of where the user is
-		var subStr = "cellGroupVal[" + indexs[0] + "]";
-
-		// a loop that adds subGroups equal to how deep the user is
-		for(var i=1; i<=pos; i++) {
-			subStr += ".subGroup";
-			if(indexs[i] !== undefined) {
-				subStr += "[" + indexs[i] + "]";
+		var moveInto = cellGroupVal[indexs[0]];
+			for(i=1; i<pos; i++) {
+				if(moveInto.subGroup.length != 0 ) {
+					moveInto = moveInto.subGroup[indexs[i]];
+				} 
 			}
-		}
+
 
 		// search the subArray and find the name and then the index of that name
-		var result = $.grep(eval(subStr), function(e){ return e.name == model; });
+		var result = $.grep(moveInto.subGroup, function(e){ return e.name == model; });
 		lastActive2 = clone(result[0]);
-		index1 = getIndex(eval(subStr), "name", lastActive2.name);
+		index1 = getIndex(moveInto.subGroup, "name", lastActive2.name);
+		
 	
 		// populate the cellgroup parameters on the right corresponding to what the user clicked on
 		popCellP();
@@ -240,29 +237,28 @@ function myModelsList2($scope, $compile) {
 		// when the user double clicks push the index of what they clicked on into the index array
 		indexs.push(index1);
 
-		// start a string of where the user is
-		var subStr = "cellGroupVal[" + indexs[0] + "]";
-
-		// add on the subGroups equal to how deep the user is
-		for(var i=1; i<=pos; i++) {
-			subStr += ".subGroup";
-			if(indexs[i] !== undefined) {
-				subStr += "[" + indexs[i] + "]";
+		var moveInto = cellGroupVal[indexs[0]];
+			for(i=1; i<pos; i++) {
+				if(moveInto.subGroup.length != 0 ) {
+					moveInto = moveInto.subGroup[indexs[i]];
+				} 
 			}
-		}
+		
+		// add the breadcrumb of whatever the user clicked on
+		var myStr = $compile('<li><a id="' + breadDepth + '" class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + lastActive2.name + '</a></li>')($scope);
+		$('#bread').append(myStr);
+		breadDepth += 1;
 
-		// add breadcrumbs corresponding to what the user clicks on
-		$("#bread").append('<li><a id="bc2" href="#">' + lastActive2.name + '</a></li>');
-
-		// set the scope to the subStr which prints the cellgroups of the level the user is in
-		var run = "$scope.list = " + subStr;
-		eval(run); 
+		$scope.list = moveInto.subGroup;
 	};
 
 	// when the user clicks on home it erases the breadcrumbs and resets the scope to the home level
 	$scope.breadGoHome = function (event) {
 		// reset the position to the beginning
 		pos = 0;
+
+		// reset bread depth
+		breadDepth = 1;
 
 		// erase the indexs array
 		indexs.length = 0;
@@ -280,6 +276,45 @@ function myModelsList2($scope, $compile) {
 		$scope.list = cellGroupVal;
 	};
 
+	$scope.changeBreadcrumb = function (event) {
+
+		var moveInto = cellGroupVal[indexs[0]];
+		for(i=1; i<event.target.id; i++) {
+			moveInto = moveInto.subGroup[indexs[i]];
+		}
+
+		// update breadcrumbs and pos
+		breadDepth = +event.target.id + 1;
+		pos = +event.target.id;
+
+		// erase all the breadcrumbs
+		$('#bread').html('');
+
+		// recompile the new home breadcrumb because it uses an angular click inside. This is so angular knows it is there.
+		var myStr = $compile('<li><a id="bc1" class="active" ng-click="breadGoHome()" href="javascript:">Home</a></li>')($scope);
+
+		// append the new home button to the breadcrumbs
+		$('#bread').append(myStr);
+
+
+		var moveInto2 = cellGroupVal[indexs[0]];
+		var depth = 1;
+
+		// redraw the correct breadcrumbs
+		for(var i=0; i<breadDepth-1; i++) {
+			var name = moveInto2.name;
+			moveInto2 = moveInto2.subGroup[indexs[i+1]]; 
+
+			var myStr2 = $compile('<li><a id="' + depth + '"class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + name + '</a></li>')($scope);
+			$('#bread').append(myStr2);
+			depth += 1;
+		}		
+
+		indexs.length = breadDepth - 1;
+		
+		$scope.list = moveInto.subGroup;
+		
+	};
 }
 
 
@@ -315,7 +350,21 @@ function popCellP() {
 	$("#paramval").append('<a id="n4" class="list-group-item">' + lastActive2.geometry +'</a>');
 	$('#paramval a').editable({
 		success: function(response, newValue) {
-			var index = getIndex(cellGroupVal, "name", lastActive2.name);
+			var moveInto3 = cellGroupVal[0];
+			for(i=1; i<pos; i++) {
+				if(moveInto3.subGroup.length != 0 ) {
+					moveInto3 = moveInto3.subGroup[indexs[i]];
+				} 
+			}
+
+			// search the subArray and find the name and then the index of that name
+			var result0 = $.grep(cellGroupVal, function(e){ return e.name == lastActive2.name; });			
+			var newVal0 = clone(result0[0]);
+			var index0 = getIndex(cellGroupVal, "name", lastActive2.name);
+
+			var result = $.grep(moveInto3.subGroup, function(e){ return e.name == lastActive2.name; });
+			var newVal = clone(result[0]);
+			var index = getIndex(moveInto3.subGroup, "name", lastActive2.name);
 
 			if(this.id == "n1") {
 				lastActive2.name = newValue;
@@ -329,11 +378,11 @@ function popCellP() {
 			if(this.id == "n4") {
 				lastActive2.geometry = newValue;
 			}
-			if(pos == 0) {
-				cellGroupVal[index] = clone(lastActive2);
+			if(pos == 0) {		
+				cellGroupVal[index0] = clone(lastActive2);
 			}
 			else {
-				cellGroupVal[index1].subGroup[index] = clone(lastActive2);
+				moveInto3.subGroup[index] = clone(lastActive2);
 			}
 		}
 	});
