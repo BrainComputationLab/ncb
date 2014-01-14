@@ -46,16 +46,6 @@ body {
     min-height:480px;
 }
 
-#collapse1 {
-	position: relative;
-	right: -7px;
-}
-
-#collapse2 {
-	position: relative;
-	right: -7px;
-}
-
 #paramid a {
 	position: relative;
 
@@ -65,6 +55,42 @@ body {
 	position: relative;
 	right: 31px;
 }
+
+#type1 {
+	position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#type2 {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#value {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#minvalue {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#maxvalue {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
 
 #bread {
 	font-size: 10px;
