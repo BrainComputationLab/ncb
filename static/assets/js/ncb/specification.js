@@ -56,27 +56,37 @@ ConnectionGroup.prototype.toJSON = function() {
 		"ModelParameters" : this.parameters.toJSON()
 	};
 }
+
+function sendJSON(jsonObj) {
+    var request = $.ajax({
+		url: '/json',
+		type: 'POST',
+
+		data: JSON.stringify(jsonObj.toJSON()),
+		dataType: "json",
+		contentType: "application/json; charset=utf-8"
+	});
+
+	request.done(function(response, textStatus, jqXHR) {
+		console.log("JSON Successfully Uploaded");
+	});
+}
+
+function getJSON() {
+	var jsonObj = $.getJSON("json", {}, function(data,textStatus,jqXHR) {
+		console.log("JSON Successfully Received");
+	});
+
+	return jsonObj;
+}
+
 // testing area
 $().ready(function() {
     var x = new CellGroup("CellGroup1", 2000, new ModelParameters("param1", "izhikevich"));
     var alias = new CellAlias(x,x,x);
     var conn = new ConnectionGroup("name1", alias, alias, 0.65, new ModelParameters("param2", "LIF"));
-    console.log(conn.toJSON());
     
-    /* Code to send JSON to server
-    var request = $.ajax({
-    	url: '/json',
-    	type: 'POST',
-
-    	data: JSON.stringify(obj),
-    	dataType: "json",
-    	contentType: "application/json; charset=utf-8"
-	});
-
-	// function callback on successful upload
-	request.done(function(response, textStatus, jqXHR) {
-		console.log("upload complete");
-	});
-
-	*/
+    sendJSON(conn);
+    var recData = getJSON();
+    console.log(recData);
 });

@@ -129,10 +129,10 @@ function ModelBuilderController($scope, $routeParams) {
 
     // function for initiating a model import
     $scope.importModel = function() {
-    	var value = $("#uploadModelFile").value;
+    	var value = $("#uploadModelFile").val();
 
     	// if file selected, trigger an upload
-    	if(value !== undefined && value !== "") {
+    	if(value) {
 			progressBar.show();
 			$("#uploadModelForm").trigger("submit");
 			$(".importButtons").prop("disabled", true);
