@@ -180,7 +180,6 @@ function myModelsList($scope) {
 	//set the scope to point at myModels
 	$scope.list = myModels;
 
-	$scope.modelDetailsList = [{name: "Test"}, {a:"2.5"}];
 
 	//sets the lastActive model to the last model the user clicks on
 	$scope.setModel = function (model){
