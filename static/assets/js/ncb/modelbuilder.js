@@ -170,12 +170,17 @@ var lastActive2;
 var lastActive3;
 var test = 0;
 
+angular.module('ncbApp', ['ui.bootstrap']);
+
+
 //scope for models in the left menu
 function myModelsList($scope) {
 	$scope.currentModel = null;
 
 	//set the scope to point at myModels
 	$scope.list = myModels;
+
+	$scope.modelDetailsList = [{name: "Test"}, {a:"2.5"}];
 
 	//sets the lastActive model to the last model the user clicks on
 	$scope.setModel = function (model){
@@ -211,6 +216,8 @@ function myModelsList($scope) {
 		};
 
 	};
+
+	
 
 
 	
@@ -345,7 +352,6 @@ function popModelP() {
 	});
 }
 
-var bootstrap = angular.module("bootstrap", []);
 
 
 

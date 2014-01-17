@@ -15,13 +15,11 @@
 				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Database" ng-false-value="" /><label ng-style="{color: '#5d6b74'}">Database</label>
 			</div> 
             <!-- End Filter -->
-
-		    <!-- list of model elements -->
-			<ul id="modelList" class="list-group" >
-				<a href="" pop-over items="model", title="Type: {{'{{model.type}}'}}" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType)" ng-mousedown="setModel(model.name)"> {{ '{{ model.name }}'  }}</a>
-			</ul>
-	        <!-- end list of model elements -->
-	        
+				<!-- list of model elements -->
+				<ul id="modelList" class="list-group" >
+					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType)" ng-mousedown="setModel(model.name)" popover-title="{{'{{model.name}}'}}" popover="Type:{{'{{model.type}}'}} a: {{'{{model.a}}'}}" popover-trigger="mouseenter" popover-placement="top"> {{ '{{ model.name }}'  }}</a>
+				</ul>
+			    <!-- end list of model elements -->
 		</div>
 	</div>
 </div> 
