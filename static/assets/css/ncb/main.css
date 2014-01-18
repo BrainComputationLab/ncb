@@ -27,14 +27,14 @@ body {
 #modelList {
     overflow-x: hidden;
     overflow-y: scroll;
-	min-height:200px;
+	min-height:400px;
     max-height:400px;
 }
 
 #modelList2 {
     overflow-x: hidden;
-	min-height:200px;
-    max-height:400px;
+	min-height:450px;
+    max-height:450px;
 }
 
 #loadModelDropdown {
@@ -43,17 +43,7 @@ body {
 
 #centerView {
     //border: 1px solid gray;
-    min-height:400px;
-}
-
-#collapse1 {
-	position: relative;
-	right: -7px;
-}
-
-#collapse2 {
-	position: relative;
-	right: -7px;
+    min-height:480px;
 }
 
 #paramid a {
@@ -64,4 +54,44 @@ body {
 #paramval a{
 	position: relative;
 	right: 31px;
-}	
+}
+
+#type1 {
+	position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#type2 {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#value {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#minvalue {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+#maxvalue {
+	//position: relative;
+	margin-top: -1px;
+	padding-left:0;
+	padding-right:0;
+}
+
+
+#bread {
+	font-size: 10px;
+}

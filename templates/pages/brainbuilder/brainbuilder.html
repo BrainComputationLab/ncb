@@ -1,18 +1,20 @@
 <!-- Main Div for containing the Model Builder page -->
-<div id="model" class="container page" ng-controller="ModelBuilderController">
+<div id="model" class="container page">
     
     <!-- Model Configuration Header -->
     <div class="page-header">
         <h3>Model Configuration</h3>
     </div>
     <!-- End Header -->
-    
-    <!-- Bread crumbs to see the hiearchy of where one is at in the model -->
-    <ol class="breadcrumb">
-  		<li><a class="active" id="bc1" href="#" ng-click="clickBreadCrumb()">Home</a></li>
-  		<!-- <li><a id="bc2" href="#">Library</a></li> 
-  		<li class="active">Data</li> -->
-	</ol>
+     
+    <!-- Bread crumbs to see the hiearchy of where one is at in the model 
+	<div ng-controller="myModelsList2">
+		<ol class="breadcrumb">
+	  		<li><a id="b1" class="active" href="" ng-click="breadGoHome()">Home</a></li>
+	  		<!-- <li><a id="bc2" href="#">Library</a></li> 
+	  		<li class="active">Data</li> 
+		</ol> 
+	</div>
 	<!-- End Bread Crumbs -->
 	
 

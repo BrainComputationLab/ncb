@@ -143,9 +143,4 @@ function ModelBuilderController($scope, $routeParams) {
     		$("#modelbuilder_importmodel").modal("hide");
     	}
     };
-
-    // function for handling breadcrumbs
-    $scope.clickBreadCrumb = function() {
-    	alert($(this).attr("id"));
-    };
 }
