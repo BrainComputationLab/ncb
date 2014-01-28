@@ -1,6 +1,6 @@
 // lookup progress bar object once (for performance reasons)
 var progressBar = $("#uploadProgress");
-
+var objectFromUpload;
 // initialize import modal on show event
 $("#modelbuilder_importmodel").on("show.bs.modal", function() {
 	// set progress bar to 0% and hide it
@@ -92,6 +92,8 @@ $("#uploadModelForm").submit(function(event) {
 	// function callback on successful upload
 	request.done(function(response, textStatus, jqXHR) {
 		console.log("upload complete");
+		objectFromUpload = getJSON();
+		console.log(objectFromUpload);
 		$("#modelbuilder_importmodel").modal("hide");
 		progressBar.hide();
 	});
