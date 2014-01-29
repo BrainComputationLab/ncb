@@ -17,6 +17,9 @@ var indexs = [];
 var breadDepth = 1;
 var globalCellGroup = [];
 
+angular.module('ncbApp', ['ui.bootstrap']);
+
+
 //scope for models in the left menu
 function myModelsList($scope) {
 	//set the scope to point at myModels
@@ -304,7 +307,6 @@ function popModelP() {
 	});
 }
 
-var bootstrap = angular.module("bootstrap", []);
 
 
 bootstrap.directive('popOver', function ($compile) {
