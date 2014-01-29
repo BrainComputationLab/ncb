@@ -17,7 +17,7 @@
             <!-- End Filter -->
 				<!-- list of model elements -->
 				<ul id="modelList" class="list-group" >
-					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType)" ng-mousedown="setModel(model.name)" popover-title="{{'{{model.name}}'}}" popover="Type: {{'{{model.type}}'}} a: {{'{{model.parameters.a.value}}'}}" popover-trigger="mouseenter" popover-placement="top"> {{ '{{ model.name }}'  }}</a>
+					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType)" ng-mousedown="setModel(model.name)" popover-title="{{'{{model.name}}'}}" popover="Type: {{'{{model.type}}'}} a: {{'{{model.parameters.a.value}}'}} b: {{'{{model.parameters.b.value}}'}}" popover-trigger="mouseenter" popover-placement="top"> {{ '{{ model.name }}'  }}</a>
 				</ul>
 			    <!-- end list of model elements -->
 		</div>
