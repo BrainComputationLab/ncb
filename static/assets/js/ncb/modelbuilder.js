@@ -193,6 +193,7 @@ function myModelsList2($scope, $compile) {
 		$scope.list = moveInto.subGroup;
 		
 	};
+
 }
 
 $().ready( function() {
@@ -242,9 +243,7 @@ function popCellP() {
 				midMenuLast.geometry = newValue;
 			}
 			if(pos == 0) {
-				console.log(midMenuLast.name);
 				globalCellGroup[index0] = clone(midMenuLast);
-				console.log(midMenuLast.name);
 			}
 			else {
 				moveInto3.subGroup[index] = clone(midMenuLast);
@@ -254,7 +253,38 @@ function popCellP() {
 }
 
 function popModelP() {
-	showParameterNames()
+	showParameterNames();
+	var dropChoice = [{'value': 0, 'text': 'exact'}, {'value': 1, 'text': 'uniform'}, {'value': 2, 'text': 'normal'}];
+
+	$('#type2 a').editable({
+		'source': dropChoice,
+		'success': function(response, newValue) {
+				if(this.id == "a1") { midMenuLast.modelParameters.parameters.a.type = dropChoice[newValue].text; }
+				if(this.id == "b1") { midMenuLast.modelParameters.parameters.b.type = dropChoice[newValue].text; }
+				if(this.id == "c1") { midMenuLast.modelParameters.parameters.c.type = dropChoice[newValue].text; }
+				if(this.id == "d1") { midMenuLast.modelParameters.parameters.d.type = dropChoice[newValue].text; }
+				if(this.id == "u1") { midMenuLast.modelParameters.parameters.u.type = dropChoice[newValue].text; }
+				if(this.id == "v1") { midMenuLast.modelParameters.parameters.v.type = dropChoice[newValue].text; }
+				if(this.id == "t1") { midMenuLast.modelParameters.parameters.threshold.type = dropChoice[newValue].text; }
+			}
+	});
+	$('#value a').editable({
+		'success': function(response, newValue) {
+				
+			}
+	});
+	$('#minValue a').editable({
+		'success': function(response, newValue) {
+				
+			}
+	});
+	$('#maxValue a').editable({
+		'success': function(response, newValue) {
+				
+			}
+	});
+
+/*
 	$('#paramval a').editable({
 		success: function(response, newValue) {
 			var index = getIndex(globalCellGroup, "name", midMenuLast.modelParameters.name);
@@ -304,9 +334,100 @@ function popModelP() {
 				globalCellGroup[index1].subGroup[index] = clone(midMenuLast);
 			}
 		}
-	});
+	});*/
 }
 
+
+
+
+function showParameterNames() {
+	if(midMenuLast.modelParameters.type === "Izhikevich") {
+		$('#p1').hide();
+		$('#p2').show();
+		$('#paramval').html('');
+		$('#paramval').append('<div id="name"></div>');
+		$('#paramval').append('<div id="type1"></div>');
+		$('#paramval').append('<div class="row">');
+		$('#paramval').append('<div id="type2" class="col-lg-3"></div>');
+		$('#paramval').append('<div id="value" class="col-lg-3"></div>');
+		$('#paramval').append('<div id="minvalue" class="col-lg-3"></div>');
+		$('#paramval').append('<div id="maxvalue" class="col-lg-3"></div>');
+		$('#paramval').append('</div>');
+		
+
+		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
+		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
+
+		$("#type2").append('<a class="list-group-item"> <span style="text-decoration: underline;">Type</span></a>');
+		$("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
+		$("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
+		$("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
+
+
+		$("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.a.type +'</a>');
+		$("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.a.value +'</a>');
+		$("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.a.minValue +'</a>');
+		$("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.a.maxValue +'</a>');
+
+		$("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.b.type +'</a>');
+		$("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.value +'</a>');
+		$("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.minValue +'</a>');
+		$("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.maxValue +'</a>');
+
+		$("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.c.type +'</a>');
+		$("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.value +'</a>');
+		$("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.minValue +'</a>');
+		$("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.maxValue +'</a>');
+
+		$("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.d.type +'</a>');
+		$("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.value +'</a>');
+		$("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.minValue +'</a>');
+		$("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.maxValue +'</a>');
+
+		$("#type2").append('<a id="u1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.u.type +'</a>');
+		$("#value").append('<a id="u2" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.value +'</a>');
+		$("#minvalue").append('<a id="u3" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.minValue +'</a>');
+		$("#maxvalue").append('<a id="u4" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.maxValue +'</a>');
+
+		$("#type2").append('<a id="v1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.v.type +'</a>');
+		$("#value").append('<a id="v2" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.value +'</a>');
+		$("#minvalue").append('<a id="v3" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.minValue +'</a>');
+		$("#maxvalue").append('<a id="v4" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.maxValue +'</a>');
+
+		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
+		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
+		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.minValue +'</a>');
+		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
+
+	}
+	else {
+		$('#p1').hide();
+		$('#p2').hide();
+		$('#paramval').html('');
+		$("#paramval").append('<a id="n11" class="list-group-item">Currently only izhikevich cells show</a>');
+	}
+
+}
+
+function clone(source) {
+	var clone = {};
+	for( var key in source) {
+		if(source.hasOwnProperty(key)) {
+			clone[key] = source[key];
+		}
+	}
+	return clone;	
+}
+
+function getIndex(source, attr, value) {
+	for(var i=0; i<source.length; i++) {
+		if(source[i][attr] === value) {
+			return i;
+		}
+	}
+}
+
+var bootstrap = angular.module("bootstrap", []);
 
 
 bootstrap.directive('popOver', function ($compile) {
@@ -344,113 +465,4 @@ bootstrap.directive('popOver', function ($compile) {
             }
         };
     });
-
-/*
-function populateModels() {
-	$('#modelList').html('');
-	if(selectedValue == 1) {
-		for(var i=0; i<myModels.length; i++) {
-			$("#modelList").append('<a id="' + i + '" href="#" class="draggable list-group-item">' + myModels[i].name + '</a>').find('a.draggable').draggable({helper:"clone"});
-				$("#modelList").on("mousedown", "a:not(.active)", function ( event ) {
-		  		$(".active", event.delegateTarget).removeClass("active");
-		 			$(this).addClass("active");
-				});
-		}
-  }
-	if(selectedValue == 2) {
-		for(var i=0; i<myModels2.length; i++) {
-			$("#modelList").append('<a id="' + i + '" href="#" class="draggable list-group-item">' + myModels2[i].name + '</a>').find('a.draggable').draggable({helper:"clone"});
-				$("#modelList").on("mousedown", "a:not(.active)", function ( event ) {
-		  		$(".active", event.delegateTarget).removeClass("active");
-		 			$(this).addClass("active");
-				});
-		}
-  }
-}
-*/
-
-function showParameterNames() {
-	if(midMenuLast.modelParameters.type === "Izhikevich") {
-		$('#p1').hide();
-		$('#p2').show();
-		$('#paramval').html('');
-		$('#paramval').append('<div id="name"></div>');
-		$('#paramval').append('<div id="type1"></div>');
-		$('#paramval').append('<div class="row">');
-		$('#paramval').append('<div id="type2" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="value" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="minvalue" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="maxvalue" class="col-lg-3"></div>');
-		$('#paramval').append('</div>');
-		
-
-		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
-		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
-
-		$("#type2").append('<a id="a1" class="list-group-item">' + midMenuLast.modelParameters.parameters.a.type +'</a>');
-		$("#value").append('<a id="a2" class="list-group-item">' + midMenuLast.modelParameters.parameters.a.value +'</a>');
-		$("#minvalue").append('<a id="a3" class="list-group-item">' + midMenuLast.modelParameters.parameters.a.minValue +'</a>');
-		$("#maxvalue").append('<a id="a4" class="list-group-item">' + midMenuLast.modelParameters.parameters.a.maxValue +'</a>');
-
-		$("#type2").append('<a id="b1" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.type +'</a>');
-		$("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.value +'</a>');
-		$("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.minValue +'</a>');
-		$("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.maxValue +'</a>');
-
-		$("#type2").append('<a id="c1" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.type +'</a>');
-		$("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.value +'</a>');
-		$("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.minValue +'</a>');
-		$("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.maxValue +'</a>');
-
-		$("#type2").append('<a id="d1" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.type +'</a>');
-		$("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.value +'</a>');
-		$("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.minValue +'</a>');
-		$("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.maxValue +'</a>');
-
-		$("#type2").append('<a id="u1" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.type +'</a>');
-		$("#value").append('<a id="u2" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.value +'</a>');
-		$("#minvalue").append('<a id="u3" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.minValue +'</a>');
-		$("#maxvalue").append('<a id="u4" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.maxValue +'</a>');
-
-		$("#type2").append('<a id="v1" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.type +'</a>');
-		$("#value").append('<a id="v2" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.value +'</a>');
-		$("#minvalue").append('<a id="v3" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.minValue +'</a>');
-		$("#maxvalue").append('<a id="v4" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.maxValue +'</a>');
-
-		$("#type2").append('<a id="t1" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
-		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
-		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.minValue +'</a>');
-		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
-
-	}
-	else {
-		$('#p1').hide();
-		$('#p2').hide();
-		$('#paramval').html('');
-		$("#paramval").append('<a id="n11" class="list-group-item">Currently only izhikevich cells show</a>');
-	}
-
-}
-
-function editModal(loc) {
-
-}
-
-function clone(source) {
-	var clone = {};
-	for( var key in source) {
-		if(source.hasOwnProperty(key)) {
-			clone[key] = source[key];
-		}
-	}
-	return clone;	
-}
-
-function getIndex(source, attr, value) {
-	for(var i=0; i<source.length; i++) {
-		if(source[i][attr] === value) {
-			return i;
-		}
-	}
-}
 
