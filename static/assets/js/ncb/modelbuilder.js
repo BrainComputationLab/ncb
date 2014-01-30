@@ -1,11 +1,18 @@
 //test models
+var testChannel1 = new voltageGatedIonChannel();
+var testChannel2 = new calciumDependantChannel();
 var testParam = new izhikevichParam();
+var testParam2 = new izhikevichParam();
+var test2Param = new ncsParam(testChannel1);
+var test3Param = new hodgkinHuxleyParam(testChannel2);
 var myModels = [
-	new modelParameters('Model1', 'Izhikevich', testParam, 'Database'),
-	new modelParameters('Model2', 'Izhikevich', testParam, 'Personal'),
-	new modelParameters('Model3', 'Izhikevich', testParam, 'Personal'), 
-	new modelParameters('Model4', 'Izhikevich', testParam, 'Database'),
-	new modelParameters('Model5', 'Izhikevich', testParam, 'Personal'),
+	new modelParameters('I_Cell_1', 'Izhikevich', testParam, 'Database'),
+	new modelParameters('I_Cell_2', 'Izhikevich', testParam, 'Personal'),
+	new modelParameters('I_Cell_3', 'Izhikevich', testParam, 'Personal'), 
+	new modelParameters('I_Cell_4', 'Izhikevich', testParam, 'Database'),
+	new modelParameters('I_Cell_4', 'Izhikevich', testParam, 'Personal'),
+    new modelParameters('NCS_Cell_1', 'NCS', test2Param, 'Personal'),
+    new modelParameters('HH_Cell_1', 'HodgkinHuxley', test3Param, 'Database'),
 ];
 
 // variables needed for implementation
@@ -201,11 +208,15 @@ $().ready( function() {
 	$('#cellP').click(popCellP);
     $('#p1').hide();
     $('#p2').hide();
+    $('#p3').hide();
+    $('#p4').hide();
   	$.fn.editable.defaults.mode = 'popup';
 });
 
 function popCellP() {
 	$('#p2').hide();
+    $('#p3').hide();
+    $('#p4').hide();
 	$('#p1').show();
 	$('#paramval').html('');
 	$("#paramval").append('<a id="n1" class="list-group-item">' + midMenuLast.name +'</a>');
@@ -213,41 +224,25 @@ function popCellP() {
 	$("#paramval").append('<a id="n3" class="list-group-item">' + midMenuLast.num +'</a>');
 	$("#paramval").append('<a id="n4" class="list-group-item">' + midMenuLast.geometry +'</a>');
 	$('#paramval a').editable({
-		success: function(response, newValue) {
-			var moveInto3 = globalCellGroup[0];
+		'success': function(response, newValue) {
+			if(typeof indexs[0] === 'undefined') {console.log("hi");  var moveInto3 = globalCellGroup[0]; }
+			else { var moveInto3 = globalCellGroup[indexs[0]]; }
 			for(i=1; i<pos; i++) {
 				if(moveInto3.subGroup.length != 0 ) {
 					moveInto3 = moveInto3.subGroup[indexs[i]];
 				} 
 			}
 
-			// search the subArray and find the name and then the index of that name
-			var result0 = $.grep(globalCellGroup, function(e){ return e.name == midMenuLast.name; });			
-			var newVal0 = clone(result0[0]);
+			// search the subArray and find the name and then the index of that name			
 			var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-
-			var result = $.grep(moveInto3.subGroup, function(e){ return e.name == midMenuLast.name; });
-			var newVal = clone(result[0]);
 			var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
 
-			if(this.id == "n1") {
-				midMenuLast.name = newValue;
-			}
-			if(this.id == "n2") {
-				midMenuLast.modelParameters.name = newValue;
-			}
-			if(this.id == "n3") {
-				midMenuLast.num = newValue;
-			}
-			if(this.id == "n4") {
-				midMenuLast.geometry = newValue;
-			}
-			if(pos == 0) {
-				globalCellGroup[index0] = clone(midMenuLast);
-			}
-			else {
-				moveInto3.subGroup[index] = clone(midMenuLast);
-			}
+			if(this.id == "n1") { midMenuLast.name = newValue; }
+			if(this.id == "n2") { midMenuLast.modelParameters.name = newValue; }
+			if(this.id == "n3") { midMenuLast.num = newValue; }
+			if(this.id == "n4") { midMenuLast.geometry = newValue; }
+			if(pos == 0) { globalCellGroup[index0] = clone(midMenuLast); }
+			else { moveInto3.subGroup[index] = clone(midMenuLast); }
 		}
 	});
 }
@@ -256,85 +251,114 @@ function popModelP() {
 	showParameterNames();
 	var dropChoice = [{'value': 0, 'text': 'exact'}, {'value': 1, 'text': 'uniform'}, {'value': 2, 'text': 'normal'}];
 
+	$('#name a').editable({
+		'success': function(response, newValue) {
+				var moveInto3 = globalCellGroup[indexs[0]];
+				for(i=1; i<pos; i++) {
+					if(moveInto3.subGroup.length != 0 ) {
+						moveInto3 = moveInto3.subGroup[indexs[i]];
+					} 
+				}
+				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				if(this.id == "n11") {midMenuLast.modelParameters.name = newValue}
+				 if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			}
+	});
+
 	$('#type2 a').editable({
 		'source': dropChoice,
-		'success': function(response, newValue) {
-				if(this.id == "a1") { midMenuLast.modelParameters.parameters.a.type = dropChoice[newValue].text; }
-				if(this.id == "b1") { midMenuLast.modelParameters.parameters.b.type = dropChoice[newValue].text; }
-				if(this.id == "c1") { midMenuLast.modelParameters.parameters.c.type = dropChoice[newValue].text; }
-				if(this.id == "d1") { midMenuLast.modelParameters.parameters.d.type = dropChoice[newValue].text; }
-				if(this.id == "u1") { midMenuLast.modelParameters.parameters.u.type = dropChoice[newValue].text; }
-				if(this.id == "v1") { midMenuLast.modelParameters.parameters.v.type = dropChoice[newValue].text; }
-				if(this.id == "t1") { midMenuLast.modelParameters.parameters.threshold.type = dropChoice[newValue].text; }
+		'success': function(response, newValue) { 
+				var moveInto3 = globalCellGroup[indexs[0]];
+				for(i=1; i<pos; i++) {
+					if(moveInto3.subGroup.length != 0 ) {
+						moveInto3 = moveInto3.subGroup[indexs[i]];
+					} 
+				}
+				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				if(this.id == "a1") { swap.a.type = dropChoice[newValue].text; }
+				if(this.id == "b1") { swap.b.type = dropChoice[newValue].text; }
+				if(this.id == "c1") { swap.c.type = dropChoice[newValue].text; }
+				if(this.id == "d1") { swap.d.type = dropChoice[newValue].text; }
+				if(this.id == "u1") { swap.u.type = dropChoice[newValue].text; }
+				if(this.id == "v1") { swap.v.type = dropChoice[newValue].text; }
+				if(this.id == "t1") { swap.threshold.type = dropChoice[newValue].text; }
+                if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			}
 	});
 	$('#value a').editable({
 		'success': function(response, newValue) {
-				
+				var moveInto3 = globalCellGroup[indexs[0]];
+				for(i=1; i<pos; i++) {
+					if(moveInto3.subGroup.length != 0 ) {
+						moveInto3 = moveInto3.subGroup[indexs[i]];
+					} 
+				}
+				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				console.log(index0);
+				console.log(index);
+				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				if(this.id == "a2") { swap.a.value = newValue; }
+				if(this.id == "b2") { swap.b.value = newValue; }
+				if(this.id == "c2") { swap.c.value = newValue; }
+				if(this.id == "d2") { swap.d.value = newValue; }
+				if(this.id == "u2") { swap.u.value = newValue; }
+				if(this.id == "v2") { swap.v.value = newValue; }
+				if(this.id == "t2") { swap.value = newValue; }
+			    if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			}
 	});
-	$('#minValue a').editable({
+	$('#minvalue a').editable({
 		'success': function(response, newValue) {
-				
+				var moveInto3 = globalCellGroup[indexs[0]];
+				for(i=1; i<pos; i++) {
+					if(moveInto3.subGroup.length != 0 ) {
+						moveInto3 = moveInto3.subGroup[indexs[i]];
+					} 
+				}
+				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);			
+				if(this.id == "a3") { swap.a.minValue = newValue; }
+				if(this.id == "b3") { swap.b.minValue = newValue; }
+				if(this.id == "c3") { swap.c.minValue = newValue; }
+				if(this.id == "d3") { swap.d.minValue = newValue; }
+				if(this.id == "u3") { swap.u.minValue = newValue; }
+				if(this.id == "v3") { swap.v.minValue = newValue; }
+				if(this.id == "t3") { swap.minValue = newValue; }
+			    if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			}
 	});
-	$('#maxValue a').editable({
+	$('#maxvalue a').editable({
 		'success': function(response, newValue) {
-				
+				var moveInto3 = globalCellGroup[indexs[0]];
+				for(i=1; i<pos; i++) {
+					if(moveInto3.subGroup.length != 0 ) {
+						moveInto3 = moveInto3.subGroup[indexs[i]];
+					} 
+				}
+				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				if(this.id == "a4") { swap.a.maxValue = newValue; }
+				if(this.id == "b4") { swap.b.maxValue = newValue; }
+				if(this.id == "c4") { swap.c.maxValue = newValue; }
+				if(this.id == "d4") { swap.d.maxValue = newValue; }
+				if(this.id == "u4") { swap.u.maxValue = newValue; }
+				if(this.id == "v4") { swap.v.maxValue = newValue; }
+				if(this.id == "t4") { swap.maxValue = newValue; }
+			    if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			}
 	});
-
-/*
-	$('#paramval a').editable({
-		success: function(response, newValue) {
-			var index = getIndex(globalCellGroup, "name", midMenuLast.modelParameters.name);
-
-			if(this.id == "n11") { midMenuLast.modelParameters.name = newValue; }
-			//if(this.id == "n22") { midMenuLast.modelParameters.type = newValue; }
-
-			if(this.id == "a1") { midMenuLast.modelParameters.parameters.a.type = newValue; }
-			if(this.id == "a2") { midMenuLast.modelParameters.parameters.a.value = newValue; }
-			if(this.id == "a3") { midMenuLast.modelParameters.parameters.a.minValue = newValue; }
-			if(this.id == "a4") { midMenuLast.modelParameters.parameters.a.maxValue = newValue; }
-
-			if(this.id == "b1") { midMenuLast.modelParameters.parameters.b.type = newValue; }
-			if(this.id == "b2") { midMenuLast.modelParameters.parameters.b.value = newValue; }
-			if(this.id == "b3") { midMenuLast.modelParameters.parameters.b.minValue = newValue; }
-			if(this.id == "b4") { midMenuLast.modelParameters.parameters.b.maxValue = newValue; }
-
-			if(this.id == "c1") { midMenuLast.modelParameters.parameters.c.type = newValue; }
-			if(this.id == "c2") { midMenuLast.modelParameters.parameters.c.value = newValue; }
-			if(this.id == "c3") { midMenuLast.modelParameters.parameters.c.minValue = newValue; }
-			if(this.id == "c4") { midMenuLast.modelParameters.parameters.c.maxValue = newValue; }
-
-			if(this.id == "d1") { midMenuLast.modelParameters.parameters.d.type = newValue; }
-			if(this.id == "d2") { midMenuLast.modelParameters.parameters.d.value = newValue; }
-			if(this.id == "d3") { midMenuLast.modelParameters.parameters.d.minValue = newValue; }
-			if(this.id == "d4") { midMenuLast.modelParameters.parameters.d.maxValue = newValue; }
-
-			if(this.id == "u1") { midMenuLast.modelParameters.parameters.u.type = newValue; }
-			if(this.id == "u2") { midMenuLast.modelParameters.parameters.u.value = newValue; }
-			if(this.id == "u3") { midMenuLast.modelParameters.parameters.u.minValue = newValue; }
-			if(this.id == "u4") { midMenuLast.modelParameters.parameters.u.maxValue = newValue; }
-
-			if(this.id == "v1") { midMenuLast.modelParameters.parameters.v.type = newValue; }
-			if(this.id == "v2") { midMenuLast.modelParameters.parameters.v.value = newValue; }
-			if(this.id == "v3") { midMenuLast.modelParameters.parameters.v.minValue = newValue; }
-			if(this.id == "v4") { midMenuLast.modelParameters.parameters.v.maxValue = newValue; }
-
-			if(this.id == "t1") { midMenuLast.modelParameters.parameters.threshold.type = newValue; }
-			if(this.id == "t2") { midMenuLast.modelParameters.parameters.threshold.value = newValue; }
-			if(this.id == "t3") { midMenuLast.modelParameters.parameters.threshold.minValue = newValue; }
-			if(this.id == "t4") { midMenuLast.modelParameters.parameters.threshold.maxValue = newValue; }
-
-			if(pos == 0) {
-				globalCellGroup[index] = clone(midMenuLast);
-			}
-			else {
-				globalCellGroup[index1].subGroup[index] = clone(midMenuLast);
-			}
-		}
-	});*/
 }
 
 
@@ -343,6 +367,8 @@ function popModelP() {
 function showParameterNames() {
 	if(midMenuLast.modelParameters.type === "Izhikevich") {
 		$('#p1').hide();
+        $('#p3').hide();
+        $('#p4').hide();
 		$('#p2').show();
 		$('#paramval').html('');
 		$('#paramval').append('<div id="name"></div>');
@@ -400,11 +426,80 @@ function showParameterNames() {
 		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
 
 	}
-	else {
-		$('#p1').hide();
+	else if(midMenuLast.modelParameters.type === "NCS") {
+    	$('#p1').hide();
+        $('#p3').show();
+        $('#p4').hide();
 		$('#p2').hide();
 		$('#paramval').html('');
-		$("#paramval").append('<a id="n11" class="list-group-item">Currently only izhikevich cells show</a>');
+		$('#paramval').append('<div id="name"></div>');
+		$('#paramval').append('<div id="type1"></div>');
+		$('#paramval').append('<div class="row">');
+		$('#paramval').append('<div id="type2" class="col-lg-3"></div>');
+		$('#paramval').append('<div id="value" class="col-lg-3"></div>');
+		$('#paramval').append('<div id="minvalue" class="col-lg-3"></div>');
+		$('#paramval').append('<div id="maxvalue" class="col-lg-3"></div>');
+		$('#paramval').append('</div>');
+		
+
+		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
+		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
+
+		$("#type2").append('<a class="list-group-item"> <span style="text-decoration: underline;">Type</span></a>');
+		$("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
+		$("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
+		$("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
+
+
+		$("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
+		$("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
+		$("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.minValue +'</a>');
+		$("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
+
+		$("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.restingPotential.type +'</a>');
+		$("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.value +'</a>');
+		$("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.minValue +'</a>');
+		$("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.maxValue +'</a>');
+
+		$("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calcium.type +'</a>');
+		$("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.value +'</a>');
+		$("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.minValue +'</a>');
+		$("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.maxValue +'</a>');
+
+		$("#type2").append('<a id="u1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.type +'</a>');
+		$("#value").append('<a id="u2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.value +'</a>');
+		$("#minvalue").append('<a id="u3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.minValue +'</a>');
+		$("#maxvalue").append('<a id="u4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.maxValue +'</a>');
+
+		$("#type2").append('<a id="v1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauCalcium.type +'</a>');
+		$("#value").append('<a id="v2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.value +'</a>');
+		$("#minvalue").append('<a id="v3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.minValue +'</a>');
+		$("#maxvalue").append('<a id="v4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.maxValue +'</a>');
+
+		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.leakReversalPotential.type +'</a>');
+		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.value +'</a>');
+		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.minValue +'</a>');
+		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.maxValue +'</a>');
+
+		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauMembrane.type +'</a>');
+		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.value +'</a>');
+		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.minValue +'</a>');
+		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.maxValue +'</a>');
+
+		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.rMembrane.type +'</a>');
+		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.value +'</a>');
+		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.minValue +'</a>');
+		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.maxValue +'</a>');
+
+		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.spikeShape.type +'</a>');
+		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.value +'</a>');
+		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.minValue +'</a>');
+		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.maxValue +'</a>');
+
+		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
 	}
 
 }
@@ -417,6 +512,18 @@ function clone(source) {
 		}
 	}
 	return clone;	
+}
+
+function cloneModelP(source) {
+    var clone = {};
+    clone.a = source.a;
+    clone.b = source.b;
+    clone.c = source.c;
+    clone.d = source.d;
+    clone.u = source.u;
+    clone.v = source.v;
+    clone.threshold = source.threshold;
+    return clone;
 }
 
 function getIndex(source, attr, value) {
