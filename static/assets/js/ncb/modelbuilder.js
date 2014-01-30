@@ -253,6 +253,7 @@ function popModelP() {
 
 	$('#name a').editable({
 		'success': function(response, newValue) {
+		            if(midMenuLast.modelParameters.type === "Izhikevich") { 
 				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
 				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
 				        
@@ -269,10 +270,15 @@ function popModelP() {
 				        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
+			        else if(midMenuLast.modelParameters.type === "NCS") {
+			        
+			        } 
+			       }
 	});
 	$('#type2 a').editable({
 		'source': dropChoice,
 		'success': function(response, newValue) {
+		            if(midMenuLast.modelParameters.type === "Izhikevich") { 
          				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
 				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
 				        
@@ -295,9 +301,14 @@ function popModelP() {
                         if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
+			        else if(midMenuLast.modelParameters.type === "NCS") { 
+			        
+			        }
+			       }
 	});
 	$('#value a').editable({
 		'success': function(response, newValue) {
+		            if(midMenuLast.modelParameters.type === "Izhikevich") { 
 				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
 				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
 				        
@@ -320,9 +331,14 @@ function popModelP() {
 			            if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
+			        else if(midMenuLast.modelParameters.type === "NCS") { 
+			        
+			        }
+			       }
 	});
 	$('#minvalue a').editable({
 		'success': function(response, newValue) {
+		            if(midMenuLast.modelParameters.type === "Izhikevich") { 
 				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
 				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
 
@@ -345,9 +361,14 @@ function popModelP() {
 			            if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
+			        else if(midMenuLast.modelParameters.type === "NCS") { 
+			        
+			        }
+			       }
 	});
 	$('#maxvalue a').editable({
 		'success': function(response, newValue) {
+		            if(midMenuLast.modelParameters.type === "Izhikevich") { 
 				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
 				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
 
@@ -370,6 +391,10 @@ function popModelP() {
 			            if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
+			        else if(midMenuLast.modelParameters.type === "NCS") { 
+			        
+			        }
+			       }
 	});
 }
 
