@@ -26,7 +26,6 @@ var globalCellGroup = [];
 
 angular.module('ncbApp', ['ui.bootstrap']);
 
-
 //scope for models in the left menu
 function myModelsList($scope) {
 	//set the scope to point at myModels
@@ -205,45 +204,46 @@ function myModelsList2($scope, $compile) {
 
 $().ready( function() {
     $('#modelP').click(popModelP);
-	$('#cellP').click(popCellP);
+    $('#cellP').click(popCellP);
     $('#p1').hide();
     $('#p2').hide();
     $('#p3').hide();
     $('#p4').hide();
-  	$.fn.editable.defaults.mode = 'popup';
+    $.fn.editable.defaults.mode = 'popup';
 });
 
 function popCellP() {
-	$('#p2').hide();
+    $('#p2').hide();
     $('#p3').hide();
     $('#p4').hide();
-	$('#p1').show();
-	$('#paramval').html('');
+    $('#p1').show();
+    $('#paramval').html('');
 	$("#paramval").append('<a id="n1" class="list-group-item">' + midMenuLast.name +'</a>');
 	$("#paramval").append('<a id="n2" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
 	$("#paramval").append('<a id="n3" class="list-group-item">' + midMenuLast.num +'</a>');
 	$("#paramval").append('<a id="n4" class="list-group-item">' + midMenuLast.geometry +'</a>');
 	$('#paramval a').editable({
 		'success': function(response, newValue) {
-			if(typeof indexs[0] === 'undefined') {console.log("hi");  var moveInto3 = globalCellGroup[0]; }
-			else { var moveInto3 = globalCellGroup[indexs[0]]; }
-			for(i=1; i<pos; i++) {
-				if(moveInto3.subGroup.length != 0 ) {
-					moveInto3 = moveInto3.subGroup[indexs[i]];
-				} 
-			}
+                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+			            else { var moveInto3 = globalCellGroup[indexs[0]]; }
+			            
+			            for(i=1; i<pos; i++) {
+				            if(moveInto3.subGroup.length != 0 ) {
+					            moveInto3 = moveInto3.subGroup[indexs[i]];
+				            } 
+			            }
 
-			// search the subArray and find the name and then the index of that name			
-			var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-			var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+			            // search the subArray and find the name and then the index of that name			
+			            var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+			            var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
 
-			if(this.id == "n1") { midMenuLast.name = newValue; }
-			if(this.id == "n2") { midMenuLast.modelParameters.name = newValue; }
-			if(this.id == "n3") { midMenuLast.num = newValue; }
-			if(this.id == "n4") { midMenuLast.geometry = newValue; }
-			if(pos == 0) { globalCellGroup[index0] = clone(midMenuLast); }
-			else { moveInto3.subGroup[index] = clone(midMenuLast); }
-		}
+			            if(this.id == "n1") { midMenuLast.name = newValue; }
+			            if(this.id == "n2") { midMenuLast.modelParameters.name = newValue; }
+			            if(this.id == "n3") { midMenuLast.num = newValue; }
+			            if(this.id == "n4") { midMenuLast.geometry = newValue; }
+			            if(pos == 0) { globalCellGroup[index0] = clone(midMenuLast); }
+			            else { moveInto3.subGroup[index] = clone(midMenuLast); }
+		            }
 	});
 }
 
@@ -253,111 +253,123 @@ function popModelP() {
 
 	$('#name a').editable({
 		'success': function(response, newValue) {
-				var moveInto3 = globalCellGroup[indexs[0]];
-				for(i=1; i<pos; i++) {
-					if(moveInto3.subGroup.length != 0 ) {
-						moveInto3 = moveInto3.subGroup[indexs[i]];
-					} 
-				}
-				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-				if(this.id == "n11") {midMenuLast.modelParameters.name = newValue}
-				 if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-			}
+				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "n11") {midMenuLast.modelParameters.name = newValue}
+				        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
 	});
-
 	$('#type2 a').editable({
 		'source': dropChoice,
-		'success': function(response, newValue) { 
-				var moveInto3 = globalCellGroup[indexs[0]];
-				for(i=1; i<pos; i++) {
-					if(moveInto3.subGroup.length != 0 ) {
-						moveInto3 = moveInto3.subGroup[indexs[i]];
-					} 
-				}
-				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-				if(this.id == "a1") { swap.a.type = dropChoice[newValue].text; }
-				if(this.id == "b1") { swap.b.type = dropChoice[newValue].text; }
-				if(this.id == "c1") { swap.c.type = dropChoice[newValue].text; }
-				if(this.id == "d1") { swap.d.type = dropChoice[newValue].text; }
-				if(this.id == "u1") { swap.u.type = dropChoice[newValue].text; }
-				if(this.id == "v1") { swap.v.type = dropChoice[newValue].text; }
-				if(this.id == "t1") { swap.threshold.type = dropChoice[newValue].text; }
-                if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-			}
+		'success': function(response, newValue) {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a1") { swap.a.type = dropChoice[newValue].text; }
+				        if(this.id == "b1") { swap.b.type = dropChoice[newValue].text; }
+				        if(this.id == "c1") { swap.c.type = dropChoice[newValue].text; }
+				        if(this.id == "d1") { swap.d.type = dropChoice[newValue].text; }
+				        if(this.id == "u1") { swap.u.type = dropChoice[newValue].text; }
+				        if(this.id == "v1") { swap.v.type = dropChoice[newValue].text; }
+				        if(this.id == "t1") { swap.threshold.type = dropChoice[newValue].text; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
 	});
 	$('#value a').editable({
 		'success': function(response, newValue) {
-				var moveInto3 = globalCellGroup[indexs[0]];
-				for(i=1; i<pos; i++) {
-					if(moveInto3.subGroup.length != 0 ) {
-						moveInto3 = moveInto3.subGroup[indexs[i]];
-					} 
-				}
-				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-				console.log(index0);
-				console.log(index);
-				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-				if(this.id == "a2") { swap.a.value = newValue; }
-				if(this.id == "b2") { swap.b.value = newValue; }
-				if(this.id == "c2") { swap.c.value = newValue; }
-				if(this.id == "d2") { swap.d.value = newValue; }
-				if(this.id == "u2") { swap.u.value = newValue; }
-				if(this.id == "v2") { swap.v.value = newValue; }
-				if(this.id == "t2") { swap.value = newValue; }
-			    if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-			}
+				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a2") { swap.a.value = newValue; }
+				        if(this.id == "b2") { swap.b.value = newValue; }
+				        if(this.id == "c2") { swap.c.value = newValue; }
+				        if(this.id == "d2") { swap.d.value = newValue; }
+				        if(this.id == "u2") { swap.u.value = newValue; }
+				        if(this.id == "v2") { swap.v.value = newValue; }
+				        if(this.id == "t2") { swap.value = newValue; }
+			            if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
 	});
 	$('#minvalue a').editable({
 		'success': function(response, newValue) {
-				var moveInto3 = globalCellGroup[indexs[0]];
-				for(i=1; i<pos; i++) {
-					if(moveInto3.subGroup.length != 0 ) {
-						moveInto3 = moveInto3.subGroup[indexs[i]];
-					} 
-				}
-				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);			
-				if(this.id == "a3") { swap.a.minValue = newValue; }
-				if(this.id == "b3") { swap.b.minValue = newValue; }
-				if(this.id == "c3") { swap.c.minValue = newValue; }
-				if(this.id == "d3") { swap.d.minValue = newValue; }
-				if(this.id == "u3") { swap.u.minValue = newValue; }
-				if(this.id == "v3") { swap.v.minValue = newValue; }
-				if(this.id == "t3") { swap.minValue = newValue; }
-			    if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-			}
+				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);			
+				        if(this.id == "a3") { swap.a.minValue = newValue; }
+				        if(this.id == "b3") { swap.b.minValue = newValue; }
+				        if(this.id == "c3") { swap.c.minValue = newValue; }
+				        if(this.id == "d3") { swap.d.minValue = newValue; }
+				        if(this.id == "u3") { swap.u.minValue = newValue; }
+				        if(this.id == "v3") { swap.v.minValue = newValue; }
+				        if(this.id == "t3") { swap.minValue = newValue; }
+			            if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
 	});
 	$('#maxvalue a').editable({
 		'success': function(response, newValue) {
-				var moveInto3 = globalCellGroup[indexs[0]];
-				for(i=1; i<pos; i++) {
-					if(moveInto3.subGroup.length != 0 ) {
-						moveInto3 = moveInto3.subGroup[indexs[i]];
-					} 
-				}
-				var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-				var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-				var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-				if(this.id == "a4") { swap.a.maxValue = newValue; }
-				if(this.id == "b4") { swap.b.maxValue = newValue; }
-				if(this.id == "c4") { swap.c.maxValue = newValue; }
-				if(this.id == "d4") { swap.d.maxValue = newValue; }
-				if(this.id == "u4") { swap.u.maxValue = newValue; }
-				if(this.id == "v4") { swap.v.maxValue = newValue; }
-				if(this.id == "t4") { swap.maxValue = newValue; }
-			    if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-				else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-			}
+				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a4") { swap.a.maxValue = newValue; }
+				        if(this.id == "b4") { swap.b.maxValue = newValue; }
+				        if(this.id == "c4") { swap.c.maxValue = newValue; }
+				        if(this.id == "d4") { swap.d.maxValue = newValue; }
+				        if(this.id == "u4") { swap.u.maxValue = newValue; }
+				        if(this.id == "v4") { swap.v.maxValue = newValue; }
+				        if(this.id == "t4") { swap.maxValue = newValue; }
+			            if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
 	});
 }
 
@@ -514,18 +526,6 @@ function clone(source) {
 	return clone;	
 }
 
-function cloneModelP(source) {
-    var clone = {};
-    clone.a = source.a;
-    clone.b = source.b;
-    clone.c = source.c;
-    clone.d = source.d;
-    clone.u = source.u;
-    clone.v = source.v;
-    clone.threshold = source.threshold;
-    return clone;
-}
-
 function getIndex(source, attr, value) {
 	for(var i=0; i<source.length; i++) {
 		if(source[i][attr] === value) {
@@ -533,43 +533,3 @@ function getIndex(source, attr, value) {
 		}
 	}
 }
-
-var bootstrap = angular.module("bootstrap", []);
-
-
-bootstrap.directive('popOver', function ($compile) {
-        var itemsTemplate = "<ul class='unstyled'><li ng-repeat='model in list'>{{ '{{item}}' }}</li></ul>";
-        var getTemplate = function (contentType) {
-            var template = '';
-            switch (contentType) {
-                case 'list':
-                    template = itemsTemplate;
-                    break;
-            }
-            return template;
-        }
-        return {
-            restrict: "A",
-            transclude: true,
-            template: "<span ng-transclude></span>",
-            link: function (scope, element, attrs) {
-                var popOverContent;
-                if (scope.list) {
-                    var html = getTemplate("list");
-                    popOverContent = $compile(html)(scope);                    
-                }
-                var options = {
-                    content: popOverContent,
-                    placement: "right",
-                    html: true,
-                    title: scope.title
-                };
-                $(element).popover(options);
-            },
-            scope: {
-                list: '=',
-                title: '@'
-            }
-        };
-    });
-
