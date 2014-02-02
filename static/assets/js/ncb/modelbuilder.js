@@ -573,6 +573,331 @@ function popModelP() {
 			        }
 			       }
 	});
+	$('#chantype a').editable({
+		'source': dropChoice,
+		'success': function(response, newValue) {
+					if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Ion Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha1") { swap.vHalf.type = dropChoice[newValue].text; }
+				        if(this.id == "chb1") { swap.r.type = dropChoice[newValue].text; }
+				        if(this.id == "chc1") { swap.activationSlope.type = dropChoice[newValue].text; }
+				        if(this.id == "chd1") { swap.deactivationSlope.type = dropChoice[newValue].text; }
+				        if(this.id == "che1") { swap.equilibriumSlope.type = dropChoice[newValue].text; }
+				        if(this.id == "chf1") { swap.conductance.type = dropChoice[newValue].text; }
+				        if(this.id == "chg1") { swap.reversalPotential.type = dropChoice[newValue].text; }
+				        if(this.id == "chh1") { swap.mInitial.type = dropChoice[newValue].text; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Calcium Dependant Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha1") { swap.mInitial.type = dropChoice[newValue].text; }
+				        if(this.id == "chb1") { swap.reversalPotential.type = dropChoice[newValue].text; }
+				        if(this.id == "chc1") { swap.backwardsRate.type = dropChoice[newValue].text; }
+				        if(this.id == "chd1") { swap.forwardScale.type = dropChoice[newValue].text; }
+				        if(this.id == "che1") { swap.forwardExponent.type = dropChoice[newValue].text; }
+				        if(this.id == "chf1") { swap.tauScale.type = dropChoice[newValue].text; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha1") { swap.conductance.type = dropChoice[newValue].text; }
+				        if(this.id == "chb1") { swap.reversalPotential.type = dropChoice[newValue].text; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+			}
+	});
+	$('#chanvalue a').editable({
+		'success': function(response, newValue) {
+					if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Ion Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha2") { swap.vHalf.value = newValue; }
+				        if(this.id == "chb2") { swap.r.value = newValue; }
+				        if(this.id == "chc2") { swap.activationSlope.value = newValue; }
+				        if(this.id == "chd2") { swap.deactivationSlope.value = newValue; }
+				        if(this.id == "che2") { swap.equilibriumSlope.value = newValue; }
+				        if(this.id == "chf2") { swap.conductance.value = newValue; }
+				        if(this.id == "chg2") { swap.reversalPotential.value = newValue; }
+				        if(this.id == "chh2") { swap.mInitial.value = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Calcium Dependant Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha2") { swap.mInitial.value = newValue; }
+				        if(this.id == "chb2") { swap.reversalPotential.value = newValue; }
+				        if(this.id == "chc2") { swap.backwardsRate.value = newValue; }
+				        if(this.id == "chd2") { swap.forwardScale.value = newValue; }
+				        if(this.id == "che2") { swap.forwardExponent.value = newValue; }
+				        if(this.id == "chf2") { swap.tauScale.value = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha2") { swap.conductance.value = newValue; }
+				        if(this.id == "chb2") { swap.reversePotential.value = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+			}
+	});
+	$('#chanminvalue a').editable({
+		'success': function(response, newValue) {
+					if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Ion Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha3") { swap.vHalf.minValue = newValue; }
+				        if(this.id == "chb3") { swap.r.minValue = newValue; }
+				        if(this.id == "chc3") { swap.activationSlope.minValue = newValue; }
+				        if(this.id == "chd3") { swap.deactivationSlope.minValue = newValue; }
+				        if(this.id == "che3") { swap.equilibriumSlope.minValue = newValue; }
+				        if(this.id == "chf3") { swap.conductance.minValue = newValue; }
+				        if(this.id == "chg3") { swap.reversalPotential.minValue = newValue; }
+				        if(this.id == "chh3") { swap.mInitial.minValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Calcium Dependant Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha3") { swap.mInitial.minValue = newValue; }
+				        if(this.id == "chb3") { swap.reversalPotential.minValue = newValue; }
+				        if(this.id == "chc3") { swap.backwardsRate.minValue = newValue; }
+				        if(this.id == "chd3") { swap.forwardScale.minValue = newValue; }
+				        if(this.id == "che3") { swap.forwardExponent.minValue = newValue; }
+				        if(this.id == "chf3") { swap.tauScale.minValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha3") { swap.conductance.minValue = newValue; }
+				        if(this.id == "chb3") { swap.reversePotential.minValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+			}
+	});
+	$('#chanmaxvalue a').editable({
+		'success': function(response, newValue) {
+					if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Ion Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha4") { swap.vHalf.maxValue = newValue; }
+				        if(this.id == "chb4") { swap.r.maxValue = newValue; }
+				        if(this.id == "chc4") { swap.activationSlope.maxValue = newValue; }
+				        if(this.id == "chd4") { swap.deactivationSlope.maxValue = newValue; }
+				        if(this.id == "che4") { swap.equilibriumSlope.maxValue = newValue; }
+				        if(this.id == "chf4") { swap.conductance.maxValue = newValue; }
+				        if(this.id == "chg4") { swap.reversalPotential.maxValue = newValue; }
+				        if(this.id == "chh4") { swap.mInitial.maxValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Calcium Dependant Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha4") { swap.mInitial.maxValue = newValue; }
+				        if(this.id == "chb4") { swap.reversalPotential.maxValue = newValue; }
+				        if(this.id == "chc4") { swap.backwardsRate.maxValue = newValue; }
+				        if(this.id == "chd4") { swap.forwardScale.maxValue = newValue; }
+				        if(this.id == "che4") { swap.forwardExponent.maxValue = newValue; }
+				        if(this.id == "chf4") { swap.tauScale.maxValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+					else if(midMenuLast.modelParameters.parameters.channel.name === "Voltage Gated Channel") {
+         				if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel);
+				        if(this.id == "cha4") { swap.conductance.maxValue = newValue; }
+				        if(this.id == "chb4") { swap.reversePotential.maxValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+					}
+			}
+	});
+	$('#particletype a').editable({
+		'source': dropChoice,
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#particlevalue a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#particleminvalue a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#particlemaxvalue a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constanttype a').editable({
+		'source': dropChoice,
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constantvalue a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constantminvalue a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constantmaxvalue a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constanttype2 a').editable({
+		'source': dropChoice,
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constantvalue2 a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constantminvalue2 a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+	$('#constantmaxvalue2 a').editable({
+		'success': function(response, newValue) {
+
+			}
+	});
+
 }
 
 
