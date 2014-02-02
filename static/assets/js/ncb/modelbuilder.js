@@ -5,6 +5,11 @@ var testParam = new izhikevichParam();
 var testParam2 = new izhikevichParam();
 var test2Param = new ncsParam(testChannel1);
 var test3Param = new hodgkinHuxleyParam(testChannel2);
+var a1 = new particleVariableConstants();
+var b1 = new particleVariableConstants();
+var testParticle = new voltageGatedParticle(a1, b1);
+var testChannel3 = new voltageGatedChannel(testParticle);
+var test4Param = new hodgkinHuxleyParam(testChannel3);
 var myModels = [
 	new modelParameters('I_Cell_1', 'Izhikevich', testParam, 'Database'),
 	new modelParameters('I_Cell_2', 'Izhikevich', testParam, 'Personal'),
@@ -13,6 +18,7 @@ var myModels = [
 	new modelParameters('I_Cell_4', 'Izhikevich', testParam, 'Personal'),
 	new modelParameters('NCS_Cell_1', 'NCS', test2Param, 'Personal'),
 	new modelParameters('HH_Cell_1', 'HodgkinHuxley', test3Param, 'Database'),
+	new modelParameters('HH_Cell_3_testparticles', 'HodgkinHuxley', test4Param, 'Personal'),
 ];
 
 // variables needed for implementation
@@ -209,6 +215,12 @@ $().ready( function() {
     $('#p2').hide();
     $('#p3').hide();
     $('#p4').hide();
+    $('#p5').hide();
+    $('#p6').hide();
+    $('#p7').hide();
+    $('#p8').hide();
+    $('#p9').hide();
+
     $.fn.editable.defaults.mode = 'popup';
 });
 
@@ -217,6 +229,12 @@ function popCellP() {
     $('#p3').hide();
     $('#p4').hide();
     $('#p1').show();
+	$('#p5').hide();
+	$('#p6').hide();
+	$('#p7').hide();
+	$('#p8').hide();
+	$('#p9').hide();
+
     $('#paramval').html('');
 	$("#paramval").append('<a id="n1" class="list-group-item">' + midMenuLast.name +'</a>');
 	$("#paramval").append('<a id="n2" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
@@ -575,7 +593,12 @@ function showParameterNames() {
 		$('#p1').hide();
         $('#p3').hide();
         $('#p4').hide();
-		$('#p2').show();		
+		$('#p2').show();
+		$('#p5').hide();
+		$('#p6').hide();
+		$('#p7').hide();
+		$('#p8').hide();
+		$('#p9').hide();
 
 		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
 		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -626,6 +649,12 @@ function showParameterNames() {
         $('#p3').show();
         $('#p4').hide();
 		$('#p2').hide();
+		$('#p5').hide();
+		$('#p6').hide();
+		$('#p7').hide();
+		$('#p8').hide();
+		$('#p9').hide();
+
 
 		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
 		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -680,16 +709,23 @@ function showParameterNames() {
 		$("#minvalue").append('<a id="i3" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.minValue +'</a>');
 		$("#maxvalue").append('<a id="i4" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.maxValue +'</a>');
 
-		$("#type2").append('<a id="j1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#value").append('<a id="j2" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#minvalue").append('<a id="j3" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#maxvalue").append('<a id="j4" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$('#paramval').append('<div id="channelid" class="col-lg-12"></div>');
+		$('#channelid').append('<a id="channeltype" class="list-group-item" data-type="select">'+ midMenuLast.modelParameters.parameters.channel.name +'</a>');
+
+		showChannelParams(midMenuLast);
+
 	}
 	else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
     	$('#p1').hide();
         $('#p3').hide();
         $('#p4').show();
-		$('#p2').hide();		
+		$('#p2').hide();
+		$('#p5').hide();
+		$('#p6').hide();
+		$('#p7').hide();
+		$('#p8').hide();
+		$('#p9').hide();
+
 
 		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
 		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -714,11 +750,221 @@ function showParameterNames() {
 		$("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.minValue +'</a>');
 		$("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.maxValue +'</a>');
 
-		$("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$('#paramval').append('<div id="channelid" class="col-lg-12"></div>');
+		$('#channelid').append('<a id="channeltype" class="list-group-item" data-type="select">'+ midMenuLast.modelParameters.parameters.channel.name +'</a>');
+
+		showChannelParams(midMenuLast);
 	}
+
+}
+
+function showChannelParams(source) {
+	$('#paramval').append('<div class="row">');
+	$('#paramval').append('<div id="chantype" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="chanvalue" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="chanminvalue" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="chanmaxvalue" class="col-lg-3"></div>');
+	$('#paramval').append('</div>');
+
+	if(source.modelParameters.parameters.channel.name === "Voltage Gated Ion Channel") {
+		$('#p5').show();
+		$("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.vHalf.type +'</a>');
+		$("#chanvalue").append('<a id="cha2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.vHalf.value +'</a>');
+		$("#chanminvalue").append('<a id="cha3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.vHalf.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="cha4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.vHalf.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.r.type +'</a>');
+		$("#chanvalue").append('<a id="chb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.r.value +'</a>');
+		$("#chanminvalue").append('<a id="chb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.r.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.r.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chc1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.activationSlope.type +'</a>');
+		$("#chanvalue").append('<a id="chc2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.activationSlope.value +'</a>');
+		$("#chanminvalue").append('<a id="chc3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.activationSlope.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chc4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.activationSlope.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chd1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.deactivationSlope.type +'</a>');
+		$("#chanvalue").append('<a id="chd2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.deactivationSlope.value +'</a>');
+		$("#chanminvalue").append('<a id="chd3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.deactivationSlope.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chd4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.deactivationSlope.maxValue +'</a>');
+
+		$("#chantype").append('<a id="che1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.equilibriumSlope.type +'</a>');
+		$("#chanvalue").append('<a id="che2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.equilibriumSlope.value +'</a>');
+		$("#chanminvalue").append('<a id="che3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.equilibriumSlope.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="che4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.equilibriumSlope.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chf1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.conductance.type +'</a>');
+		$("#chanvalue").append('<a id="chf2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.value +'</a>');
+		$("#chanminvalue").append('<a id="chf3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chg1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.reversalPotential.type +'</a>');
+		$("#chanvalue").append('<a id="chg2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversalPotential.value +'</a>');
+		$("#chanminvalue").append('<a id="chg3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversalPotential.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chg4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversalPotential.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chh1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.mInitial.type +'</a>');
+		$("#chanvalue").append('<a id="chh2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.value +'</a>');
+		$("#chanminvalue").append('<a id="chh3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chh4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.maxValue +'</a>');
+	}
+	else if(source.modelParameters.parameters.channel.name === "Calcium Dependant Channel") {
+		$("#p6").show();
+		$("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.mInitial.type +'</a>');
+		$("#chanvalue").append('<a id="cha2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.value +'</a>');
+		$("#chanminvalue").append('<a id="cha3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="cha4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.reversalPotential.type +'</a>');
+		$("#chanvalue").append('<a id="chb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversalPotential.value +'</a>');
+		$("#chanminvalue").append('<a id="chb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversalPotential.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversalPotential.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chc1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.backwardsRate.type +'</a>');
+		$("#chanvalue").append('<a id="chc2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.backwardsRate.value +'</a>');
+		$("#chanminvalue").append('<a id="chc3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.backwardsRate.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chc4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.backwardsRate.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chd1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.forwardScale.type +'</a>');
+		$("#chanvalue").append('<a id="chd2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.forwardScale.value +'</a>');
+		$("#chanminvalue").append('<a id="chd3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.forwardScale.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chd4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.forwardScale.maxValue +'</a>');
+
+		$("#chantype").append('<a id="che1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.forwardExponent.type +'</a>');
+		$("#chanvalue").append('<a id="che2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.forwardExponent.value +'</a>');
+		$("#chanminvalue").append('<a id="che3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.forwardExponent.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="che4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.forwardExponent.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chf1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.tauScale.type +'</a>');
+		$("#chanvalue").append('<a id="chf2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.tauScale.value +'</a>');
+		$("#chanminvalue").append('<a id="chf3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.tauScale.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.tauScale.maxValue +'</a>');
+	}
+	else if(source.modelParameters.parameters.channel.name === "Voltage Gated Channel") {
+		$("#p7").show();
+		$("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.conductance.type +'</a>');
+		$("#chanvalue").append('<a id="cha2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.value +'</a>');
+		$("#chanminvalue").append('<a id="cha3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="cha4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.maxValue +'</a>');
+
+		$("#chantype").append('<a id="chb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.reversePotential.type +'</a>');
+		$("#chanvalue").append('<a id="chb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.value +'</a>');
+		$("#chanminvalue").append('<a id="chb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.minValue +'</a>');
+		$("#chanmaxvalue").append('<a id="chb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.maxValue +'</a>');
+
+		$('#paramval').append('<div id="particleid" class="col-lg-12"></div>');
+		$('#particleid').append('<a class="list-group-item" data-type="select">Voltage Gated Particle</a>');
+		
+		showParticleParams(midMenuLast);
+	}
+}
+
+function showParticleParams(source) {
+	$('#paramval').append('<div class="row">');
+	$('#paramval').append('<div id="particletype" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="particlevalue" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="particleminvalue" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="particlemaxvalue" class="col-lg-3"></div>');
+	$('#paramval').append('</div>');
+
+	$("#p8").show();
+
+	$("#particletype").append('<a id="pa1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.power.type +'</a>');
+	$("#particlevalue").append('<a id="pa2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.power.value +'</a>');
+	$("#particleminvalue").append('<a id="pa3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.power.minValue +'</a>');
+	$("#particlemaxvalue").append('<a id="pa4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.power.maxValue +'</a>');
+
+	$("#particletype").append('<a id="pb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.xInitial.type +'</a>');
+	$("#particlevalue").append('<a id="pb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.xInitial.value +'</a>');
+	$("#particleminvalue").append('<a id="pb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.xInitial.minValue +'</a>');
+	$("#particlemaxvalue").append('<a id="pb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.xInitial.maxValue +'</a>');
+
+
+	$('#paramval').append('<div id="alphaid" class="col-lg-12"></div>');
+	$('#alphaid').append('<a class="list-group-item" data-type="select"><   ></a>');
+
+	showParticleConstants(source);
+}
+
+function showParticleConstants(source) {
+	$('#paramval').append('<div class="row">');
+	$('#paramval').append('<div id="constanttype" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="constantvalue" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="constantminvalue" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="constantmaxvalue" class="col-lg-3"></div>');
+	$('#paramval').append('</div>');
+
+	$("#p9").show();
+
+	$("#constanttype").append('<a id="ca1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.alpha.a.type +'</a>');
+	$("#constantvalue").append('<a id="ca2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.a.value +'</a>');
+	$("#constantminvalue").append('<a id="ca3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.a.minValue +'</a>');
+	$("#constantmaxvalue").append('<a id="ca4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.a.maxValue +'</a>');
+
+	$("#constanttype").append('<a id="cb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.alpha.b.type +'</a>');
+	$("#constantvalue").append('<a id="cb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.b.value +'</a>');
+	$("#constantminvalue").append('<a id="cb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.b.minValue +'</a>');
+	$("#constantmaxvalue").append('<a id="cb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.b.maxValue +'</a>');
+
+	$("#constanttype").append('<a id="cc1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.alpha.c.type +'</a>');
+	$("#constantvalue").append('<a id="cc2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.c.value +'</a>');
+	$("#constantminvalue").append('<a id="cc3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.c.minValue +'</a>');
+	$("#constantmaxvalue").append('<a id="cc4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.c.maxValue +'</a>');
+
+	$("#constanttype").append('<a id="cd1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.alpha.d.type +'</a>');
+	$("#constantvalue").append('<a id="cd2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.d.value +'</a>');
+	$("#constantminvalue").append('<a id="cd3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.d.minValue +'</a>');
+	$("#constantmaxvalue").append('<a id="cd4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.d.maxValue +'</a>');
+
+	$("#constanttype").append('<a id="cf1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.alpha.f.type +'</a>');
+	$("#constantvalue").append('<a id="cf2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.f.value +'</a>');
+	$("#constantminvalue").append('<a id="cf3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.f.minValue +'</a>');
+	$("#constantmaxvalue").append('<a id="cf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.f.maxValue +'</a>');
+
+	$("#constanttype").append('<a id="cg1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.alpha.h.type +'</a>');
+	$("#constantvalue").append('<a id="cg2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.h.value +'</a>');
+	$("#constantminvalue").append('<a id="cg3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.h.minValue +'</a>');
+	$("#constantmaxvalue").append('<a id="cg4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.h.maxValue +'</a>');
+
+	$('#paramval').append('<div id="betaid" class="col-lg-12"></div>');
+	$('#betaid').append('<a class="list-group-item" data-type="select"><   ></a>');
+
+	$('#paramval').append('<div class="row">');
+	$('#paramval').append('<div id="constanttype2" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="constantvalue2" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="constantminvalue2" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="constantmaxvalue2" class="col-lg-3"></div>');
+	$('#paramval').append('</div>');
+
+	$("#constanttype2").append('<a id="cba1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.beta.a.type +'</a>');
+	$("#constantvalue2").append('<a id="cba2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.a.value +'</a>');
+	$("#constantminvalue2").append('<a id="cba3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.a.minValue +'</a>');
+	$("#constantmaxvalue2").append('<a id="cba4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.a.maxValue +'</a>');
+
+	$("#constanttype2").append('<a id="cbb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.beta.b.type +'</a>');
+	$("#constantvalue2").append('<a id="cbb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.b.value +'</a>');
+	$("#constantminvalue2").append('<a id="cbb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.b.minValue +'</a>');
+	$("#constantmaxvalue2").append('<a id="cbb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.b.maxValue +'</a>');
+
+	$("#constanttype2").append('<a id="cbc1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.beta.c.type +'</a>');
+	$("#constantvalue2").append('<a id="cbc2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.c.value +'</a>');
+	$("#constantminvalue2").append('<a id="cbc3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.c.minValue +'</a>');
+	$("#constantmaxvalue2").append('<a id="cbc4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.c.maxValue +'</a>');
+
+	$("#constanttype2").append('<a id="cbd1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.beta.d.type +'</a>');
+	$("#constantvalue2").append('<a id="cbd2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.d.value +'</a>');
+	$("#constantminvalue2").append('<a id="cbd3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.d.minValue +'</a>');
+	$("#constantmaxvalue2").append('<a id="cbd4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.d.maxValue +'</a>');
+
+	$("#constanttype2").append('<a id="cbf1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.beta.f.type +'</a>');
+	$("#constantvalue2").append('<a id="cbf2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.f.value +'</a>');
+	$("#constantminvalue2").append('<a id="cbf3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.f.minValue +'</a>');
+	$("#constantmaxvalue2").append('<a id="cbf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.f.maxValue +'</a>');
+
+	$("#constanttype2").append('<a id="cbg1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.beta.h.type +'</a>');
+	$("#constantvalue2").append('<a id="cbg2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.h.value +'</a>');
+	$("#constantminvalue2").append('<a id="cbg3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.h.minValue +'</a>');
+	$("#constantmaxvalue2").append('<a id="cbg4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.h.maxValue +'</a>');
 
 }
 

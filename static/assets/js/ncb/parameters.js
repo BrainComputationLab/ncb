@@ -29,6 +29,7 @@ function hodgkinHuxleyParam(channel) {
 }
 
 function voltageGatedIonChannel() {
+	this.name="Voltage Gated Ion Channel";
 	this.vHalf = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};			 //double
 	this.r = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};				 //double
 	this.activationSlope = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};	 //double
@@ -40,6 +41,7 @@ function voltageGatedIonChannel() {
 }
 
 function calciumDependantChannel() {
+	this.name="Calcium Dependant Channel";
 	this.mInitial = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};			 //double
 	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 	this.backwardsRate = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};	 //double
@@ -49,6 +51,7 @@ function calciumDependantChannel() {
 }
 
 function voltageGatedChannel(particles) {
+	this.name="Voltage Gated Channel";
 	this.particles = particles;															//list of parameters for particles
 	this.conductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};		//double
 	this.reversePotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double

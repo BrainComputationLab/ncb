@@ -18,12 +18,6 @@ body {
     height:100%;
 }
 
-.highlight {
-    background-color:blue;
-    filter: alpha(opacity=20);
-          opacity: 0.20;
-}
-
 #modelList {
     overflow-x: hidden;
     overflow-y: scroll;
@@ -33,6 +27,7 @@ body {
 
 #modelList2 {
     overflow-x: hidden;
+    overflow-y: scroll;
 	min-height:450px;
     max-height:450px;
 }
@@ -42,8 +37,9 @@ body {
 }
 
 #centerView {
-    //border: 1px solid gray;
+
     min-height:480px;
+    max-height:480px;
 }
 
 #paramid a {
@@ -56,41 +52,16 @@ body {
 	right: 31px;
 }
 
-#type1 {
-	position: relative;
-	margin-top: -1px;
-	padding-left:0;
-	padding-right:0;
+#chantype, #chanvalue, #chanminvalue, #chanmaxvalue,
+    #type1, #type2, #value, #minvalue, #maxvalue,
+    #particletype, #particlevalue, #particleminvalue,
+    #particlemaxvalue, #constanttype, #constantvalue,
+    #constantminvalue, #constantmaxvalue, #constanttype2,
+    #constantvalue2, #constantminvalue2, #constantmaxvalue2 {
+    margin-top: -1px;
+    padding-left:0;
+    padding-right:0;
 }
-
-#type2 {
-	//position: relative;
-	margin-top: -1px;
-	padding-left:0;
-	padding-right:0;
-}
-
-#value {
-	//position: relative;
-	margin-top: -1px;
-	padding-left:0;
-	padding-right:0;
-}
-
-#minvalue {
-	//position: relative;
-	margin-top: -1px;
-	padding-left:0;
-	padding-right:0;
-}
-
-#maxvalue {
-	//position: relative;
-	margin-top: -1px;
-	padding-left:0;
-	padding-right:0;
-}
-
 
 #bread {
 	font-size: 10px;
