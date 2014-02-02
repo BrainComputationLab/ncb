@@ -11,8 +11,8 @@ var myModels = [
 	new modelParameters('I_Cell_3', 'Izhikevich', testParam, 'Personal'), 
 	new modelParameters('I_Cell_4', 'Izhikevich', testParam, 'Database'),
 	new modelParameters('I_Cell_4', 'Izhikevich', testParam, 'Personal'),
-    new modelParameters('NCS_Cell_1', 'NCS', test2Param, 'Personal'),
-    new modelParameters('HH_Cell_1', 'HodgkinHuxley', test3Param, 'Database'),
+	new modelParameters('NCS_Cell_1', 'NCS', test2Param, 'Personal'),
+	new modelParameters('HH_Cell_1', 'HodgkinHuxley', test3Param, 'Database'),
 ];
 
 // variables needed for implementation
@@ -253,8 +253,7 @@ function popModelP() {
 
 	$('#name a').editable({
 		'success': function(response, newValue) {
-		            if(midMenuLast.modelParameters.type === "Izhikevich") { 
-				        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				       	if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
 				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
 				        
 				        for(i=1; i<pos; i++) {
@@ -270,10 +269,6 @@ function popModelP() {
 				        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
-			        else if(midMenuLast.modelParameters.type === "NCS") {
-			        
-			        } 
-			       }
 	});
 	$('#type2 a').editable({
 		'source': dropChoice,
@@ -302,8 +297,49 @@ function popModelP() {
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
 			        else if(midMenuLast.modelParameters.type === "NCS") { 
-			        
+			            if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a1") { swap.threshold.type = dropChoice[newValue].text; }
+				        if(this.id == "b1") { swap.restingPotential.type = dropChoice[newValue].text; }
+				        if(this.id == "c1") { swap.calcium.type = dropChoice[newValue].text; }
+				        if(this.id == "d1") { swap.calciumSpikeIncrement.type = dropChoice[newValue].text; }
+				        if(this.id == "e1") { swap.tauCalcium.type = dropChoice[newValue].text; }
+				        if(this.id == "f1") { swap.leakReversalPotential.type = dropChoice[newValue].text; }
+				        if(this.id == "g1") { swap.tauMembrane.type = dropChoice[newValue].text; }
+				        if(this.id == "h1") { swap.rMembrane.type = dropChoice[newValue].text; }
+				     	if(this.id == "i1") { swap.spikeShape.type = dropChoice[newValue].text; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
+			  	    else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
+			            if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a1") { swap.threshold.type = dropChoice[newValue].text; }
+				        if(this.id == "b1") { swap.restingPotential.type = dropChoice[newValue].text; }
+				        if(this.id == "c1") { swap.capacitence.type = dropChoice[newValue].text; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        } 
 			       }
 	});
 	$('#value a').editable({
@@ -332,7 +368,48 @@ function popModelP() {
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
 			        else if(midMenuLast.modelParameters.type === "NCS") { 
-			        
+			        	if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a2") { swap.threshold.value = newValue; }
+				        if(this.id == "b2") { swap.restingPotential.value = newValue; }
+				        if(this.id == "c2") { swap.calcium.value = newValue; }
+				        if(this.id == "d2") { swap.calciumSpikeIncrement.value = newValue; }
+				        if(this.id == "e2") { swap.tauCalcium.value = newValue; }
+				        if(this.id == "f2") { swap.leakReversalPotential.value = newValue; }
+				        if(this.id == "g2") { swap.tauMembrane.value = newValue; }
+				        if(this.id == "h2") { swap.rMembrane.value = newValue; }
+				     	if(this.id == "i2") { swap.spikeShape.value = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
+			        else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
+ 						if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a2") { swap.threshold.value = newValue; }
+				        if(this.id == "b2") { swap.restingPotential.value = newValue; }
+				        if(this.id == "c2") { swap.capacitence.value = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
 			       }
 	});
@@ -362,7 +439,48 @@ function popModelP() {
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
 			        else if(midMenuLast.modelParameters.type === "NCS") { 
-			        
+			        	if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a3") { swap.threshold.minValue = newValue; }
+				        if(this.id == "b3") { swap.restingPotential.minValue = newValue; }
+				        if(this.id == "c3") { swap.calcium.minValue = newValue; }
+				        if(this.id == "d3") { swap.calciumSpikeIncrement.minValue = newValue; }
+				        if(this.id == "e3") { swap.tauCalcium.minValue = newValue; }
+				        if(this.id == "f3") { swap.leakReversalPotential.minValue = newValue; }
+				        if(this.id == "g3") { swap.tauMembrane.minValue = newValue; }
+				        if(this.id == "h3") { swap.rMembrane.minValue = newValue; }
+				     	if(this.id == "i3") { swap.spikeShape.minValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
+			        else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
+ 						if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a3") { swap.threshold.minValue = newValue; }
+				        if(this.id == "b3") { swap.restingPotential.minValue = newValue; }
+				        if(this.id == "c3") { swap.capacitence.minValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
 			       }
 	});
@@ -392,7 +510,48 @@ function popModelP() {
 				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
 			        else if(midMenuLast.modelParameters.type === "NCS") { 
-			        
+			        	if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a4") { swap.threshold.maxValue = newValue; }
+				        if(this.id == "b4") { swap.restingPotential.maxValue = newValue; }
+				        if(this.id == "c4") { swap.calcium.maxValue = newValue; }
+				        if(this.id == "d4") { swap.calciumSpikeIncrement.maxValue = newValue; }
+				        if(this.id == "e4") { swap.tauCalcium.maxValue = newValue; }
+				        if(this.id == "f4") { swap.leakReversalPotential.maxValue = newValue; }
+				        if(this.id == "g4") { swap.tauMembrane.maxValue = newValue; }
+				        if(this.id == "h4") { swap.rMembrane.maxValue = newValue; }
+				     	if(this.id == "i4") { swap.spikeShape.maxValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
+			        }
+			        else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
+ 						if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+				        else { var moveInto3 = globalCellGroup[indexs[0]]; }
+				        
+				        for(i=1; i<pos; i++) {
+					        if(moveInto3.subGroup.length != 0 ) {
+						        moveInto3 = moveInto3.subGroup[indexs[i]];
+					        } 
+				        }
+				        
+				        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+				        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+				        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
+				        if(this.id == "a4") { swap.threshold.maxValue = newValue; }
+				        if(this.id == "b4") { swap.restingPotential.maxValue = newValue; }
+				        if(this.id == "c4") { swap.capacitence.maxValue = newValue; }
+                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
+				        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
 			        }
 			       }
 	});
@@ -402,21 +561,21 @@ function popModelP() {
 
 
 function showParameterNames() {
+	$('#paramval').html('');
+	$('#paramval').append('<div id="name"></div>');
+	$('#paramval').append('<div id="type1"></div>');
+	$('#paramval').append('<div class="row">');
+	$('#paramval').append('<div id="type2" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="value" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="minvalue" class="col-lg-3"></div>');
+	$('#paramval').append('<div id="maxvalue" class="col-lg-3"></div>');
+	$('#paramval').append('</div>');
+
 	if(midMenuLast.modelParameters.type === "Izhikevich") {
 		$('#p1').hide();
         $('#p3').hide();
         $('#p4').hide();
-		$('#p2').show();
-		$('#paramval').html('');
-		$('#paramval').append('<div id="name"></div>');
-		$('#paramval').append('<div id="type1"></div>');
-		$('#paramval').append('<div class="row">');
-		$('#paramval').append('<div id="type2" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="value" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="minvalue" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="maxvalue" class="col-lg-3"></div>');
-		$('#paramval').append('</div>');
-		
+		$('#p2').show();		
 
 		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
 		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -425,7 +584,6 @@ function showParameterNames() {
 		$("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
 		$("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
 		$("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
-
 
 		$("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.a.type +'</a>');
 		$("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.a.value +'</a>');
@@ -468,16 +626,6 @@ function showParameterNames() {
         $('#p3').show();
         $('#p4').hide();
 		$('#p2').hide();
-		$('#paramval').html('');
-		$('#paramval').append('<div id="name"></div>');
-		$('#paramval').append('<div id="type1"></div>');
-		$('#paramval').append('<div class="row">');
-		$('#paramval').append('<div id="type2" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="value" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="minvalue" class="col-lg-3"></div>');
-		$('#paramval').append('<div id="maxvalue" class="col-lg-3"></div>');
-		$('#paramval').append('</div>');
-		
 
 		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
 		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -486,7 +634,6 @@ function showParameterNames() {
 		$("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
 		$("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
 		$("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
-
 
 		$("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
 		$("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
@@ -498,45 +645,79 @@ function showParameterNames() {
 		$("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.minValue +'</a>');
 		$("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.maxValue +'</a>');
 
-		$("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calcium.type +'</a>');
-		$("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.value +'</a>');
-		$("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.minValue +'</a>');
-		$("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.maxValue +'</a>');
+		$("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calcium.type +'</a>');
+		$("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.value +'</a>');
+		$("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.minValue +'</a>');
+		$("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.maxValue +'</a>');
 
-		$("#type2").append('<a id="u1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.type +'</a>');
-		$("#value").append('<a id="u2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.value +'</a>');
-		$("#minvalue").append('<a id="u3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.minValue +'</a>');
-		$("#maxvalue").append('<a id="u4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.maxValue +'</a>');
+		$("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.type +'</a>');
+		$("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.value +'</a>');
+		$("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.minValue +'</a>');
+		$("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.maxValue +'</a>');
 
-		$("#type2").append('<a id="v1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauCalcium.type +'</a>');
-		$("#value").append('<a id="v2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.value +'</a>');
-		$("#minvalue").append('<a id="v3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.minValue +'</a>');
-		$("#maxvalue").append('<a id="v4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.maxValue +'</a>');
+		$("#type2").append('<a id="e1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauCalcium.type +'</a>');
+		$("#value").append('<a id="e2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.value +'</a>');
+		$("#minvalue").append('<a id="e3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.minValue +'</a>');
+		$("#maxvalue").append('<a id="e4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.maxValue +'</a>');
 
-		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.leakReversalPotential.type +'</a>');
-		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.value +'</a>');
-		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.minValue +'</a>');
-		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.maxValue +'</a>');
+		$("#type2").append('<a id="f1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.leakReversalPotential.type +'</a>');
+		$("#value").append('<a id="f2" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.value +'</a>');
+		$("#minvalue").append('<a id="f3" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.minValue +'</a>');
+		$("#maxvalue").append('<a id="f4" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.maxValue +'</a>');
 
-		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauMembrane.type +'</a>');
-		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.value +'</a>');
-		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.minValue +'</a>');
-		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.maxValue +'</a>');
+		$("#type2").append('<a id="g1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauMembrane.type +'</a>');
+		$("#value").append('<a id="g2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.value +'</a>');
+		$("#minvalue").append('<a id="g3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.minValue +'</a>');
+		$("#maxvalue").append('<a id="g4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.maxValue +'</a>');
 
-		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.rMembrane.type +'</a>');
-		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.value +'</a>');
-		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.minValue +'</a>');
-		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.maxValue +'</a>');
+		$("#type2").append('<a id="h1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.rMembrane.type +'</a>');
+		$("#value").append('<a id="h2" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.value +'</a>');
+		$("#minvalue").append('<a id="h3" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.minValue +'</a>');
+		$("#maxvalue").append('<a id="h4" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.maxValue +'</a>');
 
-		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.spikeShape.type +'</a>');
-		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.value +'</a>');
-		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.minValue +'</a>');
-		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.maxValue +'</a>');
+		$("#type2").append('<a id="i1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.spikeShape.type +'</a>');
+		$("#value").append('<a id="i2" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.value +'</a>');
+		$("#minvalue").append('<a id="i3" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.minValue +'</a>');
+		$("#maxvalue").append('<a id="i4" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.maxValue +'</a>');
 
-		$("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
-		$("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#type2").append('<a id="j1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#value").append('<a id="j2" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#minvalue").append('<a id="j3" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#maxvalue").append('<a id="j4" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+	}
+	else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
+    	$('#p1').hide();
+        $('#p3').hide();
+        $('#p4').show();
+		$('#p2').hide();		
+
+		$("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
+		$("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
+
+		$("#type2").append('<a class="list-group-item"> <span style="text-decoration: underline;">Type</span></a>');
+		$("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
+		$("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
+		$("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
+
+		$("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
+		$("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
+		$("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.minValue +'</a>');
+		$("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
+
+		$("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.restingPotential.type +'</a>');
+		$("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.value +'</a>');
+		$("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.minValue +'</a>');
+		$("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.maxValue +'</a>');
+
+		$("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.capacitence.type +'</a>');
+		$("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.value +'</a>');
+		$("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.minValue +'</a>');
+		$("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.maxValue +'</a>');
+
+		$("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
+		$("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.channel +'</a>');
 	}
 
 }
