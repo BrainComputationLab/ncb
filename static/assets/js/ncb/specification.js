@@ -4,9 +4,11 @@ function sendJSON(jsonObj) {
 		url: '/json',
 		type: 'POST',
 
-		data: JSON.stringify(jsonObj.toJSON()),
+		data: JSON.stringify(jsonObj),
 		dataType: "json",
-		contentType: "application/json; charset=utf-8"
+		contentType: "application/json; charset=utf-8",
+		async: false,
+		timeout: 10000 // 10 seconds
 	});
 
 	request.done(function(response, textStatus, jqXHR) {
@@ -15,9 +17,19 @@ function sendJSON(jsonObj) {
 }
 
 function getJSON() {
-	var jsonObj = $.getJSON("json", {}, function(data,textStatus,jqXHR) {
-		console.log("JSON Successfully Received");
-	});
+	var jsonObj;
+	$.ajax({
+		datatype: "json",
+		url: "/json",
+		type: "GET",
+		data: {},
+		success: function(data, textStatus, jqXHR) {
+			jsonObj = data;
+			console.log("JSON Successfully Received");
+		},
+		async: false,
+		timeout: 5000 // 5 seconds
+	})
 
 	return jsonObj;
 }

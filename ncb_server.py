@@ -57,6 +57,7 @@ def sendJSON():
     if request.method == 'POST':
         jsonObj = request.get_json(False,False,False)
 
+        print("JSON RECEIVED")
         print(jsonObj)
 
         with open(recentUpload, 'w') as fout:
@@ -68,6 +69,7 @@ def sendJSON():
         with open(recentUpload) as fin:
             jsonObj = json.load(fin)
 
+        print("JSON SENT")
         print(jsonObj)
         return jsonify(jsonObj)
 
