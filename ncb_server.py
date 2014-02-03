@@ -1,6 +1,7 @@
+from __future__ import print_function
 from flask import Flask, render_template, send_from_directory, redirect, request, url_for, jsonify
 from werkzeug import secure_filename
-import datetime, os
+import datetime, os, json
 
 # Create new application
 app = Flask(__name__)
@@ -15,38 +16,66 @@ allowedFileExtensions = set(['json','py'])
 # register upload folder with flask app
 app.config['UPLOAD_FOLDER'] = uploadFolder
 
+# create recent file variable
+recentUpload = 'temp.json'
+
 # function see if file extension allowed
 def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1] in allowedFileExtensions
+    return '.' in filename and filename.rsplit('.', 1)[1] in allowedFileExtensions
 
 # function to upload file from web page
 @app.route('/uploads', methods=['POST'])
 def uploadFile():
-	# if user sending file
+    global recentUpload
+    # if user sending file
     if request.method == 'POST':
-    	# get the file descriptor
+        # get the file descriptor
         file = request.files['uploadFile']
         # if file exists and is allowed extension
         if file and allowed_file(file.filename):
-        	# get the secure version of the filename
+            # get the secure version of the filename
             filename = secure_filename(file.filename)
+            recentUpload = filename
+            # if uploads directory does not exist create it
+            if not os.path.isdir(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
             # save file to server filesystem
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # return JSON object to determine success
             return jsonify({"success" : True})
 
     # otherwise return failure
-	return jsonify({"success" : False})
+    return jsonify({"success" : False})
 
 # function to view / download an already uploaded file
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/json', methods=['POST', 'GET'])
+def sendJSON():
+    if request.method == 'POST':
+        jsonObj = request.get_json(False,False,False)
+
+        print(jsonObj)
+
+        with open(recentUpload, 'w') as fout:
+            json.dump(jsonObj, fout)
+
+        return jsonify({"success" : True})
+
+    elif request.method == 'GET':
+        with open(recentUpload) as fin:
+            jsonObj = json.load(fin)
+
+        print(jsonObj)
+        return jsonify(jsonObj)
+
+    return jsonify({"success" : False})
 # Serves the main application
 @app.route('/')
 def mainPage():
-	# get year for copyright tag
+    # get year for copyright tag
     year = datetime.datetime.now().year
     return render_template('index.html', year = year)
 
