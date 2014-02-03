@@ -11,13 +11,14 @@
 			<div class="form-group"> 
 				<label for="modelbuilder_modelselector_filterinput">Search Models</label>
 				<input type="text" class="form-control" id="modelbuilder_filterinput" placeholder="Search" data-ng-model="searchText" data-ng-model="searchType">
-				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Personal" ng-false-value="" /><label ng-style="{color: '#00568C'}"> Personal</label>
+				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Personal" ng-false-value="" /><label ng-style="{color: '#00568C'}">Personal</label>
 				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Database" ng-false-value="" /><label ng-style="{color: '#5d6b74'}">Database</label>
 			</div> 
             <!-- End Filter -->
 				<!-- list of model elements -->
 				<ul id="modelList" class="list-group" >
-					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType)" ng-mousedown="setModel(model.name)" popover-title="{{'{{model.name}}'}}" popover="Type: {{'{{model.type}}'}} a: {{'{{model.parameters.a.value}}'}} b: {{'{{model.parameters.b.value}}'}}" popover-trigger="mouseenter" popover-placement="top"> {{ '{{ model.name }}'  }}</a>
+			
+					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType)" ng-mousedown="setModel(model.name)" ng-mouseover="modelDetails=getModelDetails(model.type)" title="{{'{{model.name}}'}}" data-content="{{'{{model.type}}'}}" data-trigger="hover" bs-popover> {{ '{{ model.name }}'  }}</a>
 				</ul>
 			    <!-- end list of model elements -->
 		</div>
