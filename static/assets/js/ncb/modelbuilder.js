@@ -1579,3 +1579,42 @@ function getIndex(source, attr, value) {
         }
     }
 }
+
+var bootstrap = angular.module("bootstrap", []);
+
+
+bootstrap.directive('popOver', function ($compile) {
+        var itemsTemplate = "<ul class='unstyled'><li ng-repeat='model in list'>{{ '{{item}}' }}</li></ul>";
+        var getTemplate = function (contentType) {
+            var template = '';
+            switch (contentType) {
+                case 'list':
+                    template = itemsTemplate;
+                    break;
+            }
+            return template;
+        }
+        return {
+            restrict: "A",
+            transclude: true,
+            template: "<span ng-transclude></span>",
+            link: function (scope, element, attrs) {
+                var popOverContent;
+                if (scope.list) {
+                    var html = getTemplate("list");
+                    popOverContent = $compile(html)(scope);                    
+                }
+                var options = {
+                    content: popOverContent,
+                    placement: "right",
+                    html: true,
+                    title: scope.title
+                };
+                $(element).popover(options);
+            },
+            scope: {
+                list: '=',
+                title: '@'
+            }
+        };
+});
