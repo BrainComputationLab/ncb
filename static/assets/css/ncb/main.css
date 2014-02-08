@@ -52,6 +52,21 @@ body {
 	right: 31px;
 }
 
+#parameterValues a{
+    position: relative;
+    right: 31px;
+}
+
+#channelValues a{
+    position: relative;
+    right: 31px;
+}
+
+#particleValues a{
+    position: relative;
+    right: 31px;
+}
+
 #chantype, #chanvalue, #chanminvalue, #chanmaxvalue,
     #type1, #type2, #value, #minvalue, #maxvalue,
     #particletype, #particlevalue, #particleminvalue,

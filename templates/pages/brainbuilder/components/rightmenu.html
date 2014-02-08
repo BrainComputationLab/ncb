@@ -2,120 +2,174 @@
 <div class="col-lg-6">
 
     <!-- Div for Model paremeters-->
-	<div class="panel panel-default">
-	
-	    <!-- Tab bar menu buttons for Cell group Parameters, Model Parameters, User Parameters -->
-		<div class="panel-heading">
-			<div class="btn-group">
-				<button id="cellP" type="button" class="btn btn-default">CellGroup Parameters</button>
-				<button id="modelP" type="button" class="btn btn-default">Model Parameters</button>
-				<button id="userP" type="button" class="btn btn-default">User Parameters</button>
-			</div>
-		</div>
-		<!-- end tab bar menu buttons -->
-		
-		<!-- Model Attirbute Names -->
-		<div id="centerViewPanel" class="panel-body">
-			<ul id="centerView" class="list-group">
-			<div class="col-lg-5">
-				<div id="p1">
-					<a class="list-group-item"> CellGroup Name: </a>
-					<a class="list-group-item"> Model Name: </a>
-					<a class="list-group-item"> Quantity: </a>
-					<a class="list-group-item"> Geometry: </a>
-				</div>
-				<div id="p2">
-					<a class="list-group-item"> Model Name: </a>
-					<a class="list-group-item"> Model Type: </a>
-					<a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
-					<a class="list-group-item"> A: </a>
-					<a class="list-group-item"> B: </a>
-					<a class="list-group-item"> C: </a>
-					<a class="list-group-item"> D: </a>
-					<a class="list-group-item"> U: </a>
-					<a class="list-group-item"> V: </a>
-					<a class="list-group-item"> Threshold: </a>
-				</div>
-				<div id="p3">
-					<a class="list-group-item"> Model Name: </a>
-					<a class="list-group-item"> Model Type: </a>
-					<a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
-					<a class="list-group-item"> Threshold: </a>
-					<a class="list-group-item"> Resting Potential: </a>
-					<a class="list-group-item"> Calcium: </a>
-					<a class="list-group-item"> Calc. Spike Incr.: </a>
-					<a class="list-group-item"> Tau Calcium: </a>
-					<a class="list-group-item"> Leak Reversal Pot.: </a>
-					<a class="list-group-item"> Tau Membrane: </a>
-					<a class="list-group-item"> R Membrane: </a>
-					<a class="list-group-item"> Spike Shape: </a>
-                    <a class="list-group-item"> <span style="text-decoration: underline;">Channel:</span></a>
-				</div>
-				<div id="p4">
-					<a class="list-group-item"> Model Name: </a>
-					<a class="list-group-item"> Model Type: </a>
-					<a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
-					<a class="list-group-item"> Threshold: </a>
-					<a class="list-group-item"> Resting Potential: </a>
-					<a class="list-group-item"> Capacitence: </a>
-                    <a class="list-group-item"> <span style="text-decoration: underline;">Channel:</span></a>
-				</div>
-                <div id="p5">
-                    <a class="list-group-item"> vHalf: </a>
-                    <a class="list-group-item"> r: </a>
-                    <a class="list-group-item"> Activation Slope: </a>
-                    <a class="list-group-item"> De-Activation Slope: </a>
-                    <a class="list-group-item"> Equilibrium Slope: </a>
-                    <a class="list-group-item"> Conductance: </a>
-                    <a class="list-group-item"> Reversal Potential: </a>
-                    <a class="list-group-item"> mInitial: </a>
-                </div>
-                <div id="p6">
-                    <a class="list-group-item"> mInitial: </a>
-                    <a class="list-group-item"> Reversal Potential: </a>
-                    <a class="list-group-item"> Backwards Rate: </a>
-                    <a class="list-group-item"> Forward Scale: </a>
-                    <a class="list-group-item"> Forward Exponent: </a>
-                    <a class="list-group-item"> Tau Scale: </a>
-                </div>
-                <div id="p7">
-                    <a class="list-group-item"> Conductance: </a>
-                    <a class="list-group-item"> Reverse Potential: </a>
-                    <a class="list-group-item"> <span style="text-decoration: underline;">Particles:</span></a>
-                </div>
-                <div id="p8">
-                    <a class="list-group-item"> Power: </a>
-                    <a class="list-group-item"> xInitial: </a>
-                </div>
-                <div id="p9">
-                    <a class="list-group-item"> <span style="text-decoration: underline;">Alpha:</span></a>
-                    <a class="list-group-item"> A: </a>
-                    <a class="list-group-item"> B: </a>
-                    <a class="list-group-item"> C: </a>
-                    <a class="list-group-item"> D: </a>
-                    <a class="list-group-item"> F: </a>
-                    <a class="list-group-item"> H: </a>
-                    <a class="list-group-item"> <span style="text-decoration: underline;">Beta:</span></a>
-                    <a class="list-group-item"> A: </a>
-                    <a class="list-group-item"> B: </a>
-                    <a class="list-group-item"> C: </a>
-                    <a class="list-group-item"> D: </a>
-                    <a class="list-group-item"> F: </a>
-                    <a class="list-group-item"> H: </a>
-                </div>
+    <div class="panel panel-default">
+    
+        <!-- Tab bar menu buttons for Cell group Parameters, Model Parameters, User Parameters -->
+        <div class="panel-heading">
+            <div class="btn-group">
+                <button id="cellP" type="button" class="btn btn-default">CellGroup Parameters</button>
+                <button id="modelP" type="button" class="btn btn-default">Model Parameters</button>
+                <button id="userP" type="button" class="btn btn-default">User Parameters</button>
+            </div>
+        </div>
+        <!-- end tab bar menu buttons -->
 
-			</div>
-			<div id="paramval" class="col-lg-7">
-		
-			</div>
+        <!-- Accordion -->
+        <div class="panel-body">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default" id="paramCollapse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                Parameters
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse in">
+                        <div class="row">
+                            <div id="parameters" class="col-lg-5">
+                                <div id="izParam">
+                                    <a class="list-group-item"> Model Name: </a>
+                                    <a class="list-group-item"> Model Type: </a>
+                                    <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
+                                    <a class="list-group-item"> A: </a>
+                                    <a class="list-group-item"> B: </a>
+                                    <a class="list-group-item"> C: </a>
+                                    <a class="list-group-item"> D: </a>
+                                    <a class="list-group-item"> U: </a>
+                                    <a class="list-group-item"> V: </a>
+                                    <a class="list-group-item"> Threshold: </a>
+                                </div>
+                                <div id="ncsParam">
+                                    <a class="list-group-item"> Model Name: </a>
+                                    <a class="list-group-item"> Model Type: </a>
+                                    <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
+                                    <a class="list-group-item"> Threshold: </a>
+                                    <a class="list-group-item"> Resting Potential: </a>
+                                    <a class="list-group-item"> Calcium: </a>
+                                    <a class="list-group-item"> Calc. Spike Incr.: </a>
+                                    <a class="list-group-item"> Tau Calcium: </a>
+                                    <a class="list-group-item"> Leak Reversal Pot.: </a>
+                                    <a class="list-group-item"> Tau Membrane: </a>
+                                    <a class="list-group-item"> R Membrane: </a>
+                                    <a class="list-group-item"> Spike Shape: </a>
+                                </div>
+                                <div id="hhParam">
+                                    <a class="list-group-item"> Model Name: </a>
+                                    <a class="list-group-item"> Model Type: </a>
+                                    <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
+                                    <a class="list-group-item"> Threshold: </a>
+                                    <a class="list-group-item"> Resting Potential: </a>
+                                    <a class="list-group-item"> Capacitence: </a>
+                                </div>
+                            </div>
+                            <div id="parameterValues" class="col-lg-7">
 
-			</ul>
-		</div>
-		<!-- end Model Attribute Names -->
-		
-		
-	</div>
-	<!-- End Model Paremeters -->
+                            </div>
+                        </div>
+                        <div class="panel panel-default" id="chanCollapse">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a id="chan1Name"data-toggle="collapse" data-parent="#ncsParam" href="#collapse2">
+                                        
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse2" class="panel-collapse collapse in">
+                                <div class="row">
+                                    <div id="channels" class="col-lg-5">
+                                        <div id="vgiChan">
+                                            <a class="list-group-item"> vHalf: </a>
+                                            <a class="list-group-item"> r: </a>
+                                            <a class="list-group-item"> Activation Slope: </a>
+                                            <a class="list-group-item"> De-Activation Slope: </a>
+                                            <a class="list-group-item"> Equilibrium Slope: </a>
+                                            <a class="list-group-item"> Conductance: </a>
+                                            <a class="list-group-item"> Reversal Potential: </a>
+                                            <a class="list-group-item"> mInitial: </a>
+                                        </div>
+                                        <div id="cdChan">
+                                            <a class="list-group-item"> mInitial: </a>
+                                            <a class="list-group-item"> Reversal Potential: </a>
+                                            <a class="list-group-item"> Backwards Rate: </a>
+                                            <a class="list-group-item"> Forward Scale: </a>
+                                            <a class="list-group-item"> Forward Exponent: </a>
+                                            <a class="list-group-item"> Tau Scale: </a>
+                                        </div>
+                                        <div id="vgChan">
+                                            <a class="list-group-item"> Conductance: </a>
+                                            <a class="list-group-item"> Reverse Potential: </a>
+                                        </div>
+                                    </div>
+                                    <div id="channelValues" class="col-lg-7">
+
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" id="particleCollapse">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#vgChan" href="#collapse3">
+                                                Particles 
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse3" class="panel-collapse collapse in">
+                                        <div class="row">
+                                            <div id="particles" class="col-lg-5">
+                                                <a class="list-group-item"> Power: </a>
+                                                <a class="list-group-item"> xInitial: </a>
+                                                <div id="alphaP">
+                                                    <a class="list-group-item"> A: </a>
+                                                    <a class="list-group-item"> B: </a>
+                                                    <a class="list-group-item"> C: </a>
+                                                    <a class="list-group-item"> D: </a>
+                                                    <a class="list-group-item"> F: </a>
+                                                    <a class="list-group-item"> H: </a>
+                                                </div>
+                                                <div id="betaP">
+                                                    <a class="list-group-item"> A: </a>
+                                                    <a class="list-group-item"> B: </a>
+                                                    <a class="list-group-item"> C: </a>
+                                                    <a class="list-group-item"> D: </a>
+                                                    <a class="list-group-item"> F: </a>
+                                                    <a class="list-group-item"> H: </a>
+                                                </div>
+                                            </div>
+                                            <div id="particleValues" class="col-lg-7">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- end Accordion -->
+
+        <!-- Model Attirbute Names -->
+        <div id="centerViewPanel" class="panel-body">
+            <ul id="centerView" class="list-group">
+            <div class="col-lg-5">
+                <div id="p1">
+                    <a class="list-group-item"> CellGroup Name: </a>
+                    <a class="list-group-item"> Model Name: </a>
+                    <a class="list-group-item"> Quantity: </a>
+                    <a class="list-group-item"> Geometry: </a>
+                </div>
+            </div>
+            <div id="paramval" class="col-lg-7">
+        
+            </div>
+
+            </ul>
+        </div>
+        <!-- end Model Attribute Names -->
+        
+        
+    </div>
+    <!-- End Model Paremeters -->
 </div>  
 <!-- RIGHT MENU END -->
 

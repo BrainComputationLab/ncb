@@ -51,7 +51,7 @@ function myModelsList($scope) {
 
         // push a new cellgroup into the cellGroup variable
         if(pos == 0) {
-            globalCellGroup.push({name: "tempGrp"+inc, num: 1, modelParameters: clone(result[0]), geometry: "box", subGroup: sub});
+            globalCellGroup.push({name: "tempGrp"+inc, num: 1, modelParameters: cloneModel(result[0]), geometry: "box", subGroup: sub});
         }
         else {
             var moveInto = globalCellGroup[indexs[0]];
@@ -60,7 +60,7 @@ function myModelsList($scope) {
                     moveInto = moveInto.subGroup[indexs[i]];
                 } 
             }
-            moveInto.subGroup.push({name: 'tempGrp'+inc, num: 1, modelParameters: clone(result[0]), geometry: 'box', subGroup: sub})
+            moveInto.subGroup.push({name: 'tempGrp'+inc, num: 1, modelParameters: cloneModel(result[0]), geometry: 'box', subGroup: sub})
         }
         // increment counter to keep names unique
         inc++;
@@ -210,6 +210,7 @@ function myModelsList2($scope, $compile) {
 }
 
 $().ready( function() {
+    hideAll();
     $('#modelP').click(popModelP);
     $('#cellP').click(popCellP);
     $('#p1').hide();
@@ -221,11 +222,14 @@ $().ready( function() {
     $('#p7').hide();
     $('#p8').hide();
     $('#p9').hide();
+    //$('#izParam').hide();
+    //$('#hhParam').hide();
 
     $.fn.editable.defaults.mode = 'popup';
 });
 
 function popCellP() {
+    $('#paramCollapse').hide();
     $('#p2').hide();
     $('#p3').hide();
     $('#p4').hide();
@@ -387,7 +391,7 @@ function popModelP() {
                         if(this.id == "d2") { swap.d.value = newValue; }
                         if(this.id == "u2") { swap.u.value = newValue; }
                         if(this.id == "v2") { swap.v.value = newValue; }
-                        if(this.id == "t2") { swap.value = newValue; }
+                        if(this.id == "t2") { swap.threshold.value = newValue; }
                         if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
                         else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
                         delete swap;
@@ -461,7 +465,7 @@ function popModelP() {
                         if(this.id == "d3") { swap.d.minValue = newValue; }
                         if(this.id == "u3") { swap.u.minValue = newValue; }
                         if(this.id == "v3") { swap.v.minValue = newValue; }
-                        if(this.id == "t3") { swap.minValue = newValue; }
+                        if(this.id == "t3") { swap.threshold.minValue = newValue; }
                         if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
                         else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
                         delete swap;
@@ -535,7 +539,7 @@ function popModelP() {
                         if(this.id == "d4") { swap.d.maxValue = newValue; }
                         if(this.id == "u4") { swap.u.maxValue = newValue; }
                         if(this.id == "v4") { swap.v.maxValue = newValue; }
-                        if(this.id == "t4") { swap.maxValue = newValue; }
+                        if(this.id == "t4") { swap.threshold.maxValue = newValue; }
                         if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
                         else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
                         delete swap;
@@ -1173,26 +1177,23 @@ function popModelP() {
 
 
 function showParameterNames() {
+    hideAll();
+    $('#paramCollapse').show();
+    $('#parameterValues').html('');
+    $('#parameterValues').append('<div id="name"></div>');
+    $('#parameterValues').append('<div id="type1"></div>');
+    $('#parameterValues').append('<div class="row">');
+    $('#parameterValues').append('<div id="type2" class="col-lg-3"></div>');
+    $('#parameterValues').append('<div id="value" class="col-lg-3"></div>');
+    $('#parameterValues').append('<div id="minvalue" class="col-lg-3"></div>');
+    $('#parameterValues').append('<div id="maxvalue" class="col-lg-3"></div>');
+    $('#parameterValues').append('</div>');
     $('#paramval').html('');
-    $('#paramval').append('<div id="name"></div>');
-    $('#paramval').append('<div id="type1"></div>');
-    $('#paramval').append('<div class="row">');
-    $('#paramval').append('<div id="type2" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="value" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="minvalue" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="maxvalue" class="col-lg-3"></div>');
-    $('#paramval').append('</div>');
 
     if(midMenuLast.modelParameters.type === "Izhikevich") {
+        $('#izParam').show();
+        $('#parameterValues').show();
         $('#p1').hide();
-        $('#p3').hide();
-        $('#p4').hide();
-        $('#p2').show();
-        $('#p5').hide();
-        $('#p6').hide();
-        $('#p7').hide();
-        $('#p8').hide();
-        $('#p9').hide();
 
         $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
         $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -1239,16 +1240,11 @@ function showParameterNames() {
 
     }
     else if(midMenuLast.modelParameters.type === "NCS") {
+        $('#ncsParam').show();
+        $('#parameterValues').show();
+        $('#chanCollapse').show();
+        $('#channelName').show();
         $('#p1').hide();
-        $('#p3').show();
-        $('#p4').hide();
-        $('#p2').hide();
-        $('#p5').hide();
-        $('#p6').hide();
-        $('#p7').hide();
-        $('#p8').hide();
-        $('#p9').hide();
-
 
         $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
         $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -1303,23 +1299,18 @@ function showParameterNames() {
         $("#minvalue").append('<a id="i3" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.minValue +'</a>');
         $("#maxvalue").append('<a id="i4" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.maxValue +'</a>');
 
-        $('#paramval').append('<div id="channelid" class="col-lg-12"></div>');
-        $('#channelid').append('<a id="channeltype" class="list-group-item" data-type="select">'+ midMenuLast.modelParameters.parameters.channel.name +'</a>');
+        $('#chan1Name').empty();
+        $('#chan1Name').append(midMenuLast.modelParameters.parameters.channel.name);
 
         showChannelParams(midMenuLast);
 
     }
     else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
+        $('#hhParam').show();
+        $('#parameterValues').show();
+        $('#chanCollapse').show();
+        $('#channelName').show();
         $('#p1').hide();
-        $('#p3').hide();
-        $('#p4').show();
-        $('#p2').hide();
-        $('#p5').hide();
-        $('#p6').hide();
-        $('#p7').hide();
-        $('#p8').hide();
-        $('#p9').hide();
-
 
         $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
         $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -1344,8 +1335,8 @@ function showParameterNames() {
         $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.minValue +'</a>');
         $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.maxValue +'</a>');
 
-        $('#paramval').append('<div id="channelid" class="col-lg-12"></div>');
-        $('#channelid').append('<a id="channeltype" class="list-group-item" data-type="select">'+ midMenuLast.modelParameters.parameters.channel.name +'</a>');
+        $('#chan1Name').empty();
+        $('#chan1Name').append(midMenuLast.modelParameters.parameters.channel.name);
 
         showChannelParams(midMenuLast);
     }
@@ -1353,15 +1344,17 @@ function showParameterNames() {
 }
 
 function showChannelParams(source) {
-    $('#paramval').append('<div class="row">');
-    $('#paramval').append('<div id="chantype" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="chanvalue" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="chanminvalue" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="chanmaxvalue" class="col-lg-3"></div>');
-    $('#paramval').append('</div>');
+    $('#channelValues').html('');
+    $('#channelValues').show();
+    $('#channelValues').append('<div class="row">');
+    $('#channelValues').append('<div id="chantype" class="col-lg-3"></div>');
+    $('#channelValues').append('<div id="chanvalue" class="col-lg-3"></div>');
+    $('#channelValues').append('<div id="chanminvalue" class="col-lg-3"></div>');
+    $('#channelValues').append('<div id="chanmaxvalue" class="col-lg-3"></div>');
+    $('#channelValues').append('</div>');
 
     if(source.modelParameters.parameters.channel.name === "Voltage Gated Ion Channel") {
-        $('#p5').show();
+        $('#vgiChan').show();
         $("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.vHalf.type +'</a>');
         $("#chanvalue").append('<a id="cha2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.vHalf.value +'</a>');
         $("#chanminvalue").append('<a id="cha3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.vHalf.minValue +'</a>');
@@ -1403,7 +1396,8 @@ function showChannelParams(source) {
         $("#chanmaxvalue").append('<a id="chh4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.maxValue +'</a>');
     }
     else if(source.modelParameters.parameters.channel.name === "Calcium Dependant Channel") {
-        $("#p6").show();
+        //$("#p6").show();
+        $('#cdChan').show();
         $("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.mInitial.type +'</a>');
         $("#chanvalue").append('<a id="cha2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.value +'</a>');
         $("#chanminvalue").append('<a id="cha3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.minValue +'</a>');
@@ -1435,7 +1429,9 @@ function showChannelParams(source) {
         $("#chanmaxvalue").append('<a id="chf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.tauScale.maxValue +'</a>');
     }
     else if(source.modelParameters.parameters.channel.name === "Voltage Gated Channel") {
-        $("#p7").show();
+        //$("#p7").show();
+        $('#particleCollapse').show();
+        $('#vgChan').show();
         $("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.conductance.type +'</a>');
         $("#chanvalue").append('<a id="cha2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.value +'</a>');
         $("#chanminvalue").append('<a id="cha3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.conductance.minValue +'</a>');
@@ -1445,23 +1441,20 @@ function showChannelParams(source) {
         $("#chanvalue").append('<a id="chb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.value +'</a>');
         $("#chanminvalue").append('<a id="chb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.minValue +'</a>');
         $("#chanmaxvalue").append('<a id="chb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.maxValue +'</a>');
-
-        $('#paramval').append('<div id="particleid" class="col-lg-12"></div>');
-        $('#particleid').append('<a class="list-group-item" data-type="select">Voltage Gated Particle</a>');
         
         showParticleParams(midMenuLast);
     }
 }
 
 function showParticleParams(source) {
-    $('#paramval').append('<div class="row">');
-    $('#paramval').append('<div id="particletype" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="particlevalue" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="particleminvalue" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="particlemaxvalue" class="col-lg-3"></div>');
-    $('#paramval').append('</div>');
-
-    $("#p8").show();
+    $('#particleValues').html('');
+    $('#particleValues').show();
+    $('#particleValues').append('<div class="row">');
+    $('#particleValues').append('<div id="particletype" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="particlevalue" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="particleminvalue" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="particlemaxvalue" class="col-lg-3"></div>');
+    $('#particleValues').append('</div>');
 
     $("#particletype").append('<a id="pa1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.power.type +'</a>');
     $("#particlevalue").append('<a id="pa2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.power.value +'</a>');
@@ -1473,22 +1466,16 @@ function showParticleParams(source) {
     $("#particleminvalue").append('<a id="pb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.xInitial.minValue +'</a>');
     $("#particlemaxvalue").append('<a id="pb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.xInitial.maxValue +'</a>');
 
-
-    $('#paramval').append('<div id="alphaid" class="col-lg-12"></div>');
-    $('#alphaid').append('<a class="list-group-item" data-type="select"><   ></a>');
-
     showParticleConstants(source);
 }
 
 function showParticleConstants(source) {
-    $('#paramval').append('<div class="row">');
-    $('#paramval').append('<div id="constanttype" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="constantvalue" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="constantminvalue" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="constantmaxvalue" class="col-lg-3"></div>');
-    $('#paramval').append('</div>');
-
-    $("#p9").show();
+    $('#particleValues').append('<div class="row">');
+    $('#particleValues').append('<div id="constanttype" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="constantvalue" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="constantminvalue" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="constantmaxvalue" class="col-lg-3"></div>');
+    $('#particleValues').append('</div>');
 
     $("#constanttype").append('<a id="ca1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.alpha.a.type +'</a>');
     $("#constantvalue").append('<a id="ca2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.a.value +'</a>');
@@ -1520,15 +1507,12 @@ function showParticleConstants(source) {
     $("#constantminvalue").append('<a id="ch3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.h.minValue +'</a>');
     $("#constantmaxvalue").append('<a id="ch4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.alpha.h.maxValue +'</a>');
 
-    $('#paramval').append('<div id="betaid" class="col-lg-12"></div>');
-    $('#betaid').append('<a class="list-group-item" data-type="select"><   ></a>');
-
-    $('#paramval').append('<div class="row">');
-    $('#paramval').append('<div id="constanttype2" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="constantvalue2" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="constantminvalue2" class="col-lg-3"></div>');
-    $('#paramval').append('<div id="constantmaxvalue2" class="col-lg-3"></div>');
-    $('#paramval').append('</div>');
+    $('#particleValues').append('<div class="row">');
+    $('#particleValues').append('<div id="constanttype2" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="constantvalue2" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="constantminvalue2" class="col-lg-3"></div>');
+    $('#particleValues').append('<div id="constantmaxvalue2" class="col-lg-3"></div>');
+    $('#particleValues').append('</div>');
 
     $("#constanttype2").append('<a id="cba1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.particles.beta.a.type +'</a>');
     $("#constantvalue2").append('<a id="cba2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.a.value +'</a>');
@@ -1559,7 +1543,78 @@ function showParticleConstants(source) {
     $("#constantvalue2").append('<a id="cbh2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.h.value +'</a>');
     $("#constantminvalue2").append('<a id="cbh3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.h.minValue +'</a>');
     $("#constantmaxvalue2").append('<a id="cbh4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.h.maxValue +'</a>');
+}
 
+function hideAll() {
+    $('#izParam').hide();
+    $('#ncsParam').hide();
+    $('#hhParam').hide();
+    $('#parameterValues').hide();
+    $('#chanCollapse').hide();
+    $('#vgiChan').hide();
+    $('#cdChan').hide();
+    $('#vgChan').hide();
+    $('#channelValues').hide();
+    $('#paramCollapse').hide();
+    $('#particlesValues').hide();
+    $('#particleCollapse').hide();
+}
+
+function cloneModel(source) {
+    var ret = new modelParameters();
+    ret = clone(source);
+    ret.parameters = cloneParam(source.parameters);
+    return ret;
+}
+
+function cloneParam(source) {
+    if(source.className === "izhikevichParam") {
+        var ret = new izhikevichParam();
+        ret = clone(source);
+        return ret;
+    }
+    else if(source.className === "ncsParam") {
+        var ret = new ncsParam();
+        ret = clone(source);
+        ret.channel = cloneChan(source.channel);
+        return ret;
+    }
+    else if(source.className === "hodgkinHuxleyParam") {
+        var ret = new hodgkinHuxleyParam();
+        ret = clone(source);
+        ret.channel = cloneChan(source.channel);
+        return ret;
+    }
+}
+
+function cloneChan(source) {
+    if(source.className === "voltageGatedIonChannel") {
+        var ret = new voltageGatedIonChannel();
+        ret = clone(source);
+        return ret;
+    }
+    else if(source.className === "calciumDependantChannel") {
+        var ret = new calciumDependantChannel();
+        ret = clone(source);
+        return ret;
+    }
+    else if(source.className === "voltageGatedChannel") {
+        var ret = new voltageGatedChannel();
+        ret = clone(source);
+        ret.particles = cloneParticles(source.particles);
+        return ret;
+    }
+}
+
+function cloneParticles(source) {
+    var retA = new particleVariableConstants();
+    retA = clone(source.alpha);
+    var retB = new particleVariableConstants();
+    retB = clone(source.beta);
+    var ret = new voltageGatedParticle(retA, retB);
+    ret.power = clone(source.power);
+    ret.xInitial = clone(source.xInitial);
+    return ret;
 }
 
 function clone(source) {
@@ -1579,42 +1634,3 @@ function getIndex(source, attr, value) {
         }
     }
 }
-
-var bootstrap = angular.module("bootstrap", []);
-
-
-bootstrap.directive('popOver', function ($compile) {
-        var itemsTemplate = "<ul class='unstyled'><li ng-repeat='model in list'>{{ '{{item}}' }}</li></ul>";
-        var getTemplate = function (contentType) {
-            var template = '';
-            switch (contentType) {
-                case 'list':
-                    template = itemsTemplate;
-                    break;
-            }
-            return template;
-        }
-        return {
-            restrict: "A",
-            transclude: true,
-            template: "<span ng-transclude></span>",
-            link: function (scope, element, attrs) {
-                var popOverContent;
-                if (scope.list) {
-                    var html = getTemplate("list");
-                    popOverContent = $compile(html)(scope);                    
-                }
-                var options = {
-                    content: popOverContent,
-                    placement: "right",
-                    html: true,
-                    title: scope.title
-                };
-                $(element).popover(options);
-            },
-            scope: {
-                list: '=',
-                title: '@'
-            }
-        };
-});
