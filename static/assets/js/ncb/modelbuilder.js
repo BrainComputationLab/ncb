@@ -24,13 +24,19 @@ var indexs = [];
 var breadDepth = 1;
 var globalCellGroup = [];
 
-var ncbApp = angular.module('ncbApp', ['ui.bootstrap', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip']);
+var ncbApp = angular.module('ncbApp', ['ui.bootstrap', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'colorpicker.module']);
+
+
 
 
 //scope for models in the left menu
 function myModelsList($scope) {
 	//set the scope to point at myModels
 	$scope.list = myModels;
+
+	//set default colors for model list
+	$scope.model_color = {personal:'#00568C', database:'#5d6b74'};
+
 
 	//sets the leftMenuLast model to the last model the user clicks on
 	$scope.setModel = function (model){
@@ -62,40 +68,30 @@ function myModelsList($scope) {
 	};
 
 
-	// get details about the model to display correct information within the popover
-	
-
-	$scope.getModelDetails = function(model) {
-		return "{{'{{model.parameters.a}}'}}";
-
-
-	};
-
-	ncbApp.directive('popover', function(){
-		return {
-			restrict: 'A',
-			link:function(scope, element, attrib){
-				scope.modelName = attrib.model
-			},
-			template:"{{'{{modelName}}'}}"
-	
-		}
-	})
-	
-
 	// changes color of model depending on if from personal or database
-	$scope.styleModel = function(dbType) {
+	$scope.styleModel = function(dbType, color) {
 	if(dbType == "Personal")		
 		return {
 				'color': '#FFFFFF',
-				'background-color': '#00568C'
+				'background-color': color.personal
 		};
 	else if(dbType == "Database")
 		return {
 				'color': '#FFFFFF',
-				'background-color': '#5d6b74'
+				'background-color': color.database
 		};
 	};
+
+
+	// needed for color picker popover to appear with html template
+	$scope.colorPickerPopover = {
+  		"title": "Title",
+  		"content": "Content"
+	};
+
+	
+
+
 }
 
 //scope for the cellgroups in the center menu
