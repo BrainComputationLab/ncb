@@ -30,6 +30,7 @@ var index1 = 0;
 var indexs = [];
 var breadDepth = 1;
 var globalCellGroup = [];
+var dynamicChanNum = 0;
 
 angular.module('ncbApp', ['ui.bootstrap']);
 
@@ -216,18 +217,12 @@ $().ready( function() {
     $('#cellGroupCollapse').show();
     $('#paramCollapse').show();
 
-    
-
-
     $.fn.editable.defaults.mode = 'popup';
 });
 
 function popCellP() {
-    //$('#paramCollapse').hide();
     $('#cellGroupCollapse').show();
     popModelP();
-
-
 
     $('#cellGroupParams').html('');
     $("#cellGroupParams").append('<a id="n1" class="list-group-item">' + midMenuLast.name +'</a>');
@@ -1168,6 +1163,9 @@ function popModelP() {
 function showParameterNames() {
     hideAll();
 
+    $('#collapse2').html('');
+    dynamicChanNum = 0; 
+
     $('#paramCollapse').show();
     $('#cellGroupCollapse').show();
 
@@ -1185,7 +1183,7 @@ function showParameterNames() {
     if(midMenuLast.modelParameters.type === "Izhikevich") {
         $('#izParam').show();
         $('#parameterValues').show();
-        $('#p1').hide();
+        //$('#p1').hide();
 
         $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
         $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -1291,8 +1289,12 @@ function showParameterNames() {
         $("#minvalue").append('<a id="i3" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.minValue +'</a>');
         $("#maxvalue").append('<a id="i4" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.maxValue +'</a>');
 
-        $('#chan1Name').empty();
-        $('#chan1Name').append(midMenuLast.modelParameters.parameters.channel.name);
+        var num = dynamicChanNum;
+        chanCollapseAdd();
+        hideChanParam();
+
+        $('#chan'+num+'Name').empty();
+        $('#chan'+num+'Name').append(midMenuLast.modelParameters.parameters.channel.name);
 
         showChannelParams(midMenuLast);
 
@@ -1327,8 +1329,12 @@ function showParameterNames() {
         $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.minValue +'</a>');
         $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.maxValue +'</a>');
 
-        $('#chan1Name').empty();
-        $('#chan1Name').append(midMenuLast.modelParameters.parameters.channel.name);
+        var num = dynamicChanNum;
+        chanCollapseAdd();
+        hideChanParam();
+
+        $('#chan'+num+'Name').empty();
+        $('#chan'+num+'Name').append(midMenuLast.modelParameters.parameters.channel.name);
 
         showChannelParams(midMenuLast);
     }
@@ -1388,7 +1394,6 @@ function showChannelParams(source) {
         $("#chanmaxvalue").append('<a id="chh4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.maxValue +'</a>');
     }
     else if(source.modelParameters.parameters.channel.name === "Calcium Dependant Channel") {
-        //$("#p6").show();
         $('#cdChan').show();
         $("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.mInitial.type +'</a>');
         $("#chanvalue").append('<a id="cha2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.mInitial.value +'</a>');
@@ -1421,7 +1426,6 @@ function showChannelParams(source) {
         $("#chanmaxvalue").append('<a id="chf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.tauScale.maxValue +'</a>');
     }
     else if(source.modelParameters.parameters.channel.name === "Voltage Gated Channel") {
-        //$("#p7").show();
         $('#particleCollapse').show();
         $('#vgChan').show();
         $("#chantype").append('<a id="cha1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel.conductance.type +'</a>');
@@ -1433,7 +1437,8 @@ function showChannelParams(source) {
         $("#chanvalue").append('<a id="chb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.value +'</a>');
         $("#chanminvalue").append('<a id="chb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.minValue +'</a>');
         $("#chanmaxvalue").append('<a id="chb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.reversePotential.maxValue +'</a>');
-        
+        $('#particlesValues').show();
+        $('#particleCollapse').show();
         showParticleParams(midMenuLast);
     }
 }
@@ -1537,6 +1542,89 @@ function showParticleConstants(source) {
     $("#constantmaxvalue2").append('<a id="cbh4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel.particles.beta.h.maxValue +'</a>');
 }
 
+function chanCollapseAdd() {
+	var collapseable = '<div class="panel panel-default">\
+                                    <div class="panel-heading">\
+                                        <h4 class="panel-title">\
+                                            <a id="chan'+dynamicChanNum+'Name" data-toggle="collapse" data-parent="#chanCollapse" href="#chan_'+dynamicChanNum+'">\
+                                                \
+                                            </a>\
+                                        </h4>\
+                                    </div>\
+                                    <div id="chan_'+dynamicChanNum+'" class="panel-collapse collapse in">\
+                                        <div class="row">\
+                                            <div id="channels" class="col-lg-5">\
+                                                <div id="vgiChan">\
+                                                    <a class="list-group-item"> vHalf: </a>\
+                                                    <a class="list-group-item"> r: </a>\
+                                                    <a class="list-group-item"> Activation Slope: </a>\
+                                                    <a class="list-group-item"> De-Activation Slope: </a>\
+                                                    <a class="list-group-item"> Equilibrium Slope: </a>\
+                                                    <a class="list-group-item"> Conductance: </a>\
+                                                    <a class="list-group-item"> Reversal Potential: </a>\
+                                                    <a class="list-group-item"> mInitial: </a>\
+                                                </div>\
+                                                <div id="cdChan">\
+                                                    <a class="list-group-item"> mInitial: </a>\
+                                                    <a class="list-group-item"> Reversal Potential: </a>\
+                                                    <a class="list-group-item"> Backwards Rate: </a>\
+                                                    <a class="list-group-item"> Forward Scale: </a>\
+                                                    <a class="list-group-item"> Forward Exponent: </a>\
+                                                    <a class="list-group-item"> Tau Scale: </a>\
+                                                </div>\
+                                                <div id="vgChan">\
+                                                    <a class="list-group-item"> Conductance: </a>\
+                                                    <a class="list-group-item"> Reverse Potential: </a>\
+                                                </div>\
+                                            </div>\
+                                            <div id="channelValues" class="col-lg-7">\
+\
+                                            </div>\
+                                        </div>\
+                                        <div class="panel panel-default" id="particleCollapse">\
+                                            <div class="panel-heading">\
+                                                <h4 class="panel-title">\
+                                                    <a data-toggle="collapse" data-parent="#vgChan" href="#collapse3">\
+                                                        Particles \
+                                                    </a>\
+                                                </h4>\
+                                            </div>\
+                                            <div id="collapse3" class="panel-collapse collapse in">\
+                                                <div class="row">\
+                                                    <div id="particles" class="col-lg-5">\
+                                                        <a class="list-group-item"> Power: </a>\
+                                                        <a class="list-group-item"> xInitial: </a>\
+                                                        <div id="alphaP">\
+                                                            <a class="list-group-item"> A: </a>\
+                                                            <a class="list-group-item"> B: </a>\
+                                                            <a class="list-group-item"> C: </a>\
+                                                            <a class="list-group-item"> D: </a>\
+                                                            <a class="list-group-item"> F: </a>\
+                                                            <a class="list-group-item"> H: </a>\
+                                                        </div>\
+                                                        <div id="betaP">\
+                                                            <a class="list-group-item"> A: </a>\
+                                                            <a class="list-group-item"> B: </a>\
+                                                            <a class="list-group-item"> C: </a>\
+                                                            <a class="list-group-item"> D: </a>\
+                                                            <a class="list-group-item"> F: </a>\
+                                                            <a class="list-group-item"> H: </a>\
+                                                        </div>\
+                                                    </div>\
+                                                    <div id="particleValues" class="col-lg-7">\
+\
+                                                    </div>\
+                                                </div>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                </div>';
+
+	$('#collapse2').append(collapseable);
+	dynamicChanNum++;                               
+
+}
+
 function hideAll() {
     $('#cellGroupCollapse').hide();
     $('#izParam').hide();
@@ -1549,6 +1637,14 @@ function hideAll() {
     $('#vgChan').hide();
     $('#channelValues').hide();
     $('#paramCollapse').hide();
+    $('#particlesValues').hide();
+    $('#particleCollapse').hide();
+}
+
+function hideChanParam() {
+	$('#vgiChan').hide();
+    $('#cdChan').hide();
+    $('#vgChan').hide();
     $('#particlesValues').hide();
     $('#particleCollapse').hide();
 }
