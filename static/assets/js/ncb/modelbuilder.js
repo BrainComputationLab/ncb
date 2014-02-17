@@ -211,41 +211,30 @@ function myModelsList2($scope, $compile) {
 
 $().ready( function() {
     hideAll();
-    $('#modelP').click(popModelP);
-    $('#cellP').click(popCellP);
-    $('#p1').hide();
-    $('#p2').hide();
-    $('#p3').hide();
-    $('#p4').hide();
-    $('#p5').hide();
-    $('#p6').hide();
-    $('#p7').hide();
-    $('#p8').hide();
-    $('#p9').hide();
-    //$('#izParam').hide();
-    //$('#hhParam').hide();
+    //$('#modelP').click(popModelP);
+    //$('#cellP').click(popCellP);
+    $('#cellGroupCollapse').show();
+    $('#paramCollapse').show();
+
+    
+
 
     $.fn.editable.defaults.mode = 'popup';
 });
 
 function popCellP() {
-    $('#paramCollapse').hide();
-    $('#p2').hide();
-    $('#p3').hide();
-    $('#p4').hide();
-    $('#p1').show();
-    $('#p5').hide();
-    $('#p6').hide();
-    $('#p7').hide();
-    $('#p8').hide();
-    $('#p9').hide();
+    //$('#paramCollapse').hide();
+    $('#cellGroupCollapse').show();
+    popModelP();
 
-    $('#paramval').html('');
-    $("#paramval").append('<a id="n1" class="list-group-item">' + midMenuLast.name +'</a>');
-    $("#paramval").append('<a id="n2" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
-    $("#paramval").append('<a id="n3" class="list-group-item">' + midMenuLast.num +'</a>');
-    $("#paramval").append('<a id="n4" class="list-group-item">' + midMenuLast.geometry +'</a>');
-    $('#paramval a').editable({
+
+
+    $('#cellGroupParams').html('');
+    $("#cellGroupParams").append('<a id="n1" class="list-group-item">' + midMenuLast.name +'</a>');
+    $("#cellGroupParams").append('<a id="n2" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
+    $("#cellGroupParams").append('<a id="n3" class="list-group-item">' + midMenuLast.num +'</a>');
+    $("#cellGroupParams").append('<a id="n4" class="list-group-item">' + midMenuLast.geometry +'</a>');
+    $('#cellGroupParams a').editable({
         'success': function(response, newValue) {
                         if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
                         else { var moveInto3 = globalCellGroup[indexs[0]]; }
@@ -1178,7 +1167,10 @@ function popModelP() {
 
 function showParameterNames() {
     hideAll();
+
     $('#paramCollapse').show();
+    $('#cellGroupCollapse').show();
+
     $('#parameterValues').html('');
     $('#parameterValues').append('<div id="name"></div>');
     $('#parameterValues').append('<div id="type1"></div>');
@@ -1244,7 +1236,7 @@ function showParameterNames() {
         $('#parameterValues').show();
         $('#chanCollapse').show();
         $('#channelName').show();
-        $('#p1').hide();
+        //$('#p1').hide();
 
         $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
         $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
@@ -1546,6 +1538,7 @@ function showParticleConstants(source) {
 }
 
 function hideAll() {
+    $('#cellGroupCollapse').hide();
     $('#izParam').hide();
     $('#ncsParam').hide();
     $('#hhParam').hide();

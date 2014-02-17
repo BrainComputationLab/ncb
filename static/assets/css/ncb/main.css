@@ -52,7 +52,7 @@ body {
 	right: 31px;
 }
 
-#parameterValues a{
+#parameterValues, #cellGroupParams a{
     position: relative;
     right: 31px;
 }
