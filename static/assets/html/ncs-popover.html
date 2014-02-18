@@ -1,0 +1,265 @@
+<div class="popover" ng-show="content" id="#accordion">
+  <div class="arrow"></div>
+  <h3 class="popover-title" ng-bind-html-unsafe="title" ng-show="title" ng-style="styleModel(model.dbType, model_color)">{{model.name}}<button class="btn btn-danger btn-xs pull-right"type="button" class="btn btn-danger" ng-click="$hide()">X</button></h3>
+  <div class="popover-content" style="min-width:225px; height:250px;overflow-y:scroll;">
+      
+       <!-- Threshold Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSOne" style="display:block">
+                  Threshold:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSOne" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.threshold.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.threshold.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.threshold.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.threshold.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Threshold Parameter for NCS Cell -->
+
+       <!-- Resting Potential Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSTwo" style="display:block">
+                  Resting Potential:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSTwo" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.restingPotential.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.restingPotential.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.restingPotential.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.restingPotential.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Resting Potential Parameter for NCS Cell -->
+
+       <!-- Calcium Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSThree" style="display:block">
+                  Calcium:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSThree" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.calcium.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.calcium.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.calcium.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.calcium.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Calcium Parameter for NCS Cell -->
+
+       <!-- Calcium Spike Increment Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSFour" style="display:block">
+                  Calcium Spike Increment:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSFour" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.calciumSpikeIncrement.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.calciumSpikeIncrement.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.calciumSpikeIncrement.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.calciumSpikeIncrement.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Calcium Spike Increment Parameter for NCS Cell -->
+
+      <!-- Tau Calcium Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSFive" style="display:block">
+                  Tau Calcium:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSFive" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.tauCalcium.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.tauCalcium.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.tauCalcium.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.tauCalcium.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End Tau Calcium Parameter for NCS Cell -->
+
+      <!-- Leak Reversal Potential Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSSix" style="display:block">
+                  Leak Reversal Potential:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSSix" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.leakReversalPotential.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.leakReversalPotential.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.leakReversalPotential.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.leakReversalPotential.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End Leak Reversal Potential Parameter for NCS Cell -->
+
+      <!-- Tau Membrane Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSSeven" style="display:block">
+                  Tau Membrane:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSSeven" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.tauMembrane.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.tauMembrane.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.tauMembrane.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.tauMembrane.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End Tau Membrane Parameter for NCS Cell -->
+
+      <!-- R Membrane for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSEight" style="display:block">
+                  R Membrane:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSEight" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.rMembrane.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.rMembrane.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.rMembrane.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.rMembrane.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End R Membrane Parameter for NCS Cell -->
+
+      <!-- Spike Shape Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSNine" style="display:block">
+                  Spike Shape:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSNine" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.spikeShape.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.spikeShape.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.spikeShape.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.spikeShape.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End Spike Shape Parameter for NCS Cell -->
+
+      <!-- Channel Parameter for NCS Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseNCSTen" style="display:block">
+                  Channel:
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseNCSTen" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Channel: {{model.parameters.channel}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End Channel Parameter for NCS Cell -->
+
+
+  </div>
+</div>

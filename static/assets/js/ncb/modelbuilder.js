@@ -89,6 +89,11 @@ function myModelsList($scope) {
   		"content": "Content"
 	};
 
+	$scope.modelPopover ={
+		"title": "Title",
+		"content": "Content"
+	};
+
 	
 
 

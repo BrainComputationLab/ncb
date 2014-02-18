@@ -13,8 +13,7 @@
 				<input type="text" class="form-control" id="modelbuilder_filterinput" placeholder="Search" data-ng-model="searchText" data-ng-model="searchType">
 
 				<button type="button" class="btn btn-default" title="{{ '{{colorPickerPopover.title}}' }}" data-content="{{ '{{colorPickerPopover.content}}' }}" data-template="assets/html/colorpicker-popover.html" data-trigger="click" data-placement="top" bs-popover> <span class="glyphicon glyphicon-cog"></span></button>
-				<!-- color=#00568C-->
-				<!--<button colorpicker colorpicker-position="top" class ="span2" type="button" class="btn btn-default" ng-model="color" ng-init="color='#00568C'"> <span class="glyphicon glyphicon-cog"></span></button>-->
+
 				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Personal" ng-false-value="" /><label ng-style="{color: model_color.personal}"> Personal</label>
 				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Database" ng-false-value="" /><label ng-style="{color: model_color.database}"> Database</label>
 			</div> 
@@ -24,8 +23,7 @@
 
 				<!-- list of model elements -->
 				<ul id="modelList" class="list-group" >
-			
-					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType, model_color)" ng-mousedown="setModel(model.name)" title="{{'{{model.name}}'}}" data-content="{{'{{model.type}}'}}" data-template="assets/html/popover.html" data-trigger="hover" bs-popover> {{ '{{ model.name }}'  }}</a>
+					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType, model_color)" ng-mousedown="setModel(model.name)" title="{{'{{modelPopover.title}}'}}" data-content="{{'{{modelPopover.content}}'}}" data-template="assets/html/izhik-popover.html" data-trigger="click" bs-popover> {{ '{{ model.name }}'  }}</a>
 				</ul>
 			    <!-- end list of model elements -->
 		</div>
