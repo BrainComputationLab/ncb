@@ -37,7 +37,7 @@ body {
 }
 
 #centerView {
-
+    position: relative;
     min-height:480px;
     max-height:480px;
 }
@@ -52,7 +52,7 @@ body {
 	right: 31px;
 }
 
-#parameterValues, #cellGroupParams a{
+#parameterValues a, #cellGroupParams a{
     position: relative;
     right: 31px;
 }
@@ -73,6 +73,7 @@ body {
     #particlemaxvalue, #constanttype, #constantvalue,
     #constantminvalue, #constantmaxvalue, #constanttype2,
     #constantvalue2, #constantminvalue2, #constantmaxvalue2 {
+    position: relative;
     margin-top: -1px;
     padding-left:0;
     padding-right:0;

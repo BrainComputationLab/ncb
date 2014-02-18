@@ -9,7 +9,7 @@ function izhikevichParam() {
 	this.threshold = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 }
 
-function ncsParam(channel) {
+function ncsParam() {
 	this.className = "ncsParam";
 	this.threshold = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0}; 				  //double
 	this.restingPotential = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0}; 			  //double
@@ -20,15 +20,15 @@ function ncsParam(channel) {
 	this.tauMembrane = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 				  //double
 	this.rMembrane = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 				  //double
 	this.spikeShape = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};			      //list of doubles
-	this.channel = channel;				  														  //list of parameters for channel
+	this.channel = [];				  														  //list of parameters for channel
 }
 
-function hodgkinHuxleyParam(channel) {
+function hodgkinHuxleyParam() {
 	this.className = "hodgkinHuxleyParam";
 	this.threshold = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};	    //double
 	this.restingPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 	this.capacitence = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};		//double
-	this.channel = channel;																//list of parameters for channel
+	this.channel = [];																//list of parameters for channel
 }
 
 function voltageGatedIonChannel() {
