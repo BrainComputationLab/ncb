@@ -82,6 +82,16 @@ function myModelsList($scope) {
 		};
 	};
 
+	// returns the path for the correct poopover template depending on cell type
+	$scope.getTemplate = function(modelType){
+		if(modelType == "Izhikevich")
+			return "assets/html/izhik-popover.html";
+		else if (modelType == "NCS")
+			return "assets/html/ncs-popover.html";
+		else if (modelType == "HodgkinHuxley")
+			return "assets/html/hh-popover.html";
+
+	};
 
 	// needed for color picker popover to appear with html template
 	$scope.colorPickerPopover = {
