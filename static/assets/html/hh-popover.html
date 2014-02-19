@@ -1,0 +1,109 @@
+<div class="popover" ng-show="content" id="#accordion">
+  <div class="arrow"></div>
+  <h3 class="popover-title" ng-bind-html-unsafe="title" ng-show="title" ng-style="styleModel(model.dbType, model_color)">{{model.name}}<button class="btn btn-danger btn-xs pull-right"type="button" class="btn btn-danger" ng-click="$hide()">X</button></h3>
+  <div class="popover-content" style="min-width:225px; height:250px;overflow-y:scroll;">
+      
+       <!-- Threshold Parameter for Hodgkin Huxley Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseHHOne" style="display:block">
+                  Threshold
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseHHOne" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.threshold.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.threshold.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.threshold.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.threshold.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Threshold Parameter for Hodgkin Huxley Cell -->
+
+       <!-- Resting Potential Parameter for Hodgkin Huxley Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseHHTwo" style="display:block">
+                  Resting Potential
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseHHTwo" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.restingPotential.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.restingPotential.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.restingPotential.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.restingPotential.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Resting Potential Parameter for Hodgkin Huxley Cell -->
+
+       <!-- Calcium Parameter for Hodgkin Huxley Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseHHThree" style="display:block">
+                  Capacitence
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseHHThree" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.capacitence.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.capacitence.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.capacitence.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.capacitence.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Calcium Parameter for Hodgkin Huxley Cell -->
+
+       <!-- Calcium Spike Increment Parameter for Hodgkin Huxley Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseHHFour" style="display:block">
+                  Channel
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseHHFour" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Channel: {{model.parameters.channel}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End Calcium Spike Increment Parameter for Hodgkin Huxley Cell -->
+
+
+  </div>
+</div>

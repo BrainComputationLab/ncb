@@ -38,12 +38,18 @@ var dynamicChanNum = 0;
 var leftMenuLast = {};
 var midMenuLast = {};
 
-angular.module('ncbApp', ['ui.bootstrap']);
+var ncbApp = angular.module('ncbApp', ['ui.bootstrap', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'colorpicker.module']);
+
+
 
 //scope for models in the left menu
 function myModelsList($scope) {
     //set the scope to point at myModels
     $scope.list = myModels;
+
+	//set default colors for model list
+	$scope.model_color = {personal:'#00568C', database:'#5d6b74'};
+
 
     //sets the leftMenuLast model to the last model the user clicks on
     $scope.setModel = function (model){
@@ -75,19 +81,46 @@ function myModelsList($scope) {
 
     };
 
+
     // changes color of model depending on if from personal or database
-    $scope.styleModel = function(dbType) {
+	$scope.styleModel = function(dbType, color) {
     if(dbType == "Personal")        
         return {
                 'color': '#FFFFFF',
-                'background-color': '#00568C'
+				'background-color': color.personal
         };
     else if(dbType == "Database")
         return {
                 'color': '#FFFFFF',
-                'background-color': '#5d6b74'
-        };
+				'background-color': color.database
+		};
+	};
+
+	// returns the path for the correct poopover template depending on cell type
+	$scope.getTemplate = function(modelType){
+		if(modelType == "Izhikevich")
+			return "assets/html/izhik-popover.html";
+		else if (modelType == "NCS")
+			return "assets/html/ncs-popover.html";
+		else if (modelType == "HodgkinHuxley")
+			return "assets/html/hh-popover.html";
+
+	};
+
+	// needed for color picker popover to appear with html template
+	$scope.colorPickerPopover = {
+  		"title": "Title",
+  		"content": "Content"
+	};
+
+	$scope.modelPopover ={
+		"title": "Title",
+		"content": "Content"
     };
+
+	
+
+
 }
 
 //scope for the cellgroups in the center menu
@@ -1770,7 +1803,6 @@ function popChanModal(val) {
             moveInto3 = moveInto3.subGroup[indexs[i]];
         } 
     }
-
     var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
     var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
 
