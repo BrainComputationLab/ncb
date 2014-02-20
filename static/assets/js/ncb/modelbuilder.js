@@ -585,7 +585,7 @@ function popModelP() {
                     }
                    }
     });
-/*
+
     $('#channeltype').editable({
         'source': dropChoice2,
         'success': function(response, newValue) {
@@ -1163,7 +1163,7 @@ function popModelP() {
                         else { moveInto3.subGroup[index].modelParameters.parameters.channel.particles.beta = $.extend(true, {}, swap); }
                         delete swap;
             }
-    });*/
+    });
 
 }
 
@@ -1450,7 +1450,7 @@ function showChannelParams(source, val) {
         $("#chanmaxvalue"+val).append('<a id="chf4" class="list-group-item" data-type="number">' + source.tauScale.maxValue +'</a>');
     }
     else if(source.name === "Voltage Gated Channel") {
-        $('#particleCollapse').show();
+        $('#particleCollapse'+val).show();
         $('#vgChan'+val).show();
         $("#chantype"+val).append('<a id="cha1" class="list-group-item" data-type="select">' + source.conductance.type +'</a>');
         $("#chanvalue"+val).append('<a id="cha2" class="list-group-item" data-type="number">' + source.conductance.value +'</a>');
@@ -1463,108 +1463,108 @@ function showChannelParams(source, val) {
         $("#chanmaxvalue"+val).append('<a id="chb4" class="list-group-item" data-type="number">' + source.reversePotential.maxValue +'</a>');
         $('#particlesValues'+val).show();
         $('#particleCollapse'+val).show();
-        showParticleParams(source);
+        showParticleParams(source, val);
     }
 
 }
 
-function showParticleParams(source) {
-    $('#particleValues').html('');
-    $('#particleValues').show();
-    $('#particleValues').append('<div class="row">');
-    $('#particleValues').append('<div id="particletype" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="particlevalue" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="particleminvalue" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="particlemaxvalue" class="col-lg-3"></div>');
-    $('#particleValues').append('</div>');
+function showParticleParams(source, val) {
+    $('#particleValues'+val).html('');
+    $('#particleValues'+val).show();
+    $('#particleValues'+val).append('<div class="row">');
+    $('#particleValues'+val).append('<div id="particletype'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="particlevalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="particleminvalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="particlemaxvalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('</div>');
 
-    $("#particletype").append('<a id="pa1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.power.type +'</a>');
-    $("#particlevalue").append('<a id="pa2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.power.value +'</a>');
-    $("#particleminvalue").append('<a id="pa3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.power.minValue +'</a>');
-    $("#particlemaxvalue").append('<a id="pa4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.power.maxValue +'</a>');
+    $("#particletype"+val).append('<a id="pa1" class="list-group-item" data-type="select">' + source.particles.power.type +'</a>');
+    $("#particlevalue"+val).append('<a id="pa2" class="list-group-item" data-type="number">' + source.particles.power.value +'</a>');
+    $("#particleminvalue"+val).append('<a id="pa3" class="list-group-item" data-type="number">' + source.particles.power.minValue +'</a>');
+    $("#particlemaxvalue"+val).append('<a id="pa4" class="list-group-item" data-type="number">' + source.particles.power.maxValue +'</a>');
 
-    $("#particletype").append('<a id="pb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.xInitial.type +'</a>');
-    $("#particlevalue").append('<a id="pb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.xInitial.value +'</a>');
-    $("#particleminvalue").append('<a id="pb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.xInitial.minValue +'</a>');
-    $("#particlemaxvalue").append('<a id="pb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.xInitial.maxValue +'</a>');
+    $("#particletype"+val).append('<a id="pb1" class="list-group-item" data-type="select">' + source.particles.xInitial.type +'</a>');
+    $("#particlevalue"+val).append('<a id="pb2" class="list-group-item" data-type="number">' + source.particles.xInitial.value +'</a>');
+    $("#particleminvalue"+val).append('<a id="pb3" class="list-group-item" data-type="number">' + source.particles.xInitial.minValue +'</a>');
+    $("#particlemaxvalue"+val).append('<a id="pb4" class="list-group-item" data-type="number">' + source.particles.xInitial.maxValue +'</a>');
 
-    showParticleConstants(source);
+    showParticleConstants(source,val);
 }
 
-function showParticleConstants(source) {
-    $('#particleValues').append('<div class="row">');
-    $('#particleValues').append('<div id="constanttype" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="constantvalue" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="constantminvalue" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="constantmaxvalue" class="col-lg-3"></div>');
-    $('#particleValues').append('</div>');
+function showParticleConstants(source, val) {
+    $('#particleValues'+val).append('<div class="row">');
+    $('#particleValues'+val).append('<div id="constanttype'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constantvalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constantminvalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constantmaxvalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('</div>');
 
-    $("#constanttype").append('<a id="ca1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.alpha.a.type +'</a>');
-    $("#constantvalue").append('<a id="ca2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.a.value +'</a>');
-    $("#constantminvalue").append('<a id="ca3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.a.minValue +'</a>');
-    $("#constantmaxvalue").append('<a id="ca4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.a.maxValue +'</a>');
+    $("#constanttype"+val).append('<a id="ca1" class="list-group-item" data-type="select">' + source.particles.alpha.a.type +'</a>');
+    $("#constantvalue"+val).append('<a id="ca2" class="list-group-item" data-type="number">' + source.particles.alpha.a.value +'</a>');
+    $("#constantminvalue"+val).append('<a id="ca3" class="list-group-item" data-type="number">' + source.particles.alpha.a.minValue +'</a>');
+    $("#constantmaxvalue"+val).append('<a id="ca4" class="list-group-item" data-type="number">' + source.particles.alpha.a.maxValue +'</a>');
 
-    $("#constanttype").append('<a id="cb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.alpha.b.type +'</a>');
-    $("#constantvalue").append('<a id="cb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.b.value +'</a>');
-    $("#constantminvalue").append('<a id="cb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.b.minValue +'</a>');
-    $("#constantmaxvalue").append('<a id="cb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.b.maxValue +'</a>');
+    $("#constanttype"+val).append('<a id="cb1" class="list-group-item" data-type="select">' + source.particles.alpha.b.type +'</a>');
+    $("#constantvalue"+val).append('<a id="cb2" class="list-group-item" data-type="number">' + source.particles.alpha.b.value +'</a>');
+    $("#constantminvalue"+val).append('<a id="cb3" class="list-group-item" data-type="number">' + source.particles.alpha.b.minValue +'</a>');
+    $("#constantmaxvalue"+val).append('<a id="cb4" class="list-group-item" data-type="number">' + source.particles.alpha.b.maxValue +'</a>');
 
-    $("#constanttype").append('<a id="cc1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.alpha.c.type +'</a>');
-    $("#constantvalue").append('<a id="cc2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.c.value +'</a>');
-    $("#constantminvalue").append('<a id="cc3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.c.minValue +'</a>');
-    $("#constantmaxvalue").append('<a id="cc4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.c.maxValue +'</a>');
+    $("#constanttype"+val).append('<a id="cc1" class="list-group-item" data-type="select">' + source.particles.alpha.c.type +'</a>');
+    $("#constantvalue"+val).append('<a id="cc2" class="list-group-item" data-type="number">' + source.particles.alpha.c.value +'</a>');
+    $("#constantminvalue"+val).append('<a id="cc3" class="list-group-item" data-type="number">' + source.particles.alpha.c.minValue +'</a>');
+    $("#constantmaxvalue"+val).append('<a id="cc4" class="list-group-item" data-type="number">' + source.particles.alpha.c.maxValue +'</a>');
 
-    $("#constanttype").append('<a id="cd1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.alpha.d.type +'</a>');
-    $("#constantvalue").append('<a id="cd2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.d.value +'</a>');
-    $("#constantminvalue").append('<a id="cd3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.d.minValue +'</a>');
-    $("#constantmaxvalue").append('<a id="cd4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.d.maxValue +'</a>');
+    $("#constanttype"+val).append('<a id="cd1" class="list-group-item" data-type="select">' + source.particles.alpha.d.type +'</a>');
+    $("#constantvalue"+val).append('<a id="cd2" class="list-group-item" data-type="number">' + source.particles.alpha.d.value +'</a>');
+    $("#constantminvalue"+val).append('<a id="cd3" class="list-group-item" data-type="number">' + source.particles.alpha.d.minValue +'</a>');
+    $("#constantmaxvalue"+val).append('<a id="cd4" class="list-group-item" data-type="number">' + source.particles.alpha.d.maxValue +'</a>');
 
-    $("#constanttype").append('<a id="cf1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.alpha.f.type +'</a>');
-    $("#constantvalue").append('<a id="cf2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.f.value +'</a>');
-    $("#constantminvalue").append('<a id="cf3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.f.minValue +'</a>');
-    $("#constantmaxvalue").append('<a id="cf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.f.maxValue +'</a>');
+    $("#constanttype"+val).append('<a id="cf1" class="list-group-item" data-type="select">' + source.particles.alpha.f.type +'</a>');
+    $("#constantvalue"+val).append('<a id="cf2" class="list-group-item" data-type="number">' + source.particles.alpha.f.value +'</a>');
+    $("#constantminvalue"+val).append('<a id="cf3" class="list-group-item" data-type="number">' + source.particles.alpha.f.minValue +'</a>');
+    $("#constantmaxvalue"+val).append('<a id="cf4" class="list-group-item" data-type="number">' + source.particles.alpha.f.maxValue +'</a>');
 
-    $("#constanttype").append('<a id="ch1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.alpha.h.type +'</a>');
-    $("#constantvalue").append('<a id="ch2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.h.value +'</a>');
-    $("#constantminvalue").append('<a id="ch3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.h.minValue +'</a>');
-    $("#constantmaxvalue").append('<a id="ch4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.alpha.h.maxValue +'</a>');
+    $("#constanttype"+val).append('<a id="ch1" class="list-group-item" data-type="select">' + source.particles.alpha.h.type +'</a>');
+    $("#constantvalue"+val).append('<a id="ch2" class="list-group-item" data-type="number">' + source.particles.alpha.h.value +'</a>');
+    $("#constantminvalue"+val).append('<a id="ch3" class="list-group-item" data-type="number">' + source.particles.alpha.h.minValue +'</a>');
+    $("#constantmaxvalue"+val).append('<a id="ch4" class="list-group-item" data-type="number">' + source.particles.alpha.h.maxValue +'</a>');
 
-    $('#particleValues').append('<div class="row">');
-    $('#particleValues').append('<div id="constanttype2" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="constantvalue2" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="constantminvalue2" class="col-lg-3"></div>');
-    $('#particleValues').append('<div id="constantmaxvalue2" class="col-lg-3"></div>');
-    $('#particleValues').append('</div>');
+    $('#particleValues'+val).append('<div class="row">');
+    $('#particleValues'+val).append('<div id="constanttype2'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constantvalue2'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constantminvalue2'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constantmaxvalue2'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('</div>');
 
-    $("#constanttype2").append('<a id="cba1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.beta.a.type +'</a>');
-    $("#constantvalue2").append('<a id="cba2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.a.value +'</a>');
-    $("#constantminvalue2").append('<a id="cba3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.a.minValue +'</a>');
-    $("#constantmaxvalue2").append('<a id="cba4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.a.maxValue +'</a>');
+    $("#constanttype2"+val).append('<a id="cba1" class="list-group-item" data-type="select">' + source.particles.beta.a.type +'</a>');
+    $("#constantvalue2"+val).append('<a id="cba2" class="list-group-item" data-type="number">' + source.particles.beta.a.value +'</a>');
+    $("#constantminvalue2"+val).append('<a id="cba3" class="list-group-item" data-type="number">' + source.particles.beta.a.minValue +'</a>');
+    $("#constantmaxvalue2"+val).append('<a id="cba4" class="list-group-item" data-type="number">' + source.particles.beta.a.maxValue +'</a>');
 
-    $("#constanttype2").append('<a id="cbb1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.beta.b.type +'</a>');
-    $("#constantvalue2").append('<a id="cbb2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.b.value +'</a>');
-    $("#constantminvalue2").append('<a id="cbb3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.b.minValue +'</a>');
-    $("#constantmaxvalue2").append('<a id="cbb4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.b.maxValue +'</a>');
+    $("#constanttype2"+val).append('<a id="cbb1" class="list-group-item" data-type="select">' + source.particles.beta.b.type +'</a>');
+    $("#constantvalue2"+val).append('<a id="cbb2" class="list-group-item" data-type="number">' + source.particles.beta.b.value +'</a>');
+    $("#constantminvalue2"+val).append('<a id="cbb3" class="list-group-item" data-type="number">' + source.particles.beta.b.minValue +'</a>');
+    $("#constantmaxvalue2"+val).append('<a id="cbb4" class="list-group-item" data-type="number">' + source.particles.beta.b.maxValue +'</a>');
 
-    $("#constanttype2").append('<a id="cbc1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.beta.c.type +'</a>');
-    $("#constantvalue2").append('<a id="cbc2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.c.value +'</a>');
-    $("#constantminvalue2").append('<a id="cbc3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.c.minValue +'</a>');
-    $("#constantmaxvalue2").append('<a id="cbc4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.c.maxValue +'</a>');
+    $("#constanttype2"+val).append('<a id="cbc1" class="list-group-item" data-type="select">' + source.particles.beta.c.type +'</a>');
+    $("#constantvalue2"+val).append('<a id="cbc2" class="list-group-item" data-type="number">' + source.particles.beta.c.value +'</a>');
+    $("#constantminvalue2"+val).append('<a id="cbc3" class="list-group-item" data-type="number">' + source.particles.beta.c.minValue +'</a>');
+    $("#constantmaxvalue2"+val).append('<a id="cbc4" class="list-group-item" data-type="number">' + source.particles.beta.c.maxValue +'</a>');
 
-    $("#constanttype2").append('<a id="cbd1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.beta.d.type +'</a>');
-    $("#constantvalue2").append('<a id="cbd2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.d.value +'</a>');
-    $("#constantminvalue2").append('<a id="cbd3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.d.minValue +'</a>');
-    $("#constantmaxvalue2").append('<a id="cbd4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.d.maxValue +'</a>');
+    $("#constanttype2"+val).append('<a id="cbd1" class="list-group-item" data-type="select">' + source.particles.beta.d.type +'</a>');
+    $("#constantvalue2"+val).append('<a id="cbd2" class="list-group-item" data-type="number">' + source.particles.beta.d.value +'</a>');
+    $("#constantminvalue2"+val).append('<a id="cbd3" class="list-group-item" data-type="number">' + source.particles.beta.d.minValue +'</a>');
+    $("#constantmaxvalue2"+val).append('<a id="cbd4" class="list-group-item" data-type="number">' + source.particles.beta.d.maxValue +'</a>');
 
-    $("#constanttype2").append('<a id="cbf1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.beta.f.type +'</a>');
-    $("#constantvalue2").append('<a id="cbf2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.f.value +'</a>');
-    $("#constantminvalue2").append('<a id="cbf3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.f.minValue +'</a>');
-    $("#constantmaxvalue2").append('<a id="cbf4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.f.maxValue +'</a>');
+    $("#constanttype2"+val).append('<a id="cbf1" class="list-group-item" data-type="select">' + source.particles.beta.f.type +'</a>');
+    $("#constantvalue2"+val).append('<a id="cbf2" class="list-group-item" data-type="number">' + source.particles.beta.f.value +'</a>');
+    $("#constantminvalue2"+val).append('<a id="cbf3" class="list-group-item" data-type="number">' + source.particles.beta.f.minValue +'</a>');
+    $("#constantmaxvalue2"+val).append('<a id="cbf4" class="list-group-item" data-type="number">' + source.particles.beta.f.maxValue +'</a>');
 
-    $("#constanttype2").append('<a id="cbh1" class="list-group-item" data-type="select">' + source.modelParameters.parameters.channel[0].particles.beta.h.type +'</a>');
-    $("#constantvalue2").append('<a id="cbh2" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.h.value +'</a>');
-    $("#constantminvalue2").append('<a id="cbh3" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.h.minValue +'</a>');
-    $("#constantmaxvalue2").append('<a id="cbh4" class="list-group-item" data-type="number">' + source.modelParameters.parameters.channel[0].particles.beta.h.maxValue +'</a>');
+    $("#constanttype2"+val).append('<a id="cbh1" class="list-group-item" data-type="select">' + source.particles.beta.h.type +'</a>');
+    $("#constantvalue2"+val).append('<a id="cbh2" class="list-group-item" data-type="number">' + source.particles.beta.h.value +'</a>');
+    $("#constantminvalue2"+val).append('<a id="cbh3" class="list-group-item" data-type="number">' + source.particles.beta.h.minValue +'</a>');
+    $("#constantmaxvalue2"+val).append('<a id="cbh4" class="list-group-item" data-type="number">' + source.particles.beta.h.maxValue +'</a>');
 }
 
 function chanCollapseAdd() {
@@ -1616,10 +1616,10 @@ function chanCollapseAdd() {
                                             </div>\
                                             <div id="collapse3" class="panel-collapse collapse in">\
                                                 <div class="row">\
-                                                    <div id="particles" class="col-lg-5">\
+                                                    <div id="particles'+dynamicChanNum+'" class="col-lg-5">\
                                                         <a class="list-group-item"> Power: </a>\
                                                         <a class="list-group-item"> xInitial: </a>\
-                                                        <div id="alphaP">\
+                                                        <div id="alphaP'+dynamicChanNum+'">\
                                                             <a class="list-group-item"> A: </a>\
                                                             <a class="list-group-item"> B: </a>\
                                                             <a class="list-group-item"> C: </a>\
@@ -1627,7 +1627,7 @@ function chanCollapseAdd() {
                                                             <a class="list-group-item"> F: </a>\
                                                             <a class="list-group-item"> H: </a>\
                                                         </div>\
-                                                        <div id="betaP">\
+                                                        <div id="betaP'+dynamicChanNum+'">\
                                                             <a class="list-group-item"> A: </a>\
                                                             <a class="list-group-item"> B: </a>\
                                                             <a class="list-group-item"> C: </a>\
@@ -1636,7 +1636,7 @@ function chanCollapseAdd() {
                                                             <a class="list-group-item"> H: </a>\
                                                         </div>\
                                                     </div>\
-                                                    <div id="particleValues" class="col-lg-7">\
+                                                    <div id="particleValues'+dynamicChanNum+'" class="col-lg-7">\
 \
                                                     </div>\
                                                 </div>\
