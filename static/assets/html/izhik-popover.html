@@ -1,0 +1,197 @@
+<div class="popover" ng-show="content" id="#accordion">
+  <div class="arrow"></div>
+  <h3 class="popover-title" ng-bind-html-unsafe="title" ng-show="title" ng-style="styleModel(model.dbType, model_color)">{{model.name}}<button class="btn btn-danger btn-xs pull-right"type="button" class="btn btn-danger" ng-click="$hide()">X</button></h3>
+  <div class="popover-content" style="min-width:225px; height:250px;overflow-y:scroll;">
+      
+       <!-- A Parameter for Izhikevich Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseIZOne" style="display:block">
+                  a
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseIZOne" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.a.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.a.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.a.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.a.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End A Parameter for Izhikevich Cell -->
+
+       <!-- B Parameter for Izhikevich Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseIZTwo" style="display:block">
+                  b
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseIZTwo" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.b.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.b.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.b.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.b.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End B Parameter for Izhikevich Cell -->
+
+       <!-- C Parameter for Izhikevich Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseIZThree" style="display:block">
+                  c
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseIZThree" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.c.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.c.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.c.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.c.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End C Parameter for Izhikevich Cell -->
+
+       <!-- D Parameter for Izhikevich Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseIZFour" style="display:block">
+                  d
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseIZFour" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.d.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.d.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.d.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.d.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+       <!-- End D Parameter for Izhikevich Cell -->
+
+      <!-- U Parameter for Izhikevich Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseIZFive" style="display:block">
+                  u
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseIZFive" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.u.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.u.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.u.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.u.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End U Parameter for Izhikevich Cell -->
+
+      <!-- V Parameter for Izhikevich Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseIZSix" style="display:block">
+                  v
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseIZSix" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.v.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.v.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.v.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.v.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End V Parameter for Izhikevich Cell -->
+
+      <!-- Threshold Parameter for Izhikevich Cell -->
+      <div class="panel-group" id="accordion" style="width:200px">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseIZSeven" style="display:block">
+                  Threshold
+              </a>
+            </h4>
+          </div>
+        
+          <div id="collapseIZSeven" class="panel-collapse collapse out">
+            <div class="panel-body">
+              <ul class="list-group col-lg-6" >
+                <li class="list-group-item" >Type: {{model.parameters.threshold.type}}</li>
+                <li class="list-group-item" style="min-width:175px">Value: {{model.parameters.threshold.value}}</li>
+                <li class="list-group-item" style="min-width:175px">Min Value: {{model.parameters.threshold.minValue}}</li>
+                <li class="list-group-item" style="min-width:175px">Max Value: {{model.parameters.threshold.maxValue}}</li>
+              </ul>
+            </div>
+          </div>  
+        
+        </div>
+      </div>
+      <!-- End Threshold Parameter for Izhikevich Cell -->
+
+  </div>
+</div>
+
+
+
+
+
+
+
+  
