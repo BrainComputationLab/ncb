@@ -80,12 +80,12 @@ function particleVariableConstants() {
 	this.h = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 }
 
-function flatConnection() {
+function flatSynapse() {
 	this.delay = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};   //integer
 	this.current = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 }
 
-function ncsConnection() {
+function ncsSynapse() {
 	this.utilization = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 				  //double
 	this.redistribution = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 			  //double
 	this.lastPrefireTime = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 			  //double
@@ -118,7 +118,7 @@ function modelParameters(name, type, parameters, dbType) {
 	this.dbType = dbType;
 }
 
-function cellGroup(name, num, modelParameters, geometry) {
+function cellGroup(name, num, modelParameters, geometry, subGroup) {
 	this.name = name;
 	this.num = num;
 	this.modelParameters = modelParameters;
@@ -126,12 +126,13 @@ function cellGroup(name, num, modelParameters, geometry) {
 	this.subGroup = subGroup; //temporary becasue I dont know how cellAliases work with cellgroups. What is the point of aliases when you can put subgroups in cellgroups?
 }
 
-function cellAlias(cellGroup, cellAlias) {
+function cellAlias(name, cellGroup, cellAlias) {
+	this.name = name;
 	this.cellGroup = cellGroup;
 	this.cellAlias = cellAlias;
 }
 
-function connectionGroup(name, pre, post, prob, parameters) {
+function synapseGroup(name, pre, post, prob, parameters) {
 	this.name = name;
 	this.pre = pre;
 	this.post = post;
@@ -139,9 +140,9 @@ function connectionGroup(name, pre, post, prob, parameters) {
 	this.parameters = parameters;
 }
 
-function connectionAlias(connectionGroup, connectionAlias) {
-	this.connectionGroup = connectionGroup;
-	this.connectionAlias = connectionAlias;
+function synapseAlias(synapseGroup, synapseAlias) {
+	this.synapseGroup = synapseGroup;
+	this.synapseAlias = synapseAlias;
 }
 
 function inputGroup() {

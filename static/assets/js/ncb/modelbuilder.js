@@ -12,6 +12,8 @@ var testParticle = new voltageGatedParticle(a1, b1);
 var testChannel3 = new voltageGatedChannel(testParticle);
 var test4Param = new hodgkinHuxleyParam();
 test4Param.channel[0] = cloneChan(testChannel3);
+var flatS = new flatSynapse();
+var ncsS = new ncsSynapse();
 
 var myModels = [
     new modelParameters('I_Cell_1', 'Izhikevich', cloneParam(testParam), 'Database'),
@@ -34,9 +36,17 @@ var index1 = 0;
 var indexs = [];
 var breadDepth = 1;
 var globalCellGroup = [];
+var globalCellAlias = [];
+var globalSynapseGroup = [];
 var dynamicChanNum = 0;
+var dynamicSynNum = 0;
 var leftMenuLast = {};
 var midMenuLast = {};
+var aliasid = 0;
+var aliasVals = [];
+var aliasVal = 0;
+var synapseChoice = 1;
+var prePost = [null, null]
 
 var ncbApp = angular.module('ncbApp', ['ui.bootstrap', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'colorpicker.module']);
 
@@ -127,45 +137,64 @@ function myModelsList($scope) {
 function myModelsList2($scope, $compile) {
     // show the first layer of cellgroups added
     $scope.list = globalCellGroup;
+    //$scope.list2 = globalCellAlias;
     
     // set the midMenuLast model to the last cellgroup the user clicks on in the middle menu
-    $scope.setModel = function (model){
+    $scope.setModel = function (model, num1){
         // if user on home state
         if(pos == 0) {
             // search the array for the model the user clicked on
-            var result = $.grep(globalCellGroup, function(e){ return e.name == model; });
+            if(num1 == 1) {var result = $.grep(globalCellGroup, function(e){ return e.name == model; });}
+            if(num1 == 2) {var result = $.grep(globalCellAlias, function(e){ return e.name == model; });}
 
             // clone the value in midMenuLast
             midMenuLast = {};
             clone(midMenuLast, result[0]);
 
             // find the index of that value
-            index1 = getIndex(globalCellGroup, "name", midMenuLast.name);
+            if(num1 == 1) {index1 = getIndex(globalCellGroup, "name", midMenuLast.name);}
+            if(num1 == 2) {index1 = getIndex(globalCellAlias, "name", midMenuLast.name);}
 
             // populate the cellgroup parameters on the right corresponding to what the user clicked on
-            popCellP();
+            if(num1 == 1) {popCellP();}
+            if(num1 == 2) {popAliasP();}
             return;
         }
 
-        var moveInto = globalCellGroup[indexs[0]];
-            for(i=1; i<pos; i++) {
-                if(moveInto.subGroup.length != 0 ) {
-                    moveInto = moveInto.subGroup[indexs[i]];
-                } 
-            }
+        if(num1 == 1) {
+	        var moveInto = globalCellGroup[indexs[0]];
+	            for(i=1; i<pos; i++) {
+	                if(moveInto.subGroup.length != 0 ) {
+	                    moveInto = moveInto.subGroup[indexs[i]];
+	                } 
+	            }
 
-        // search the subArray and find the name and then the index of that name
-        var result = $.grep(moveInto.subGroup, function(e){ return e.name == model; });
-        midMenuLast = {};
-        clone(midMenuLast, result[0]);
-        index1 = getIndex(moveInto.subGroup, "name", midMenuLast.name);
-        
-        // populate the cellgroup parameters on the right corresponding to what the user clicked on
-        popCellP();
+	        // search the subArray and find the name and then the index of that name
+	        var result = $.grep(moveInto.subGroup, function(e){ return e.name == model; });
+	        midMenuLast = {};
+	        clone(midMenuLast, result[0]);
+	        index1 = getIndex(moveInto.subGroup, "name", midMenuLast.name);
+	        
+	        // populate the cellgroup parameters on the right corresponding to what the user clicked on
+	        popCellP();
+    	}
+    	if(num1 == 2) {
+    		var moveInto = globalCellAlias[indexs[0]];
+	            for(i=1; i<pos; i++) {
+	                if(moveInto.cellAlias.length != 0 ) {
+	                    moveInto = moveInto.cellAlias[indexs[i]];
+	                } 
+	            }
+	        // search the subArray and find the name and then the index of that name
+	        var result = $.grep(moveInto.cellAlias, function(e){ return e.name == model; });
+	        midMenuLast = {};
+	        clone(midMenuLast, result[0]);
+	        index1 = getIndex(moveInto.cellAlias, "name", midMenuLast.name);
+    	}
     };
     
     // when the user double clicks on a cellgroup it should set the scope to that cellgroups subgroup.
-    $scope.intoModel = function (){
+    $scope.intoModel = function (num1){
         // as the user goes deeper into the subarrays then add to this counter
         pos += 1;
 
@@ -178,6 +207,7 @@ function myModelsList2($scope, $compile) {
                     moveInto = moveInto.subGroup[indexs[i]];
                 } 
             }
+
         
         // add the breadcrumb of whatever the user clicked on
         var myStr = $compile('<li><a id="' + breadDepth + '" class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + midMenuLast.name + '</a></li>')($scope);
@@ -185,6 +215,7 @@ function myModelsList2($scope, $compile) {
         breadDepth += 1;
 
         $scope.list = moveInto.subGroup;
+        //$scope.list2 = moveIntoA.cellAlias;
     };
 
     // when the user clicks on home it erases the breadcrumbs and resets the scope to the home level
@@ -209,6 +240,7 @@ function myModelsList2($scope, $compile) {
 
         // reset the scope to home.
         $scope.list = globalCellGroup;
+        //$scope.list2 = globalCellAlias;
     };
 
     $scope.changeBreadcrumb = function (event) {
@@ -250,6 +282,11 @@ function myModelsList2($scope, $compile) {
         
     };
 
+}
+
+//scope for the cellaliases in the center menu
+function myModelsList3($scope, $compile) {
+    $scope.list = globalCellAlias;
 }
 
 $().ready( function() {
@@ -1724,6 +1761,10 @@ function hideChanParam() {
     $('#particleCollapse').hide();
 }
 
+function popAliasP() {
+	console.log("yay");
+}
+
 function cloneModel(source) {
     var ret = new modelParameters();
     clone(ret, source);
@@ -1847,3 +1888,145 @@ function popChanModal(val) {
     return;
 }
 
+
+function fillAliasBody() {
+	$("#aliasbody").html('');
+	aliasid = 0;
+	for(var i=0; i<globalCellGroup.length; i++) {
+		printAlias(globalCellGroup[i], aliasid);
+	}
+}
+
+function printAlias(source, id) {
+	$("#aliasbody").append('<a id="'+source.name+'" class="list-group-item" onClick="toggleChoice(this)" data-type="select">'+source.name+'</a>')
+	aliasid++;
+	if(source.hasOwnProperty('subGroup')) {
+		for(var i=0; i<source.subGroup.length; i++) {
+			printAlias(source.subGroup[i]);
+		}
+	}
+
+}
+
+function addToAlias() {
+	var cgroup1 = [];
+	for(var i=0; i<aliasVals.length; i++) {
+		for(var j=0; j<globalCellGroup.length; j++) {
+			var source = addToAliasSearch(globalCellGroup[j], aliasVals[i]);
+			if(source != -1) {
+				cgroup1.push(source);
+			}
+		}
+	}
+	var cgroup2 = new cellGroup();
+	cgroup2.name = 'hi';
+	cgroup2.subGroup = cgroup1;
+
+	globalCellAlias.push({name: 'alias'+aliasVal, cellGroup: cgroup2, cellAlias: null});
+	aliasVal++;
+	aliasVals.length = 0;
+}
+
+function addToAliasSearch(source, x) {
+	if(source.name === x) {
+		return source;
+	}
+	if(source.hasOwnProperty('subGroup')) {
+		for(var i=0; i<source.subGroup.length; i++) {
+			addToAliasSearch(source.subGroup[i], x);
+		}
+	}
+	return -1;
+}
+
+function toggleChoice(id) {
+	$('#'+$(id).attr('id')).append(' Added to Alias!');
+	aliasVals.push($(id).attr('id'));
+}
+
+function createSynapse() {
+	if(synapseChoice == 1) {
+		globalSynapseGroup.push(new synapseGroup($('#synapName').val(), prePost[0], prePost[1], $('#probOfConnection').val(), new flatSynapse()));
+		var subCollapse = '<div id="flatsyn'+dynamicSynNum+'">\
+		                    <a class="list-group-item"> PreSynaptic: </a>\
+		                    <a class="list-group-item"> PostSynaptic: </a>\
+		                    <a class="list-group-item"> Delay: </a>\
+		                    <a class="list-group-item"> Current: </a>\
+		                   </div>';
+	}
+	else if(synapseChoice == 2) {
+		globalSynapseGroup.push(new synapseGroup($('#synapName').val(), prePost[0], prePost[1], $('#probOfConnection').val(), new ncsSynapse()));
+		var subCollapse = '<div id="ncssyn'+dynamicSynNum+'">\
+		                    <a class="list-group-item"> PreSynaptic: </a>\
+		                    <a class="list-group-item"> PostSynaptic: </a>\
+                            <a class="list-group-item"> Utilization: </a>\
+                            <a class="list-group-item"> Redistribution: </a>\
+                            <a class="list-group-item"> Last Prefire Time: </a>\
+                            <a class="list-group-item"> Last Postfire Time: </a>\
+                            <a class="list-group-item"> Tau Facilitation: </a>\
+                            <a class="list-group-item"> Tau Depression: </a>\
+                            <a class="list-group-item"> Tau Ltp: </a>\
+                            <a class="list-group-item"> Tau Ltd: </a>\
+                            <a class="list-group-item"> A Ltp Minimum: </a>\
+                            <a class="list-group-item"> A Ltd Minimum: </a>\
+                            <a class="list-group-item"> Max Conductance: </a>\
+                            <a class="list-group-item"> Reversal Potential: </a>\
+                            <a class="list-group-item"> Tau Postsyn. Cond.: </a>\
+                            <a class="list-group-item"> Psg Waveform Duration: </a>\
+                            <a class="list-group-item"> Delay: </a>\
+                   		   </div>';
+	}
+
+	var collapseable = '<div class="panel panel-default">\
+                                    <div class="panel-heading">\
+                                        <h4 class="panel-title">\
+                                            <a id="syn'+dynamicSynNum+'Name" data-toggle="collapse" data-parent="#synCollapse" href="#syn_'+dynamicSynNum+'">\
+                                                '+globalSynapseGroup[dynamicSynNum].name+'\
+                                            </a>\
+                                        </h4>\
+                                    </div>\
+                                    <div id="syn_'+dynamicSynNum+'" class="panel-collapse collapse in">\
+                                        <div class="row">\
+                                            <div id="synapses" class="col-lg-5">'+subCollapse+'\
+                                            </div>\
+                                            <div id="synValues'+dynamicSynNum+'" class="col-lg-7">\
+\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                </div>';
+
+    $('#collapseS').append(collapseable);
+	dynamicSynNum++;
+	$('#synChoices').selectedIndex = 0;
+}
+
+function setSynapseVal(value) {
+	synapseChoice = value;
+}
+
+function fillSynapseBody() {
+	$('#preChoices').html('');
+	$('#postChoices').html('');
+	fillSynapseBodyHelp(globalCellGroup);
+}
+
+function fillSynapseBodyHelp(source) {
+	for(var i=0; i<source.length; i++) {
+		console.log(source[i].name)
+		$('#preChoices').append('<option value="'+source[i].name+'" onClick="setSynapsePre(value)">'+source[i].name+'</option>')
+		$('#postChoices').append('<option value="'+source[i].name+'" onClick="setSynapsePost(value)">'+source[i].name+'</option>')
+		if(source[i].hasOwnProperty('subGroup')) {
+			fillSynapseBodyHelp(source[i].subGroup);
+		}
+	}
+}
+
+function setSynapsePre(value) {
+	prePost[0] = value;
+}
+
+
+function setSynapsePost(value) {
+	prePost[1] = value;
+}
