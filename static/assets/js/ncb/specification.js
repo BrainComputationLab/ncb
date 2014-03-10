@@ -16,11 +16,12 @@ function sendJSON(jsonObj) {
 	});
 }
 
-function getJSON() {
+function getJSON(serverUrl) {
 	var jsonObj;
+	serverUrl = serverUrl || "/json";
 	$.ajax({
 		datatype: "json",
-		url: "/json",
+		url: serverUrl,
 		type: "GET",
 		data: {},
 		success: function(data, textStatus, jqXHR) {

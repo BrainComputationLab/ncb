@@ -10,14 +10,14 @@ app = Flask(__name__)
 app.debug = True
 
 # set upload folder and allowed extensions
-uploadFolder = 'uploads'
 allowedFileExtensions = set(['json','py'])
 
 # register upload folder with flask app
-app.config['UPLOAD_FOLDER'] = uploadFolder
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
 # create recent file variable
 recentUpload = 'temp.json'
+parameterFile = 'params.json'
 
 # function see if file extension allowed
 def allowed_file(filename):
@@ -47,10 +47,40 @@ def uploadFile():
     # otherwise return failure
     return jsonify({"success" : False})
 
+@app.route('/uploadsim', methods=['POST', 'GET'])
+def uploadSimulationParameter():
+    global parameterFile
+    if request.method == 'POST':
+        # get the file descriptor
+        file = request.files['uploadFile']
+        # if file exists and is allowed extension
+        if file and allowed_file(file.filename):
+            # get the secure version of the filename
+            filename = secure_filename(parameterFile)
+            parameterFile = app.config['UPLOAD_FOLDER'] + '/' + filename
+            # if uploads directory does not exist create it
+            if not os.path.isdir(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
+            # save file to server filesystem
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # return JSON object to determine success
+            print("Received parameters")
+            return jsonify({"success" : True})
+
+    elif request.method == 'GET':
+        with open(parameterFile) as fin:
+            params = json.load(fin)
+
+        print("Parameters Uploaded")
+        return jsonify(params)
+
+    # otherwise return failure
+    return jsonify({"success" : False})
+
 # function to view / download an already uploaded file
-@app.route('/uploads/<filename>')
+@app.route('/uploads/<filename>', methods=["GET"])
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment = True)
 
 @app.route('/json', methods=['POST', 'GET'])
 def sendJSON():
