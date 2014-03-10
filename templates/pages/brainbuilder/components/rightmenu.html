@@ -172,25 +172,29 @@
             </div>
             <div id="createNewSynapseBody" class="modal-body">
                 <div class="input-group">
-                    <span class="input-group-addon">Name:</span>
-                    <input id="synapName" type="text" class="form-control" placeholder="Synapse Name">
+                    <label> Name:</label>
+                    <br>
+                    <input id="synapName" type="text" class="form-control" placeholder="Synapse Name" style="width: 450px">
                 </div>
+                <br>
                 <div class="input-group">
-                    <span class="input-group-addon">%</span>
-                    <input id="probOfConnection" type="text" class="form-control" placeholder="Probability of Connection">
+                    <label> Probability (%)</label>
+                    <br>
+                    <input id="probOfConnection" type="text" class="form-control" placeholder="Probability of Connection" style="width: 450px">
                 </div>
+                <br>
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="modalSynapsetype" class="control-label"> Pre-Synaptic</label>
-                        <select id="preChoices" class="form-control">
+                        <label for="modalSynapsetype" class="control-label" style="margin-left:15px"> Pre-Synaptic</label>
+                        <select id="preChoices" class="form-control" style="width:300px; margin-left: 15px">
 
                         </select>
-                        <label for="modalSynapsetype" class="control-label"> Post-Synaptic</label>
-                        <select id="postChoices" class="form-control">
+                        <label for="modalSynapsetype" class="control-label" style="margin-left:15px"> Post-Synaptic</label>
+                        <select id="postChoices" class="form-control" style="width:300px; margin-left: 15px">
 
                         </select>
-                        <label for="modalSynapsetype" class="control-label"> Synapse</label>
-                        <select id="synChoices" class="form-control">
+                        <label for="modalSynapsetype" class="control-label" style="margin-left:15px"> Synapse</label>
+                        <select id="synChoices" class="form-control" style="width:300px; margin-left: 15px">
                             <option value="1" onClick="setSynapseVal(value)">Flat Synapse</option>
                             <option value="2" onClick="setSynapseVal(value)">NCS Synapse</option>
                         </select>
