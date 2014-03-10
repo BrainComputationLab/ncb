@@ -1655,7 +1655,7 @@ function showParticleConstants(source, val) {
 }
 
 function chanCollapseAdd() {
-	var collapseable = '<div class="panel panel-default">\
+	var collapseable = '<div class="panel panel-default" style="overflow:visible;">\
                                     <div class="panel-heading">\
                                         <h4 class="panel-title">\
                                             <a id="chan'+dynamicChanNum+'Name" data-toggle="collapse" data-parent="#chanCollapse" href="#chan_'+dynamicChanNum+'">\
@@ -1693,7 +1693,7 @@ function chanCollapseAdd() {
 \
                                             </div>\
                                         </div>\
-                                        <div class="panel panel-default" id="particleCollapse'+dynamicChanNum+'">\
+                                        <div class="panel panel-default" id="particleCollapse'+dynamicChanNum+'" style="overflow:visible;">\
                                             <div class="panel-heading">\
                                                 <h4 class="panel-title">\
                                                     <a data-toggle="collapse" data-parent="#vgChan" href="#collapse3">\
@@ -1977,7 +1977,7 @@ function createSynapse() {
                    		   </div>';
 	}
 
-	var collapseable = '<div class="panel panel-default">\
+	var collapseable = '<div class="panel panel-default" style="overflow:visible;">\
                                     <div class="panel-heading">\
                                         <h4 class="panel-title">\
                                             <a id="syn'+dynamicSynNum+'Name" data-toggle="collapse" data-parent="#synCollapse" href="#syn_'+dynamicSynNum+'">\
