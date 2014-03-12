@@ -1654,6 +1654,34 @@ function showParticleConstants(source, val) {
     $("#constantmaxvalue2"+val).append('<a id="cbh4'+val+'" class="list-group-item" data-type="number">' + source.particles.beta.h.maxValue +'</a>');
 }
 
+function popSynVal(val) {
+	console.log(globalSynapseGroup[val].pre);
+	$('#synValues'+val).append('<div id=synpre'+val+' class="col-lg-12"></div>');
+	$('#synValues'+val).append('<div id=synpost'+val+' class="col-lg-12"></div>');
+	$('#synValues'+val).append('<div id=synprob'+val+' class="col-lg-12"></div>');
+	$('#synpre'+val).append('<a id="spre'+val+'" class="list-group-item">' + globalSynapseGroup[val].pre +'</a>');
+	$('#synpost'+val).append('<a id="spost'+val+'" class="list-group-item">' + globalSynapseGroup[val].post +'</a>');
+	$('#synprob'+val).append('<a id="sname'+val+'" class="list-group-item">' + globalSynapseGroup[val].prob +'</a>');
+    $('#synValues'+val).append('<div class="row">');
+    $('#synValues'+val).append('<div id="syntype'+val+'" class="col-lg-3"></div>');
+    $('#synValues'+val).append('<div id="synvalue'+val+'" class="col-lg-3"></div>');
+    $('#synValues'+val).append('<div id="synminvalue'+val+'" class="col-lg-3"></div>');
+    $('#synValues'+val).append('<div id="synmaxvalue'+val+'" class="col-lg-3"></div>');
+    $('#synValues'+val).append('</div>');
+
+    if(globalSynapseGroup[val].parameters.name === 'flatSynapse') {
+	    $("#syntype"+val).append('<a id="s1'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.delay.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s2'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s3'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s4'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.maxValue +'</a>');
+
+	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.current.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.current.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.current.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.current.maxValue +'</a>');
+	}
+}
+
 function chanCollapseAdd() {
 	var collapseable = '<div class="panel panel-default" style="overflow:visible;">\
                                     <div class="panel-heading">\
@@ -1946,10 +1974,12 @@ function toggleChoice(id) {
 
 function createSynapse() {
 	if(synapseChoice == 1) {
-		globalSynapseGroup.push(new synapseGroup($('#synapName').val(), prePost[0], prePost[1], $('#probOfConnection').val(), new flatSynapse()));
+		var params = new flatSynapse();
+		globalSynapseGroup.push({name: $('#synapName').val(), pre: prePost[0], post: prePost[1], prob: $('#probOfConnection').val(), parameters: params});
 		var subCollapse = '<div id="flatsyn'+dynamicSynNum+'">\
 		                    <a class="list-group-item"> PreSynaptic: </a>\
 		                    <a class="list-group-item"> PostSynaptic: </a>\
+		                    <a class="list-group-item"> Probability: </a>\
 		                    <a class="list-group-item"> Delay: </a>\
 		                    <a class="list-group-item"> Current: </a>\
 		                   </div>';
@@ -1997,6 +2027,7 @@ function createSynapse() {
                                 </div>';
 
     $('#collapseS').append(collapseable);
+    popSynVal(dynamicSynNum);
 	dynamicSynNum++;
 	$('#synChoices').selectedIndex = 0;
 }
@@ -2013,7 +2044,6 @@ function fillSynapseBody() {
 
 function fillSynapseBodyHelp(source) {
 	for(var i=0; i<source.length; i++) {
-		console.log(source[i].name)
 		$('#preChoices').append('<option value="'+source[i].name+'" onClick="setSynapsePre(value)">'+source[i].name+'</option>')
 		$('#postChoices').append('<option value="'+source[i].name+'" onClick="setSynapsePost(value)">'+source[i].name+'</option>')
 		if(source[i].hasOwnProperty('subGroup')) {
@@ -2025,7 +2055,6 @@ function fillSynapseBodyHelp(source) {
 function setSynapsePre(value) {
 	prePost[0] = value;
 }
-
 
 function setSynapsePost(value) {
 	prePost[1] = value;

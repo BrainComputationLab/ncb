@@ -81,11 +81,13 @@ function particleVariableConstants() {
 }
 
 function flatSynapse() {
+	this.name = "flatSynapse";
 	this.delay = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};   //integer
 	this.current = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 }
 
 function ncsSynapse() {
+	this.name = "ncsSynapse"
 	this.utilization = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 				  //double
 	this.redistribution = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 			  //double
 	this.lastPrefireTime = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 			  //double
