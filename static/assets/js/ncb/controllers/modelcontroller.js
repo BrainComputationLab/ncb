@@ -116,9 +116,10 @@ $("#uploadModelForm").submit(function(event) {
 });
 
 // function for clearing the input file field
-function clearFileInput()
+function clearFileInput(fileID)
 {
-	var fileInput = $("#uploadModelFile");
+	fileID = fileID || "#uploadModelFile";
+	var fileInput = $(fileID);
     fileInput.replaceWith(fileInput.clone(true));
 }
 
