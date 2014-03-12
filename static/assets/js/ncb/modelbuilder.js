@@ -1655,7 +1655,6 @@ function showParticleConstants(source, val) {
 }
 
 function popSynVal(val) {
-	console.log(globalSynapseGroup[val].pre);
 	$('#synValues'+val).append('<div id=synpre'+val+' class="col-lg-12"></div>');
 	$('#synValues'+val).append('<div id=synpost'+val+' class="col-lg-12"></div>');
 	$('#synValues'+val).append('<div id=synprob'+val+' class="col-lg-12"></div>');
@@ -1751,34 +1750,26 @@ function popSynVal(val) {
 	    $("#synminvalue"+val).append('<a id="s143'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.minValue +'</a>');
 	    $("#synmaxvalue"+val).append('<a id="s144'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.maxValue +'</a>');
 	}
-	makeSynEditable(val);
 }
 
-function makeSynEditable(x) {
-var dropChoice = [{ 'value': 0, 'text': 'exact' }, { 'value': 1, 'text': 'uniform' }, { 'value': 2, 'text': 'normal' }];
-for(var x=0; x<val; x++) {
-    $('#syntype'+x).editable({
-        'source': dropChoice2,
-        'success': function(response, newValue) {
-                if (typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                else { var moveInto3 = globalCellGroup[indexs[0]]; }
-
-                for (i = 1; i < pos; i++) {
-                    if (moveInto3.subGroup.length != 0) {
-                        moveInto3 = moveInto3.subGroup[indexs[i]];
-                    }
-                }
-                var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                if (newValue == 0) { var swap = new voltageGatedIonChannel(); }
-                else if (newValue == 1) { var swap = new calciumDependantChannel(); }
-                else if (newValue == 2) { var swap = new voltageGatedChannel(testParticle); }
-
-                if (pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
-                else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
-                delete swap;
-            }
-    });
+function makeSynEditable(val) {
+	console.log(val)
+	var dropChoice = [{ 'value': 0, 'text': 'exact' }, { 'value': 1, 'text': 'uniform' }, { 'value': 2, 'text': 'normal' }];
+	for(var x=0; x<val; x++) {
+		console.log("s11"+x)
+		$('#syntype'+x+' a').editable({
+		        'source': dropChoice,
+		        'success': function(response, newValue) {
+		                        if(this.id == "s11"+x) { swap.a.type = dropChoice[newValue].text; }
+		                        if(this.id == "s22"+x) { swap.b.type = dropChoice[newValue].text; }
+		                        // if(this.id == "c1") { swap.c.type = dropChoice[newValue].text; }
+		                        // if(this.id == "d1") { swap.d.type = dropChoice[newValue].text; }
+		                        // if(this.id == "u1") { swap.u.type = dropChoice[newValue].text; }
+		                        // if(this.id == "v1") { swap.v.type = dropChoice[newValue].text; }
+		                        // if(this.id == "t1") { swap.threshold.type = dropChoice[newValue].text; }
+		                    }
+		    });
+	}
 }
 
 function chanCollapseAdd() {
@@ -2128,6 +2119,7 @@ function createSynapse() {
     $('#collapseS').append(collapseable);
     popSynVal(dynamicSynNum);
 	dynamicSynNum++;
+	makeSynEditable(dynamicSynNum);
 	$('#synChoices').selectedIndex = 0;
 }
 
