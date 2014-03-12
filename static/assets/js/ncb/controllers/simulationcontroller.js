@@ -1,4 +1,65 @@
 var simProgressBar = $("#uploadSimProgress");
+
+$().ready(function() {
+    $(".simOutputFileOnly").hide();
+
+    $("#simOutputType").change(function() {
+        if($("#simOutputType").val() === "file") {
+            $(".simOutputFileOnly").show();
+        }
+
+        else {
+            $(".simOutputFileOnly").hide();
+        }
+    });
+
+    $("#stopSimButton").hide();
+    //$("#launchSimButton").prop("disabled", true);
+    $("#launchSimButton").on("confirmDialog", function() {
+        $("#launchSimButton").hide();
+        $("#stopSimButton").show();
+    });
+
+    $("#launchSimButton").click(function() {
+        openConfirmDialog($("#launchSimButton"), "Are you sure you want to launch a simulation?", "Confirm Simulation Launch");
+    });
+
+    $("#stopSimButton").on("confirmDialog", function() {
+        $("#stopSimButton").hide();
+        $("#launchSimButton").show();
+    });
+
+    $("#stopSimButton").click(function() {
+        openConfirmDialog($("#stopSimButton"), "Are you sure you wish to end the currently running simulation?", "Confirm Stop Simulation");
+    });
+
+    //$("#launchSimButton").prop("disabled", true);
+    //$("#stopSimButton").prop("disabled", true);
+
+});
+
+function openConfirmDialog(obj, dialogText, dialogTitle) {
+    dialogTitle = dialogTitle || "Confirm";
+
+    bootbox.dialog({
+        title: dialogTitle,
+        message: dialogText,
+        buttons: {
+            no: {
+                label: "No",
+                className: "btn-danger btn-md",
+                callback: function() {}
+            },
+            yes: {
+                label: "Yes",
+                className: "btn-success btn-md",
+                callback: function() {
+                    obj.trigger("confirmDialog");
+                }
+            }
+        }
+    });
+}
 //var objectFromUpload;
 // initialize import modal on show event
 $("#simbuilder_importparams").on("show.bs.modal", function() {
@@ -148,6 +209,8 @@ $("#simbuilder_export").on("show.bs.modal", function() {
     $("#exportSimFileName").val('');
     $("#exportSimOkButton").prop("disabled", true);
 });
+
+
 
 var exportSim = function() {
     $.ajax({

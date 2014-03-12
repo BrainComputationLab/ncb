@@ -1,0 +1,75 @@
+<!-- Right MENU -->
+<div class="col-lg-4"> 
+
+    <!-- List of Simulation Paremeters -->
+    <div id="simulationOutputList" class="panel panel-default">
+    
+        <!-- Simulation Paremeter Heading -->
+        <div class="panel-heading">
+            Simulation Output
+        </div>
+
+        <div class="panel-body">
+            <form id="simulationOutputForm">
+                <!-- Name of Simulation input -->
+                <div class="form-group">
+                    <label for="simOutputType">Output Type</label>
+                    <select class="form-control" id="simOutputType">
+                        <option value="report">View Report</option>
+                        <option value="file">Save as File</option>
+                    </select>
+                </div>
+
+                <div class="form-group simOutputFileOnly">
+                    <label for="simOutputFileName">FileName</label>
+                    <input id="simOutputFileName" type="text" placeholder="File Name" class="form-control">
+                </div>
+
+                <div class="form-group simOutputFileOnly">
+                    <label for="simOutputNumberFormat">Number Format</label>
+                    <select class="form-control" id="simOutputNumberFormat">
+                        <option value="ascii">ascii</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="simOutputReportType">Report Type</label>
+                    <select class="form-control" id="simOutputReportType">
+                        <option value="channel_conductance">Channel Conductance</option>
+                        <option value="report2">Report 2</option>
+                        <option value="report3">Report 3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="simOutputReportTarget">Report Target</label>
+                    <select class="form-control" id="simOutputReportTarget">
+                        <option value="alias_1">Cell Alias 1</option>
+                        <option value="alias_2">Cell Alias 2</option>
+                        <option value="alias_3">Cell Alias 3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="simOutputProbability">Probability</label>
+                    <input id="simOutputProbability" type="number" placeholder="0.5" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="simOutputFrequency">Frequency</label>
+                    <input id="simOutputFrequency" type="number" placeholder="5" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="simOutputStartTime">Start Time</label>
+                    <input id="simOutputStartTime" type="number" placeholder="0" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="simOutputEndTime">End Time</label>
+                    <input id="simOutputEndTime" type="number" placeholder="0" class="form-control">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
