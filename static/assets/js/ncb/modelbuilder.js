@@ -1670,10 +1670,10 @@ function popSynVal(val) {
     $('#synValues'+val).append('</div>');
 
     if(globalSynapseGroup[val].parameters.name === 'flatSynapse') {
-	    $("#syntype"+val).append('<a id="s1'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.delay.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s2'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s3'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s4'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s11'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.delay.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s12'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s13'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s14'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.maxValue +'</a>');
 
 	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.current.type +'</a>');
 	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.current.value +'</a>');
@@ -1681,76 +1681,104 @@ function popSynVal(val) {
 	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.current.maxValue +'</a>');
 	}
 	if(globalSynapseGroup[val].parameters.name === 'ncsSynapse') {
-	    $("#syntype"+val).append('<a id="s1'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.utilization.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s2'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.utilization.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s3'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.utilization.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s4'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.utilization.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s11'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.utilization.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s12'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.utilization.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s13'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.utilization.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s14'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.utilization.maxValue +'</a>');
 
 	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.redistribution.type +'</a>');
 	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.redistribution.value +'</a>');
 	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.redistribution.minValue +'</a>');
 	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.redistribution.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.lastPrefireTime.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPrefireTime.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPrefireTime.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPrefireTime.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s31'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.lastPrefireTime.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s32'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPrefireTime.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s33'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPrefireTime.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s34'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPrefireTime.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.lastPostfireTime.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPostfireTime.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPostfireTime.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPostfireTime.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s41'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.lastPostfireTime.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s42'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPostfireTime.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s43'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPostfireTime.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s44'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.lastPostfireTime.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauFacilitation.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauFacilitation.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauFacilitation.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauFacilitation.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s51'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauFacilitation.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s52'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauFacilitation.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s53'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauFacilitation.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s54'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauFacilitation.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauDepression.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauDepression.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauDepression.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauDepression.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s61'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauDepression.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s62'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauDepression.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s63'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauDepression.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s64'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauDepression.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauLtp.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtp.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtp.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtp.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s71'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauLtp.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s72'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtp.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s73'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtp.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s74'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtp.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauLtd.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtd.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtd.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtd.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s81'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauLtd.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s82'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtd.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s83'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtd.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s84'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauLtd.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.aLtpMinimum.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.aLtpMinimum.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.aLtpMinimum.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.aLtpMinimum.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s91'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.aLtpMinimum.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s92'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.aLtpMinimum.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s93'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.aLtpMinimum.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s94'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.aLtpMinimum.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.maxConductance.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.maxConductance.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.maxConductance.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.maxConductance.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s101'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.maxConductance.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s102'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.maxConductance.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s103'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.maxConductance.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s104'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.maxConductance.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.reversalPotential.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.reversalPotential.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.reversalPotential.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.reversalPotential.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s111'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.reversalPotential.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s112'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.reversalPotential.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s113'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.reversalPotential.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s114'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.reversalPotential.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s121'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s122'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s123'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s124'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.tauPostSynapticConductance.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.psgWaveformDuration.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.psgWaveformDuration.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.psgWaveformDuration.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.psgWaveformDuration.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s131'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.psgWaveformDuration.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s132'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.psgWaveformDuration.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s133'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.psgWaveformDuration.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s134'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.psgWaveformDuration.maxValue +'</a>');
 
-	    $("#syntype"+val).append('<a id="s21'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.delay.type +'</a>');
-	    $("#synvalue"+val).append('<a id="s22'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.value +'</a>');
-	    $("#synminvalue"+val).append('<a id="s23'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.minValue +'</a>');
-	    $("#synmaxvalue"+val).append('<a id="s24'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.maxValue +'</a>');
+	    $("#syntype"+val).append('<a id="s141'+val+'" class="list-group-item" data-type="select">' + globalSynapseGroup[val].parameters.delay.type +'</a>');
+	    $("#synvalue"+val).append('<a id="s142'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.value +'</a>');
+	    $("#synminvalue"+val).append('<a id="s143'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.minValue +'</a>');
+	    $("#synmaxvalue"+val).append('<a id="s144'+val+'" class="list-group-item" data-type="number">' + globalSynapseGroup[val].parameters.delay.maxValue +'</a>');
 	}
+	makeSynEditable(val);
+}
+
+function makeSynEditable(x) {
+var dropChoice = [{ 'value': 0, 'text': 'exact' }, { 'value': 1, 'text': 'uniform' }, { 'value': 2, 'text': 'normal' }];
+for(var x=0; x<val; x++) {
+    $('#syntype'+x).editable({
+        'source': dropChoice2,
+        'success': function(response, newValue) {
+                if (typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
+                else { var moveInto3 = globalCellGroup[indexs[0]]; }
+
+                for (i = 1; i < pos; i++) {
+                    if (moveInto3.subGroup.length != 0) {
+                        moveInto3 = moveInto3.subGroup[indexs[i]];
+                    }
+                }
+                var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
+                var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+                if (newValue == 0) { var swap = new voltageGatedIonChannel(); }
+                else if (newValue == 1) { var swap = new calciumDependantChannel(); }
+                else if (newValue == 2) { var swap = new voltageGatedChannel(testParticle); }
+
+                if (pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+                else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
+                delete swap;
+            }
+    });
 }
 
 function chanCollapseAdd() {
