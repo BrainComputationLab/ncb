@@ -20,8 +20,10 @@
             <!-- End Filter -->
 
 				<!-- list of model elements -->
-				<ul id="modelList" class="list-group" >
-					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType, model_color)" ng-mousedown="setModel(model.name)" title="{{'{{modelPopover.title}}'}}" data-content="{{'{{modelPopover.content}}'}}" ng-init="path=getTemplate(model.type)" ng-model="path" data-template="{{'{{path}}'}}" data-trigger="click" bs-popover> {{ '{{ model.name }}'  }}</a>
+				<ul id="modelList" class="list-group">
+					
+					<a href="" class="list-group-item" data-ng-repeat="model in list | filter: searchText | filter:searchType | orderBy: 'model.name'" ng-dblclick="moveModel(model.name)" ng-style="styleModel(model.dbType, model_color)" ng-mousedown="setModel(model.name)" title="{{'{{modelPopover.title}}'}}" data-content="{{'{{modelPopover.content}}'}}" ng-init="path=getTemplate(model.type)" ng-model="path" data-template="{{'{{path}}'}}" data-trigger="click" bs-popover>{{ '{{ model.name }}'  }}</a>
+					
 				</ul>
 			    <!-- end list of model elements -->
 		</div>

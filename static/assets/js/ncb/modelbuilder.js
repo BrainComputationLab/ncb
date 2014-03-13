@@ -60,6 +60,15 @@ function myModelsList($scope) {
 	//set default colors for model list
 	$scope.model_color = {personal:'#00568C', database:'#5d6b74'};
 
+    // handles different color config styles
+    $scope.options = [
+        { label: 'Complete Color', value: 1 },
+        { label: 'Partial Color', value: 2 }
+    ];
+
+    // part of color config styles
+    $scope.selected = $scope.options[0];
+    $scope.data = {selected:$scope.selected}
 
     //sets the leftMenuLast model to the last model the user clicks on
     $scope.setModel = function (model){
@@ -92,18 +101,51 @@ function myModelsList($scope) {
     };
 
 
-    // changes color of model depending on if from personal or database
+    // changes color of model depending on if from personal or database also depending on different style configuration
 	$scope.styleModel = function(dbType, color) {
     if(dbType == "Personal")        
-        return {
-                'color': '#FFFFFF',
-				'background-color': color.personal
-        };
+        if ($scope.data.selected.value == 2) {
+            return {
+
+                    'width':'223px',
+                    'height':'42px',
+                    'background-image': 'linear-gradient(left, '+color.personal+', '+color.personal+' 5%, transparent 5%, transparent 100%)',
+                    'background-image': '-webkit-linear-gradient(left, '+color.personal+', '+color.personal+' 5%, transparent 5%, transparent 100%)',
+                    'color': color.personal
+
+            };
+        }
+        else{
+            return {
+                    
+                    'color': '#FFFFFF',
+                    'background-color': color.personal
+            };
+
+        }
     else if(dbType == "Database")
-        return {
-                'color': '#FFFFFF',
-				'background-color': color.database
-		};
+        if ($scope.data.selected.value == 2) {
+
+            return {
+
+                    'width':'223px',
+                    'height':'42px',
+                    'background-image': 'linear-gradient(left, '+color.database+', '+color.database+' 5%, transparent 5%, transparent 100%)',
+                    'background-image': '-webkit-linear-gradient(left, '+color.database+', '+color.database+' 5%, transparent 5%, transparent 100%)',
+                    'color': color.database
+
+            };
+        }
+        else{
+            return {
+                    
+                    'color': '#FFFFFF',
+                    'background-color': color.database
+            };
+
+        }
+
+
 	};
 
 	// returns the path for the correct poopover template depending on cell type
@@ -117,6 +159,8 @@ function myModelsList($scope) {
 
 	};
 
+
+    
 	// needed for color picker popover to appear with html template
 	$scope.colorPickerPopover = {
   		"title": "Title",
