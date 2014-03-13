@@ -1,10 +1,15 @@
 <div class="popover" ng-show="content">
   <div class="arrow"></div>
-  <h3 class="popover-title" ng-bind-html-unsafe="title" ng-show="title"> Color Configuration </h3>
-  <div class="popover-content">
+  <h3 class="popover-title" ng-bind-html-unsafe="title" ng-show="title"> <label>Color Configuration</label> </h3>
+  <div class="popover-content" style="max-width:225px;">
     <button colorpicker colorpicker-position="top" class ="span2" type="button" class="btn btn-default" ng-model="model_color.personal"> <span class="glyphicon glyphicon-eye-open"></span></button><label ng-style="{color: model_color.personal}"> Personal Color</label>
     <br />
     <button colorpicker colorpicker-position="top" class ="span2" type="button" class="btn btn-default" ng-model="model_color.database"> <span class="glyphicon glyphicon-eye-open"></span></button><label ng-style="{color: model_color.database}"> Database Color </label>
+    <br>
+    Change Style:
+    <select ng-model="data.selected" ng-options="opt as opt.label for opt in options" style="margin=auto; text-align=auto">
+    </select>
+
+
   </div>
 </div>
-
