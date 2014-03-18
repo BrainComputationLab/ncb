@@ -50,8 +50,6 @@ var prePost = [null, null]
 
 var ncbApp = angular.module('ncbApp', ['ui.bootstrap', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'colorpicker.module']);
 
-
-
 //scope for models in the left menu
 function myModelsList($scope) {
     //set the scope to point at myModels
