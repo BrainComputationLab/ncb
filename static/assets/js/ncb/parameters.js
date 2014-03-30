@@ -1,3 +1,12 @@
+function currentWorkingModel() {
+	this.name = "Current Model";
+	this.description = "";
+	this.neurons = [];
+	this.cellGroups = [];
+	this.cellAliases = [];
+	this.synapses = [];
+}
+
 function izhikevichParam() {
 	this.className = "izhikevichParam";
 	this.a = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0}; 		 //double
@@ -114,27 +123,32 @@ function reportParameters() {
 }
 
 function modelParameters(name, type, parameters, dbType) {
+	this.className = "neuron";
 	this.name = name;
 	this.type = type;
 	this.parameters = parameters;
 	this.dbType = dbType;
 }
 
-function cellGroup(name, num, modelParameters, geometry, subGroup) {
+function cellGroup(name, num, modelParameters, geometry) {
+	this.className = "cellGroup";
 	this.name = name;
 	this.num = num;
 	this.modelParameters = modelParameters;
 	this.geometry = geometry;
-	this.subGroup = subGroup; //temporary becasue I dont know how cellAliases work with cellgroups. What is the point of aliases when you can put subgroups in cellgroups?
+	this.cellGroups = [];
+	//this.subGroup = subGroup;
 }
 
 function cellAlias(name, cellGroup, cellAlias) {
+	this.className = "cellAlias";
 	this.name = name;
 	this.cellGroup = cellGroup;
 	this.cellAlias = cellAlias;
 }
 
 function synapseGroup(name, pre, post, prob, parameters) {
+	this.className = "synapseGroup"
 	this.name = name;
 	this.pre = pre;
 	this.post = post;

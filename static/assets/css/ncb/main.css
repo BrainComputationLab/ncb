@@ -83,4 +83,6 @@ body {
 	font-size: 10px;
 }
 
-
+.centered {
+    text-align:center;
+}

@@ -26,7 +26,6 @@
                             <div id="cellgroup" class="col-lg-5">
                                 <div id="cellParams">
                                     <a class="list-group-item"> CellGroup Name: </a>
-                                    <a class="list-group-item"> Model Name: </a>
                                     <a class="list-group-item"> Quantity: </a>
                                     <a class="list-group-item"> Geometry: </a>
                                 </div>
@@ -146,10 +145,10 @@
                     <div class="form-group">
                         <label for="modalchanneltype" class="col-sm-4 control-label"> Channel Type</label>
                         <div class="col-sm-8">
-                            <select class="form-control">
-                                <option onClick="popChanModal(1)">Voltage Gated Ion Channel</option>
-                                <option onClick="popChanModal(2)">Calcium Dependant Channel</option>
-                                <option onClick="popChanModal(3)">Voltage Gated Channel</option>
+                            <select class="form-control" id="addChannelType">
+                                <option value='0'>Voltage Gated Ion Channel</option>
+                                <option value='1'>Calcium Dependant Channel</option>
+                                <option value='2'>Voltage Gated Channel</option>
                             </select>
                         </div>
                     </div>
@@ -157,7 +156,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-success" onClick="addChannel()" data-dismiss="modal">Save</button>
             </div>
         </div>
     </div>

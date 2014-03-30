@@ -33,6 +33,7 @@ var inc = 0;
 var pos = 0;
 var value = 0;
 var index1 = 0;
+var index = 0;
 var indexs = [];
 var breadDepth = 1;
 var globalCellGroup = [];
@@ -42,11 +43,15 @@ var dynamicChanNum = 0;
 var dynamicSynNum = 0;
 var leftMenuLast = {};
 var midMenuLast = {};
+var cellGroupLast = {};
 var aliasid = 0;
 var aliasVals = [];
 var aliasVal = 0;
 var synapseChoice = 1;
 var prePost = [null, null]
+
+var currentModel = new currentWorkingModel();
+var indexes = [];
 
 var ncbApp = angular.module('ncbApp', ['ui.bootstrap', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'colorpicker.module']);
 
@@ -80,22 +85,16 @@ function myModelsList($scope) {
         var result = $.grep(myModels, function(e){ return e.name == model; });
         var sub = [];
 
-        // push a new cellgroup into the cellGroup variable
-        if(pos == 0) {
-            globalCellGroup.push({name: "tempGrp"+inc, num: 1, modelParameters: cloneModel(result[0]), geometry: "box", subGroup: sub});
+        if(result[0].className === "neuron") {
+            currentModel.neurons.push({name: "neuron"+inc, type: result[0].type, parameters: cloneParam(result[0].parameters), dbType: 'Personal'});
         }
-        else {
-            var moveInto = globalCellGroup[indexs[0]];
-            for(i=1; i<pos; i++) {
-                if(moveInto.subGroup.length != 0 ) {
-                    moveInto = moveInto.subGroup[indexs[i]];
-                } 
-            }
-            moveInto.subGroup.push({name: 'tempGrp'+inc, num: 1, modelParameters: cloneModel(result[0]), geometry: 'box', subGroup: sub})
-        }
-        // increment counter to keep names unique
-        inc++;
+        else if(result[0].className === "cellGroup") {
 
+        }
+        else if(result[0].className === "cellAlias") {
+
+        }
+        inc++;
     };
 
 
@@ -177,200 +176,122 @@ function myModelsList($scope) {
 
 //scope for the cellgroups in the center menu
 function myModelsList2($scope, $compile) {
-    // show the first layer of cellgroups added
     $scope.list = globalCellGroup;
-    //$scope.list2 = globalCellAlias;
-    
-    // set the midMenuLast model to the last cellgroup the user clicks on in the middle menu
+    $scope.list2 = currentModel;
+
     $scope.setModel = function (model, num1){
-        // if user on home state
-        if(pos == 0) {
-            // search the array for the model the user clicked on
-            if(num1 == 1) {var result = $.grep(globalCellGroup, function(e){ return e.name == model; });}
-            if(num1 == 2) {var result = $.grep(globalCellAlias, function(e){ return e.name == model; });}
-
-            // clone the value in midMenuLast
+        if(num1 == 0) {
+            $('#collapse0').hide();
+            var result = $.grep(currentModel.neurons, function(e){return e.name == model; });
             midMenuLast = {};
-            clone(midMenuLast, result[0]);
-
-            // find the index of that value
-            if(num1 == 1) {index1 = getIndex(globalCellGroup, "name", midMenuLast.name);}
-            if(num1 == 2) {index1 = getIndex(globalCellAlias, "name", midMenuLast.name);}
-
-            // populate the cellgroup parameters on the right corresponding to what the user clicked on
-            if(num1 == 1) {popCellP();}
-            if(num1 == 2) {popAliasP();}
+            midMenuLast = result[0];
+            midMenuLast.className = "neuron";
+            index = getIndex(currentModel.neurons, "name", midMenuLast.name);
+            popModelP();
             return;
         }
-
-        if(num1 == 1) {
-	        var moveInto = globalCellGroup[indexs[0]];
-	            for(i=1; i<pos; i++) {
-	                if(moveInto.subGroup.length != 0 ) {
-	                    moveInto = moveInto.subGroup[indexs[i]];
-	                } 
-	            }
-
-	        // search the subArray and find the name and then the index of that name
-	        var result = $.grep(moveInto.subGroup, function(e){ return e.name == model; });
-	        midMenuLast = {};
-	        clone(midMenuLast, result[0]);
-	        index1 = getIndex(moveInto.subGroup, "name", midMenuLast.name);
-	        
-	        // populate the cellgroup parameters on the right corresponding to what the user clicked on
-	        popCellP();
-    	}
-    	if(num1 == 2) {
-    		var moveInto = globalCellAlias[indexs[0]];
-	            for(i=1; i<pos; i++) {
-	                if(moveInto.cellAlias.length != 0 ) {
-	                    moveInto = moveInto.cellAlias[indexs[i]];
-	                } 
-	            }
-	        // search the subArray and find the name and then the index of that name
-	        var result = $.grep(moveInto.cellAlias, function(e){ return e.name == model; });
-	        midMenuLast = {};
-	        clone(midMenuLast, result[0]);
-	        index1 = getIndex(moveInto.cellAlias, "name", midMenuLast.name);
-    	}
+        else if(num1 = 1){
+            $('#collapse0').show();
+            if(pos != 0) {
+                var moveInto = currentModel.cellGroups[indexes[0]];
+                for(i=1; i<pos; i++) {
+                    if(moveInto.cellGroups.length != 0) {
+                        moveInto = moveInto.cellGroups[indexes[i]];
+                    }
+                }
+                // console.log(moveInto)
+                var result = $.grep(moveInto.cellGroups, function(e){return e.name == model; });
+            }
+            else {
+                var result = $.grep(currentModel.cellGroups, function(e){return e.name == model; }); 
+            }
+            
+            cellGroupLast = {};
+            cellGroupLast = result[0];
+            midMenuLast = cellGroupLast.modelParameters;
+            index = getIndex(currentModel.cellGroups, "name", cellGroupLast.name);
+            popCellP();
+            //midMenuLast = midMenuLast.modelParameters;
+            console.log(midMenuLast.name)
+            popModelP();
+            return;
+        }
+       
     };
     
     // when the user double clicks on a cellgroup it should set the scope to that cellgroups subgroup.
     $scope.intoModel = function (num1){
-        // as the user goes deeper into the subarrays then add to this counter
         pos += 1;
+        indexes.push(index);
 
-        // when the user double clicks push the index of what they clicked on into the index array
-        indexs.push(index1);
+        var myStr = $compile('<li><a id="' + breadDepth + '" class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + cellGroupLast.name + '</a></li>')($scope);
 
-        var moveInto = globalCellGroup[indexs[0]];
-            for(i=1; i<pos; i++) {
-                if(moveInto.subGroup.length != 0 ) {
-                    moveInto = moveInto.subGroup[indexs[i]];
-                } 
+        for(i=1; i<pos; i++) {
+            if(cellGroupLast.cellGroups.length != 0) {
+                cellGroupLast = cellGroupLast.cellGroups[indexes[i]];
             }
+        }
 
-        
-        // add the breadcrumb of whatever the user clicked on
-        var myStr = $compile('<li><a id="' + breadDepth + '" class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + midMenuLast.name + '</a></li>')($scope);
         $('#bread').append(myStr);
         breadDepth += 1;
 
-        $scope.list = moveInto.subGroup;
-        //$scope.list2 = moveIntoA.cellAlias;
+        console.log(cellGroupLast)
+        $scope.list2 = cellGroupLast;
     };
 
     // when the user clicks on home it erases the breadcrumbs and resets the scope to the home level
     $scope.breadGoHome = function (event) {
-        // reset the position to the beginning
         pos = 0;
-
-        // reset bread depth
         breadDepth = 1;
+        indexes.length = 0;
 
-        // erase the indexs array
-        indexs.length = 0;
-
-        // erase all the breadcrumbs
         $('#bread').html('');
-
-        // recompile the new home breadcrumb because it uses an angular click inside. This is so angular knows it is there.
         var myStr = $compile('<li><a id="bc1" class="active" ng-click="breadGoHome()" href="javascript:">Home</a></li>')($scope);
-
-        // append the new home button to the breadcrumbs
         $('#bread').append(myStr);
 
-        // reset the scope to home.
-        $scope.list = globalCellGroup;
-        //$scope.list2 = globalCellAlias;
+        $scope.list2 = currentModel;
     };
 
     $scope.changeBreadcrumb = function (event) {
-        var moveInto = globalCellGroup[indexs[0]];
-        for(i=1; i<event.target.id; i++) {
-            moveInto = moveInto.subGroup[indexs[i]];
-        }
-
-        // update breadcrumbs and pos
         breadDepth = +event.target.id + 1;
         pos = +event.target.id;
 
-        // erase all the breadcrumbs
         $('#bread').html('');
 
-        // recompile the new home breadcrumb because it uses an angular click inside. This is so angular knows it is there.
         var myStr = $compile('<li><a id="bc1" class="active" ng-click="breadGoHome()" href="javascript:">Home</a></li>')($scope);
 
-        // append the new home button to the breadcrumbs
         $('#bread').append(myStr);
 
-
-        var moveInto2 = globalCellGroup[indexs[0]];
         var depth = 1;
 
-        // redraw the correct breadcrumbs
-        for(var i=0; i<breadDepth-1; i++) {
-            var name = moveInto2.name;
-            moveInto2 = moveInto2.subGroup[indexs[i+1]]; 
-
+        var moveInto = currentModel.cellGroups[indexes[0]];
+        for(i=1; i<breadDepth-1; i++) {
+            var name = moveInto.name;
+            moveInto = moveInto.cellGroups[indexes[i]];
             var myStr2 = $compile('<li><a id="' + depth + '"class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + name + '</a></li>')($scope);
             $('#bread').append(myStr2);
             depth += 1;
-        }       
+        }
 
-        indexs.length = breadDepth - 1;
-        
-        $scope.list = moveInto.subGroup;
-        
+        indexes.length = breadDepth - 1;
+
+        $scope.list2 = moveInto;        
     };
 
 }
 
-//scope for the cellaliases in the center menu
-function myModelsList3($scope, $compile) {
-    $scope.list = globalCellAlias;
-}
-
-$().ready( function() {
-    hideAll();
-    //$('#modelP').click(popModelP);
-    //$('#cellP').click(popCellP);
-    $('#cellGroupCollapse').show();
-    $('#paramCollapse').show();
-
-    $.fn.editable.defaults.mode = 'popup';
-});
-
 function popCellP() {
     $('#cellGroupCollapse').show();
-    popModelP();
 
     $('#cellGroupParams').html('');
-    $("#cellGroupParams").append('<a id="n1" class="list-group-item">' + midMenuLast.name +'</a>');
-    $("#cellGroupParams").append('<a id="n2" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
-    $("#cellGroupParams").append('<a id="n3" class="list-group-item">' + midMenuLast.num +'</a>');
-    $("#cellGroupParams").append('<a id="n4" class="list-group-item">' + midMenuLast.geometry +'</a>');
+    $("#cellGroupParams").append('<a id="n1" class="list-group-item">' + cellGroupLast.name +'</a>');
+    $("#cellGroupParams").append('<a id="n3" class="list-group-item">' + cellGroupLast.num +'</a>');
+    $("#cellGroupParams").append('<a id="n4" class="list-group-item">' + cellGroupLast.geometry +'</a>');
     $('#cellGroupParams a').editable({
         'success': function(response, newValue) {
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
-                        }
-
-                        // search the subArray and find the name and then the index of that name            
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-
-                        if(this.id == "n1") { midMenuLast.name = newValue; }
-                        if(this.id == "n2") { midMenuLast.modelParameters.name = newValue; }
-                        if(this.id == "n3") { midMenuLast.num = newValue; }
-                        if(this.id == "n4") { midMenuLast.geometry = newValue; }
-                        if(pos == 0) { clone(globalCellGroup[index0], midMenuLast); }
-                        else { clone(moveInto3.subGroup[index], midMenuLast); }
+                        if(this.id == "n1") { cellGroupLast.name = newValue; }
+                        if(this.id == "n3") { cellGroupLast.num = newValue; }
+                        if(this.id == "n4") { cellGroupLast.geometry = newValue; }
                     }
     });
 }
@@ -382,914 +303,458 @@ function popModelP() {
 
     $('#name a').editable({
         'success': function(response, newValue) {
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id === "n11") {midMenuLast.name = newValue;};
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "n11") {midMenuLast.modelParameters.name = newValue}
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
+                        else if(midMenuLast.className === "cellGroup") {
+
+                        }
                     }
     });
     $('#type2 a').editable({
         'source': dropChoice,
         'success': function(response, newValue) {
-                    if(midMenuLast.modelParameters.type === "Izhikevich") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.type === "Izhikevich") {
+                                if(this.id === "a1") { midMenuLast.parameters.a.type = dropChoice[newValue].text; }
+                                if(this.id === "b1") { midMenuLast.parameters.b.type = dropChoice[newValue].text; }
+                                if(this.id === "c1") { midMenuLast.parameters.c.type = dropChoice[newValue].text; }
+                                if(this.id === "d1") { midMenuLast.parameters.d.type = dropChoice[newValue].text; }
+                                if(this.id === "u1") { midMenuLast.parameters.u.type = dropChoice[newValue].text; }
+                                if(this.id === "v1") { midMenuLast.parameters.v.type = dropChoice[newValue].text; }
+                                if(this.id === "t1") { midMenuLast.parameters.threshold.type = dropChoice[newValue].text; }
+                            }
+                            else if(midMenuLast.type === "NCS") {
+                                if(this.id === "a1") { midMenuLast.parameters.threshold.type = dropChoice[newValue].text; }
+                                if(this.id === "b1") { midMenuLast.parameters.restingPotential.type = dropChoice[newValue].text; }
+                                if(this.id === "c1") { midMenuLast.parameters.calcium.type = dropChoice[newValue].text; }
+                                if(this.id === "d1") { midMenuLast.parameters.calciumSpikeIncrement.type = dropChoice[newValue].text; }
+                                if(this.id === "e1") { midMenuLast.parameters.tauCalcium.type = dropChoice[newValue].text; }
+                                if(this.id === "f1") { midMenuLast.parameters.leakReversalPotential.type = dropChoice[newValue].text; }
+                                if(this.id === "g1") { midMenuLast.parameters.tauMembrane.type = dropChoice[newValue].text; }
+                                if(this.id === "h1") { midMenuLast.parameters.rMembrane.type = dropChoice[newValue].text; }
+                                if(this.id === "i1") { midMenuLast.parameters.spikeShape.type = dropChoice[newValue].text; }
+                            }
+                            else if(midMenuLast.type === "HodgkinHuxley") {
+                                if(this.id === "a1") { midMenuLast.parameters.threshold.type = dropChoice[newValue].text; }
+                                if(this.id === "b1") { midMenuLast.parameters.restingPotential.type = dropChoice[newValue].text; }
+                                if(this.id === "c1") { swmidMenuLast.parameters.capacitence.type = dropChoice[newValue].text; }
+                            }
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a1") { swap.a.type = dropChoice[newValue].text; }
-                        if(this.id == "b1") { swap.b.type = dropChoice[newValue].text; }
-                        if(this.id == "c1") { swap.c.type = dropChoice[newValue].text; }
-                        if(this.id == "d1") { swap.d.type = dropChoice[newValue].text; }
-                        if(this.id == "u1") { swap.u.type = dropChoice[newValue].text; }
-                        if(this.id == "v1") { swap.v.type = dropChoice[newValue].text; }
-                        if(this.id == "t1") { swap.threshold.type = dropChoice[newValue].text; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "NCS") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        else if(midMenuLast.className === "cellGroup") {
+                            
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a1") { swap.threshold.type = dropChoice[newValue].text; }
-                        if(this.id == "b1") { swap.restingPotential.type = dropChoice[newValue].text; }
-                        if(this.id == "c1") { swap.calcium.type = dropChoice[newValue].text; }
-                        if(this.id == "d1") { swap.calciumSpikeIncrement.type = dropChoice[newValue].text; }
-                        if(this.id == "e1") { swap.tauCalcium.type = dropChoice[newValue].text; }
-                        if(this.id == "f1") { swap.leakReversalPotential.type = dropChoice[newValue].text; }
-                        if(this.id == "g1") { swap.tauMembrane.type = dropChoice[newValue].text; }
-                        if(this.id == "h1") { swap.rMembrane.type = dropChoice[newValue].text; }
-                        if(this.id == "i1") { swap.spikeShape.type = dropChoice[newValue].text; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
-                        }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a1") { swap.threshold.type = dropChoice[newValue].text; }
-                        if(this.id == "b1") { swap.restingPotential.type = dropChoice[newValue].text; }
-                        if(this.id == "c1") { swap.capacitence.type = dropChoice[newValue].text; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    } 
                    }
     });
     $('#value a').editable({
         'success': function(response, newValue) {
-                    if(midMenuLast.modelParameters.type === "Izhikevich") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.type === "Izhikevich") {
+                                if(this.id === "a2") { midMenuLast.parameters.a.value = newValue; }
+                                if(this.id === "b2") { midMenuLast.parameters.b.value = newValue; }
+                                if(this.id === "c2") { midMenuLast.parameters.c.value = newValue; }
+                                if(this.id === "d2") { midMenuLast.parameters.d.value = newValue; }
+                                if(this.id === "u2") { midMenuLast.parameters.u.value = newValue; }
+                                if(this.id === "v2") { midMenuLast.parameters.v.value = newValue; }
+                                if(this.id === "t2") { midMenuLast.parameters.threshold.value = newValue; }
+                            }
+                            else if(midMenuLast.type === "NCS") {
+                                if(this.id === "a2") { midMenuLast.parameters.threshold.value = newValue; }
+                                if(this.id === "b2") { midMenuLast.parameters.restingPotential.value = newValue; }
+                                if(this.id === "c2") { midMenuLast.parameters.calcium.value = newValue; }
+                                if(this.id === "d2") { midMenuLast.parameters.calciumSpikeIncrement.value = newValue; }
+                                if(this.id === "e2") { midMenuLast.parameters.tauCalcium.value = newValue; }
+                                if(this.id === "f2") { midMenuLast.parameters.leakReversalPotential.value = newValue; }
+                                if(this.id === "g2") { midMenuLast.parameters.tauMembrane.value = newValue; }
+                                if(this.id === "h2") { midMenuLast.parameters.rMembrane.value = newValue; }
+                                if(this.id === "i2") { midMenuLast.parameters.spikeShape.value = newValue; }
+                            }
+                            else if(midMenuLast.type === "HodgkinHuxley") {
+                                if(this.id === "a2") { midMenuLast.parameters.threshold.value = newValue; }
+                                if(this.id === "b2") { midMenuLast.parameters.restingPotential.value = newValue; }
+                                if(this.id === "c2") { midMenuLast.parameters.capacitence.value = newValue; }
+                            }
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a2") { swap.a.value = newValue; }
-                        if(this.id == "b2") { swap.b.value = newValue; }
-                        if(this.id == "c2") { swap.c.value = newValue; }
-                        if(this.id == "d2") { swap.d.value = newValue; }
-                        if(this.id == "u2") { swap.u.value = newValue; }
-                        if(this.id == "v2") { swap.v.value = newValue; }
-                        if(this.id == "t2") { swap.threshold.value = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "NCS") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        else if(midMenuLast.className === "cellGroup") {
+                            
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a2") { swap.threshold.value = newValue; }
-                        if(this.id == "b2") { swap.restingPotential.value = newValue; }
-                        if(this.id == "c2") { swap.calcium.value = newValue; }
-                        if(this.id == "d2") { swap.calciumSpikeIncrement.value = newValue; }
-                        if(this.id == "e2") { swap.tauCalcium.value = newValue; }
-                        if(this.id == "f2") { swap.leakReversalPotential.value = newValue; }
-                        if(this.id == "g2") { swap.tauMembrane.value = newValue; }
-                        if(this.id == "h2") { swap.rMembrane.value = newValue; }
-                        if(this.id == "i2") { swap.spikeShape.value = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
-                        }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a2") { swap.threshold.value = newValue; }
-                        if(this.id == "b2") { swap.restingPotential.value = newValue; }
-                        if(this.id == "c2") { swap.capacitence.value = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
                    }
     });
     $('#minvalue a').editable({
         'success': function(response, newValue) {
-                    if(midMenuLast.modelParameters.type === "Izhikevich") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.type === "Izhikevich") {
+                                if(this.id == "a3") { midMenuLast.parameters.a.minValue = newValue; }
+                                if(this.id == "b3") { midMenuLast.parameters.b.minValue = newValue; }
+                                if(this.id == "c3") { midMenuLast.parameters.c.minValue = newValue; }
+                                if(this.id == "d3") { midMenuLast.parameters.d.minValue = newValue; }
+                                if(this.id == "u3") { midMenuLast.parameters.u.minValue = newValue; }
+                                if(this.id == "v3") { midMenuLast.parameters.v.minValue = newValue; }
+                                if(this.id == "t3") { midMenuLast.parameters.threshold.minValue = newValue; }
+                            }
+                            else if(midMenuLast.type === "NCS") {
+                                if(this.id == "a3") { midMenuLast.parameters.threshold.minValue = newValue; }
+                                if(this.id == "b3") { midMenuLast.parameters.restingPotentminValueial.minValue = newValue; }
+                                if(this.id == "c3") { midMenuLast.parameters.calcium.minValue = newValue; }
+                                if(this.id == "d3") { midMenuLast.parameters.calciumSpikeIncrement.minValue = newValue; }
+                                if(this.id == "e3") { midMenuLast.parameters.tauCalcium.minValue = newValue; }
+                                if(this.id == "f3") { midMenuLast.parameters.leakReversalPotential.minValue = newValue; }
+                                if(this.id == "g3") { midMenuLast.parameters.tauMembrane.minValue = newValue; }
+                                if(this.id == "h3") { midMenuLast.parameters.rMembrane.minValue = newValue; }
+                                if(this.id == "i3") { midMenuLast.parameters.spikeShape.minValue = newValue; }
+                            }
+                            else if(midMenuLast.type === "HodgkinHuxley") {
+                                if(this.id == "a3") { midMenuLast.parameters.threshold.minValue = newValue; }
+                                if(this.id == "b3") { midMenuLast.parameters.restingPotential.minValue = newValue; }
+                                if(this.id == "c3") { midMenuLast.parameters.capacitence.minValue = newValue; }
+                            }
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);         
-                        if(this.id == "a3") { swap.a.minValue = newValue; }
-                        if(this.id == "b3") { swap.b.minValue = newValue; }
-                        if(this.id == "c3") { swap.c.minValue = newValue; }
-                        if(this.id == "d3") { swap.d.minValue = newValue; }
-                        if(this.id == "u3") { swap.u.minValue = newValue; }
-                        if(this.id == "v3") { swap.v.minValue = newValue; }
-                        if(this.id == "t3") { swap.threshold.minValue = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "NCS") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        else if(midMenuLast.className === "cellGroup") {
+                            
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a3") { swap.threshold.minValue = newValue; }
-                        if(this.id == "b3") { swap.restingPotential.minValue = newValue; }
-                        if(this.id == "c3") { swap.calcium.minValue = newValue; }
-                        if(this.id == "d3") { swap.calciumSpikeIncrement.minValue = newValue; }
-                        if(this.id == "e3") { swap.tauCalcium.minValue = newValue; }
-                        if(this.id == "f3") { swap.leakReversalPotential.minValue = newValue; }
-                        if(this.id == "g3") { swap.tauMembrane.minValue = newValue; }
-                        if(this.id == "h3") { swap.rMembrane.minValue = newValue; }
-                        if(this.id == "i3") { swap.spikeShape.minValue = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
-                        }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a3") { swap.threshold.minValue = newValue; }
-                        if(this.id == "b3") { swap.restingPotential.minValue = newValue; }
-                        if(this.id == "c3") { swap.capacitence.minValue = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
                    }
     });
     $('#maxvalue a').editable({
         'success': function(response, newValue) {
-                    if(midMenuLast.modelParameters.type === "Izhikevich") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.type === "Izhikevich") {
+                                if(this.id == "a4") { midMenuLast.parameters.a.maxValue = newValue; }
+                                if(this.id == "b4") { midMenuLast.parameters.b.maxValue = newValue; }
+                                if(this.id == "c4") { midMenuLast.parameters.c.maxValue = newValue; }
+                                if(this.id == "d4") { midMenuLast.parameters.d.maxValue = newValue; }
+                                if(this.id == "u4") { midMenuLast.parameters.u.maxValue = newValue; }
+                                if(this.id == "v4") { midMenuLast.parameters.v.maxValue = newValue; }
+                                if(this.id == "t4") { midMenuLast.parameters.threshold.maxValue = newValue; }
+                            }
+                            else if(midMenuLast.type === "NCS") {
+                                if(this.id == "a4") { midMenuLast.parameters.threshold.maxValue = newValue; }
+                                if(this.id == "b4") { midMenuLast.parameters.restingPotentminValueial.maxValue = newValue; }
+                                if(this.id == "c4") { midMenuLast.parameters.calcium.maxValue = newValue; }
+                                if(this.id == "d4") { midMenuLast.parameters.calciumSpikeIncrement.maxValue = newValue; }
+                                if(this.id == "e4") { midMenuLast.parameters.tauCalcium.maxValue = newValue; }
+                                if(this.id == "f4") { midMenuLast.parameters.leakReversalPotential.maxValue = newValue; }
+                                if(this.id == "g4") { midMenuLast.parameters.tauMembrane.maxValue = newValue; }
+                                if(this.id == "h4") { midMenuLast.parameters.rMembrane.maxValue = newValue; }
+                                if(this.id == "i4") { midMenuLast.parameters.spikeShape.maxValue = newValue; }
+                            }
+                            else if(midMenuLast.type === "HodgkinHuxley") {
+                                if(this.id == "a4") { midMenuLast.parameters.threshold.maxValue = newValue; }
+                                if(this.id == "b4") { midMenuLast.parameters.restingPotential.maxValue = newValue; }
+                                if(this.id == "c4") { midMenuLast.parameters.capacitence.maxValue = newValue; }
+                            }
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a4") { swap.a.maxValue = newValue; }
-                        if(this.id == "b4") { swap.b.maxValue = newValue; }
-                        if(this.id == "c4") { swap.c.maxValue = newValue; }
-                        if(this.id == "d4") { swap.d.maxValue = newValue; }
-                        if(this.id == "u4") { swap.u.maxValue = newValue; }
-                        if(this.id == "v4") { swap.v.maxValue = newValue; }
-                        if(this.id == "t4") { swap.threshold.maxValue = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "NCS") { 
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
+                        else if(midMenuLast.className === "cellGroup") {
+                            
                         }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a4") { swap.threshold.maxValue = newValue; }
-                        if(this.id == "b4") { swap.restingPotential.maxValue = newValue; }
-                        if(this.id == "c4") { swap.calcium.maxValue = newValue; }
-                        if(this.id == "d4") { swap.calciumSpikeIncrement.maxValue = newValue; }
-                        if(this.id == "e4") { swap.tauCalcium.maxValue = newValue; }
-                        if(this.id == "f4") { swap.leakReversalPotential.maxValue = newValue; }
-                        if(this.id == "g4") { swap.tauMembrane.maxValue = newValue; }
-                        if(this.id == "h4") { swap.rMembrane.maxValue = newValue; }
-                        if(this.id == "i4") { swap.spikeShape.maxValue = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
-                    else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
-                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-                        
-                        for(i=1; i<pos; i++) {
-                            if(moveInto3.subGroup.length != 0 ) {
-                                moveInto3 = moveInto3.subGroup[indexs[i]];
-                            } 
-                        }
-                        
-                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters);
-                        if(this.id == "a4") { swap.threshold.maxValue = newValue; }
-                        if(this.id == "b4") { swap.restingPotential.maxValue = newValue; }
-                        if(this.id == "c4") { swap.capacitence.maxValue = newValue; }
-                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters = $.extend(true, {}, swap); }
-                        else { moveInto3.subGroup[index].modelParameters.parameters = $.extend(true, {}, swap); }
-                        delete swap;
-                    }
                    }
     });
     for(var x=0; x<dynamicChanNum; x++) {
-	    $('#channeltype'+x).editable({
-	        'source': dropChoice2,
-	        'success': function(response, newValue) {
-	                if (typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                else { var moveInto3 = globalCellGroup[indexs[0]]; }
-
-	                for (i = 1; i < pos; i++) {
-	                    if (moveInto3.subGroup.length != 0) {
-	                        moveInto3 = moveInto3.subGroup[indexs[i]];
-	                    }
-	                }
-	                var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                if (newValue == 0) { var swap = new voltageGatedIonChannel(); }
-	                else if (newValue == 1) { var swap = new calciumDependantChannel(); }
-	                else if (newValue == 2) { var swap = new voltageGatedChannel(testParticle); }
-
-	                if (pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel = $.extend(true, {}, swap); }
-	                else { moveInto3.subGroup[index].modelParameters.parameters.channel = $.extend(true, {}, swap); }
-	                delete swap;
-	            }
-	    });
 	    $('#chantype'+x+' a').editable({
 	        'source': dropChoice,
 	        'success': function(response, newValue) {
-	        			var thisVal = this.id.slice(-1);
-	                    if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha1"+thisVal) { swap.vHalf.type = dropChoice[newValue].text; }
-	                        if(this.id == "chb1"+thisVal) { swap.r.type = dropChoice[newValue].text;}
-	                        if(this.id == "chc1"+thisVal) { swap.activationSlope.type = dropChoice[newValue].text; }
-	                        if(this.id == "chd1"+thisVal) { swap.deactivationSlope.type = dropChoice[newValue].text; }
-	                        if(this.id == "che1"+thisVal) { swap.equilibriumSlope.type = dropChoice[newValue].text; }
-	                        if(this.id == "chf1"+thisVal) { swap.conductance.type = dropChoice[newValue].text; }
-	                        if(this.id == "chg1"+thisVal) { swap.reversalPotential.type = dropChoice[newValue].text; }
-	                        if(this.id == "chh1"+thisVal) { swap.mInitial.type = dropChoice[newValue].text; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha1"+thisVal) { swap.mInitial.type = dropChoice[newValue].text; }
-	                        if(this.id == "chb1"+thisVal) { swap.reversalPotential.type = dropChoice[newValue].text; }
-	                        if(this.id == "chc1"+thisVal) { swap.backwardsRate.type = dropChoice[newValue].text; }
-	                        if(this.id == "chd1"+thisVal) { swap.forwardScale.type = dropChoice[newValue].text; }
-	                        if(this.id == "che1"+thisVal) { swap.forwardExponent.type = dropChoice[newValue].text; }
-	                        if(this.id == "chf1"+thisVal) { swap.tauScale.type = dropChoice[newValue].text; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha1"+thisVal) { swap.conductance.type = dropChoice[newValue].text; }
-	                        if(this.id == "chb1"+thisVal) { swap.reversePotential.type = dropChoice[newValue].text; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
+                                if(this.id == "cha1"+thisVal) { midMenuLast.parameters.channel[thisVal].vHalf.type = dropChoice[newValue].text; }
+                                if(this.id == "chb1"+thisVal) { midMenuLast.parameters.channel[thisVal].r.type = dropChoice[newValue].text;}
+                                if(this.id == "chc1"+thisVal) { midMenuLast.parameters.channel[thisVal].activationSlope.type = dropChoice[newValue].text; }
+                                if(this.id == "chd1"+thisVal) { midMenuLast.parameters.channel[thisVal].deactivationSlope.type = dropChoice[newValue].text; }
+                                if(this.id == "che1"+thisVal) { midMenuLast.parameters.channel[thisVal].equilibriumSlope.type = dropChoice[newValue].text; }
+                                if(this.id == "chf1"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.type = dropChoice[newValue].text; }
+                                if(this.id == "chg1"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.type = dropChoice[newValue].text; }
+                                if(this.id == "chh1"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.type = dropChoice[newValue].text; }
+                            }
+                            if(midMenuLast.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
+                                if(this.id == "cha1"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.type = dropChoice[newValue].text; }
+                                if(this.id == "chb1"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.type = dropChoice[newValue].text; }
+                                if(this.id == "chc1"+thisVal) { midMenuLast.parameters.channel[thisVal].backwardsRate.type = dropChoice[newValue].text; }
+                                if(this.id == "chd1"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardScale.type = dropChoice[newValue].text; }
+                                if(this.id == "che1"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardExponent.type = dropChoice[newValue].text; }
+                                if(this.id == "chf1"+thisVal) { midMenuLast.parameters.channel[thisVal].tauScale.type = dropChoice[newValue].text; }
+                            }
+                            else if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Channel") {
+                                if(this.id == "cha1"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.type = dropChoice[newValue].text; }
+                                if(this.id == "chb1"+thisVal) { midMenuLast.parameters.channel[thisVal].reversePotential.type = dropChoice[newValue].text; }
+                            }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#chanvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        		    var thisVal = this.id.slice(-1);
-	                    if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha2"+thisVal) { swap.vHalf.value = newValue; }
-	                        if(this.id == "chb2"+thisVal) { swap.r.value = newValue; }
-	                        if(this.id == "chc2"+thisVal) { swap.activationSlope.value = newValue; }
-	                        if(this.id == "chd2"+thisVal) { swap.deactivationSlope.value = newValue; }
-	                        if(this.id == "che2"+thisVal) { swap.equilibriumSlope.value = newValue; }
-	                        if(this.id == "chf2"+thisVal) { swap.conductance.value = newValue; }
-	                        if(this.id == "chg2"+thisVal) { swap.reversalPotential.value = newValue; }
-	                        if(this.id == "chh2"+thisVal) { swap.mInitial.value = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha2"+thisVal) { swap.mInitial.value = newValue; }
-	                        if(this.id == "chb2"+thisVal) { swap.reversalPotential.value = newValue; }
-	                        if(this.id == "chc2"+thisVal) { swap.backwardsRate.value = newValue; }
-	                        if(this.id == "chd2"+thisVal) { swap.forwardScale.value = newValue; }
-	                        if(this.id == "che2"+thisVal) { swap.forwardExponent.value = newValue; }
-	                        if(this.id == "chf2"+thisVal) { swap.tauScale.value = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha2"+thisVal) { swap.conductance.value = newValue; }
-	                        if(this.id == "chb2"+thisVal) { swap.reversePotential.value = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
+                                if(this.id == "cha2"+thisVal) { midMenuLast.parameters.channel[thisVal].vHalf.value = newValue; }
+                                if(this.id == "chb2"+thisVal) { midMenuLast.parameters.channel[thisVal].r.value = newValue; }
+                                if(this.id == "chc2"+thisVal) { midMenuLast.parameters.channel[thisVal].activationSlope.value = newValue; }
+                                if(this.id == "chd2"+thisVal) { midMenuLast.parameters.channel[thisVal].deactivationSlope.value = newValue; }
+                                if(this.id == "che2"+thisVal) { midMenuLast.parameters.channel[thisVal].equilibriumSlope.value = newValue; }
+                                if(this.id == "chf2"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.value = newValue; }
+                                if(this.id == "chg2"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.value = newValue; }
+                                if(this.id == "chh2"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.value = newValue; }
+                            }
+                            if(midMenuLast.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
+                                if(this.id == "cha2"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.value = newValue; }
+                                if(this.id == "chb2"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.value = newValue; }
+                                if(this.id == "chc2"+thisVal) { midMenuLast.parameters.channel[thisVal].backwardsRate.value = newValue; }
+                                if(this.id == "chd2"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardScale.value = newValue; }
+                                if(this.id == "che2"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardExponent.value = newValue; }
+                                if(this.id == "chf2"+thisVal) { midMenuLast.parameters.channel[thisVal].tauScale.value = newValue; }
+                            }
+                            else if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Channel") {
+                                if(this.id == "cha2"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.value = newValue; }
+                                if(this.id == "chb2"+thisVal) { midMenuLast.parameters.channel[thisVal].reversePotential.value = newValue; }
+                            }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#chanminvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        			var thisVal = this.id.slice(-1);
-	                    if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha3"+thisVal) { swap.vHalf.minValue = newValue; }
-	                        if(this.id == "chb3"+thisVal) { swap.r.minValue = newValue; }
-	                        if(this.id == "chc3"+thisVal) { swap.activationSlope.minValue = newValue; }
-	                        if(this.id == "chd3"+thisVal) { swap.deactivationSlope.minValue = newValue; }
-	                        if(this.id == "che3"+thisVal) { swap.equilibriumSlope.minValue = newValue; }
-	                        if(this.id == "chf3"+thisVal) { swap.conductance.minValue = newValue; }
-	                        if(this.id == "chg3"+thisVal) { swap.reversalPotential.minValue = newValue; }
-	                        if(this.id == "chh3"+thisVal) { swap.mInitial.minValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha3"+thisVal) { swap.mInitial.minValue = newValue; }
-	                        if(this.id == "chb3"+thisVal) { swap.reversalPotential.minValue = newValue; }
-	                        if(this.id == "chc3"+thisVal) { swap.backwardsRate.minValue = newValue; }
-	                        if(this.id == "chd3"+thisVal) { swap.forwardScale.minValue = newValue; }
-	                        if(this.id == "che3"+thisVal) { swap.forwardExponent.minValue = newValue; }
-	                        if(this.id == "chf3"+thisVal) { swap.tauScale.minValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha3"+thisVal) { swap.conductance.minValue = newValue; }
-	                        if(this.id == "chb3"+thisVal) { swap.reversePotential.minValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
+                                if(this.id == "cha3"+thisVal) { midMenuLast.parameters.channel[thisVal].vHalf.minValue = newValue; }
+                                if(this.id == "chb3"+thisVal) { midMenuLast.parameters.channel[thisVal].r.minValue = newValue; }
+                                if(this.id == "chc3"+thisVal) { midMenuLast.parameters.channel[thisVal].activationSlope.minValue = newValue; }
+                                if(this.id == "chd3"+thisVal) { midMenuLast.parameters.channel[thisVal].deactivationSlope.minValue = newValue; }
+                                if(this.id == "che3"+thisVal) { midMenuLast.parameters.channel[thisVal].equilibriumSlope.minValue = newValue; }
+                                if(this.id == "chf3"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.minValue = newValue; }
+                                if(this.id == "chg3"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.minValue = newValue; }
+                                if(this.id == "chh3"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.minValue = newValue; }
+                            }
+                            if(midMenuLast.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
+                                if(this.id == "cha3"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.minValue = newValue; }
+                                if(this.id == "chb3"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.minValue = newValue; }
+                                if(this.id == "chc3"+thisVal) { midMenuLast.parameters.channel[thisVal].backwardsRate.minValue = newValue; }
+                                if(this.id == "chd3"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardScale.minValue = newValue; }
+                                if(this.id == "che3"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardExponent.minValue = newValue; }
+                                if(this.id == "chf3"+thisVal) { midMenuLast.parameters.channel[thisVal].tauScale.minValue = newValue; }
+                            }
+                            else if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Channel") {
+                                if(this.id == "cha3"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.minValue = newValue; }
+                                if(this.id == "chb3"+thisVal) { midMenuLast.parameters.channel[thisVal].reversePotential.minValue = newValue; }
+                            }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#chanmaxvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        			var thisVal = this.id.slice(-1);
-	                    if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha4"+thisVal) { swap.vHalf.maxValue = newValue; }
-	                        if(this.id == "chb4"+thisVal) { swap.r.maxValue = newValue; }
-	                        if(this.id == "chc4"+thisVal) { swap.activationSlope.maxValue = newValue; }
-	                        if(this.id == "chd4"+thisVal) { swap.deactivationSlope.maxValue = newValue; }
-	                        if(this.id == "che4"+thisVal) { swap.equilibriumSlope.maxValue = newValue; }
-	                        if(this.id == "chf4"+thisVal) { swap.conductance.maxValue = newValue; }
-	                        if(this.id == "chg4"+thisVal) { swap.reversalPotential.maxValue = newValue; }
-	                        if(this.id == "chh4"+thisVal) { swap.mInitial.maxValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha4"+thisVal) { swap.mInitial.maxValue = newValue; }
-	                        if(this.id == "chb4"+thisVal) { swap.reversalPotential.maxValue = newValue; }
-	                        if(this.id == "chc4"+thisVal) { swap.backwardsRate.maxValue = newValue; }
-	                        if(this.id == "chd4"+thisVal) { swap.forwardScale.maxValue = newValue; }
-	                        if(this.id == "che4"+thisVal) { swap.forwardExponent.maxValue = newValue; }
-	                        if(this.id == "chf4"+thisVal) { swap.tauScale.maxValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
-	                    else if(midMenuLast.modelParameters.parameters.channel[thisVal].name === "Voltage Gated channel[thisVal]") {
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal]);
-	                        if(this.id == "cha4"+thisVal) { swap.conductance.maxValue = newValue; }
-	                        if(this.id == "chb4"+thisVal) { swap.reversePotential.maxValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal] = $.extend(true, {}, swap); }
-	                        delete swap;
-	                    }
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Ion Channel") {
+                                if(this.id == "cha4"+thisVal) { midMenuLast.parameters.channel[thisVal].vHalf.maxValue = newValue; }
+                                if(this.id == "chb4"+thisVal) { midMenuLast.parameters.channel[thisVal].r.maxValue = newValue; }
+                                if(this.id == "chc4"+thisVal) { midMenuLast.parameters.channel[thisVal].activationSlope.maxValue = newValue; }
+                                if(this.id == "chd4"+thisVal) { midMenuLast.parameters.channel[thisVal].deactivationSlope.maxValue = newValue; }
+                                if(this.id == "che4"+thisVal) { midMenuLast.parameters.channel[thisVal].equilibriumSlope.maxValue = newValue; }
+                                if(this.id == "chf4"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.maxValue = newValue; }
+                                if(this.id == "chg4"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.maxValue = newValue; }
+                                if(this.id == "chh4"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.maxValue = newValue; }
+                            }
+                            if(midMenuLast.parameters.channel[thisVal].name === "Calcium Dependant Channel") {
+                                if(this.id == "cha4"+thisVal) { midMenuLast.parameters.channel[thisVal].mInitial.maxValue = newValue; }
+                                if(this.id == "chb4"+thisVal) { midMenuLast.parameters.channel[thisVal].reversalPotential.maxValue = newValue; }
+                                if(this.id == "chc4"+thisVal) { midMenuLast.parameters.channel[thisVal].backwardsRate.maxValue = newValue; }
+                                if(this.id == "chd4"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardScale.maxValue = newValue; }
+                                if(this.id == "che4"+thisVal) { midMenuLast.parameters.channel[thisVal].forwardExponent.maxValue = newValue; }
+                                if(this.id == "chf4"+thisVal) { midMenuLast.parameters.channel[thisVal].tauScale.maxValue = newValue; }
+                            }
+                            else if(midMenuLast.parameters.channel[thisVal].name === "Voltage Gated Channel") {
+                                if(this.id == "cha4"+thisVal) { midMenuLast.parameters.channel[thisVal].conductance.maxValue = newValue; }
+                                if(this.id == "chb4"+thisVal) { midMenuLast.parameters.channel[thisVal].reversePotential.maxValue = newValue; }
+                            }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#particletype'+x+' a').editable({
 	        'source': dropChoice,
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles);
-	                        if(this.id == "pa1"+thisVal) { swap.power.type = dropChoice[newValue].text; }
-	                        if(this.id == "pb1"+thisVal) { swap.xInitial.type = dropChoice[newValue].text; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "pa1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.power.type = dropChoice[newValue].text; }
+                            if(this.id == "pb1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.xInitial.type = dropChoice[newValue].text; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#particlevalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles);
-	                        if(this.id == "pa2"+thisVal) { swap.power.value = newValue; }
-	                        if(this.id == "pb2"+thisVal) { swap.xInitial.value = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "pa2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.power.value = newValue; }
+                            if(this.id == "pb2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.xInitial.value = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#particleminvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles);
-	                        if(this.id == "pa3"+thisVal) { swap.power.minValue = newValue; }
-	                        if(this.id == "pb3"+thisVal) { swap.xInitial.minValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "pa3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.power.minValue = newValue; }
+                            if(this.id == "pb3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.xInitial.maxValue = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#particlemaxvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles);
-	                        if(this.id == "pa4"+thisVal) { swap.power.maxValue = newValue; }
-	                        if(this.id == "pb4"+thisVal) { swap.xInitial.maxValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "pa4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.power.maxValue = newValue; }
+                            if(this.id == "pb4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.xInitial.maxValue = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constanttype'+x+' a').editable({
 	        'source': dropChoice,
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.alpha);
-	                        if(this.id == "ca1"+thisVal) { swap.a.type = dropChoice[newValue].text; }
-	                        if(this.id == "cb1"+thisVal) { swap.b.type = dropChoice[newValue].text; }
-	                        if(this.id == "cc1"+thisVal) { swap.c.type = dropChoice[newValue].text; }
-	                        if(this.id == "cd1"+thisVal) { swap.d.type = dropChoice[newValue].text; }
-	                        if(this.id == "cf1"+thisVal) { swap.f.type = dropChoice[newValue].text; }
-	                        if(this.id == "ch1"+thisVal) { swap.h.type = dropChoice[newValue].text; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "ca1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.a.type = dropChoice[newValue].text; }
+                            if(this.id == "cb1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.b.type = dropChoice[newValue].text; }
+                            if(this.id == "cc1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.c.type = dropChoice[newValue].text; }
+                            if(this.id == "cd1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.d.type = dropChoice[newValue].text; }
+                            if(this.id == "cf1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.f.type = dropChoice[newValue].text; }
+                            if(this.id == "ch1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.h.type = dropChoice[newValue].text; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constantvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.alpha);
-	                        if(this.id == "ca2"+thisVal) { swap.a.value = newValue; }
-	                        if(this.id == "cb2"+thisVal) { swap.b.value = newValue; }
-	                        if(this.id == "cc2"+thisVal) { swap.c.value = newValue; }
-	                        if(this.id == "cd2"+thisVal) { swap.d.value = newValue; }
-	                        if(this.id == "cf2"+thisVal) { swap.f.value = newValue; }
-	                        if(this.id == "ch2"+thisVal) { swap.h.value = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "ca2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.a.value = newValue; }
+                            if(this.id == "cb2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.b.value = newValue; }
+                            if(this.id == "cc2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.c.value = newValue; }
+                            if(this.id == "cd2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.d.value = newValue; }
+                            if(this.id == "cf2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.f.value = newValue; }
+                            if(this.id == "ch2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.h.value = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constantminvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.alpha);
-	                        if(this.id == "ca3"+thisVal) { swap.a.minValue = newValue; }
-	                        if(this.id == "cb3"+thisVal) { swap.b.minValue = newValue; }
-	                        if(this.id == "cc3"+thisVal) { swap.c.minValue = newValue; }
-	                        if(this.id == "cd3"+thisVal) { swap.d.minValue = newValue; }
-	                        if(this.id == "cf3"+thisVal) { swap.f.minValue = newValue; }
-	                        if(this.id == "ch3"+thisVal) { swap.h.minValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "ca3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.a.minValue = newValue; }
+                            if(this.id == "cb3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.b.minValue = newValue; }
+                            if(this.id == "cc3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.c.minValue = newValue; }
+                            if(this.id == "cd3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.d.minValue = newValue; }
+                            if(this.id == "cf3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.f.minValue = newValue; }
+                            if(this.id == "ch3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.h.minValue = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constantmaxvalue'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.alpha);
-	                        if(this.id == "ca4"+thisVal) { swap.a.maxValue = newValue; }
-	                        if(this.id == "cb4"+thisVal) { swap.b.maxValue = newValue; }
-	                        if(this.id == "cc4"+thisVal) { swap.c.maxValue = newValue; }
-	                        if(this.id == "cd4"+thisVal) { swap.d.maxValue = newValue; }
-	                        if(this.id == "cf4"+thisVal) { swap.f.maxValue = newValue; }
-	                        if(this.id == "ch4"+thisVal) { swap.h.maxValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.alpha = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "ca4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.a.maxValue = newValue; }
+                            if(this.id == "cb4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.b.maxValue = newValue; }
+                            if(this.id == "cc4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.c.maxValue = newValue; }
+                            if(this.id == "cd4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.d.maxValue = newValue; }
+                            if(this.id == "cf4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.f.maxValue = newValue; }
+                            if(this.id == "ch4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.alpha.h.maxValue = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constanttype2'+x+' a').editable({
 	        'source': dropChoice,
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.beta);
-	                        if(this.id == "cba1"+thisVal) { swap.a.type = dropChoice[newValue].text; }
-	                        if(this.id == "cbb1"+thisVal) { swap.b.type = dropChoice[newValue].text; }
-	                        if(this.id == "cbc1"+thisVal) { swap.c.type = dropChoice[newValue].text; }
-	                        if(this.id == "cbd1"+thisVal) { swap.d.type = dropChoice[newValue].text; }
-	                        if(this.id == "cbf1"+thisVal) { swap.f.type = dropChoice[newValue].text; }
-	                        if(this.id == "cbh1"+thisVal) { swap.h.type = dropChoice[newValue].text; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "cba1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.a.type = dropChoice[newValue].text; }
+                            if(this.id == "cbb1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.b.type = dropChoice[newValue].text; }
+                            if(this.id == "cbc1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.c.type = dropChoice[newValue].text; }
+                            if(this.id == "cbd1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.d.type = dropChoice[newValue].text; }
+                            if(this.id == "cbf1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.f.type = dropChoice[newValue].text; }
+                            if(this.id == "cbh1"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.h.type = dropChoice[newValue].text; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constantvalue2'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.beta);
-	                        if(this.id == "cba2"+thisVal) { swap.a.value = newValue; }
-	                        if(this.id == "cbb2"+thisVal) { swap.b.value = newValue; }
-	                        if(this.id == "cbc2"+thisVal) { swap.c.value = newValue; }
-	                        if(this.id == "cbd2"+thisVal) { swap.d.value = newValue; }
-	                        if(this.id == "cbf2"+thisVal) { swap.f.value = newValue; }
-	                        if(this.id == "cbh2"+thisVal) { swap.h.value = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "cba2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.a.value = newValue; }
+                            if(this.id == "cbb2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.b.value = newValue; }
+                            if(this.id == "cbc2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.c.value = newValue; }
+                            if(this.id == "cbd2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.d.value = newValue; }
+                            if(this.id == "cbf2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.f.value = newValue; }
+                            if(this.id == "cbh2"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.h.value = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constantminvalue2'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.beta);
-	                        if(this.id == "cba3"+thisVal) { swap.a.minValue = newValue; }
-	                        if(this.id == "cbb3"+thisVal) { swap.b.minValue = newValue; }
-	                        if(this.id == "cbc3"+thisVal) { swap.c.minValue = newValue; }
-	                        if(this.id == "cbd3"+thisVal) { swap.d.minValue = newValue; }
-	                        if(this.id == "cbf3"+thisVal) { swap.f.minValue = newValue; }
-	                        if(this.id == "cbh3"+thisVal) { swap.h.minValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "cba3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.a.minValue = newValue; }
+                            if(this.id == "cbb3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.b.minValue = newValue; }
+                            if(this.id == "cbc3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.c.minValue = newValue; }
+                            if(this.id == "cbd3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.d.minValue = newValue; }
+                            if(this.id == "cbf3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.f.minValue = newValue; }
+                            if(this.id == "cbh3"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.h.minValue = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	    $('#constantmaxvalue2'+x+' a').editable({
 	        'success': function(response, newValue) {
-	        				var thisVal = this.id.slice(-1);
-	                        if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-	                        else { var moveInto3 = globalCellGroup[indexs[0]]; }
-	                        
-	                        for(i=1; i<pos; i++) {
-	                            if(moveInto3.subGroup.length != 0 ) {
-	                                moveInto3 = moveInto3.subGroup[indexs[i]];
-	                            } 
-	                        }
-	                        
-	                        var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-	                        var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-	                        var swap = jQuery.extend(true, {}, midMenuLast.modelParameters.parameters.channel[thisVal].particles.beta);
-	                        if(this.id == "cba4"+thisVal) { swap.a.maxValue = newValue; }
-	                        if(this.id == "cbb4"+thisVal) { swap.b.maxValue = newValue; }
-	                        if(this.id == "cbc4"+thisVal) { swap.c.maxValue = newValue; }
-	                        if(this.id == "cbd4"+thisVal) { swap.d.maxValue = newValue; }
-	                        if(this.id == "cbf4"+thisVal) { swap.f.maxValue = newValue; }
-	                        if(this.id == "cbh4"+thisVal) { swap.h.maxValue = newValue; }
-	                        if(pos == 0) { globalCellGroup[index0].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        else { moveInto3.subGroup[index].modelParameters.parameters.channel[thisVal].particles.beta = $.extend(true, {}, swap); }
-	                        delete swap;
+                        var thisVal = this.id.slice(-1);
+                        if(midMenuLast.className === "neuron") {
+                            if(this.id == "cba4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.a.maxValue = newValue; }
+                            if(this.id == "cbb4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.b.maxValue = newValue; }
+                            if(this.id == "cbc4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.c.maxValue = newValue; }
+                            if(this.id == "cbd4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.d.maxValue = newValue; }
+                            if(this.id == "cbf4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.f.maxValue = newValue; }
+                            if(this.id == "cbh4"+thisVal) { midMenuLast.parameters.channel[thisVal].particles.beta.h.maxValue = newValue; }
+                        }
+                        else if(midMenuLast.className === "cellGroup") {
+                            
+                        }
 	            }
 	    });
 	}
@@ -1304,7 +769,12 @@ function showParameterNames() {
 
     $('#collapse2').html('');
     dynamicChanNum = 0;
+
     $('#groupName').html(midMenuLast.name + ' Parameters');
+
+    if(midMenuLast.className === "cellGroup") { 
+        midMenuLast = midMenuLast.modelParameters;
+    }
 
     $('#paramCollapse').show();
     $('#cellGroupCollapse').show();
@@ -1320,117 +790,117 @@ function showParameterNames() {
     $('#parameterValues').append('</div>');
     $('#paramval').html('');
 
-    if(midMenuLast.modelParameters.type === "Izhikevich") {
+    if(midMenuLast.type === "Izhikevich") {
         $('#izParam').show();
         $('#parameterValues').show();
         //$('#p1').hide();
 
-        $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
-        $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
+        $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.name +'</a>');
+        $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.type +'</a>');
 
         $("#type2").append('<a class="list-group-item"> <span style="text-decoration: underline;">Type</span></a>');
         $("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
         $("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
         $("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
 
-        $("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.a.type +'</a>');
-        $("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.a.value +'</a>');
-        $("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.a.minValue +'</a>');
-        $("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.a.maxValue +'</a>');
+        $("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.parameters.a.type +'</a>');
+        $("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.parameters.a.value +'</a>');
+        $("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.parameters.a.minValue +'</a>');
+        $("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.parameters.a.maxValue +'</a>');
 
-        $("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.b.type +'</a>');
-        $("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.value +'</a>');
-        $("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.minValue +'</a>');
-        $("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.b.maxValue +'</a>');
+        $("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.parameters.b.type +'</a>');
+        $("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.parameters.b.value +'</a>');
+        $("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.parameters.b.minValue +'</a>');
+        $("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.parameters.b.maxValue +'</a>');
 
-        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.c.type +'</a>');
-        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.value +'</a>');
-        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.minValue +'</a>');
-        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.c.maxValue +'</a>');
+        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.parameters.c.type +'</a>');
+        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.parameters.c.value +'</a>');
+        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.parameters.c.minValue +'</a>');
+        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.parameters.c.maxValue +'</a>');
 
-        $("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.d.type +'</a>');
-        $("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.value +'</a>');
-        $("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.minValue +'</a>');
-        $("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.d.maxValue +'</a>');
+        $("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.parameters.d.type +'</a>');
+        $("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.parameters.d.value +'</a>');
+        $("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.parameters.d.minValue +'</a>');
+        $("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.parameters.d.maxValue +'</a>');
 
-        $("#type2").append('<a id="u1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.u.type +'</a>');
-        $("#value").append('<a id="u2" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.value +'</a>');
-        $("#minvalue").append('<a id="u3" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.minValue +'</a>');
-        $("#maxvalue").append('<a id="u4" class="list-group-item">' + midMenuLast.modelParameters.parameters.u.maxValue +'</a>');
+        $("#type2").append('<a id="u1" class="list-group-item" data-type="select">' + midMenuLast.parameters.u.type +'</a>');
+        $("#value").append('<a id="u2" class="list-group-item">' + midMenuLast.parameters.u.value +'</a>');
+        $("#minvalue").append('<a id="u3" class="list-group-item">' + midMenuLast.parameters.u.minValue +'</a>');
+        $("#maxvalue").append('<a id="u4" class="list-group-item">' + midMenuLast.parameters.u.maxValue +'</a>');
 
-        $("#type2").append('<a id="v1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.v.type +'</a>');
-        $("#value").append('<a id="v2" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.value +'</a>');
-        $("#minvalue").append('<a id="v3" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.minValue +'</a>');
-        $("#maxvalue").append('<a id="v4" class="list-group-item">' + midMenuLast.modelParameters.parameters.v.maxValue +'</a>');
+        $("#type2").append('<a id="v1" class="list-group-item" data-type="select">' + midMenuLast.parameters.v.type +'</a>');
+        $("#value").append('<a id="v2" class="list-group-item">' + midMenuLast.parameters.v.value +'</a>');
+        $("#minvalue").append('<a id="v3" class="list-group-item">' + midMenuLast.parameters.v.minValue +'</a>');
+        $("#maxvalue").append('<a id="v4" class="list-group-item">' + midMenuLast.parameters.v.maxValue +'</a>');
 
-        $("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
-        $("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
-        $("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.minValue +'</a>');
-        $("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
+        $("#type2").append('<a id="t1" class="list-group-item" data-type="select">' + midMenuLast.parameters.threshold.type +'</a>');
+        $("#value").append('<a id="t2" class="list-group-item">' + midMenuLast.parameters.threshold.value +'</a>');
+        $("#minvalue").append('<a id="t3" class="list-group-item">' + midMenuLast.parameters.threshold.minValue +'</a>');
+        $("#maxvalue").append('<a id="t4" class="list-group-item">' + midMenuLast.parameters.threshold.maxValue +'</a>');
 
     }
-    else if(midMenuLast.modelParameters.type === "NCS") {
+    else if(midMenuLast.type === "NCS") {
         $('#ncsParam').show();
         $('#parameterValues').show();
         $('#chanCollapse').show();
         $('#channelName').show();
         //$('#p1').hide();
 
-        $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
-        $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
+        $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.name +'</a>');
+        $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.type +'</a>');
 
         $("#type2").append('<a class="list-group-item"> <span style="text-decoration: underline;">Type</span></a>');
         $("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
         $("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
         $("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
 
-        $("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
-        $("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
-        $("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.minValue +'</a>');
-        $("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
+        $("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.parameters.threshold.type +'</a>');
+        $("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.parameters.threshold.value +'</a>');
+        $("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.parameters.threshold.minValue +'</a>');
+        $("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.parameters.threshold.maxValue +'</a>');
 
-        $("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.restingPotential.type +'</a>');
-        $("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.value +'</a>');
-        $("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.minValue +'</a>');
-        $("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.maxValue +'</a>');
+        $("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.parameters.restingPotential.type +'</a>');
+        $("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.parameters.restingPotential.value +'</a>');
+        $("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.parameters.restingPotential.minValue +'</a>');
+        $("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.parameters.restingPotential.maxValue +'</a>');
 
-        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calcium.type +'</a>');
-        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.value +'</a>');
-        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.minValue +'</a>');
-        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calcium.maxValue +'</a>');
+        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.parameters.calcium.type +'</a>');
+        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.parameters.calcium.value +'</a>');
+        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.parameters.calcium.minValue +'</a>');
+        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.parameters.calcium.maxValue +'</a>');
 
-        $("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.type +'</a>');
-        $("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.value +'</a>');
-        $("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.minValue +'</a>');
-        $("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.modelParameters.parameters.calciumSpikeIncrement.maxValue +'</a>');
+        $("#type2").append('<a id="d1" class="list-group-item" data-type="select">' + midMenuLast.parameters.calciumSpikeIncrement.type +'</a>');
+        $("#value").append('<a id="d2" class="list-group-item">' + midMenuLast.parameters.calciumSpikeIncrement.value +'</a>');
+        $("#minvalue").append('<a id="d3" class="list-group-item">' + midMenuLast.parameters.calciumSpikeIncrement.minValue +'</a>');
+        $("#maxvalue").append('<a id="d4" class="list-group-item">' + midMenuLast.parameters.calciumSpikeIncrement.maxValue +'</a>');
 
-        $("#type2").append('<a id="e1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauCalcium.type +'</a>');
-        $("#value").append('<a id="e2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.value +'</a>');
-        $("#minvalue").append('<a id="e3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.minValue +'</a>');
-        $("#maxvalue").append('<a id="e4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauCalcium.maxValue +'</a>');
+        $("#type2").append('<a id="e1" class="list-group-item" data-type="select">' + midMenuLast.parameters.tauCalcium.type +'</a>');
+        $("#value").append('<a id="e2" class="list-group-item">' + midMenuLast.parameters.tauCalcium.value +'</a>');
+        $("#minvalue").append('<a id="e3" class="list-group-item">' + midMenuLast.parameters.tauCalcium.minValue +'</a>');
+        $("#maxvalue").append('<a id="e4" class="list-group-item">' + midMenuLast.parameters.tauCalcium.maxValue +'</a>');
 
-        $("#type2").append('<a id="f1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.leakReversalPotential.type +'</a>');
-        $("#value").append('<a id="f2" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.value +'</a>');
-        $("#minvalue").append('<a id="f3" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.minValue +'</a>');
-        $("#maxvalue").append('<a id="f4" class="list-group-item">' + midMenuLast.modelParameters.parameters.leakReversalPotential.maxValue +'</a>');
+        $("#type2").append('<a id="f1" class="list-group-item" data-type="select">' + midMenuLast.parameters.leakReversalPotential.type +'</a>');
+        $("#value").append('<a id="f2" class="list-group-item">' + midMenuLast.parameters.leakReversalPotential.value +'</a>');
+        $("#minvalue").append('<a id="f3" class="list-group-item">' + midMenuLast.parameters.leakReversalPotential.minValue +'</a>');
+        $("#maxvalue").append('<a id="f4" class="list-group-item">' + midMenuLast.parameters.leakReversalPotential.maxValue +'</a>');
 
-        $("#type2").append('<a id="g1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.tauMembrane.type +'</a>');
-        $("#value").append('<a id="g2" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.value +'</a>');
-        $("#minvalue").append('<a id="g3" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.minValue +'</a>');
-        $("#maxvalue").append('<a id="g4" class="list-group-item">' + midMenuLast.modelParameters.parameters.tauMembrane.maxValue +'</a>');
+        $("#type2").append('<a id="g1" class="list-group-item" data-type="select">' + midMenuLast.parameters.tauMembrane.type +'</a>');
+        $("#value").append('<a id="g2" class="list-group-item">' + midMenuLast.parameters.tauMembrane.value +'</a>');
+        $("#minvalue").append('<a id="g3" class="list-group-item">' + midMenuLast.parameters.tauMembrane.minValue +'</a>');
+        $("#maxvalue").append('<a id="g4" class="list-group-item">' + midMenuLast.parameters.tauMembrane.maxValue +'</a>');
 
-        $("#type2").append('<a id="h1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.rMembrane.type +'</a>');
-        $("#value").append('<a id="h2" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.value +'</a>');
-        $("#minvalue").append('<a id="h3" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.minValue +'</a>');
-        $("#maxvalue").append('<a id="h4" class="list-group-item">' + midMenuLast.modelParameters.parameters.rMembrane.maxValue +'</a>');
+        $("#type2").append('<a id="h1" class="list-group-item" data-type="select">' + midMenuLast.parameters.rMembrane.type +'</a>');
+        $("#value").append('<a id="h2" class="list-group-item">' + midMenuLast.parameters.rMembrane.value +'</a>');
+        $("#minvalue").append('<a id="h3" class="list-group-item">' + midMenuLast.parameters.rMembrane.minValue +'</a>');
+        $("#maxvalue").append('<a id="h4" class="list-group-item">' + midMenuLast.parameters.rMembrane.maxValue +'</a>');
 
-        $("#type2").append('<a id="i1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.spikeShape.type +'</a>');
-        $("#value").append('<a id="i2" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.value +'</a>');
-        $("#minvalue").append('<a id="i3" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.minValue +'</a>');
-        $("#maxvalue").append('<a id="i4" class="list-group-item">' + midMenuLast.modelParameters.parameters.spikeShape.maxValue +'</a>');
+        $("#type2").append('<a id="i1" class="list-group-item" data-type="select">' + midMenuLast.parameters.spikeShape.type +'</a>');
+        $("#value").append('<a id="i2" class="list-group-item">' + midMenuLast.parameters.spikeShape.value +'</a>');
+        $("#minvalue").append('<a id="i3" class="list-group-item">' + midMenuLast.parameters.spikeShape.minValue +'</a>');
+        $("#maxvalue").append('<a id="i4" class="list-group-item">' + midMenuLast.parameters.spikeShape.maxValue +'</a>');
 
         $('#collapse2').html('');
-        for(var i=0; i<midMenuLast.modelParameters.parameters.channel.length; i++) {
+        for(var i=0; i<midMenuLast.parameters.channel.length; i++) {
             var num = dynamicChanNum;
             chanCollapseAdd();
             hideChanParam();
@@ -1440,43 +910,43 @@ function showParameterNames() {
             $('#particleCollapse'+num).hide();
 
             $('#chan'+num+'Name').empty();
-            $('#chan'+num+'Name').append(midMenuLast.modelParameters.parameters.channel[i].name);
+            $('#chan'+num+'Name').append(midMenuLast.parameters.channel[i].name);
 
-            showChannelParams(midMenuLast.modelParameters.parameters.channel[i], i);
+            showChannelParams(midMenuLast.parameters.channel[i], i);
         }
     }
-    else if(midMenuLast.modelParameters.type === "HodgkinHuxley") {
+    else if(midMenuLast.type === "HodgkinHuxley") {
         $('#hhParam').show();
         $('#parameterValues').show();
         $('#chanCollapse').show();
         $('#channelName').show();
         $('#p1').hide();
 
-        $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.modelParameters.name +'</a>');
-        $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.modelParameters.type +'</a>');
+        $("#name").append('<a id="n11" class="list-group-item">' + midMenuLast.name +'</a>');
+        $("#type1").append('<a id="n22" class="list-group-item">' + midMenuLast.type +'</a>');
 
         $("#type2").append('<a class="list-group-item"> <span style="text-decoration: underline;">Type</span></a>');
         $("#value").append('<a class="list-group-item"> <span style="text-decoration: underline;">Value</span></a>');
         $("#minvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Min</span></a>');
         $("#maxvalue").append('<a class="list-group-item"> <span style="text-decoration: underline;">Max</span></a>');
 
-        $("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.threshold.type +'</a>');
-        $("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.value +'</a>');
-        $("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.minValue +'</a>');
-        $("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.modelParameters.parameters.threshold.maxValue +'</a>');
+        $("#type2").append('<a id="a1" class="list-group-item" data-type="select">' + midMenuLast.parameters.threshold.type +'</a>');
+        $("#value").append('<a id="a2" class="list-group-item" data-type="number">' + midMenuLast.parameters.threshold.value +'</a>');
+        $("#minvalue").append('<a id="a3" class="list-group-item" data-type="number">' + midMenuLast.parameters.threshold.minValue +'</a>');
+        $("#maxvalue").append('<a id="a4" class="list-group-item" data-type="number">' + midMenuLast.parameters.threshold.maxValue +'</a>');
 
-        $("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.restingPotential.type +'</a>');
-        $("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.value +'</a>');
-        $("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.minValue +'</a>');
-        $("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.modelParameters.parameters.restingPotential.maxValue +'</a>');
+        $("#type2").append('<a id="b1" class="list-group-item" data-type="select">' + midMenuLast.parameters.restingPotential.type +'</a>');
+        $("#value").append('<a id="b2" class="list-group-item">' + midMenuLast.parameters.restingPotential.value +'</a>');
+        $("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.parameters.restingPotential.minValue +'</a>');
+        $("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.parameters.restingPotential.maxValue +'</a>');
 
-        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.modelParameters.parameters.capacitence.type +'</a>');
-        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.value +'</a>');
-        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.minValue +'</a>');
-        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.modelParameters.parameters.capacitence.maxValue +'</a>');
+        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.parameters.capacitence.type +'</a>');
+        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.parameters.capacitence.value +'</a>');
+        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.parameters.capacitence.minValue +'</a>');
+        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.parameters.capacitence.maxValue +'</a>');
 
         $('#collapse2').html('');
-        for(var i=0; i<midMenuLast.modelParameters.parameters.channel.length; i++) {
+        for(var i=0; i<midMenuLast.parameters.channel.length; i++) {
             var num = dynamicChanNum;
             chanCollapseAdd();
             hideChanParam();
@@ -1486,9 +956,9 @@ function showParameterNames() {
             $('#particleCollapse'+num).hide();
 
             $('#chan'+num+'Name').empty();
-            $('#chan'+num+'Name').append(midMenuLast.modelParameters.parameters.channel[i].name);
+            $('#chan'+num+'Name').append(midMenuLast.parameters.channel[i].name);
 
-            showChannelParams(midMenuLast.modelParameters.parameters.channel[i], i);
+            showChannelParams(midMenuLast.parameters.channel[i], i);
         }
     }
 
@@ -1795,10 +1265,8 @@ function popSynVal(val) {
 }
 
 function makeSynEditable(val) {
-	console.log(val)
 	var dropChoice = [{ 'value': 0, 'text': 'exact' }, { 'value': 1, 'text': 'uniform' }, { 'value': 2, 'text': 'normal' }];
 	for(var x=0; x<val; x++) {
-		console.log("s11"+x)
 		$('#syntype'+x+' a').editable({
 		        'source': dropChoice,
 		        'success': function(response, newValue) {
@@ -1921,10 +1389,6 @@ function hideChanParam() {
     $('#particleCollapse').hide();
 }
 
-function popAliasP() {
-	console.log("yay");
-}
-
 function cloneModel(source) {
     var ret = new modelParameters();
     clone(ret, source);
@@ -1941,7 +1405,7 @@ function cloneParam(source) {
     else if(source.className === "ncsParam") {
         var ret = new ncsParam();
         clone(ret, source);
-        for(var i=0; i<source.length; i++) {
+        for(var i=0; i<source.channel.length; i++) {
             ret.channel[i] = cloneChan(source.channel[i]);
         }
         return ret;
@@ -1949,7 +1413,7 @@ function cloneParam(source) {
     else if(source.className === "hodgkinHuxleyParam") {
         var ret = new hodgkinHuxleyParam();
         clone(ret, source);
-        for(var i=0; i<source.length; i++) {
+        for(var i=0; i<source.channel.length; i++) {
             ret.channel[i] = cloneChan(source.channel[i]);
         }
         return ret;
@@ -2017,12 +1481,12 @@ function popChanModal(val) {
     else { var moveInto3 = globalCellGroup[indexs[0]]; }
     
     for(i=1; i<pos; i++) {
-        if(moveInto3.subGroup.length != 0 ) {
-            moveInto3 = moveInto3.subGroup[indexs[i]];
-        } 
+       // if(moveInto3.subGroup.length != 0 ) {
+      //      moveInto3 = moveInto3.subGroup[indexs[i]];
+       // } 
     }
     var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-    var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
+    //var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
 
     if(val == 1) {
         var newChan = new voltageGatedIonChannel();
@@ -2039,69 +1503,13 @@ function popChanModal(val) {
 
     if(pos == 0) { 
         newChanPos = globalCellGroup[index0].modelParameters.parameters.channel.length;
-        globalCellGroup[index0].modelParameters.parameters.channel[newChanPos] = cloneChan(newChan);
+        //globalCellGroup[index0].modelParameters.parameters.channel[newChanPos] = cloneChan(newChan);
     }
     else { 
         var newChanPos = moveInto3.modelParameters.parameters.channel.length;
-        moveInto3.subGroup[index].modelParameters.parameters.channel[newChanPos] = cloneChan(newChan); 
+        //moveInto3.subGroup[index].modelParameters.parameters.channel[newChanPos] = cloneChan(newChan); 
     }
     return;
-}
-
-
-function fillAliasBody() {
-	$("#aliasbody").html('');
-	aliasid = 0;
-	for(var i=0; i<globalCellGroup.length; i++) {
-		printAlias(globalCellGroup[i], aliasid);
-	}
-}
-
-function printAlias(source, id) {
-	$("#aliasbody").append('<a id="'+source.name+'" class="list-group-item" onClick="toggleChoice(this)" data-type="select">'+source.name+'</a>')
-	aliasid++;
-	if(source.hasOwnProperty('subGroup')) {
-		for(var i=0; i<source.subGroup.length; i++) {
-			printAlias(source.subGroup[i]);
-		}
-	}
-
-}
-
-function addToAlias() {
-	var cgroup1 = [];
-	for(var i=0; i<aliasVals.length; i++) {
-		for(var j=0; j<globalCellGroup.length; j++) {
-			var source = addToAliasSearch(globalCellGroup[j], aliasVals[i]);
-			if(source != -1) {
-				cgroup1.push(source);
-			}
-		}
-	}
-	var cgroup2 = new cellGroup();
-	cgroup2.name = 'hi';
-	cgroup2.subGroup = cgroup1;
-
-	globalCellAlias.push({name: 'alias'+aliasVal, cellGroup: cgroup2, cellAlias: null});
-	aliasVal++;
-	aliasVals.length = 0;
-}
-
-function addToAliasSearch(source, x) {
-	if(source.name === x) {
-		return source;
-	}
-	if(source.hasOwnProperty('subGroup')) {
-		for(var i=0; i<source.subGroup.length; i++) {
-			addToAliasSearch(source.subGroup[i], x);
-		}
-	}
-	return -1;
-}
-
-function toggleChoice(id) {
-	$('#'+$(id).attr('id')).append(' Added to Alias!');
-	aliasVals.push($(id).attr('id'));
 }
 
 function createSynapse() {
@@ -2191,4 +1599,211 @@ function setSynapsePre(value) {
 
 function setSynapsePost(value) {
 	prePost[1] = value;
+}
+
+$().ready(function() {
+    $('#elementType').change(function() {
+        if($('#elementType').val() === '0') {
+            $('.cellGroupTypes').hide();
+            $('.neuronTypes').show();
+        }
+        else if($('#elementType').val() === '1') {
+            $('.neuronTypes').hide();
+            $('.cellGroupTypes').show();
+            $('.neuronChannelType').hide();
+        }
+        else if($('#elementType').val() === '2') {
+            $('.neuronTypes').hide();
+            $('.neuronChannelType').hide();
+        }
+
+    });
+    $('#neuronType').change(function() {
+        if($('#neuronType').val() === '0') {
+            $('.neuronChannelType').hide();
+        }
+        else if($('#neuronType').val() === '1') {
+            $('.neuronChannelType').show();
+        }
+        else if($('#neuronType').val() === '2') {
+            $('.neuronChannelType').show();
+        }
+    });
+    $('#cellGroupType').change(function() {
+        if($('#cellGroupType').val() === '0') {
+            $('.cellChannelType').hide();
+        }
+        else if($('#cellGroupType').val() === '1') {
+            $('.cellChannelType').show();
+        }
+        else if($('#cellGroupType').val() === '2') {
+            $('.cellChannelType').show();
+        }
+    });
+});
+
+function addToGlobalModel() {
+    // Adding a single neuron to model.
+    if($('#elementType').val() === '0') {
+        if($('#neuronType').val() === '0') {
+            $('.neuronChannelType').hide();
+            var newParam = new modelParameters($('#modalneuronName').val(), "Izhikevich", new izhikevichParam(), "Personal");
+            currentModel.neurons.push(newParam);
+        }
+        else if($('#neuronType').val() === '1') {
+            $('.neuronChannelType').show();
+            if($('#neuronChannelType').val() === '0') {
+                var newChan = new voltageGatedIonChannel();
+                var newNcs = new ncsParam();
+                newNcs.channel.push(newChan);
+                var newParam = new modelParameters($('#modalneuronName').val(), "NCS", newNcs, "Personal");
+                currentModel.neurons.push(newParam);
+            }
+            if($('#neuronChannelType').val() === '1') {
+                var newChan = new calciumDependantChannel();
+                var newNcs = new ncsParam();
+                newNcs.channel.push(newChan);
+                var newParam = new modelParameters($('#modalneuronName').val(), "NCS", newNcs, "Personal");
+                currentModel.neurons.push(newParam);
+            }
+            if($('#neuronChannelType').val() === '2') {
+                var part = new particleVariableConstants();
+                var newPart = new voltageGatedParticle(part, part);
+                var newChan = new voltageGatedChannel(newPart);
+                var newNcs = new ncsParam();
+                newNcs.channel.push(newChan);
+                var newParam = new modelParameters($('#modalneuronName').val(), "NCS", newNcs, "Personal");
+                currentModel.neurons.push(newParam);
+            }
+        }
+        else if($('#neuronType').val() === '2') {
+            $('.neuronChannelType').show();
+            if($('#neuronChannelType').val() === '0') {
+                var newChan = new voltageGatedIonChannel();
+                var newhh = new hodgkinHuxleyParam();
+                newhh.channel.push(newChan);
+                var newParam = new modelParameters($('#modalneuronName').val(), "HodgkinHuxley", newhh, "Personal");
+                currentModel.neurons.push(newParam);
+            }
+            if($('#neuronChannelType').val() === '1') {
+                var newChan = new calciumDependantChannel();
+                var newhh = new hodgkinHuxleyParam();
+                newhh.channel.push(newChan);
+                var newParam = new modelParameters($('#modalneuronName').val(), "HodgkinHuxley", newhh, "Personal");
+                currentModel.neurons.push(newParam);
+            }
+            if($('#neuronChannelType').val() === '2') {
+                var part = new particleVariableConstants();
+                var newPart = new voltageGatedParticle(part, part);
+                var newChan = new voltageGatedChannel(newPart);
+                var newhh = new hodgkinHuxleyParam();
+                newhh.channel.push(newChan);
+                var newParam = new modelParameters($('#modalneuronName').val(), "HodgkinHuxley", newhh, "Personal");
+                currentModel.neurons.push(newParam);
+            }
+        }
+
+    }
+    // Adding a cellGroup to the model.
+    if($('#elementType').val() === '1') {
+        if(pos != 0) {
+            var moveInto = currentModel.cellGroups[indexes[0]];
+            for(i=1; i<pos; i++) {
+                if(moveInto.cellGroups.length != 0) {
+                    moveInto = moveInto.cellGroups[indexes[i]];
+                }
+            }
+        }
+        else {
+            var moveInto = currentModel;
+        }
+        if($('#cellGroupType').val() === '0') {
+            $('.cellChannelType').hide();
+                var newParam = new modelParameters($('#modalcellGroupName').val(), "Izhikevich", new izhikevichParam(), "Personal");
+                var newCell = new cellGroup($('#modalcellGroupName').val(),  $('#modalcellGroupNum').val(), newParam, "box");
+                moveInto.cellGroups.push(newCell);
+        }
+        else if($('#cellGroupType').val() === '1') {
+            $('.cellChannelType').show();
+            if($('#cellChannelType').val() === '0') {
+                var newChan = new voltageGatedIonChannel();
+                var newNcs = new ncsParam();
+                newNcs.channel.push(newChan);
+                var newParam = new modelParameters($('#modalcellGroupName').val(), "NCS", newNcs, "Personal");
+                var newCell = new cellGroup($('#modalcellGroupName').val(),  $('#modalcellGroupNum').val(), newParam, "box");
+                moveInto.cellGroups.push(newCell);
+            }
+            if($('#cellChannelType').val() === '1') {
+                var newChan = new calciumDependantChannel();
+                var newNcs = new ncsParam();
+                newNcs.channel.push(newChan);
+                var newParam = new modelParameters($('#modalcellGroupName').val(), "NCS", newNcs, "Personal");
+                var newCell = new cellGroup($('#modalcellGroupName').val(),  $('#modalcellGroupNum').val(), newParam, "box");
+                moveInto.cellGroups.push(newCell);
+            }
+            if($('#cellChannelType').val() === '2') {
+                var part = new particleVariableConstants();
+                var newPart = new voltageGatedParticle(part, part);
+                var newChan = new voltageGatedChannel(newPart);
+                var newNcs = new ncsParam();
+                newNcs.channel.push(newChan);
+                var newParam = new modelParameters($('#modalcellGroupName').val(), "NCS", newNcs, "Personal");
+                var newCell = new cellGroup($('#modalcellGroupName').val(),  $('#modalcellGroupNum').val(), newParam, "box");
+                moveInto.cellGroups.push(newCell);
+            }
+        }
+        else if($('#cellGroupType').val() === '2') {
+            $('.cellChannelType').show();
+            if($('#cellChannelType').val() === '0') {
+                var newChan = new voltageGatedIonChannel();
+                var newhh = new hodgkinHuxleyParam();
+                newhh.channel.push(newChan);
+                var newParam = new modelParameters($('#modalcellGroupName').val(), "HodgkinHuxley", newhh, "Personal");
+                var newCell = new cellGroup($('#modalcellGroupName').val(),  $('#modalcellGroupNum').val(), newParam, "box");
+                moveInto.cellGroups.push(newCell);
+            }
+            if($('#cellChannelType').val() === '1') {
+                var newChan = new calciumDependantChannel();
+                var newhh = new hodgkinHuxleyParam();
+                newhh.channel.push(newChan);
+                var newParam = new modelParameters($('#modalcellGroupName').val(), "HodgkinHuxley", newhh, "Personal");
+                var newCell = new cellGroup($('#modalcellGroupName').val(),  $('#modalcellGroupNum').val(), newParam, "box");
+                moveInto.cellGroups.push(newCell);
+            }
+            if($('#cellChannelType').val() === '2') {
+                var part = new particleVariableConstants();
+                var newPart = new voltageGatedParticle(part, part);
+                var newChan = new voltageGatedChannel(newPart);
+                var newhh = new hodgkinHuxleyParam();
+                newhh.channel.push(newChan);
+                var newParam = new modelParameters($('#modalcellGroupName').val(), "HodgkinHuxley", newhh, "Personal");
+                var newCell = new cellGroup($('#modalcellGroupName').val(),  $('#modalcellGroupNum').val(), newParam, "box");
+                moveInto.cellGroups.push(newCell);
+            }
+        }
+    }
+}
+
+function hideAddElements() {
+    $('.neuronTypes').hide();
+    $('.neuronChannelType').hide();
+    $('.cellChannelType').hide()
+    $('.cellGroupTypes').hide();
+}
+
+function addChannel() {
+    if($('#addChannelType').val() === '0') {
+        var newChan = new voltageGatedIonChannel();
+        midMenuLast.parameters.channel.push(newChan);
+    }
+    else if($('#addChannelType').val() === '1') {
+        var newChan = new calciumDependantChannel();
+        midMenuLast.parameters.channel.push(newChan);
+    }
+    else if($('#addChannelType').val() === '2') {
+        var part = new particleVariableConstants();
+        var newPart = new voltageGatedParticle(part, part);
+        var newChan = new voltageGatedChannel(newPart);
+        midMenuLast.parameters.channel.push(newChan);
+    }
 }
