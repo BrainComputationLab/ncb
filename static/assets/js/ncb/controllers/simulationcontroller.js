@@ -1,4 +1,5 @@
 var simProgressBar = $("#uploadSimProgress");
+var simOutput = [];
 
 $().ready(function() {
     $(".simOutputFileOnly").hide();
@@ -218,4 +219,93 @@ var exportSim = function() {
         type: "GET"
     });
 };
+
+
+
+
+function generateOutputForm() {
+
+    for(var i = 0; i < simOutput.length; i++) {
+        $('simoutput_' + simOutput[i])
+    }
+
+    var id = simOutput.length;
+
+    var formtext = '<div class="panel panel-default">\
+                        <div class="panel-heading">\
+                            <h4 class="panel-title">\
+                                <a id="simOutputFormCollapse'+id+'" data-toggle="collapse" data-parent="#simOutputPanel" href="#simout_'+id+'">\
+                                    Output '+id+'\
+                                </a>\
+                            </h4>\
+                        </div>\
+                        <div id="simout_'+id+'" class="panel-collapse collapse in">\
+                            <form id="simulationOutputForm">\
+                                <!-- Name of Simulation input -->\
+                                <div class="form-group">\
+                                    <label for="simOutputType' + id + '">Output Type</label>\
+                                    <select class="form-control" id="simOutputType' + id + '">\
+                                        <option value="report">View Report</option>\
+                                        <option value="file">Save as File</option>\
+                                    </select>\
+                                </div>\
+    \
+                                <div class="form-group simOutputFileOnly">\
+                                    <label for="simOutputFileName' + id + '">FileName</label>\
+                                    <input id="simOutputFileName' + id + '" type="text" placeholder="File Name" class="form-control">\
+                                </div>\
+    \
+                                <div class="form-group simOutputFileOnly">\
+                                    <label for="simOutputNumberFormat' + id + '">Number Format</label>\
+                                    <select class="form-control" id="simOutputNumberFormat' + id + '">\
+                                        <option value="ascii">ascii</option>\
+                                    </select>\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simOutputReportType' + id + '">Report Type</label>\
+                                    <select class="form-control" id="simOutputReportType' + id + '">\
+                                        <option value="channel_conductance">Channel Conductance</option>\
+                                        <option value="report2">Report 2</option>\
+                                        <option value="report3">Report 3</option>\
+                                    </select>\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simOutputReportTarget' + id + '">Report Target</label>\
+                                    <select class="form-control" id="simOutputReportTarget' + id + '">\
+                                        <option value="alias_1">Cell Alias 1</option>\
+                                        <option value="alias_2">Cell Alias 2</option>\
+                                        <option value="alias_3">Cell Alias 3</option>\
+                                    </select>\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simOutputProbability' + id + '">Probability</label>\
+                                    <input id="simOutputProbability' + id + '" type="number" placeholder="0.5" class="form-control">\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simOutputFrequency' + id + '">Frequency</label>\
+                                    <input id="simOutputFrequency' + id + '" type="number" placeholder="5" class="form-control">\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simOutputStartTime' + id + '">Start Time</label>\
+                                    <input id="simOutputStartTime' + id + '" type="number" placeholder="0" class="form-control">\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simOutputEndTime' + id + '">End Time</label>\
+                                    <input id="simOutputEndTime' + id + '" type="number" placeholder="0" class="form-control">\
+                                </div>\
+                            </form>\
+                        </div>\
+                    </div>';
+
+    $("#simOutputPanel").append(formtext);
+
+    simOutput.push(id);
+}
+
 //}
