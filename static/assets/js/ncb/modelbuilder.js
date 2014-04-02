@@ -199,18 +199,20 @@ function myModelsList2($scope, $compile) {
                 }
                 // console.log(moveInto)
                 var result = $.grep(moveInto.cellGroups, function(e){return e.name == model; });
+                cellGroupLast = {};
+    	        cellGroupLast = result[0];
+    	        index = getIndex(moveInto.cellGroups, "name", cellGroupLast.name);
             }
             else {
                 var result = $.grep(currentModel.cellGroups, function(e){return e.name == model; }); 
+                cellGroupLast = {};
+            	cellGroupLast = result[0];
+            	index = getIndex(currentModel.cellGroups, "name", cellGroupLast.name);
             }
-            
-            cellGroupLast = {};
-            cellGroupLast = result[0];
             midMenuLast = cellGroupLast.modelParameters;
-            index = getIndex(currentModel.cellGroups, "name", cellGroupLast.name);
+            console.log(index)
             popCellP();
-            //midMenuLast = midMenuLast.modelParameters;
-            console.log(midMenuLast.name)
+
             popModelP();
             return;
         }
@@ -233,7 +235,7 @@ function myModelsList2($scope, $compile) {
         $('#bread').append(myStr);
         breadDepth += 1;
 
-        console.log(cellGroupLast)
+        //console.log(cellGroupLast)
         $scope.list2 = cellGroupLast;
     };
 
@@ -262,10 +264,12 @@ function myModelsList2($scope, $compile) {
 
         var depth = 1;
 
-        var moveInto = currentModel.cellGroups[indexes[0]];
-        for(i=1; i<breadDepth-1; i++) {
-            var name = moveInto.name;
+        var moveInto = currentModel;
+        for(var i=0; i<breadDepth-1; i++) {
+            //var name = moveInto.name;
             moveInto = moveInto.cellGroups[indexes[i]];
+            var name = moveInto.name;
+            //console.log(breadDepth)
             var myStr2 = $compile('<li><a id="' + depth + '"class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + name + '</a></li>')($scope);
             $('#bread').append(myStr2);
             depth += 1;
@@ -1576,18 +1580,22 @@ function setSynapseVal(value) {
 }
 
 function fillSynapseBody() {
+	var spaces = "-";
 	$('#preChoices').html('');
 	$('#postChoices').html('');
-	fillSynapseBodyHelp(currentModel);
+	fillSynapseBodyHelp(currentModel, spaces);
 }
 
-function fillSynapseBodyHelp(source) {
+function fillSynapseBodyHelp(source,spaces) {
 	for(var i=0; i<source.cellGroups.length; i++) {
-		$('#preChoices').append('<option value="'+ source.cellGroups[i].name +'" onClick="setSynapsePre(value)">'+source.cellGroups[i].name+'</option>')
-		$('#postChoices').append('<option value="'+source.cellGroups[i].name+'" onClick="setSynapsePost(value)">'+source.cellGroups[i].name+'</option>')
+		input = source.cellGroups[i].name;
+		$('#preChoices').append('<option value="'+ source.cellGroups[i].name +'" onClick="setSynapsePre(value)">'+input+'</option>')
+		$('#postChoices').append('<option value="'+ source.cellGroups[i].name+'" onClick="setSynapsePost(value)">'+ input+'</option>')
+		console.log(input)
 
-		if(source.cellGroups[i].hasOwnProperty('subGroup')) {
-			fillSynapseBodyHelp(source.cellGroups[i]);
+		if(source.cellGroups[i].hasOwnProperty('cellGroups')) {
+			spaces += "-";
+			fillSynapseBodyHelp(source.cellGroups[i],spaces);
 		}
 	}
 }
@@ -1706,17 +1714,13 @@ function addToGlobalModel() {
     }
     // Adding a cellGroup to the model.
     if($('#elementType').val() === '1') {
-        if(pos != 0) {
-            var moveInto = currentModel.cellGroups[indexes[0]];
-            for(i=1; i<pos; i++) {
-                if(moveInto.cellGroups.length != 0) {
-                    moveInto = moveInto.cellGroups[indexes[i]];
-                }
+    	var moveInto = currentModel;
+        for(var i=0; i<pos; i++) {
+            if(moveInto.cellGroups.length != 0) {
+                moveInto = moveInto.cellGroups[indexes[i]]; 
             }
         }
-        else {
-            var moveInto = currentModel;
-        }
+        //console.log(moveInto);
         if($('#cellGroupType').val() === '0') {
             $('.cellChannelType').hide();
                 var newParam = new modelParameters($('#modalcellGroupName').val(), "Izhikevich", new izhikevichParam(), "Personal");
