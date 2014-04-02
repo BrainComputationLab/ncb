@@ -181,7 +181,6 @@ function myModelsList2($scope, $compile) {
 
     $scope.setModel = function (model, num1){
         if(num1 == 0) {
-            $('#collapse0').hide();
             var result = $.grep(currentModel.neurons, function(e){return e.name == model; });
             midMenuLast = {};
             midMenuLast = result[0];
@@ -191,7 +190,6 @@ function myModelsList2($scope, $compile) {
             return;
         }
         else if(num1 = 1){
-            $('#collapse0').show();
             if(pos != 0) {
                 var moveInto = currentModel.cellGroups[indexes[0]];
                 for(i=1; i<pos; i++) {
@@ -1580,15 +1578,16 @@ function setSynapseVal(value) {
 function fillSynapseBody() {
 	$('#preChoices').html('');
 	$('#postChoices').html('');
-	fillSynapseBodyHelp(globalCellGroup);
+	fillSynapseBodyHelp(currentModel);
 }
 
 function fillSynapseBodyHelp(source) {
-	for(var i=0; i<source.length; i++) {
-		$('#preChoices').append('<option value="'+source[i].name+'" onClick="setSynapsePre(value)">'+source[i].name+'</option>')
-		$('#postChoices').append('<option value="'+source[i].name+'" onClick="setSynapsePost(value)">'+source[i].name+'</option>')
-		if(source[i].hasOwnProperty('subGroup')) {
-			fillSynapseBodyHelp(source[i].subGroup);
+	for(var i=0; i<source.cellGroups.length; i++) {
+		$('#preChoices').append('<option value="'+ source.cellGroups[i].name +'" onClick="setSynapsePre(value)">'+source.cellGroups[i].name+'</option>')
+		$('#postChoices').append('<option value="'+source.cellGroups[i].name+'" onClick="setSynapsePost(value)">'+source.cellGroups[i].name+'</option>')
+
+		if(source.cellGroups[i].hasOwnProperty('subGroup')) {
+			fillSynapseBodyHelp(source.cellGroups[i]);
 		}
 	}
 }
@@ -1602,6 +1601,7 @@ function setSynapsePost(value) {
 }
 
 $().ready(function() {
+	hideAll()
     $('#elementType').change(function() {
         if($('#elementType').val() === '0') {
             $('.cellGroupTypes').hide();
