@@ -15,8 +15,8 @@
 
 				<button type="button" class="btn btn-default" title="{{ '{{colorPickerPopover.title}}' }}" data-content="{{ '{{colorPickerPopover.content}}' }}" data-template="assets/html/colorpicker-popover.html" data-trigger="click" data-placement="top" bs-popover> <span class="glyphicon glyphicon-cog"></span></button>
 
-				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Personal" ng-false-value="" /><label ng-style="{color: model_color.personal}"> Personal</label>
-				<input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Database" ng-false-value="" /><label ng-style="{color: model_color.database}"> Database</label>
+				<label ng-style="{color: model_color.personal}"><input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Personal" ng-false-value="" /> Personal</label>
+				<label ng-style="{color: model_color.database}"><input type="checkbox" data-ng-model="searchType.dbType" ng-true-value="Database" ng-false-value="" /> Database</label>
 			</div> 
             <!-- End Filter -->
 
