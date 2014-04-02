@@ -220,26 +220,32 @@ var exportSim = function() {
     });
 };
 
+function startGenOutputForm() {
+    bootbox.prompt("Enter Output Name", function(result) {                
+        if (result !== null) {                                             
+            generateOutputForm(result);
+        }
+    });
+}
 
 
-
-function generateOutputForm() {
+var id = 0;
+function generateOutputForm(outputName) {
 
     for(var i = 0; i < simOutput.length; i++) {
-        $('simoutput_' + simOutput[i])
+        //$('simoutput_' + simOutput[i])
     }
 
-    var id = simOutput.length;
-
-    var formtext = '<div class="panel panel-default">\
+    var formtext = '<div id="simOutputFormOuterPanel' + id + '" class="panel panel-default">\
                         <div class="panel-heading">\
                             <h4 class="panel-title">\
                                 <a id="simOutputFormCollapse'+id+'" data-toggle="collapse" data-parent="#simOutputPanel" href="#simout_'+id+'">\
-                                    Output '+id+'\
+                                    ' + outputName + '\
                                 </a>\
+                                <a id="simOutputFormCollapseRemove' + id + '" class="btn btn-danger btn-xs pull-right" style="color: white;">- Remove</a>\
                             </h4>\
                         </div>\
-                        <div id="simout_'+id+'" class="panel-collapse collapse in">\
+                        <div id="simout_'+id+'" class="panel-collapse collapse in" style="margin-left: 20px;">\
                             <form id="simulationOutputForm">\
                                 <!-- Name of Simulation input -->\
                                 <div class="form-group">\
@@ -305,7 +311,22 @@ function generateOutputForm() {
 
     $("#simOutputPanel").append(formtext);
 
-    simOutput.push(id);
-}
+    var clickFunc = function(newID) {
+        return function() {
+            console.log(newID);
+            $("#simOutputFormOuterPanel" + newID).remove();
+            var index = simOutput.indexOf(id);
 
+            if(index > -1) {
+                simOutput.splice(index, 1);
+            }
+        };
+    };
+
+    $("#simOutputFormCollapseRemove" + id).click(clickFunc(id));
+
+    simOutput.push(id);
+
+    id++;
+}
 //}
