@@ -84,24 +84,32 @@ def uploaded_file(filename):
 
 @app.route('/json', methods=['POST', 'GET'])
 def sendJSON():
+    global recentUpload
     if request.method == 'POST':
         jsonObj = request.get_json(False,False,False)
 
         print("JSON RECEIVED")
-        print(jsonObj)
+        print(json.dumps(jsonObj, indent=4))
 
+        recentUpload = recentUpload.replace(app.config['UPLOAD_FOLDER'] + '/', 'exports/')
+        print('Export File: %s' % recentUpload)
         with open(recentUpload, 'w') as fout:
-            json.dump(jsonObj, fout)
+            json.dump(jsonObj, fout, indent=4)
 
         return jsonify({"success" : True})
 
     elif request.method == 'GET':
-        with open(recentUpload) as fin:
-            jsonObj = json.load(fin)
+        try:
+            print("using file: %s" % recentUpload)
+            with open(recentUpload) as fin:
+                jsonObj = json.load(fin)
 
-        print("JSON SENT")
-        print(jsonObj)
-        return jsonify(jsonObj)
+            print("JSON SENT")
+            print(jsonObj)
+            return jsonify(model = jsonObj)
+
+        except IOError:
+            print("SERVER ERROR: No JSON file to upload!")
 
     return jsonify({"success" : False})
 # Serves the main application
