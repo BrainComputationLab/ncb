@@ -123,27 +123,34 @@ function clearFileInput(fileID)
     fileInput.replaceWith(fileInput.clone(true));
 }
 
-// function acting as the Model Controller
-function ModelBuilderController($scope, $routeParams) {
 	// function to create a new model
-    $scope.createNewModel = function() {
-    	console.log("New Model Selected!");
-    };
+var createNewModel = function() {
+	console.log("New Model Selected!");
+};
 
     // function for initiating a model import
-    $scope.importModel = function() {
-    	var value = $("#uploadModelFile").val();
+var importModel = function() {
+	var value = $("#uploadModelFile").val();
 
-    	// if file selected, trigger an upload
-    	if(value) {
-			progressBar.show();
-			$("#uploadModelForm").trigger("submit");
-			$(".importButtons").prop("disabled", true);
-		}
+	// if file selected, trigger an upload
+	if(value) {
+		progressBar.show();
+		$("#uploadModelForm").trigger("submit");
+		$(".importButtons").prop("disabled", true);
+	}
 
-		// otherwise import from database
-		else {
-    		$("#modelbuilder_importmodel").modal("hide");
-    	}
-    };
-}
+	// otherwise import from database
+	else {
+		$("#modelbuilder_importmodel").modal("hide");
+	}
+};
+
+var exportModel = function() {
+    //for(int i = 0; i < globalCellGroup.length; i++) {
+        //globalCellGroup[i]
+    //}
+    console.log("Export");
+    console.log(JSON.stringify(currentModel));
+    sendJSON(currentModel);
+};
+
