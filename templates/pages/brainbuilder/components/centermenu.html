@@ -5,6 +5,7 @@
 	<div id="currentModelList" class="panel panel-default" ng-controller="myModelsList2">
 		<div class="panel-heading">
 			Current Model
+            <button type="button" data-toggle="modal" href="#addElementModal" id="#addElement" onClick="hideAddElements()" class="btn btn-xs btn-info pull-right">+ Model Element</button>
 			<!-- <button type="button" data-toggle="modal" href="#createNewAlias" id="#createNewAlias" class="btn btn-info btn-xs pull-right" onClick="fillAliasBody()" style="margin-right:5px;">+ Alias</button> -->
 		</div>
 		<div>
@@ -20,10 +21,7 @@
 				<!-- <a href="" class="list-group-item" ng-repeat="cellGroup in list | orderBy: 'cellGroup.name'" ng-dblclick="intoModel(1)" ng-mousedown="setModel(cellGroup.name, 1)"> {{ '{{ cellGroup.name }}'  }}</a> -->
 				<a href="" class="list-group-item" ng-repeat="neurons in list2.neurons | orderBy: 'neurons.name'" ng-mousedown="setModel(neurons.name, 0)"> {{ '{{ neurons.name }}'  }}</a>
 				<a href="" class="list-group-item" ng-repeat="cellGroups in list2.cellGroups| orderBy: 'cellGroups.name'" ng-dblclick="intoModel(0)" ng-mousedown="setModel(cellGroups.name, 1)"> {{ '{{ cellGroups.name }}'  }}</a>
-				<a href="" class="list-group-item" ng-repeat="cellAliases in list2.cellAliases  | orderBy: 'neurons.name'"> {{ '{{ cellAliases.name }}'  }}</a>
-				<div class="centered">
-					<button type="button" data-toggle="modal" href="#addElementModal" id="#addElement" onClick="hideAddElements()" class="btn btn-large btn-primary">+ Model Element</button>
-				</div>
+				<a href="" class="list-group-item" ng-repeat="cellAliases in list2.cellAliases  | orderBy: 'neurons.name'"> {{ '{{ cellAliases.name }}'  }}</a>				
 			</ul>
 		</div>
 		<!-- end filtering -->
