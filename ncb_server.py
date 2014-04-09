@@ -1,7 +1,7 @@
 from __future__ import print_function
 from flask import Flask, render_template, send_from_directory, redirect, request, url_for, jsonify
 from werkzeug import secure_filename
-import datetime, os, json
+import datetime, os, json, util
 
 # Create new application
 app = Flask(__name__)
@@ -89,6 +89,12 @@ def sendJSON():
         jsonObj = request.get_json(False,False,False)
 
         print("JSON RECEIVED")
+
+        util.changeAllKeys(jsonObj, u'cellGroups', u'groups')
+        util.changeAllKeys(jsonObj, u'cellAliases', u'neuron_aliases')
+        util.changeAllKeys(jsonObj, u'name', u'entity_name')
+        util.changeAllKeys(jsonObj, u'type', u'entity_type')
+
         print(json.dumps(jsonObj, indent=4))
 
         recentUpload = recentUpload.replace(app.config['UPLOAD_FOLDER'] + '/', 'exports/')
