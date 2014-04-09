@@ -48,7 +48,7 @@ var aliasid = 0;
 var aliasVals = [];
 var aliasVal = 0;
 var synapseChoice = 1;
-var prePost = [null, null]
+var prePost = [null, null];
 
 var currentModel = new currentWorkingModel();
 var indexes = [];
@@ -84,7 +84,7 @@ function myModelsList($scope) {
     $scope.moveModel = function (model) {
         var result = $.grep(myModels, function(e){ return e.name == model; });
         var sub = [];
-        $('#synCollapse').show();
+        //$('#synCollapse').show();
 
         if(result[0].className === "neuron") {
             currentModel.neurons.push({name: "neuron"+inc, type: result[0].type, parameters: cloneParam(result[0].parameters), dbType: 'Personal'});
@@ -285,6 +285,7 @@ function myModelsList2($scope, $compile) {
 
 function popCellP() {
     $('#cellGroupCollapse').show();
+    $('#synCollapse').show();
 
     $('#cellGroupParams').html('');
     $("#cellGroupParams").append('<a id="n1" class="list-group-item">' + cellGroupLast.name +'</a>');
@@ -769,6 +770,7 @@ function popModelP() {
 
 function showParameterNames() {
     hideAll();
+    $('#synCollapse').show();
 
     $('#collapse2').html('');
     dynamicChanNum = 0;
@@ -1369,6 +1371,7 @@ function chanCollapseAdd() {
 }
 
 function hideAll() {
+	$('#synCollapse').hide();
     $('#cellGroupCollapse').hide();
     $('#izParam').hide();
     $('#ncsParam').hide();
