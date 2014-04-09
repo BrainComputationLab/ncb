@@ -5,6 +5,7 @@ function currentWorkingModel() {
 	this.cellGroups = [];
 	this.cellAliases = [];
 	this.synapses = [];
+
 }
 
 function izhikevichParam() {
