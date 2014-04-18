@@ -1,0 +1,62 @@
+<!-- div class for modal window to ask user for uploading a model or selecting a database -->
+
+<div class="modal fade" id="import_modal" tabindex="-1" role="dialog">
+    <!-- Import Model Modal window -->
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Import Simulation and Model Parameters</h4>
+        </div>
+        <!-- Modal body which contains the form for uploading a file -->
+        <div class="modal-body">
+            <h4>Upload Parameters from Device</h4>
+            <form id="uploadForm" role="form" method="POST" enctype="multipart/form-data">
+                <div class="well well-sm">
+                    <input type="file" id="uploadFile" name="uploadFile">
+                </div>
+
+                <!--<input type="submit" value="Upload">-->
+            </form>
+            
+            <!-- Alert User of Incorrect file type -->
+            <div id="possible_import_error" class="alert alert-danger">
+                <strong>Error: </strong> Invalid file extension. (.py or .json expected)
+            </div>
+            <!-- End Alert -->
+            
+            <!-- upload progress bar -->
+            <div class="progress progress-striped">
+                <div id="uploadProgress" class="progress-bar" role="progressbar"
+                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                    <span class="sr-only">0% Complete</span>
+                </div>
+            </div>
+            <!-- end upload progress bar -->
+            
+        </div>
+        <!-- end form for uploading a file and progress bar div -->
+
+        <!-- add from database elements -->
+        <div id="addFromDatabaseBody" class="modal-body list-group">
+        <h4>Load From Database</h4>
+            <a id="1" href="#" class="list-group-item">NCB Database</a>
+            <a id="2" href="#" class="list-group-item">Your Previous Saved Models</a>
+            <a id="3" href="#" class="list-group-item">Other Models</a>
+        </div>
+        <!-- end add from database elements -->
+        
+        <!-- modal window Cancel and Ok buttons -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default import_export_buttons" data-dismiss="modal">Cancel</button>
+          <button type="button" id="importOkButton" class="btn btn-success import_export_buttons" onclick="importSim()">Ok</button>
+        </div>
+        <!-- end modal window Cancel and Ok buttons -->
+        
+      </div>
+      <!-- /.modal-content -->
+      
+    </div>
+    <!-- /.modal-dialog -->
+    
+</div>

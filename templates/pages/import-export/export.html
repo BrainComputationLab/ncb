@@ -1,0 +1,43 @@
+<div class="modal fade" id="export_modal" tabindex="-1" role="dialog">
+    <!-- Import Model Modal window -->
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Export Simulation and Model Parameters</h4>
+        </div>
+        <!-- Modal body which contains the form for uploading a file -->
+        <div class="modal-body">
+            <h4>Export Parameters to a File</h4>
+            <form id="exportForm" role="form" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="exportFileName">File Name</label>
+                  <input id="exportFileName" type="text" placeholder="ex. 'sim'" class="form-control">
+              </div>
+
+              <div class="form-group">
+                  <label for="exportExtension">Extension</label>
+                  <select class="form-control" id="exportExtension">
+                      <option value=".json">.json</option>
+                      <option value=".py">.py</option>
+                  </select>
+              </div>
+
+            <!--<input type="submit" value="Upload">-->
+          </form>
+            
+          </div>
+        <!-- modal window Cancel and Ok buttons -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default import_export_buttons" data-dismiss="modal">Cancel</button>
+          <button type="button" id="exportOkButton" class="btn btn-success import_export_buttons" onClick="exportSim()">Ok</button>
+        </div>
+        <!-- end modal window Cancel and Ok buttons -->
+        
+      
+      <!-- /.modal-content -->
+      
+      </div>
+    <!-- /.modal-dialog -->
+    </div>
+</div>

@@ -30,6 +30,11 @@
     </div>
     <!-- End Modularization of each tab -->
 
+    <div id="import-export-modals">
+        {% include 'pages/import-export/import.html' %}
+        {% include 'pages/import-export/export.html' %}
+    </div>
+
     <div class="container footer">
         <p>© University of Nevada {{ year }}</p>
     </div>
@@ -57,7 +62,6 @@
 	<script src="assets/js/ncb/modelbuilder.js"></script>
 	
     <!-- Load Controllers -->
-    <script src="assets/js/ncb/controllers/modelcontroller.js"></script>
     <script src="assets/js/ncb/controllers/simulationcontroller.js"></script>
     <!-- End Load Controllers and Scripts -->
 

@@ -1,4 +1,4 @@
-var simProgressBar = $("#uploadSimProgress");
+//var simProgressBar = $("#uploadSimProgress");
 var simOutput = [];
 var simInput = [];
 var simInputTargetSelections = {};
@@ -52,7 +52,8 @@ function openConfirmDialog(obj, dialogText, dialogTitle) {
         }
     });
 }
-//var objectFromUpload;
+/*
+var objectFromUpload;
 // initialize import modal on show event
 $("#simbuilder_importparams").on("show.bs.modal", function() {
     // set progress bar to 0% and hide it
@@ -210,10 +211,10 @@ var exportSim = function() {
         type: "GET"
     });
 };
-
+*/
 function startGenOutputForm() {
     bootbox.prompt("Enter Output Name", function(result) {                
-        if (result !== null) {                                             
+        if (result !== null && result !== '') {                                             
             generateOutputForm(result);
         }
     });
@@ -221,7 +222,7 @@ function startGenOutputForm() {
 
 function startGenInputForm() {
     bootbox.prompt("Enter Stimulus Name", function(result) {
-        if(result !== null) {
+        if(result !== null && result !== '') {
             generateInputForm(result);
         }
     });
@@ -253,28 +254,33 @@ function appendCurrentCellGroupOptions(cellGroup, currentOptions, currentLevel) 
         for(var j = 0; j < currentLevel * 2; j++)
             space += '&nbsp;';
 
-        currentOptions.push(space + cellGroup[i].name);
+        currentOptions.push(space + '&bull; ' + cellGroup[i].name);
         appendCurrentCellGroupOptions(cellGroup[i].cellGroups, currentOptions, currentLevel + 1);
     }
 }
 
 function removeHTMLSpaceFromString(str) {
-    return str.replace(/&nbsp;/gi,'');
+    return str.replace(/[&nbsp;|&bull;| ]/gi,'');
 }
 
 var inputID = 0;
 function generateInputForm(inputName) {
+    for(var i = 0; i < simInput.length; i++) {
+        if(!isElementHidden($("#simulationInputForm" + simInput[i])))
+            $("#simInputFormCollapse" + simInput[i]).click();
+    }
+
     var formtext = '<div id="simInputFormOuterPanel' + inputID + '" class="panel panel-default">\
                         <div class="panel-heading">\
                             <h4 class="panel-title">\
-                                <a id="simInputFormCollapse'+inputID+'" data-toggle="collapse" data-parent="#simInputPanel" href="#simout_'+inputID+'">\
+                                <a id="simInputFormCollapse'+inputID+'" data-toggle="collapse" data-parent="#simInputPanel" href="#simin_'+inputID+'">\
                                     ' + inputName + '\
                                 </a>\
                                 <a id="simInputFormCollapseRemove' + inputID + '" class="btn btn-danger btn-xs pull-right" style="color: white;">- Remove</a>\
                             </h4>\
                         </div>\
-                        <div id="simout_' + inputID + '" class="panel-collapse collapse in" style="margin-left: 20px;">\
-                            <form id="simulationInputForm">\
+                        <div id="simin_' + inputID + '" class="panel-collapse collapse in" style="margin-left: 20px;">\
+                            <form id="simulationInputForm' + inputID + '">\
                                 <!-- Name of Simulation input -->\
                                 <div class="form-group">\
                                     <label for="simInputType' + inputID + '">Stimulus Type</label>\
@@ -305,12 +311,12 @@ function generateInputForm(inputName) {
     \
                                 <div class="form-group">\
                                     <label for="simInputProbabilityField' + inputID + '">Probability</label>\
-                                    <input class="form-control" id="simInputFrequencyField' + inputID + '" type="number" placeholder="ex. 0.5">\
+                                    <input class="form-control" id="simInputProbabilityField' + inputID + '" type="number" placeholder="ex. 0.5">\
                                 </div>\
     \
                                 <div class="form-group">\
-                                    <label for="simInputReportTarget' + inputID + '">Report Target</label>\
-                                    <select class="form-control" id="simInputReportTarget' + inputID + '">\
+                                    <label for="simInputTarget' + inputID + '">Input Target</label>\
+                                    <select class="form-control" id="simInputTarget' + inputID + '">\
                                         ' + getCurrentCellGroupOptions() + '\
                                     </select>\
                                 </div>\
@@ -329,14 +335,24 @@ function generateInputForm(inputName) {
                     </div>';
 
     $("#simInputPanel").append(formtext);
+    var removeButton = $("#simInputFormCollapseRemove" + inputID);
+    removeButton.on('confirmDialog', simInputRemoveFunction(inputID));
+    removeButton.click(function() {
+        openConfirmDialog(removeButton, "Are you sure you wish to remove stimulus: " + inputName + "?", "Confirm Stimulus Removal");
+    });
+    $("#simInputTarget" + inputID).change(simInputTargetChanged(inputID));
 
-    $("#simInputFormCollapseRemove" + inputID).click(simInputRemoveFunction(inputID));
+    simInput.push(inputID);
+
+    inputID++;
 }
 
 function simInputRemoveFunction(newID) {
     return function() {
         $("#simInputFormOuterPanel" + newID).remove();
-        var index = simInput.indexOf(id);
+        var index = simInput.indexOf(newID);
+
+        delete simInputTargetSelections[newID];
 
         if(index > -1) {
             simInput.splice(index, 1);
@@ -346,6 +362,10 @@ function simInputRemoveFunction(newID) {
 
 var outputID = 0;
 function generateOutputForm(outputName) {
+    for(var i = 0; i < simOutput.length; i++) {
+        if(!isElementHidden($("#simulationOutputForm" + simOutput[i])))
+            $("#simOutputFormCollapse" + simOutput[i]).click();
+    }
 
     var formtext = '<div id="simOutputFormOuterPanel' + outputID + '" class="panel panel-default">\
                         <div class="panel-heading">\
@@ -356,13 +376,13 @@ function generateOutputForm(outputName) {
                                 <a id="simOutputFormCollapseRemove' + outputID + '" class="btn btn-danger btn-xs pull-right" style="color: white;">- Remove</a>\
                             </h4>\
                         </div>\
-                        <div id="simout_'+outputID+'" class="panel-collapse collapse in" style="margin-left: 20px;">\
-                            <form id="simulationOutputForm">\
+                        <div id="simout_' + outputID + '" class="panel-collapse collapse in" style="margin-left: 20px;">\
+                            <form id="simulationOutputForm' + outputID + '">\
                                 <!-- Name of Simulation input -->\
                                 <div class="form-group">\
                                     <label for="simOutputType' + outputID + '">Output Type</label>\
                                     <select class="form-control" id="simOutputType' + outputID + '">\
-                                        <option value="report">View Report</option>\
+                                        <option value="view">View Report</option>\
                                         <option value="file">Save as File</option>\
                                     </select>\
                                 </div>\
@@ -426,7 +446,11 @@ function generateOutputForm(outputName) {
     $("#simOutputReportTarget" + outputID).change(simOutputTargetChanged(outputID));
 
 
-    $("#simOutputFormCollapseRemove" + outputID).click(simOutputRemoveFunction(outputID));
+    var removeButton = $("#simOutputFormCollapseRemove" + outputID);
+    removeButton.on('confirmDialog', simOutputRemoveFunction(outputID));
+    removeButton.click(function() {
+        openConfirmDialog(removeButton, "Are you sure you wish to remove output: " + outputName + "?", "Confirm Output Removal");
+    });
 
     simOutput.push(outputID);
 
@@ -449,7 +473,6 @@ function simOutputFileTypeFunction(newID) {
 
 function simOutputRemoveFunction(newID) {
     return function() {
-        console.log(newID);
         $("#simOutputFormOuterPanel" + newID).remove();
         var index = simOutput.indexOf(newID);
 
@@ -466,8 +489,42 @@ function simOutputTargetChanged(newID) {
     };
 }
 
+function simInputTargetChanged(newID) {
+    return function() {
+        simInputTargetSelections[newID] = $("#simInputTarget" + newID).val();
+    };
+}
+
 function simBuilderUpdateTargets() {
+    var id, select, optionExists;
+
     for(var i = 0; i < simInput.length; i++) {
-        
+        id = simInput[i];
+        select = $("#simInputTarget" + id);
+
+        select.empty();
+        select.append(getCurrentCellGroupOptions());
+        console.log("Target updated");
+
+        optionExists = $("#simInputTarget" + id + " option[value='" + simInputTargetSelections[id] + "']").length > 0;
+        if(simInputTargetSelections[id] !== undefined && optionExists)
+            select.val(simInputTargetSelections[id]);
+
     }
+
+    for(var i = 0; i < simOutput.length; i++) {
+        id = simOutput[i];
+        select = $("#simOutputReportTarget" + id);
+
+        select.empty();
+        select.append(getCurrentCellGroupOptions());
+
+        optionExists = $("#simOutputReportTarget" + id + " option[value='" + simInputTargetSelections[id] + "']").length > 0;
+        if(simOutputTargetSelections[id] !== undefined && optionExists)
+            select.val(simOutputTargetSelections[id]);
+    }
+}
+
+function isElementHidden(element) {
+    return (element.width() * element.height()) === 0;
 }
