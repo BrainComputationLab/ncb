@@ -1,19 +1,10 @@
 var simProgressBar = $("#uploadSimProgress");
 var simOutput = [];
+var simInput = [];
+var simInputTargetSelections = {};
+var simOutputTargetSelections = {};
 
 $().ready(function() {
-    $(".simOutputFileOnly").hide();
-
-    $("#simOutputType").change(function() {
-        if($("#simOutputType").val() === "file") {
-            $(".simOutputFileOnly").show();
-        }
-
-        else {
-            $(".simOutputFileOnly").hide();
-        }
-    });
-
     $("#stopSimButton").hide();
     //$("#launchSimButton").prop("disabled", true);
     $("#launchSimButton").on("confirmDialog", function() {
@@ -228,49 +219,169 @@ function startGenOutputForm() {
     });
 }
 
+function startGenInputForm() {
+    bootbox.prompt("Enter Stimulus Name", function(result) {
+        if(result !== null) {
+            generateInputForm(result);
+        }
+    });
+}
 
-var id = 0;
-function generateOutputForm(outputName) {
+function getCurrentCellGroupOptions() {
+    var currentCellGroupOptions = [];
+    appendCurrentCellGroupOptions(currentModel.cellGroups, currentCellGroupOptions, 0);
+    var optionStr = '';
 
-    for(var i = 0; i < simOutput.length; i++) {
-        //$('simoutput_' + simOutput[i])
+    if(currentCellGroupOptions.length === 0) {
+        optionStr += '<option value="none">No Cell Groups Available</option>';
     }
 
-    var formtext = '<div id="simOutputFormOuterPanel' + id + '" class="panel panel-default">\
+    else {
+        for(var i = 0; i < currentCellGroupOptions.length; i++) {
+            optionStr += '<option value="' + removeHTMLSpaceFromString(currentCellGroupOptions[i]);
+            optionStr += '">' + currentCellGroupOptions[i];
+            optionStr += '</option>';
+        }
+    }
+
+    return optionStr;
+}
+
+function appendCurrentCellGroupOptions(cellGroup, currentOptions, currentLevel) {
+    for(var i = 0; i < cellGroup.length; i++) {
+        var space = '';
+        for(var j = 0; j < currentLevel * 2; j++)
+            space += '&nbsp;';
+
+        currentOptions.push(space + cellGroup[i].name);
+        appendCurrentCellGroupOptions(cellGroup[i].cellGroups, currentOptions, currentLevel + 1);
+    }
+}
+
+function removeHTMLSpaceFromString(str) {
+    return str.replace(/&nbsp;/gi,'');
+}
+
+var inputID = 0;
+function generateInputForm(inputName) {
+    var formtext = '<div id="simInputFormOuterPanel' + inputID + '" class="panel panel-default">\
                         <div class="panel-heading">\
                             <h4 class="panel-title">\
-                                <a id="simOutputFormCollapse'+id+'" data-toggle="collapse" data-parent="#simOutputPanel" href="#simout_'+id+'">\
-                                    ' + outputName + '\
+                                <a id="simInputFormCollapse'+inputID+'" data-toggle="collapse" data-parent="#simInputPanel" href="#simout_'+inputID+'">\
+                                    ' + inputName + '\
                                 </a>\
-                                <a id="simOutputFormCollapseRemove' + id + '" class="btn btn-danger btn-xs pull-right" style="color: white;">- Remove</a>\
+                                <a id="simInputFormCollapseRemove' + inputID + '" class="btn btn-danger btn-xs pull-right" style="color: white;">- Remove</a>\
                             </h4>\
                         </div>\
-                        <div id="simout_'+id+'" class="panel-collapse collapse in" style="margin-left: 20px;">\
+                        <div id="simout_' + inputID + '" class="panel-collapse collapse in" style="margin-left: 20px;">\
+                            <form id="simulationInputForm">\
+                                <!-- Name of Simulation input -->\
+                                <div class="form-group">\
+                                    <label for="simInputType' + inputID + '">Stimulus Type</label>\
+                                    <select class="form-control" id="simInputType' + inputID + '">\
+                                        <option value="rectangular_current">Rectangular Current</option>\
+                                        <option value="rectangular_voltage">Rectangular Voltage</option>\
+                                        <option value="linear_current">Linear Current</option>\
+                                        <option value="linear_voltage">Linear Voltage</option>\
+                                        <option value="sine_current">Sine Current</option>\
+                                        <option value="sine_voltage">Sine Voltage</option>\
+                                    </select>\
+                                </div>\
+    \
+                                <div id="simInputAmplitude' + inputID + '" class="form-group">\
+                                    <label for="simInputAmplitudeField' + inputID + '">Amplitude</label>\
+                                    <input id="simInputAmplitudeField' + inputID + '" type="number" placeholder="ex. 2" class="form-control">\
+                                </div>\
+    \
+                                <div id="simInputWidth' + inputID + '" class="form-group">\
+                                    <label for="simInputWidthField' + inputID + '">Width</label>\
+                                    <input class="form-control" id="simInputWidthField' + inputID + '" type="number" placeholder="ex. 3">\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simInputFrequencyField' + inputID + '">Frequency</label>\
+                                    <input class="form-control" id="simInputFrequencyField' + inputID + '" type="number" placeholder="ex. 10">\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simInputProbabilityField' + inputID + '">Probability</label>\
+                                    <input class="form-control" id="simInputFrequencyField' + inputID + '" type="number" placeholder="ex. 0.5">\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simInputReportTarget' + inputID + '">Report Target</label>\
+                                    <select class="form-control" id="simInputReportTarget' + inputID + '">\
+                                        ' + getCurrentCellGroupOptions() + '\
+                                    </select>\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simInputStartTimeField' + inputID + '">Start Time</label>\
+                                    <input id="simInputStartTimeField' + inputID + '" type="number" placeholder="ex. 612789" class="form-control">\
+                                </div>\
+    \
+                                <div class="form-group">\
+                                    <label for="simInputEndTimeField' + inputID + '">End Time</label>\
+                                    <input id="simInputEndTimeField' + inputID + '" type="number" placeholder="ex. 1378454" class="form-control">\
+                                </div>\
+                            </form>\
+                        </div>\
+                    </div>';
+
+    $("#simInputPanel").append(formtext);
+
+    $("#simInputFormCollapseRemove" + inputID).click(simInputRemoveFunction(inputID));
+}
+
+function simInputRemoveFunction(newID) {
+    return function() {
+        $("#simInputFormOuterPanel" + newID).remove();
+        var index = simInput.indexOf(id);
+
+        if(index > -1) {
+            simInput.splice(index, 1);
+        }
+    };
+}
+
+var outputID = 0;
+function generateOutputForm(outputName) {
+
+    var formtext = '<div id="simOutputFormOuterPanel' + outputID + '" class="panel panel-default">\
+                        <div class="panel-heading">\
+                            <h4 class="panel-title">\
+                                <a id="simOutputFormCollapse'+outputID+'" data-toggle="collapse" data-parent="#simOutputPanel" href="#simout_'+outputID+'">\
+                                    ' + outputName + '\
+                                </a>\
+                                <a id="simOutputFormCollapseRemove' + outputID + '" class="btn btn-danger btn-xs pull-right" style="color: white;">- Remove</a>\
+                            </h4>\
+                        </div>\
+                        <div id="simout_'+outputID+'" class="panel-collapse collapse in" style="margin-left: 20px;">\
                             <form id="simulationOutputForm">\
                                 <!-- Name of Simulation input -->\
                                 <div class="form-group">\
-                                    <label for="simOutputType' + id + '">Output Type</label>\
-                                    <select class="form-control" id="simOutputType' + id + '">\
+                                    <label for="simOutputType' + outputID + '">Output Type</label>\
+                                    <select class="form-control" id="simOutputType' + outputID + '">\
                                         <option value="report">View Report</option>\
                                         <option value="file">Save as File</option>\
                                     </select>\
                                 </div>\
     \
-                                <div class="form-group simOutputFileOnly">\
-                                    <label for="simOutputFileName' + id + '">FileName</label>\
-                                    <input id="simOutputFileName' + id + '" type="text" placeholder="File Name" class="form-control">\
+                                <div id="simOutputFileField' + outputID + '" class="form-group simOutputFileOnly">\
+                                    <label for="simOutputFileName' + outputID + '">FileName</label>\
+                                    <input id="simOutputFileName' + outputID + '" type="text" placeholder="File Name" class="form-control">\
                                 </div>\
     \
-                                <div class="form-group simOutputFileOnly">\
-                                    <label for="simOutputNumberFormat' + id + '">Number Format</label>\
-                                    <select class="form-control" id="simOutputNumberFormat' + id + '">\
+                                <div id="simOutputFileField2' + outputID + '" class="form-group">\
+                                    <label for="simOutputNumberFormat' + outputID + '">Number Format</label>\
+                                    <select class="form-control" id="simOutputNumberFormat' + outputID + '">\
                                         <option value="ascii">ascii</option>\
                                     </select>\
                                 </div>\
     \
                                 <div class="form-group">\
-                                    <label for="simOutputReportType' + id + '">Report Type</label>\
-                                    <select class="form-control" id="simOutputReportType' + id + '">\
+                                    <label for="simOutputReportType' + outputID + '">Report Type</label>\
+                                    <select class="form-control" id="simOutputReportType' + outputID + '">\
                                         <option value="channel_conductance">Channel Conductance</option>\
                                         <option value="report2">Report 2</option>\
                                         <option value="report3">Report 3</option>\
@@ -278,32 +389,30 @@ function generateOutputForm(outputName) {
                                 </div>\
     \
                                 <div class="form-group">\
-                                    <label for="simOutputReportTarget' + id + '">Report Target</label>\
-                                    <select class="form-control" id="simOutputReportTarget' + id + '">\
-                                        <option value="alias_1">Cell Alias 1</option>\
-                                        <option value="alias_2">Cell Alias 2</option>\
-                                        <option value="alias_3">Cell Alias 3</option>\
+                                    <label for="simOutputReportTarget' + outputID + '">Report Target</label>\
+                                    <select class="form-control" id="simOutputReportTarget' + outputID + '">\
+                                        ' + getCurrentCellGroupOptions() + '\
                                     </select>\
                                 </div>\
     \
                                 <div class="form-group">\
-                                    <label for="simOutputProbability' + id + '">Probability</label>\
-                                    <input id="simOutputProbability' + id + '" type="number" placeholder="0.5" class="form-control">\
+                                    <label for="simOutputProbability' + outputID + '">Probability</label>\
+                                    <input id="simOutputProbability' + outputID + '" type="number" placeholder="0.5" class="form-control">\
                                 </div>\
     \
                                 <div class="form-group">\
-                                    <label for="simOutputFrequency' + id + '">Frequency</label>\
-                                    <input id="simOutputFrequency' + id + '" type="number" placeholder="5" class="form-control">\
+                                    <label for="simOutputFrequency' + outputID + '">Frequency</label>\
+                                    <input id="simOutputFrequency' + outputID + '" type="number" placeholder="5" class="form-control">\
                                 </div>\
     \
                                 <div class="form-group">\
-                                    <label for="simOutputStartTime' + id + '">Start Time</label>\
-                                    <input id="simOutputStartTime' + id + '" type="number" placeholder="0" class="form-control">\
+                                    <label for="simOutputStartTime' + outputID + '">Start Time</label>\
+                                    <input id="simOutputStartTime' + outputID + '" type="number" placeholder="0" class="form-control">\
                                 </div>\
     \
                                 <div class="form-group">\
-                                    <label for="simOutputEndTime' + id + '">End Time</label>\
-                                    <input id="simOutputEndTime' + id + '" type="number" placeholder="0" class="form-control">\
+                                    <label for="simOutputEndTime' + outputID + '">End Time</label>\
+                                    <input id="simOutputEndTime' + outputID + '" type="number" placeholder="0" class="form-control">\
                                 </div>\
                             </form>\
                         </div>\
@@ -311,22 +420,54 @@ function generateOutputForm(outputName) {
 
     $("#simOutputPanel").append(formtext);
 
-    var clickFunc = function(newID) {
-        return function() {
-            console.log(newID);
-            $("#simOutputFormOuterPanel" + newID).remove();
-            var index = simOutput.indexOf(id);
+    $("#simOutputFileField" + outputID).hide();
+    $("#simOutputFileField2" + outputID).hide();
+    $("#simOutputType" + outputID).change(simOutputFileTypeFunction(outputID));
+    $("#simOutputReportTarget" + outputID).change(simOutputTargetChanged(outputID));
 
-            if(index > -1) {
-                simOutput.splice(index, 1);
-            }
-        };
-    };
 
-    $("#simOutputFormCollapseRemove" + id).click(clickFunc(id));
+    $("#simOutputFormCollapseRemove" + outputID).click(simOutputRemoveFunction(outputID));
 
-    simOutput.push(id);
+    simOutput.push(outputID);
 
-    id++;
+    outputID++;
 }
-//}
+
+function simOutputFileTypeFunction(newID) {
+    return function() {
+        if($("#simOutputType" + newID).val() === "file") {
+            $("#simOutputFileField" + newID).show();
+            $("#simOutputFileField2" + newID).show();
+        }
+
+        else {
+            $("#simOutputFileField" + newID).hide();
+            $("#simOutputFileField2" + newID).hide();
+        }
+    };
+}
+
+function simOutputRemoveFunction(newID) {
+    return function() {
+        console.log(newID);
+        $("#simOutputFormOuterPanel" + newID).remove();
+        var index = simOutput.indexOf(newID);
+
+        delete simOutputTargetSelections[newID];
+        if(index > -1) {
+            simOutput.splice(index, 1);
+        }
+    };
+}
+
+function simOutputTargetChanged(newID) {
+    return function() {
+        simOutputTargetSelections[newID] = $("#simOutputReportTarget" + newID).val();
+    };
+}
+
+function simBuilderUpdateTargets() {
+    for(var i = 0; i < simInput.length; i++) {
+        
+    }
+}

@@ -14,6 +14,7 @@ $().ready( function() {
         hidePages();
         target = $(this).attr('href');
         $(target).show();
+        simBuilderUpdateTargets();
     });
 });
 
