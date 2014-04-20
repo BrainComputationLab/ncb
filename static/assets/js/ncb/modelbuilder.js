@@ -49,6 +49,7 @@ var aliasVals = [];
 var aliasVal = 0;
 var synapseChoice = 1;
 var prePost = [null, null];
+var lasSelectSynapse = null;
 
 var currentModel = new currentWorkingModel();
 var indexes = [];
@@ -181,6 +182,7 @@ function myModelsList2($scope, $compile) {
     $scope.list2 = currentModel;
 
     $scope.setModel = function (model, num1){
+        hideAll();
         if(num1 == 0) {
             var result = $.grep(currentModel.neurons, function(e){return e.name == model; });
             midMenuLast = {};
@@ -188,6 +190,7 @@ function myModelsList2($scope, $compile) {
             midMenuLast.className = "neuron";
             index = getIndex(currentModel.neurons, "name", midMenuLast.name);
             popModelP();
+            $("#cellGroupCollapse").hide();
             return;
         }
         else if(num1 = 1){
@@ -211,10 +214,11 @@ function myModelsList2($scope, $compile) {
             	index = getIndex(currentModel.cellGroups, "name", cellGroupLast.name);
             }
             midMenuLast = cellGroupLast.modelParameters;
-            console.log(index)
-            popCellP();
 
+            popCellP();
             popModelP();
+
+            $("#cellGroupCollapse").show();
             return;
         }
        
@@ -284,8 +288,8 @@ function myModelsList2($scope, $compile) {
 }
 
 function popCellP() {
-    $('#cellGroupCollapse').show();
-    $('#synCollapse').show();
+    //$('#cellGroupCollapse').show();
+    //$('#synCollapse').show();
 
     $('#cellGroupParams').html('');
     $("#cellGroupParams").append('<a id="n1" class="list-group-item">' + cellGroupLast.name +'</a>');
@@ -782,7 +786,7 @@ function showParameterNames() {
     }
 
     $('#paramCollapse').show();
-    $('#cellGroupCollapse').show();
+    // $('#cellGroupCollapse').show();
 
     $('#parameterValues').html('');
     $('#parameterValues').append('<div id="name"></div>');
@@ -1275,15 +1279,103 @@ function makeSynEditable(val) {
 		$('#syntype'+x+' a').editable({
 		        'source': dropChoice,
 		        'success': function(response, newValue) {
-		                        if(this.id == "s11"+x) { swap.a.type = dropChoice[newValue].text; }
-		                        if(this.id == "s22"+x) { swap.b.type = dropChoice[newValue].text; }
-		                        // if(this.id == "c1") { swap.c.type = dropChoice[newValue].text; }
-		                        // if(this.id == "d1") { swap.d.type = dropChoice[newValue].text; }
-		                        // if(this.id == "u1") { swap.u.type = dropChoice[newValue].text; }
-		                        // if(this.id == "v1") { swap.v.type = dropChoice[newValue].text; }
-		                        // if(this.id == "t1") { swap.threshold.type = dropChoice[newValue].text; }
+                                if(lastSelectSynapse.parameters.name === 'flatSynapse') {
+                                    if(this.id == "s11"+x) {lastSelectSynapse.parameters.delay.type = dropChoice[newValue].text;}
+                                    if(this.id == "s21"+x) {lastSelectSynapse.parameters.current.type = dropChoice[newValue].text;}
+                                }
+                                else if(lastSelectSynapse.parameters.name === 'ncsSynapse') {
+                                    if(this.id == "s11"+x) {lastSelectSynapse.parameters.utilization.type = dropChoice[newValue].text;}
+                                    if(this.id == "s21"+x) {lastSelectSynapse.parameters.redistribution.type = dropChoice[newValue].text;}
+                                    if(this.id == "s31"+x) {lastSelectSynapse.parameters.lastPrefireTime.type = dropChoice[newValue].text;}
+                                    if(this.id == "s41"+x) {lastSelectSynapse.parameters.lastPostfireTime.type = dropChoice[newValue].text;}
+                                    if(this.id == "s51"+x) {lastSelectSynapse.parameters.tauFacilitation.type = dropChoice[newValue].text;}
+                                    if(this.id == "s61"+x) {lastSelectSynapse.parameters.tauDepression.type = dropChoice[newValue].text;}
+                                    if(this.id == "s71"+x) {lastSelectSynapse.parameters.tauLtp.type = dropChoice[newValue].text;}
+                                    if(this.id == "s81"+x) {lastSelectSynapse.parameters.tauLtd.type = dropChoice[newValue].text;}
+                                    if(this.id == "s91"+x) {lastSelectSynapse.parameters.aLtpMinimum.type = dropChoice[newValue].text;}
+                                    if(this.id == "s101"+x) {lastSelectSynapse.parameters.maxConductance.type = dropChoice[newValue].text;}
+                                    if(this.id == "s111"+x) {lastSelectSynapse.parameters.reversalPotential.type = dropChoice[newValue].text;}
+                                    if(this.id == "s121"+x) {lastSelectSynapse.parameters.tauPostSynapticConductance.type = dropChoice[newValue].text;}
+                                    if(this.id == "s131"+x) {lastSelectSynapse.parameters.psgWaveformDuration.type = dropChoice[newValue].text;}
+                                    if(this.id == "s141"+x) {lastSelectSynapse.parameters.delay.type = dropChoice[newValue].text;}
+                                }
 		                    }
 		    });
+            $('#synvalue'+x+' a').editable({
+                'source': dropChoice,
+                'success': function(response, newValue) {
+                                if(lastSelectSynapse.parameters.name === 'flatSynapse') {
+                                    if(this.id == "s12"+x) {lastSelectSynapse.parameters.delay.value = newValue;}
+                                    if(this.id == "s22"+x) {lastSelectSynapse.parameters.current.value = newValue;}
+                                }
+                                else if(lastSelectSynapse.parameters.name === 'ncsSynapse') {
+                                    if(this.id == "s12"+x) {lastSelectSynapse.parameters.utilization.value = newValue;}
+                                    if(this.id == "s22"+x) {lastSelectSynapse.parameters.redistribution.value = newValue;}
+                                    if(this.id == "s32"+x) {lastSelectSynapse.parameters.lastPrefireTime.value = newValue;}
+                                    if(this.id == "s42"+x) {lastSelectSynapse.parameters.lastPostfireTime.value = newValue;}
+                                    if(this.id == "s52"+x) {lastSelectSynapse.parameters.tauFacilitation.value = newValue;}
+                                    if(this.id == "s62"+x) {lastSelectSynapse.parameters.tauDepression.value = newValue;}
+                                    if(this.id == "s72"+x) {lastSelectSynapse.parameters.tauLtp.value = newValue;}
+                                    if(this.id == "s82"+x) {lastSelectSynapse.parameters.tauLtd.value = newValue;}
+                                    if(this.id == "s92"+x) {lastSelectSynapse.parameters.aLtpMinimum.value = newValue;}
+                                    if(this.id == "s102"+x) {lastSelectSynapse.parameters.maxConductance.value = newValue;}
+                                    if(this.id == "s112"+x) {lastSelectSynapse.parameters.reversalPotential.value = newValue;}
+                                    if(this.id == "s122"+x) {lastSelectSynapse.parameters.tauPostSynapticConductance.value = newValue;}
+                                    if(this.id == "s132"+x) {lastSelectSynapse.parameters.psgWaveformDuration.value = newValue;}
+                                    if(this.id == "s142"+x) {lastSelectSynapse.parameters.delay.value = newValue;}
+                                }
+                            }
+            });
+            $('#synminvalue'+x+' a').editable({
+                'source': dropChoice,
+                'success': function(response, newValue) {
+                                if(lastSelectSynapse.parameters.name === 'flatSynapse') {
+                                    if(this.id == "s13"+x) {lastSelectSynapse.parameters.delay.minValue = newValue;}
+                                    if(this.id == "s23"+x) {lastSelectSynapse.parameters.current.minValue = newValue;}
+                                }
+                                else if(lastSelectSynapse.parameters.name === 'ncsSynapse') {
+                                    if(this.id == "s13"+x) {lastSelectSynapse.parameters.utilization.minValue = newValue;}
+                                    if(this.id == "s23"+x) {lastSelectSynapse.parameters.redistribution.minValue = newValue;}
+                                    if(this.id == "s33"+x) {lastSelectSynapse.parameters.lastPrefireTime.minValue = newValue;}
+                                    if(this.id == "s43"+x) {lastSelectSynapse.parameters.lastPostfireTime.minValue = newValue;}
+                                    if(this.id == "s53"+x) {lastSelectSynapse.parameters.tauFacilitation.minValue = newValue;}
+                                    if(this.id == "s63"+x) {lastSelectSynapse.parameters.tauDepression.minValue = newValue;}
+                                    if(this.id == "s73"+x) {lastSelectSynapse.parameters.tauLtp.minValue = newValue;}
+                                    if(this.id == "s83"+x) {lastSelectSynapse.parameters.tauLtd.minValue = newValue;}
+                                    if(this.id == "s93"+x) {lastSelectSynapse.parameters.aLtpMinimum.minValue = newValue;}
+                                    if(this.id == "s103"+x) {lastSelectSynapse.parameters.maxConductance.minValue = newValue;}
+                                    if(this.id == "s113"+x) {lastSelectSynapse.parameters.reversalPotential.minValue = newValue;}
+                                    if(this.id == "s123"+x) {lastSelectSynapse.parameters.tauPostSynapticConductance.minValue = newValue;}
+                                    if(this.id == "s133"+x) {lastSelectSynapse.parameters.psgWaveformDuration.minValue = newValue;}
+                                    if(this.id == "s143"+x) {lastSelectSynapse.parameters.delay.minValue = newValue;}
+                                }
+                            }
+            });
+            $('#synmaxvalue'+x+' a').editable({
+                'source': dropChoice,
+                'success': function(response, newValue) {
+                                if(lastSelectSynapse.parameters.name === 'flatSynapse') {
+                                    if(this.id == "s14"+x) {lastSelectSynapse.parameters.delay.maxValue = newValue;}
+                                    if(this.id == "s24"+x) {lastSelectSynapse.parameters.current.maxValue = newValue;}
+                                }
+                                else if(lastSelectSynapse.parameters.name === 'ncsSynapse') {
+                                    if(this.id == "s14"+x) {lastSelectSynapse.parameters.utilization.maxValue = newValue;}
+                                    if(this.id == "s24"+x) {lastSelectSynapse.parameters.redistribution.maxValue = newValue;}
+                                    if(this.id == "s34"+x) {lastSelectSynapse.parameters.lastPrefireTime.maxValue = newValue;}
+                                    if(this.id == "s44"+x) {lastSelectSynapse.parameters.lastPostfireTime.maxValue = newValue;}
+                                    if(this.id == "s54"+x) {lastSelectSynapse.parameters.tauFacilitation.maxValue = newValue;}
+                                    if(this.id == "s64"+x) {lastSelectSynapse.parameters.tauDepression.maxValue = newValue;}
+                                    if(this.id == "s74"+x) {lastSelectSynapse.parameters.tauLtp.maxValue = newValue;}
+                                    if(this.id == "s84"+x) {lastSelectSynapse.parameters.tauLtd.maxValue = newValue;}
+                                    if(this.id == "s94"+x) {lastSelectSynapse.parameters.aLtpMinimum.maxValue = newValue;}
+                                    if(this.id == "s104"+x) {lastSelectSynapse.parameters.maxConductance.maxValue = newValue;}
+                                    if(this.id == "s114"+x) {lastSelectSynapse.parameters.reversalPotential.maxValue = newValue;}
+                                    if(this.id == "s124"+x) {lastSelectSynapse.parameters.tauPostSynapticConductance.maxValue = newValue;}
+                                    if(this.id == "s134"+x) {lastSelectSynapse.parameters.psgWaveformDuration.maxValue = newValue;}
+                                    if(this.id == "s144"+x) {lastSelectSynapse.parameters.delay.maxValue = newValue;}
+                                }
+                            }
+            });
 	}
 }
 
@@ -1482,46 +1574,13 @@ function getIndex(source, attr, value) {
     }
 }
 
-function popChanModal(val) {
-    if(typeof indexs[0] === 'undefined') { var moveInto3 = globalCellGroup[0]; }
-    else { var moveInto3 = globalCellGroup[indexs[0]]; }
-    
-    for(i=1; i<pos; i++) {
-       // if(moveInto3.subGroup.length != 0 ) {
-      //      moveInto3 = moveInto3.subGroup[indexs[i]];
-       // } 
-    }
-    var index0 = getIndex(globalCellGroup, "name", midMenuLast.name);
-    //var index = getIndex(moveInto3.subGroup, "name", midMenuLast.name);
-
-    if(val == 1) {
-        var newChan = new voltageGatedIonChannel();
-    }
-    else if(val == 2) {
-        var newChan = new calciumDependantChannel();
-    }
-    else if(val == 3) {
-        var a1 = new particleVariableConstants();
-        var b1 = new particleVariableConstants();
-        var testParticle = new voltageGatedParticle(a1, b1);
-        var newChan = new voltageGatedChannel(testParticle);
-    }
-
-    if(pos == 0) { 
-        newChanPos = globalCellGroup[index0].modelParameters.parameters.channel.length;
-        //globalCellGroup[index0].modelParameters.parameters.channel[newChanPos] = cloneChan(newChan);
-    }
-    else { 
-        var newChanPos = moveInto3.modelParameters.parameters.channel.length;
-        //moveInto3.subGroup[index].modelParameters.parameters.channel[newChanPos] = cloneChan(newChan); 
-    }
-    return;
-}
 
 function createSynapse() {
 	if(synapseChoice == 1) {
 		var params = new flatSynapse();
 		currentModel.synapses.push({name: $('#synapName').val(), pre: prePost[0], post: prePost[1], prob: $('#probOfConnection').val(), parameters: params});
+        lastSelectSynapse = currentModel.synapses[currentModel.synapses.length - 1];
+        console.log(lastSelectSynapse.name);
 		var subCollapse = '<div id="flatsyn'+dynamicSynNum+'">\
 		                    <a class="list-group-item"> PreSynaptic: </a>\
 		                    <a class="list-group-item"> PostSynaptic: </a>\
@@ -1532,6 +1591,7 @@ function createSynapse() {
 	}
 	else if(synapseChoice == 2) {
 		currentModel.synapses.push(new synapseGroup($('#synapName').val(), prePost[0], prePost[1], $('#probOfConnection').val(), new ncsSynapse()));
+        lastSelectSynapse = currentModel.synapses[currentModel.synapses.length - 1];
 		var subCollapse = '<div id="ncssyn'+dynamicSynNum+'">\
 		                    <a class="list-group-item"> PreSynaptic: </a>\
 		                    <a class="list-group-item"> PostSynaptic: </a>\
@@ -1556,7 +1616,7 @@ function createSynapse() {
 	var collapseable = '<div class="panel panel-default" style="overflow:visible;">\
                                     <div class="panel-heading">\
                                         <h4 class="panel-title">\
-                                            <a id="syn'+dynamicSynNum+'Name" data-toggle="collapse" data-parent="#synCollapse" href="#syn_'+dynamicSynNum+'">\
+                                            <a id="syn'+dynamicSynNum+'Name" data-toggle="collapse" name="+'+currentModel.synapses[dynamicSynNum].name+'+" onClick="selectSynapseName(name)" data-parent="#synCollapse" href="#syn_'+dynamicSynNum+'">\
                                                 '+currentModel.synapses[dynamicSynNum].name+'\
                                             </a>\
                                         </h4>\
@@ -1577,6 +1637,11 @@ function createSynapse() {
 	dynamicSynNum++;
 	makeSynEditable(dynamicSynNum);
 	$('#synChoices').selectedIndex = 0;
+}
+
+function selectSynapseName(name) {
+    var result = $.grep(currentModel.synapses, function(e){return e.name == name; });
+    lastSelectSynapse = result[0];
 }
 
 function setSynapseVal(value) {
