@@ -180,6 +180,7 @@ function myModelsList($scope) {
 function myModelsList2($scope, $compile) {
     $scope.list = globalCellGroup;
     $scope.list2 = currentModel;
+    console.log("SCOPE");
 
     $scope.setModel = function (model, num1){
         hideAll();
@@ -193,7 +194,7 @@ function myModelsList2($scope, $compile) {
             $("#cellGroupCollapse").hide();
             return;
         }
-        else if(num1 = 1){
+        else if(num1 === 1){
             if(pos != 0) {
                 var moveInto = currentModel.cellGroups[indexes[0]];
                 for(i=1; i<pos; i++) {
@@ -202,7 +203,7 @@ function myModelsList2($scope, $compile) {
                     }
                 }
                 // console.log(moveInto)
-                var result = $.grep(moveInto.cellGroups, function(e){return e.name == model; });
+                var result = $.grep(moveInto.cellGroups, function(e){return e.name == model; }); 
                 cellGroupLast = {};
     	        cellGroupLast = result[0];
     	        index = getIndex(moveInto.cellGroups, "name", cellGroupLast.name);
@@ -228,15 +229,15 @@ function myModelsList2($scope, $compile) {
     $scope.intoModel = function (num1){
         pos += 1;
         indexes.push(index);
-
         var myStr = $compile('<li><a id="' + breadDepth + '" class="active" ng-click="changeBreadcrumb($event)" href="javascript:">' + cellGroupLast.name + '</a></li>')($scope);
-
-        for(i=1; i<pos; i++) {
+/*
+        for(i=1; i<pos-5; i++) {
             if(cellGroupLast.cellGroups.length != 0) {
                 cellGroupLast = cellGroupLast.cellGroups[indexes[i]];
+                console.log(cellGroupLast);
             }
         }
-
+*/
         $('#bread').append(myStr);
         breadDepth += 1;
 
@@ -1863,6 +1864,19 @@ function addToGlobalModel() {
             }
         }
     }
+
+    updateModelListView();
+}
+
+function updateModelListView() {
+    angular.element($("#modelList2")).scope().$apply();
+}
+
+function updateModelListViewAfterImport() {
+    var scope = angular.element($("#modelList2")).scope();
+    scope.list2 = currentModel;
+    scope.breadGoHome();
+    scope.$apply();
 }
 
 function hideAddElements() {

@@ -10,8 +10,8 @@ $().ready(function() {
         $("#possible_import_error").hide();
         $(".import_export_buttons").prop("disabled", false);
 
-        $("#uploadProgess").attr("style", "width: 0%");
-        $("#uploadProgess").hide();
+        $("#uploadProgress").attr("style", "width: 0%");
+        $("#uploadProgress").hide();
 
         clearUploadFileInput();
 
@@ -171,7 +171,8 @@ function importSim() {
             console.log("Upload Received");
             console.log(currentModel);
             updateSimElements();
-            $("#uploadProgess").hide();
+            updateModelListViewAfterImport();
+            $("#uploadProgress").hide();
             $("#import_modal").modal("hide");
         },
 
@@ -239,8 +240,6 @@ function updateSimElements() {
         }
 
         $("#simOutputType" + id).trigger("change");
-    }
-}
 
         obj = {
             entity_name: $("#simOutputFormCollapse" + id).html().trim(),
@@ -269,4 +268,6 @@ function updateSimElements() {
                 type: "view"
             };
         }
+    }
+}
 
