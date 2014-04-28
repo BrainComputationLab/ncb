@@ -1,6 +1,7 @@
 function currentWorkingModel() {
 	this.name = "Current Model";
 	this.description = "";
+	this.author = "";
 	this.neurons = [];
 	this.cellGroups = [];
 	this.cellAliases = [];

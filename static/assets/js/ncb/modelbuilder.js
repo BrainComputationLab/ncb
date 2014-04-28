@@ -1902,3 +1902,43 @@ function addChannel() {
         midMenuLast.parameters.channel.push(newChan);
     }
 }
+
+function removeElement(id, val) {
+	if(val === 0) {
+		var result = $.grep(currentModel.neurons, function(e){ return e.name == id; });
+		var myIndex = getIndex(currentModel.neurons, "name", result[0].name)
+		currentModel.neurons.splice(myIndex, 1);
+		midMenuLast = {};
+	}
+	else {
+		if(pos != 0) {
+	        var moveInto = currentModel.cellGroups[indexes[0]];
+	        for(i=1; i<pos; i++) {
+	            if(moveInto.cellGroups.length != 0) {
+	                moveInto = moveInto.cellGroups[indexes[i]];
+	            }
+	        }
+			var result = $.grep(moveInto.cellGroups, function(e){ return e.name == id; });
+			var myIndex = getIndex(moveInto.cellGroups, "name", result[0].name)
+			moveInto.cellGroups.splice(myIndex, 1);
+			midMenuLast = {};
+		}
+		else {
+			moveInto = currentModel.cellGroups;
+			var result = $.grep(moveInto, function(e){ return e.name == id; });
+			var myIndex = getIndex(moveInto, "name", result[0].name)
+			moveInto.splice(myIndex, 1);
+			midMenuLast = {};
+		}
+
+	}
+	updateModelListView();
+}
+
+function editWorkingModel() {
+	currentModel.name = $('#currentName').val();
+	currentModel.description = $('#currentDesc').val();
+	currentModel.author = $('#currentAuthor').val();
+
+	$('#currentModelName').html(currentModel.name);
+}
