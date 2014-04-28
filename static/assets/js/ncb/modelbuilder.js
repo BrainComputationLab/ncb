@@ -1932,6 +1932,7 @@ function removeElement(id, val) {
 		}
 
 	}
+    hideAll();
 	updateModelListView();
 }
 
