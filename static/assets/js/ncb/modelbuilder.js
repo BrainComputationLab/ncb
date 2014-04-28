@@ -171,8 +171,6 @@ function myModelsList($scope) {
 		"content": "Content"
     };
 
-	
-
 
 }
 
@@ -978,15 +976,15 @@ function showChannelParams(source, val) {
     $('#channelValues'+val).html('');
     $('#channelValues'+val).show();
     $('#channelValues'+val).append('<div class="row">');
-    $('#channelValues'+val).append('<div id="chantype'+val+'" class="col-lg-3"></div>');
-    $('#channelValues'+val).append('<div id="chanvalue'+val+'" class="col-lg-3"></div>');
-    $('#channelValues'+val).append('<div id="chanminvalue'+val+'" class="col-lg-3"></div>');
-    $('#channelValues'+val).append('<div id="chanmaxvalue'+val+'" class="col-lg-3"></div>');
+    $('#channelValues'+val).append('<div id="chantype'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#channelValues'+val).append('<div id="chanvalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#channelValues'+val).append('<div id="chanminvalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#channelValues'+val).append('<div id="chanmaxvalue'+val+'" class="col-lg-3" style="display:block; padding-left: 0px"></div>');
     $('#channelValues'+val).append('</div>');
 
     if(source.name === "Voltage Gated Ion Channel") {
         $('#vgiChan'+val).show();
-        $("#chantype"+val).append('<a id="cha1'+val+'" class="list-group-item"  data-type="select" >' + source.vHalf.type +'</a>');
+        $("#chantype"+val).append('<a id="cha1'+val+'" class="list-group-item"  data-type="select">' + source.vHalf.type +'</a>');
         $("#chanvalue"+val).append('<a id="cha2'+val+'" class="list-group-item"  data-type="number">' + source.vHalf.value +'</a>');
         $("#chanminvalue"+val).append('<a id="cha3'+val+'" class="list-group-item"  data-type="number">' + source.vHalf.minValue +'</a>');
         $("#chanmaxvalue"+val).append('<a id="cha4'+val+'" class="list-group-item"  data-type="number">' + source.vHalf.maxValue +'</a>');
@@ -1081,10 +1079,10 @@ function showParticleParams(source, val) {
     $('#particleValues'+val).html('');
     $('#particleValues'+val).show();
     $('#particleValues'+val).append('<div class="row">');
-    $('#particleValues'+val).append('<div id="particletype'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="particlevalue'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="particleminvalue'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="particlemaxvalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="particletype'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="particlevalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="particleminvalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="particlemaxvalue'+val+'" class="col-lg-3" style="display:block; padding-left: 0px"></div>');
     $('#particleValues'+val).append('</div>');
 
     $("#particletype"+val).append('<a id="pa1'+val+'" class="list-group-item" data-type="select">' + source.particles.power.type +'</a>');
@@ -1102,10 +1100,10 @@ function showParticleParams(source, val) {
 
 function showParticleConstants(source, val) {
     $('#particleValues'+val).append('<div class="row">');
-    $('#particleValues'+val).append('<div id="constanttype'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="constantvalue'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="constantminvalue'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="constantmaxvalue'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constanttype'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="constantvalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="constantminvalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="constantmaxvalue'+val+'" class="col-lg-3" style="display:block; padding-left: 0px"></div>');
     $('#particleValues'+val).append('</div>');
 
     $("#constanttype"+val).append('<a id="ca1'+val+'" class="list-group-item" data-type="select">' + source.particles.alpha.a.type +'</a>');
@@ -1139,10 +1137,10 @@ function showParticleConstants(source, val) {
     $("#constantmaxvalue"+val).append('<a id="ch4'+val+'" class="list-group-item" data-type="number">' + source.particles.alpha.h.maxValue +'</a>');
 
     $('#particleValues'+val).append('<div class="row">');
-    $('#particleValues'+val).append('<div id="constanttype2'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="constantvalue2'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="constantminvalue2'+val+'" class="col-lg-3"></div>');
-    $('#particleValues'+val).append('<div id="constantmaxvalue2'+val+'" class="col-lg-3"></div>');
+    $('#particleValues'+val).append('<div id="constanttype2'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="constantvalue2'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="constantminvalue2'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#particleValues'+val).append('<div id="constantmaxvalue2'+val+'" class="col-lg-3" style="display:block; padding-left: 0px"></div>');
     $('#particleValues'+val).append('</div>');
 
     $("#constanttype2"+val).append('<a id="cba1'+val+'" class="list-group-item" data-type="select">' + source.particles.beta.a.type +'</a>');
@@ -1177,17 +1175,17 @@ function showParticleConstants(source, val) {
 }
 
 function popSynVal(val) {
-	$('#synValues'+val).append('<div id=synpre'+val+' class="col-lg-12"></div>');
-	$('#synValues'+val).append('<div id=synpost'+val+' class="col-lg-12"></div>');
-	$('#synValues'+val).append('<div id=synprob'+val+' class="col-lg-12"></div>');
+	$('#synValues'+val).append('<div id=synpre'+val+' class="col-lg-12" style="display:block; padding-left: 0px"></div>');
+	$('#synValues'+val).append('<div id=synpost'+val+' class="col-lg-12" style="display:block; padding-left: 0px"></div>');
+	$('#synValues'+val).append('<div id=synprob'+val+' class="col-lg-12" style="display:block; padding-left: 0px"></div>');
 	$('#synpre'+val).append('<a id="spre'+val+'" class="list-group-item">' + currentModel.synapses[val].pre +'</a>');
 	$('#synpost'+val).append('<a id="spost'+val+'" class="list-group-item">' + currentModel.synapses[val].post +'</a>');
 	$('#synprob'+val).append('<a id="sname'+val+'" class="list-group-item">' + currentModel.synapses[val].prob +'</a>');
     $('#synValues'+val).append('<div class="row">');
-    $('#synValues'+val).append('<div id="syntype'+val+'" class="col-lg-3"></div>');
-    $('#synValues'+val).append('<div id="synvalue'+val+'" class="col-lg-3"></div>');
-    $('#synValues'+val).append('<div id="synminvalue'+val+'" class="col-lg-3"></div>');
-    $('#synValues'+val).append('<div id="synmaxvalue'+val+'" class="col-lg-3"></div>');
+    $('#synValues'+val).append('<div id="syntype'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#synValues'+val).append('<div id="synvalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#synValues'+val).append('<div id="synminvalue'+val+'" class="col-lg-3" style="display:block; padding: 0px"></div>');
+    $('#synValues'+val).append('<div id="synmaxvalue'+val+'" class="col-lg-3" style="display:block; padding-left: 0px"></div>');
     $('#synValues'+val).append('</div>');
 
     if(currentModel.synapses[val].parameters.name === 'flatSynapse') {
@@ -1391,7 +1389,7 @@ function chanCollapseAdd() {
                                     </div>\
                                     <div id="chan_'+dynamicChanNum+'" class="panel-collapse collapse in">\
                                         <div class="row">\
-                                            <div id="channels" class="col-lg-5">\
+                                            <div id="channels" class="col-lg-5" style="display:block; padding-right: 0px; width:210px">\
                                                 <div id="vgiChan'+dynamicChanNum+'">\
                                                     <a class="list-group-item"> vHalf: </a>\
                                                     <a class="list-group-item"> r: </a>\
@@ -1415,7 +1413,7 @@ function chanCollapseAdd() {
                                                     <a class="list-group-item"> Reverse Potential: </a>\
                                                 </div>\
                                             </div>\
-                                            <div id="channelValues'+dynamicChanNum+'" class="col-lg-7">\
+                                            <div id="channelValues'+dynamicChanNum+'" class="col-lg-7" style="display:block; padding: 0px">\
 \
                                             </div>\
                                         </div>\
@@ -1429,7 +1427,7 @@ function chanCollapseAdd() {
                                             </div>\
                                             <div id="collapse3" class="panel-collapse collapse in">\
                                                 <div class="row">\
-                                                    <div id="particles'+dynamicChanNum+'" class="col-lg-5">\
+                                                    <div id="particles'+dynamicChanNum+'" class="col-lg-5" style="display:block; padding-right: 0px; width: 210px">\
                                                         <a class="list-group-item"> Power: </a>\
                                                         <a class="list-group-item"> xInitial: </a>\
                                                         <div id="alphaP'+dynamicChanNum+'">\
@@ -1449,7 +1447,7 @@ function chanCollapseAdd() {
                                                             <a class="list-group-item"> H: </a>\
                                                         </div>\
                                                     </div>\
-                                                    <div id="particleValues'+dynamicChanNum+'" class="col-lg-7">\
+                                                    <div id="particleValues'+dynamicChanNum+'" class="col-lg-7" style="display:block; padding: 0px">\
 \
                                                     </div>\
                                                 </div>\
@@ -1624,9 +1622,9 @@ function createSynapse() {
                                     </div>\
                                     <div id="syn_'+dynamicSynNum+'" class="panel-collapse collapse in">\
                                         <div class="row">\
-                                            <div id="synapses" class="col-lg-5">'+subCollapse+'\
+                                            <div id="synapses" class="col-lg-5" style="display:block; padding-right: 0px">'+subCollapse+'\
                                             </div>\
-                                            <div id="synValues'+dynamicSynNum+'" class="col-lg-7">\
+                                            <div id="synValues'+dynamicSynNum+'" class="col-lg-7" style="display:block; padding-left: 0px">\
 \
                                             </div>\
                                         </div>\
@@ -1944,3 +1942,4 @@ function editWorkingModel() {
 
 	$('#currentModelName').html(currentModel.name);
 }
+
