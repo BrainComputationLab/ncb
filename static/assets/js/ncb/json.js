@@ -115,6 +115,13 @@ function exportSim() {
         reports.push(obj);
     }
 
+    currentModel.sim_name = $("#simNameInput").val();
+    currentModel.sim_duration = parseInt($("#simDurationInput").val());
+    currentModel.sim_fsv = $("#simFSVInput").val();
+    currentModel.sim_interactive = $("#simInteractiveInput").val();
+    currentModel.sim_seed = parseInt($("#simSeedInput").val());
+    currentModel.sim_distance = $("#simDistanceInput").val();
+
     currentModel.stimuli = stimuli;
     currentModel.reports = reports;
     currentModel.filename = $("#exportFileName").val();
@@ -134,6 +141,8 @@ function exportSim() {
             }
 
             $("#export_modal").modal("hide");
+
+            window.location.href = 'export';
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("Unable to export sim. Reason: " + errorThrown);
@@ -172,6 +181,7 @@ function importSim() {
             console.log(currentModel);
             updateSimElements();
             updateModelListViewAfterImport();
+            updateModelDetails();
             $("#uploadProgress").hide();
             $("#import_modal").modal("hide");
         },
@@ -186,6 +196,13 @@ function importSim() {
         contentType: false,
         processData: false
     });  
+}
+
+function updateModelDetails() {
+    $('#currentName').val(currentModel.name);
+    $('#currentDesc').val(currentModel.description);
+    $('#currentAuthor').val(currentModel.author);
+    $('#currentModelName').html(currentModel.name);
 }
 
 function updateSimElements() {
@@ -269,5 +286,17 @@ function updateSimElements() {
             };
         }
     }
+
+    $("#simNameInput").val(currentModel.sim_name);
+    $("#simDurationInput").val(currentModel.sim_duration);
+    $("#simFSVInput").val(currentModel.sim_fsv);
+
+    if(currentModel.sim_interactive !== undefined)
+        $("#simInteractiveInput").val(currentModel.sim_interactive);
+
+    $("#simSeedInput").val(currentModel.sim_seed);
+
+    if(currentModel.sim_distance !== undefined)
+        $("#simDistanceInput").val(currentModel.sim_distance);
 }
 

@@ -345,7 +345,7 @@ function popModelP() {
                             else if(midMenuLast.type === "HodgkinHuxley") {
                                 if(this.id === "a1") { midMenuLast.parameters.threshold.type = dropChoice[newValue].text; }
                                 if(this.id === "b1") { midMenuLast.parameters.restingPotential.type = dropChoice[newValue].text; }
-                                if(this.id === "c1") { swmidMenuLast.parameters.capacitence.type = dropChoice[newValue].text; }
+                                if(this.id === "c1") { swmidMenuLast.parameters.capacitance.type = dropChoice[newValue].text; }
                             }
                         }
                         else if(midMenuLast.className === "cellGroup") {
@@ -379,7 +379,7 @@ function popModelP() {
                             else if(midMenuLast.type === "HodgkinHuxley") {
                                 if(this.id === "a2") { midMenuLast.parameters.threshold.value = newValue; }
                                 if(this.id === "b2") { midMenuLast.parameters.restingPotential.value = newValue; }
-                                if(this.id === "c2") { midMenuLast.parameters.capacitence.value = newValue; }
+                                if(this.id === "c2") { midMenuLast.parameters.capacitance.value = newValue; }
                             }
                         }
                         else if(midMenuLast.className === "cellGroup") {
@@ -413,7 +413,7 @@ function popModelP() {
                             else if(midMenuLast.type === "HodgkinHuxley") {
                                 if(this.id == "a3") { midMenuLast.parameters.threshold.minValue = newValue; }
                                 if(this.id == "b3") { midMenuLast.parameters.restingPotential.minValue = newValue; }
-                                if(this.id == "c3") { midMenuLast.parameters.capacitence.minValue = newValue; }
+                                if(this.id == "c3") { midMenuLast.parameters.capacitance.minValue = newValue; }
                             }
                         }
                         else if(midMenuLast.className === "cellGroup") {
@@ -447,7 +447,7 @@ function popModelP() {
                             else if(midMenuLast.type === "HodgkinHuxley") {
                                 if(this.id == "a4") { midMenuLast.parameters.threshold.maxValue = newValue; }
                                 if(this.id == "b4") { midMenuLast.parameters.restingPotential.maxValue = newValue; }
-                                if(this.id == "c4") { midMenuLast.parameters.capacitence.maxValue = newValue; }
+                                if(this.id == "c4") { midMenuLast.parameters.capacitance.maxValue = newValue; }
                             }
                         }
                         else if(midMenuLast.className === "cellGroup") {
@@ -948,10 +948,10 @@ function showParameterNames() {
         $("#minvalue").append('<a id="b3" class="list-group-item">' + midMenuLast.parameters.restingPotential.minValue +'</a>');
         $("#maxvalue").append('<a id="b4" class="list-group-item">' + midMenuLast.parameters.restingPotential.maxValue +'</a>');
 
-        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.parameters.capacitence.type +'</a>');
-        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.parameters.capacitence.value +'</a>');
-        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.parameters.capacitence.minValue +'</a>');
-        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.parameters.capacitence.maxValue +'</a>');
+        $("#type2").append('<a id="c1" class="list-group-item" data-type="select">' + midMenuLast.parameters.capacitance.type +'</a>');
+        $("#value").append('<a id="c2" class="list-group-item">' + midMenuLast.parameters.capacitance.value +'</a>');
+        $("#minvalue").append('<a id="c3" class="list-group-item">' + midMenuLast.parameters.capacitance.minValue +'</a>');
+        $("#maxvalue").append('<a id="c4" class="list-group-item">' + midMenuLast.parameters.capacitance.maxValue +'</a>');
 
         $('#collapse2').html('');
         for(var i=0; i<midMenuLast.parameters.channel.length; i++) {

@@ -1,5 +1,5 @@
 from __future__ import print_function
-from flask import Flask, render_template, send_from_directory, redirect, request, url_for, jsonify
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for, jsonify, send_file
 from werkzeug import secure_filename
 import datetime, os, json, util
 
@@ -78,6 +78,7 @@ def importFile():
 
 @app.route('/export', methods=['POST', 'GET'])
 def exportFile():
+    global exportFile
     if request.method == 'POST':
         jsonObj = request.get_json(False,False,False)
 
@@ -90,6 +91,8 @@ def exportFile():
         saveJSONFile(filePath, jsonObj)
         print(jsonObj)
 
+        exportFile = fileName
+        
         return send_from_directory(app.config['EXPORT_FOLDER'], fileName, as_attachment = True)
 
     elif request.method == 'GET':

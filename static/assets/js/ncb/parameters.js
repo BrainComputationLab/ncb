@@ -38,7 +38,7 @@ function hodgkinHuxleyParam() {
 	this.className = "hodgkinHuxleyParam";
 	this.threshold = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};	    //double
 	this.restingPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
-	this.capacitence = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};		//double
+	this.capacitance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};		//double
 	this.channel = [];																//list of parameters for channel
 }
 
