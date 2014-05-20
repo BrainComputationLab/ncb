@@ -1,4 +1,4 @@
-# ignore upload folder
-uploads/
-exports/
-#temp.json
+bower_components/
+node_modules/
+dist/
+tmp/
