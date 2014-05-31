@@ -1,18 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="ncbApp">
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="University of Nevada Brain Computation Lab">
         <title>NeoCortical Builder</title>
-        <link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css">
-        <link rel="stylesheet" href="/assets/css/ncb/ncb.min.css">
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/css/ncb.min.css">
     </head>
     <body>
         include "header.html"
-        <div class="container footer">
+        include "modelbuilder/main.html"
+        <div class="container footer col-md-12">
             <p>© University of Nevada</p>
         </div>
+
+        <!-- Vendor Libraries -->
+        <script src="/assets/js/vendor/jquery.min.js"></script>
+        <script src="/assets/js/vendor/underscore.js"></script>
+        <script src="/assets/js/vendor/bootstrap.min.js"></script>
+        <script src="/assets/js/vendor/angular.min.js"></script>
+        <script src="/assets/js/vendor/angular-strap.min.js"></script>
+        <script src="/assets/js/vendor/angular-strap.tpl.min.js"></script>
+        <script src="/assets/js/vendor/ui-bootstrap.min.js"></script>
+
+        <!-- User Libraries -->
+        <script src="/assets/js/ncb/main.js"></script>
+        <script src="/assets/js/ncb/builder.js"></script>
+        <script src="/assets/js/ncb/sim.js"></script>
     </body>
 </html>

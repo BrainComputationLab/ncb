@@ -2,6 +2,7 @@
   "name": "ncb",
   "version": "0.5.0",
   "devDependencies": {
+    "requirejs": "*",
     "bower": "*",
     "bower-requirejs": "*",
     "grunt": "*",
@@ -12,6 +13,7 @@
     "grunt-contrib-less": "*",
     "grunt-contrib-requirejs": "*",
     "grunt-contrib-htmlmin": "*",
-    "grunt-mocha-test": "*"
+    "grunt-mocha-test": "*",
+    "grunt-bowercopy": "*"
   }
 }
