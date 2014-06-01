@@ -1,5 +1,4 @@
 module.exports = function(grunt) {
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: ['dist/', 'tmp/'],
@@ -24,8 +23,23 @@ module.exports = function(grunt) {
             },
             angular: {
                 files: {
-                    'dist/assets/js/vendor/angular.min.js': 'angular/angular.min.js',
-                    'dist/assets/js/vendor/angular.min.js.map': 'angular/angular.min.js.map'
+                    'dist/assets/js/vendor/angular.min.js.map': 'angular/angular.min.js.map',
+                    'dist/assets/js/vendor/angular.min.js': 'angular/angular.js'
+                }
+            },
+            'angular-animate': {
+                files: {
+                    'dist/assets/js/vendor/angular-animate.min.js': 'angular-animate/angular-animate.min.js'
+                }
+            },
+            'angular-motion': {
+                files: {
+                    'dist/assets/css/angular-motion.min.css': 'angular-motion/dist/angular-motion.min.css'
+                }
+            },
+            restangular: {
+                files: {
+                    'dist/assets/js/vendor/restangular.min.js': 'restangular/dist/restangular.min.js'
                 }
             },
             bootstrap: {
@@ -35,9 +49,14 @@ module.exports = function(grunt) {
                     'dist/assets/fonts/': 'bootstrap/dist/fonts/*'
                 }
             },
+            'bootstrap-additions': {
+                files: {
+                    'dist/assets/css/bootstrap-additions.min.css': 'bootstrap-additions/dist/bootstrap-additions.min.css'
+                }
+            },
             jquery: {
                 files: {
-                    'dist/assets/js/vendor/jquery.min.js': 'jquery/dist/jquery.min.js',
+                    'dist/assets/js/vendor/jquery.min.js': 'jquery/dist/jquery.js',
                     'dist/assets/js/vendor/jquery.min.map': 'jquery/dist/jquery.min.map'
                 }
             },
@@ -50,6 +69,11 @@ module.exports = function(grunt) {
                 files: {
                     'dist/assets/js/vendor/require.js': 'requirejs/require.js'
                 }
+            },
+            jssha: {
+                files: {
+                    'dist/assets/js/vendor/sha256.js': 'jssha/src/sha256.js'
+                }
             }
         },
         copy: {
@@ -59,6 +83,12 @@ module.exports = function(grunt) {
                         expand: true,
                         src: ['images/**', 'icons/**'],
                         dest: 'dist/assets/'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['js/*.js'],
+                        dest: 'dist/assets/js/ncb'
                     }
                 ]
             }
@@ -112,6 +142,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-bowercopy');
 
-    grunt.registerTask('default', ['jshint', 'mochaTest', 'includes', 'copy',
-                       'bowercopy', 'less', 'htmlmin']);
+    grunt.registerTask('default', ['jshint', 'mochaTest', 'clean', 'includes',
+                       'copy', 'bowercopy', 'less', 'htmlmin']);
 };

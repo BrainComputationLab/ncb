@@ -1,0 +1,85 @@
+<div id="builder-container" class="container" data-ng-app="ncb.builder">
+
+    <script type="text/ng-template" id="/tpl.html">
+        <div class="aside" tabindex="-1" role="dialog">
+          <div class="aside-dialog">
+            <div class="aside-content">
+              <div class="aside-header" ng-show="title">
+                <button type="button" class="close" ng-click="$hide()">&times;</button>
+                <h4 class="aside-title">My title bitch!</h4>
+              </div>
+              <div class="aside-body">My content bitch!</div>
+              <div class="aside-footer">
+                <button type="button" class="btn btn-default" ng-click="$hide()">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </script>
+
+    <ol class="breadcrumb">
+        <li><strong>Current Model Navigation</strong></li>
+        <li>An item</li>
+        <li>Another item</li>
+        <li>Another item</li>
+    </ol>
+
+    <div class="col-md-4">
+        <div class="panel panel-default" data-ng-controller="ncb.builder.EntityListCtrl">
+            <div class="panel-heading">Imported Entities</div>
+            <div class="panel-body">
+                <div class="entity-filter-box">
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle database-dropdown" data-toggle="dropdown">
+                                Database <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Current Model</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">HPCVIS</a></li>
+                                <li><a href="#">BrainLab</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Entity Type <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Groups</a></li>
+                                <li><a href="#">Neurons</a></li>
+                                <li><a href="#">Channels</a></li>
+                                <li><a href="#">Synapses</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-default" bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html">+</button>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><span class="entity-badge"></span>Group_1</li>
+                    <li class="list-group-item"><span class="entity-badge entity-badge-orange"></span>Group_2</li>
+                    <li class="list-group-item"><span class="entity-badge entity-badge-aqua"></span>Group_3</li>
+                    <li class="list-group-item"><span class="entity-badge"></span>Group_4</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Current Model</div>
+            <div class="panel-body">
+                Panel Content
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Properties</div>
+            <div class="panel-body">
+                Stuff about properties
+            </div>
+        </div>
+    </div>
+</div>
