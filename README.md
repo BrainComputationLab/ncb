@@ -7,6 +7,11 @@ run, and collect results from brain simulations using the NCS simulator.
 
 Pre-Alpha
 
+## TODO’s
+
+Everything, but most importantly, it will need to use RequireJS at some point
+in the future to make the project sane.
+
 ## Requirements
 
 * Node 0.11+
