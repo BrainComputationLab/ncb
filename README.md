@@ -19,6 +19,7 @@ in the future to make the project sane.
 ## Running
 
 ~~~~
+npm install
 grunt
 cd dist/
 python -m SimpleHTTPServer 8000
