@@ -1,19 +1,20 @@
 {
   "name": "ncb",
-  "version": "0.5.0",
+  "version": "0.1.0",
   "devDependencies": {
-    "requirejs": "*",
-    "bower": "*",
-    "bower-requirejs": "*",
     "grunt": "*",
-    "grunt-includes": "*",
+    "bower": "*",
+    "requirejs": "*",
     "grunt-contrib-clean": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-uglify": "*",
     "grunt-contrib-copy": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-less": "*",
-    "grunt-contrib-requirejs": "*",
     "grunt-contrib-htmlmin": "*",
     "grunt-mocha-test": "*",
-    "grunt-bowercopy": "*"
+    "grunt-bowercopy": "*",
+    "grunt-bake": "*"
   }
 }
