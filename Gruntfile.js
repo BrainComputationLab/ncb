@@ -208,10 +208,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bowercopy');
   grunt.loadNpmTasks('grunt-bake');
 
-  grunt.registerTask('build:dist', ['jshint', 'mochaTest', 'clean', 'bake:build',
+  grunt.registerTask('dist', ['jshint', 'mochaTest', 'clean', 'bake:build',
        'bowercopy', 'less', 'bake', 'concat', 'cssmin', 'copy:dist',
        'uglify', 'htmlmin:build']);
 
-  grunt.registerTask('build:debug', ['jshint', 'mochaTest', 'clean', 'bake:build',
+  grunt.registerTask('debug', ['jshint', 'mochaTest', 'clean', 'bake:build',
        'bowercopy', 'less', 'bake', 'concat', 'copy:debug']);
 };

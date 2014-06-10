@@ -19,10 +19,14 @@ in the future to make the project sane.
 ## Running
 
 ~~~~
-grunt
+npm install
+grunt debug
 cd dist/
 python -m SimpleHTTPServer 8000
 ~~~~
+
+**Note** For for more production-orinted code, use <code>grunt dist</code>
+instead.
 
 Point your browser to <code>http://localhost:8000/</code>
 
