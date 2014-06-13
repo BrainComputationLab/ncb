@@ -15,6 +15,7 @@
     "grunt-contrib-htmlmin": "*",
     "grunt-mocha-test": "*",
     "grunt-bowercopy": "*",
-    "grunt-bake": "*"
+    "grunt-bake": "*",
+    "grunt-html": "*"
   }
 }

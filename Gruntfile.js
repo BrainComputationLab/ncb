@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    clean: ['dist/', 'tmp/'],
+    clean: ['build/', 'tmp/'],
     bowercopy: {
       'angular-strap': {
         files: {
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
         files: {
           'tmp/vendorjs/bootstrap.js': 'bootstrap/dist/js/bootstrap.js',
           'tmp/css/bootstrap.css': 'bootstrap/dist/css/bootstrap.css',
-          'dist/assets/fonts/': 'bootstrap/dist/fonts/*'
+          'build/assets/fonts/': 'bootstrap/dist/fonts/*'
         }
       },
       'bootstrap-additions': {
@@ -73,7 +73,7 @@ module.exports = function(grunt) {
           {
             expand: true,
             src: ['images/**', 'icons/**'],
-            dest: 'dist/assets/'
+            dest: 'build/assets/'
           }
         ]
       },
@@ -82,31 +82,31 @@ module.exports = function(grunt) {
           {
             expand: true,
             src: ['images/**', 'icons/**'],
-            dest: 'dist/assets/'
+            dest: 'build/assets/'
           },
           {
             expand: true,
             flatten: true,
             src: ['tmp/css/styles.css'],
-            dest: 'dist/assets/css'
+            dest: 'build/assets/css'
           },
           {
             expand: true,
             flatten: true,
             src: ['tmp/vendorjs/vendor.js'],
-            dest: 'dist/assets/js'
+            dest: 'build/assets/js'
           },
           {
             expand: true,
             flatten: true,
             src: ['tmp/ncbjs/ncb.js'],
-            dest: 'dist/assets/js'
+            dest: 'build/assets/js'
           },
           {
             expand: true,
             flatten: true,
             src: ['tmp/index.html'],
-            dest: 'dist/'
+            dest: 'build/'
           }
         ]
       }
@@ -125,7 +125,7 @@ module.exports = function(grunt) {
           collapseWhitespace: true
         },
         files: {
-          'dist/index.html': 'tmp/index.html'
+          'build/index.html': 'tmp/index.html'
         }
       }
     },
@@ -133,8 +133,10 @@ module.exports = function(grunt) {
       all: ['Gruntfile.js', 'js/**.js']
     },
     less: {
-      files: {
-        "tmp/css/ncb.css": "less/main.less"
+      default: {
+        files: {
+          "tmp/css/ncb.css": "less/main.less"
+        }
       }
     },
     mochaTest: {
@@ -174,12 +176,12 @@ module.exports = function(grunt) {
     uglify: {
       vendorjs: {
         files: {
-          'dist/assets/js/vendor.js': 'tmp/vendorjs/vendor.js'
+          'build/assets/js/vendor.js': 'tmp/vendorjs/vendor.js'
         }
       },
       ncbjs: {
         files: {
-        'dist/assets/js/ncb.js': 'tmp/ncbjs/ncb.js'
+        'build/assets/js/ncb.js': 'tmp/ncbjs/ncb.js'
         }
       }
     },
@@ -191,8 +193,11 @@ module.exports = function(grunt) {
         flatten: true,
         expand: true,
         src: 'tmp/css/styles.css',
-        dest: 'dist/assets/css'
+        dest: 'build/assets/css'
       }
+    },
+    htmllint: {
+      all: ['tmp/index.html']
     }
   });
 
@@ -207,11 +212,47 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-bowercopy');
   grunt.loadNpmTasks('grunt-bake');
+  grunt.loadNpmTasks('grunt-html');
 
-  grunt.registerTask('dist', ['jshint', 'mochaTest', 'clean', 'bake:build',
-       'bowercopy', 'less', 'bake', 'concat', 'cssmin', 'copy:dist',
-       'uglify', 'htmlmin:build']);
+  grunt.registerTask('build:dist', [
+    'clean',
+    'jshint',
+    'mochaTest',
+    'bake:build',
+    'htmllint',
+    'less',
+    'bowercopy',
+    'concat',
+    'cssmin',
+    'copy:dist',
+    'uglify',
+    'htmlmin:build'
+  ]);
 
-  grunt.registerTask('debug', ['jshint', 'mochaTest', 'clean', 'bake:build',
-       'bowercopy', 'less', 'bake', 'concat', 'copy:debug']);
+grunt.registerTask('build:debug', [
+    'clean',
+    'jshint',
+    'mochaTest',
+    'bake:build',
+    'htmllint',
+    'less',
+    'bowercopy',
+    'concat',
+    'copy:debug'
+  ]);
+
+  grunt.registerTask('lint', [
+    'jshint',
+    'bake:build',
+    'htmllint',
+    'less'
+  ]);
+
+  grunt.registerTask('test', [
+    'jshint',
+    'bake:build',
+    'htmllint',
+    'less',
+    'mochaTest'
+  ]);
 };
