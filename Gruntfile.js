@@ -38,7 +38,7 @@ module.exports = function(grunt) {
         files: {
           'tmp/vendorjs/bootstrap.js': 'bootstrap/dist/js/bootstrap.js',
           'tmp/css/bootstrap.css': 'bootstrap/dist/css/bootstrap.css',
-          'build/assets/fonts/': 'bootstrap/dist/fonts/*'
+          'build/static/assets/fonts/': 'bootstrap/dist/fonts/*'
         }
       },
       'bootstrap-additions': {
@@ -73,7 +73,12 @@ module.exports = function(grunt) {
           {
             expand: true,
             src: ['images/**', 'icons/**'],
-            dest: 'build/assets/'
+            dest: 'build/static/assets/'
+          },
+          {
+            expand: true,
+            src: ['server.py', 'db.py'],
+            dest: 'build'
           }
         ]
       },
@@ -82,25 +87,25 @@ module.exports = function(grunt) {
           {
             expand: true,
             src: ['images/**', 'icons/**'],
-            dest: 'build/assets/'
+            dest: 'build/static/assets/'
           },
           {
             expand: true,
             flatten: true,
             src: ['tmp/css/styles.css'],
-            dest: 'build/assets/css'
+            dest: 'build/static/assets/css'
           },
           {
             expand: true,
             flatten: true,
             src: ['tmp/vendorjs/vendor.js'],
-            dest: 'build/assets/js'
+            dest: 'build/static/assets/js'
           },
           {
             expand: true,
             flatten: true,
             src: ['tmp/ncbjs/ncb.js'],
-            dest: 'build/assets/js'
+            dest: 'build/static/assets/js'
           },
           {
             expand: true,
@@ -125,7 +130,7 @@ module.exports = function(grunt) {
           collapseWhitespace: true
         },
         files: {
-          'build/index.html': 'tmp/index.html'
+          'build/static/index.html': 'tmp/index.html'
         }
       }
     },
@@ -176,12 +181,12 @@ module.exports = function(grunt) {
     uglify: {
       vendorjs: {
         files: {
-          'build/assets/js/vendor.js': 'tmp/vendorjs/vendor.js'
+          'build/static/assets/js/vendor.js': 'tmp/vendorjs/vendor.js'
         }
       },
       ncbjs: {
         files: {
-        'build/assets/js/ncb.js': 'tmp/ncbjs/ncb.js'
+        'build/static/assets/js/ncb.js': 'tmp/ncbjs/ncb.js'
         }
       }
     },
@@ -193,7 +198,7 @@ module.exports = function(grunt) {
         flatten: true,
         expand: true,
         src: 'tmp/css/styles.css',
-        dest: 'build/assets/css'
+        dest: 'build/static/assets/css'
       }
     },
     htmllint: {

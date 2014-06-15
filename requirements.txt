@@ -1,0 +1,7 @@
+flask
+pymongo
+mongokit
+nose
+ensure
+coverage
+coveralls
