@@ -77,7 +77,8 @@ module.exports = function(grunt) {
           },
           {
             expand: true,
-            src: ['server.py', 'db.py'],
+            flatten: true,
+            src: ['ncb/server.py', 'ncb/db.py', 'ncb/__init__.py'],
             dest: 'build'
           }
         ]
@@ -112,6 +113,12 @@ module.exports = function(grunt) {
             flatten: true,
             src: ['tmp/index.html'],
             dest: 'build/'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['ncb/server.py', 'ncb/db.py', 'ncb/__init__.py'],
+            dest: 'build'
           }
         ]
       }
