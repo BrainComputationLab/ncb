@@ -3,7 +3,7 @@ node_js:
   - "0.10"
 # command to install dependencies
 before_install: npm install -g grunt-cli
-install: "npm install"
+install: "npm install && pip install -r requirements.txt"
 # command to run tests
 script:
     - grunt build:debug
