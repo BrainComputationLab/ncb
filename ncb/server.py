@@ -28,4 +28,4 @@ def serve_static_resource(resource):
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":
-    app.run('localhost', 5000)
+    app.run('localhost', 8000)
