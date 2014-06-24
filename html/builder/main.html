@@ -1,4 +1,4 @@
-<div id="builder-container" class="container" data-ng-app="ncb.builder">
+<div id="builder-container" class="container" data-ng-app="ncb.builder" >
 
   <script type="text/ng-template" id="/tpl.html">
     <div class="aside" tabindex="-1" role="dialog">
@@ -49,32 +49,224 @@
       </div>
     </div>
   </script>
+  
+  <script type="text/ng-template" id="/tpl2.html">
+    <div class="aside" tabindex="-1" role="dialog">
+      <div class="aside-dialog">
+        <div class="aside-content">
+          <div class="aside-header">
+            <button type="button" class="close" ng-click="$hide()">&times;</button>
+            <h4 class="aside-title">New Entity</h4>
+          </div>
+          <div class="aside-body">
+              <div class="entity-filter-box">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Entity Type <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Group</a></li>
+                    <li><a href="#">Neuron</a></li>
+                    <li><a href="#">Channel</a></li>
+                    <li><a href="#">Synapse</a></li>
+                  </ul>
+                </div>
+              </div>
+                Here would be different forms depending <br>
+                on what type of element the user wants to add.
+            </div>
+          <div class="aside-footer">
+            <button type="button" class="btn btn-success" ng-click="$hide()">Add</button>
+            <button type="button" class="btn btn-default" ng-click="$hide()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
 
-
+  <!-- Start Breadcrumbs -->
   <ol class="breadcrumb col-md-12">
     <li><strong>Current Model Navigation</strong></li>
     <li>An item</li>
     <li>Another item</li>
     <li>Another item</li>
   </ol>
+  <!-- End Breadcrumbs -->
 
+  <!-- Start Model Window -->
   <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">Current Model
-        <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html"><span class="glyphicon glyphicon-plus"></span> Add Entities</button>
+        <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html"><span class="glyphicon glyphicon-plus"></span> Add Imported Entities</button>
+        <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl2.html"><span class="glyphicon glyphicon-plus"></span> Add New Entities</button>
       </div>
       <div class="panel-body">
-        Panel Content
+        <div class="panel-body col-md-4">
+    	    <div class="list-group">
+    	    	<a href="#" class="list-group-item">Element1</a>
+    	    	<a href="#" class="list-group-item active">Element2</a>
+    	    	<a href="#" class="list-group-item">Element3</a>
+    	    	<a href="#" class="list-group-item">Element4</a>
+    	  	  <a href="#" class="list-group-item">Element5</a>
+    	    </div>
+        </div>
+        <div class="panel-body col-md-4">
+    	    <div class="list-group">
+    	    	<a href="#" class="list-group-item">Sub Element1</a>
+    	    	<a href="#" class="list-group-item">Sub Element2</a>
+    	    	<a href="#" class="list-group-item">Sub Element3</a>
+    	    	<a href="#" class="list-group-item active">Sub Element4</a>
+    	    </div>
+        </div>
+        <div class="panel-body col-md-4">
+    	    <div class="list-group">
+    	    	<a href="#" class="list-group-item">Sub Sub Element1</a>
+    	    	<a href="#" class="list-group-item active">Sub Sub Element2</a>
+    	    </div>
+        </div>
       </div>
     </div>
   </div>
+  <!-- End Model Window -->
 
+  <!-- Start Properties Window -->
   <div class="col-md-6">
     <div class="panel panel-default">
-      <div class="panel-heading">Properties</div>
-      <div class="panel-body">
-        Stuff about properties
+      <div class="panel-heading">Last Selected Element's Name</div>
+        <div class="panel-body">
+      
+          <!-- Start Accordian -->
+          <div class="panel-group" id="propertiesAccordian">
+          
+            <!-- Start First Collapsible -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#propertiesAccordian" href="#collapseOne">
+                    Name and stuff
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                      <label for="name" class="col-sm-2 control-label">Name</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" placeholder="Name">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="description" class="col-sm-2 control-label">Description</label>
+                      <div class="col-sm-10">
+                        <textarea class="form-control" id="description" placeholder="Enter a Description" rows="3"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="type" class="col-sm-2 control-label">Type</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="type" placeholder="Type of element" disabled>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success pull-right">Update</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!-- End first Collapsible -->
+            
+            <!-- Start Second Collapsible -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#propertiesAccordion" href="#collapseTwo">
+                    Properties
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"> Property name (for example a in izhikevich) </h4>
+                      <div class="panel-body">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label for="propertyType1" class="col-sm-2 control-label">Type</label>
+                            <div class="col-sm-10">
+                              <select id="propertyType1" class="form-control">
+                                <option>Exact</option>
+                                <option>Uniform</option>
+                                <option>Normal</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="value1" class="col-sm-2 control-label">Value</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control" id="value1" placeholder="0.2 (Depending on the type there would be 1 or more value entries)">
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                  </div>
+                  <div class="panel-heading">
+                    <h4 class="panel-title"> Property name (for example b in izhikevich) </h4>
+                      <div class="panel-body">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label for="propertyType2" class="col-sm-2 control-label">Type</label>
+                            <div class="col-sm-10">
+                              <select id="propertyType2" class="form-control">
+                                <option>Exact</option>
+                                <option>Uniform</option>
+                                <option>Normal</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="value2" class="col-sm-2 control-label">Value</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control" id="value2" placeholder="0.2 (Depending on the type there would be 1 or more value entries)">
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                  </div>
+                  <button type="submit" class="btn btn-success pull-right">Update</button>
+                </div>
+              </div>
+            </div>
+            <!-- End Second Collapsible -->
+              
+            <!-- Start Third Collapsible -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#propertiesAccordion" href="#collapseThree">
+                    Channels
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"> Channel 1 </h4>
+                      <div class="panel-body">
+                        Here there could be all the channel stuff if its in the model.
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Third Collapsible -->
+           
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </div>     
+  <!-- End Properties Window -->
 </div>
