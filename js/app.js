@@ -26,7 +26,7 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       neurons: []
     };
 
-    var addIzh = function(id) {root.neurons.push(id);}
+    var addIzh = function(id) {root.neurons.push(id);};
 
     return {
       addElement: function(id){
