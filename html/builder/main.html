@@ -1,4 +1,4 @@
-<div id="builder-container" class="container" data-ng-app="ncb.builder">
+<div id="builder-container" class="container" data-ng-app="builder" data-ng-controller="builder.controller">
 
   <script type="text/ng-template" id="/tpl.html">
     <div class="aside" tabindex="-1" role="dialog">
@@ -49,32 +49,474 @@
       </div>
     </div>
   </script>
+  
+  <script type="text/ng-template" id="/tpl2.html">
+    <div class="aside" tabindex="-1" role="dialog">
+      <div class="aside-dialog">
+        <div class="aside-content">
+          <div class="aside-header">
+            <button type="button" class="close" ng-click="$hide()">&times;</button>
+            <h4 class="aside-title">New Entity</h4>
+          </div>
+          <div class="aside-body">
+              <div class="entity-filter-box">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Entity Type <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" ng-click="currentTemplate='/neuron.html'">Neuron</a></li>
+                    <li class="disabled"><a href="#">Group</a></li>
+                    <li class="disabled"><a href="#">Channel</a></li>
+                    <li class="disabled"><a href="#">Synapse</a></li>
+                  </ul>
+                </div>
+            </div>
+            <div id="myTemplate" ng-include src="currentTemplate"></div>
+          <div class="aside-footer">
+            <button type="button" class="btn btn-success" ng-click="createElement(); $hide()">Add</button>
+            <button type="button" class="btn btn-default" ng-click="$hide()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <!-- Start Template for Adding Neurons -->
+  <script type="text/ng-template" id="/neuron.html">
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="Nname" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.name" type="text" class="form-control" id="Nname" placeholder="Neuron Name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Ntype" class="col-sm-2 control-label">Neuron Type</label>
+        <div class="col-sm-10">
+          <select id="Ntype" ng-model="neuronTemp.type" class="form-control">
+            <option selected></option>
+            <option ng-click="Nchoice='/izh.html'" value="izhikevich">Izhikevich</option>
+            <option value="lif" disabled>LIF</option>
+            <option value="hh" disabled>HH</option>
+          </select>
+        </div>
+      </div>
+    </form>
+    <h4>--------------------------------------</h4>
+    <div id="NeuronChoice" ng-include src="Nchoice"> </div>
+  </script>
+  <!-- End Template for Adding Neurons -->
+
+  <script type="text/ng-template" id="/izh.html">
+    <h3 style="text-decoration: underline;">a</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="aType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="aType" ng-model="neuronTemp.aType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.aExact" type="number" class="form-control" id="aValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.aVal0" type="number" class="form-control" id="aValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.aVal1" type="number" class="form-control" id="aValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">b</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="bType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="bType" ng-model="neuronTemp.bType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.bExact" type="number" class="form-control" id="bValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.bVal0" type="number" class="form-control" id="bValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.bVal1" type="number" class="form-control" id="bValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">c</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="cType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="cType" ng-model="neuronTemp.cType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.cExact" type="number" class="form-control" id="cValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.cVal0" type="number" class="form-control" id="cValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.cVal1" type="number" class="form-control" id="cValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">d</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="dType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="dType" ng-model="neuronTemp.dType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.dExact" type="number" class="form-control" id="dValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.dVal0" type="number" class="form-control" id="dValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.dVal1" type="number" class="form-control" id="dValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">u</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="uType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="uType" ng-model="neuronTemp.uType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="uValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.uExact" type="number" class="form-control" id="uValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="uValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.uVal0" type="number" class="form-control" id="uValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="uValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.uVal1" type="number" class="form-control" id="uValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">v</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="vType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="vType" ng-model="neuronTemp.vType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="vValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.vExact" type="number" class="form-control" id="vValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="vValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.vVal0" type="number" class="form-control" id="vValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="vValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.vVal1" type="number" class="form-control" id="vValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">Threshold</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="tType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="thresholdType" ng-model="neuronTemp.thresholdType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="thresholdValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.thresholdExact" type="number" class="form-control" id="tValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="thresholdValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.thresholdVal0" type="number" class="form-control" id="tValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="thresholdValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.thresholdVal1" type="number" class="form-control" id="tValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+  </script>
 
 
+  <!-- Start Breadcrumbs -->
   <ol class="breadcrumb col-md-12">
     <li><strong>Current Model Navigation</strong></li>
     <li>An item</li>
     <li>Another item</li>
     <li>Another item</li>
   </ol>
+  <!-- End Breadcrumbs -->
 
+  <!-- Start Model Window -->
   <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">Current Model
-        <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html"><span class="glyphicon glyphicon-plus"></span> Add Entities</button>
+        <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html"><span class="glyphicon glyphicon-plus"></span> Add Imported Entities</button>
+        <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl2.html"><span class="glyphicon glyphicon-plus"></span> Add New Entities</button>
       </div>
       <div class="panel-body">
-        Panel Content
+        <div class="panel-body col-md-4">
+     <div class="list-group">
+     <a href="#" data-ng-click="setSelectedIndex($index)" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
+
+     </div>
+        </div>
+        <div class="panel-body col-md-4">
+     <div class="list-group">
+     <a href="#" class="list-group-item">Sub Element1</a>
+     <a href="#" class="list-group-item">Sub Element2</a>
+     <a href="#" class="list-group-item">Sub Element3</a>
+     <a href="#" class="list-group-item active">Sub Element4</a>
+     </div>
+        </div>
+        <div class="panel-body col-md-4">
+     <div class="list-group">
+     <a href="#" class="list-group-item">Sub Sub Element1</a>
+     <a href="#" class="list-group-item active">Sub Sub Element2</a>
+     </div>
+        </div>
       </div>
     </div>
   </div>
+  <!-- End Model Window -->
 
+  <!-- Start Properties Window -->
   <div class="col-md-6">
     <div class="panel panel-default">
-      <div class="panel-heading">Properties</div>
-      <div class="panel-body">
-        Stuff about properties
+      <div class="panel-heading">Last Selected Element's Name</div>
+        <div class="panel-body">
+      
+          <!-- Start Accordian -->
+          <div class="panel-group" id="propertiesAccordian">
+          
+            <!-- Start First Collapsible -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#propertiesAccordian" href="#collapseOne">
+                    Name and stuff
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                      <label for="name" class="col-sm-2 control-label">Name</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" data-ng-model="lastSelected.name">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="description" class="col-sm-2 control-label">Description</label>
+                      <div class="col-sm-10">
+                        <textarea class="form-control" id="description" data-ng-model="lastSelected.description" rows="3"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="type" class="col-sm-2 control-label">Type</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="type" data-ng-model="lastSelected.type" disabled>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!-- End first Collapsible -->
+            
+            <!-- Start Second Collapsible -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#propertiesAccordion" href="#collapseTwo">
+                    Properties
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"> Property name (for example a in izhikevich) </h4>
+                      <div class="panel-body">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label for="propertyType1" class="col-sm-2 control-label">Type</label>
+                            <div class="col-sm-10">
+                              <select id="propertyType1" class="form-control">
+                                <option>Exact</option>
+                                <option>Uniform</option>
+                                <option>Normal</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="value1" class="col-sm-2 control-label">Value</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control" id="value1" placeholder="0.2 (Depending on the type there would be 1 or more value entries)">
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                  </div>
+                  <div class="panel-heading">
+                    <h4 class="panel-title"> Property name (for example b in izhikevich) </h4>
+                      <div class="panel-body">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label for="propertyType2" class="col-sm-2 control-label">Type</label>
+                            <div class="col-sm-10">
+                              <select id="propertyType2" class="form-control">
+                                <option>Exact</option>
+                                <option>Uniform</option>
+                                <option>Normal</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="value2" class="col-sm-2 control-label">Value</label>
+                            <div class="col-sm-10">
+                              <input type="number" class="form-control" id="value2" placeholder="0.2 (Depending on the type there would be 1 or more value entries)">
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                  </div>
+                  <button type="submit" class="btn btn-success pull-right">Update</button>
+                </div>
+              </div>
+            </div>
+            <!-- End Second Collapsible -->
+              
+            <!-- Start Third Collapsible -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#propertiesAccordion" href="#collapseThree">
+                    Channels
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"> Channel 1 </h4>
+                      <div class="panel-body">
+                        Here there could be all the channel stuff if its in the model.
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Third Collapsible -->
+           
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  <!-- End Properties Window -->
 </div>
