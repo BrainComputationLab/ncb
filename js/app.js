@@ -8,22 +8,17 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     $scope.neuronTemp = {};
     $scope.root = null;
     $scope.selectedIndex = undefined;
+    $scope.lastSelected = null;
 
     $scope.createElement = function() {
-      console.log($scope.neuronTemp);
       $scope.root = model.addElement("neuron", $scope.neuronTemp);
       $scope.neuronTemp = {};
-      console.log($scope.root.neurons[0].name);
     };
 
     $scope.setSelectedIndex = function($index) {
       $scope.selectedIndex = $index;
+      $scope.lastSelected = model.getElements().neurons[$scope.selectedIndex];
       this.selected = 'active';
-      console.log($index);
-    };
-
-    $scope.test = function(id) {
-      console.log(id);
     };
 
   }]);

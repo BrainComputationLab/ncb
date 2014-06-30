@@ -104,7 +104,7 @@
       </div>
     </form>
     <h4>--------------------------------------</h4>
-    <div style="margin-left:15px;" id="NeuronChoice" ng-include src="Nchoice"></div>
+    <div id="NeuronChoice" ng-include src="Nchoice"> </div>
   </script>
   <!-- End Template for Adding Neurons -->
 
@@ -360,24 +360,24 @@
       </div>
       <div class="panel-body">
         <div class="panel-body col-md-4">
-    	    <div class="list-group">
-    	    	<a href="#" data-ng-click="setSelectedIndex($index)" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
+     <div class="list-group">
+     <a href="#" data-ng-click="setSelectedIndex($index)" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
 
-    	    </div>
+     </div>
         </div>
         <div class="panel-body col-md-4">
-    	    <div class="list-group">
-    	    	<a href="#" class="list-group-item">Sub Element1</a>
-    	    	<a href="#" class="list-group-item">Sub Element2</a>
-    	    	<a href="#" class="list-group-item">Sub Element3</a>
-    	    	<a href="#" class="list-group-item active">Sub Element4</a>
-    	    </div>
+     <div class="list-group">
+     <a href="#" class="list-group-item">Sub Element1</a>
+     <a href="#" class="list-group-item">Sub Element2</a>
+     <a href="#" class="list-group-item">Sub Element3</a>
+     <a href="#" class="list-group-item active">Sub Element4</a>
+     </div>
         </div>
         <div class="panel-body col-md-4">
-    	    <div class="list-group">
-    	    	<a href="#" class="list-group-item">Sub Sub Element1</a>
-    	    	<a href="#" class="list-group-item active">Sub Sub Element2</a>
-    	    </div>
+     <div class="list-group">
+     <a href="#" class="list-group-item">Sub Sub Element1</a>
+     <a href="#" class="list-group-item active">Sub Sub Element2</a>
+     </div>
         </div>
       </div>
     </div>
@@ -408,24 +408,19 @@
                     <div class="form-group">
                       <label for="name" class="col-sm-2 control-label">Name</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="name" placeholder="Name">
+                        <input type="text" class="form-control" id="name" data-ng-model="lastSelected.name">
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="description" class="col-sm-2 control-label">Description</label>
                       <div class="col-sm-10">
-                        <textarea class="form-control" id="description" placeholder="Enter a Description" rows="3"></textarea>
+                        <textarea class="form-control" id="description" data-ng-model="lastSelected.description" rows="3"></textarea>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="type" class="col-sm-2 control-label">Type</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="type" placeholder="Type of element" disabled>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success pull-right">Update</button>
+                        <input type="text" class="form-control" id="type" data-ng-model="lastSelected.type" disabled>
                       </div>
                     </div>
                   </form>
@@ -522,6 +517,6 @@
           </div>
         </div>
       </div>
-    </div>     
+    </div>
   <!-- End Properties Window -->
 </div>
