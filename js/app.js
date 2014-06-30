@@ -5,18 +5,25 @@ angular.module('ncb.builder', ['ncb.model', 'mgcrea.ngStrap']);
 var app = angular.module('builder', ['mgcrea.ngStrap']);
 
   app.controller('builder.controller', ['$scope', 'model', function($scope, model) {
-    $scope.myTemp = '<h1>Test2</h1>';
-    var neuron = '<h1>Test1</h1>';
-    var group = '<h1>Test2</h1>';
+    $scope.neuronTemp = {};
+    $scope.root = null;
+    $scope.selectedIndex = undefined;
 
-    $scope.placeTemplate = function(type) {
-      if(type === "neuron") {
-          $scope.myTemp = neuron;
-      }
+    $scope.createElement = function() {
+      console.log($scope.neuronTemp);
+      $scope.root = model.addElement("neuron", $scope.neuronTemp);
+      $scope.neuronTemp = {};
+      console.log($scope.root.neurons[0].name);
     };
 
-    $scope.addIzh = function() {
-      $scope.root = model.addElement(0);
+    $scope.setSelectedIndex = function($index) {
+      $scope.selectedIndex = $index;
+      this.selected = 'active';
+      console.log($index);
+    };
+
+    $scope.test = function(id) {
+      console.log(id);
     };
 
   }]);
@@ -26,23 +33,17 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       neurons: []
     };
 
-    var addIzh = function(id) {root.neurons.push(id);};
+    var addIzh = function(element) {root.neurons.push(element);};
 
     return {
-      addElement: function(id){
-        if(id === 0) {
-          addIzh(id);
+      addElement: function(id, element){
+        if(id === "neuron") {
+          addIzh(element);
           return root;
         }
       },
       getElements: function() {
         return root;
       }
-    };
-  });
-
-  app.directive('myTemplate', function() {
-    return {
-      template: '{{myTemp}}'
     };
   });

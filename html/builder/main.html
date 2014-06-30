@@ -65,18 +65,16 @@
                     Entity Type <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" ng-click="placeTemplate('neuron')">Neuron</a></li>
+                    <li><a href="#" ng-click="currentTemplate='/neuron.html'">Neuron</a></li>
                     <li class="disabled"><a href="#">Group</a></li>
                     <li class="disabled"><a href="#">Channel</a></li>
                     <li class="disabled"><a href="#">Synapse</a></li>
                   </ul>
                 </div>
-
-              <div my-template></div>
-
             </div>
+            <div id="myTemplate" ng-include src="currentTemplate"></div>
           <div class="aside-footer">
-            <button type="button" class="btn btn-success" ng-click="$hide()">Add</button>
+            <button type="button" class="btn btn-success" ng-click="createElement(); $hide()">Add</button>
             <button type="button" class="btn btn-default" ng-click="$hide()">Close</button>
           </div>
         </div>
@@ -84,9 +82,265 @@
     </div>
   </script>
 
-  <script type="text/ng-template" id="/test.html">
-  <h1>Test10</h1>
+  <!-- Start Template for Adding Neurons -->
+  <script type="text/ng-template" id="/neuron.html">
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="Nname" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.name" type="text" class="form-control" id="Nname" placeholder="Neuron Name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Ntype" class="col-sm-2 control-label">Neuron Type</label>
+        <div class="col-sm-10">
+          <select id="Ntype" ng-model="neuronTemp.type" class="form-control">
+            <option selected></option>
+            <option ng-click="Nchoice='/izh.html'" value="izhikevich">Izhikevich</option>
+            <option value="lif" disabled>LIF</option>
+            <option value="hh" disabled>HH</option>
+          </select>
+        </div>
+      </div>
+    </form>
+    <h4>--------------------------------------</h4>
+    <div style="margin-left:15px;" id="NeuronChoice" ng-include src="Nchoice"></div>
   </script>
+  <!-- End Template for Adding Neurons -->
+
+  <script type="text/ng-template" id="/izh.html">
+    <h3 style="text-decoration: underline;">a</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="aType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="aType" ng-model="neuronTemp.aType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.aExact" type="number" class="form-control" id="aValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.aVal0" type="number" class="form-control" id="aValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.aVal1" type="number" class="form-control" id="aValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">b</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="bType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="bType" ng-model="neuronTemp.bType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.bExact" type="number" class="form-control" id="bValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.bVal0" type="number" class="form-control" id="bValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.bVal1" type="number" class="form-control" id="bValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">c</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="cType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="cType" ng-model="neuronTemp.cType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.cExact" type="number" class="form-control" id="cValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.cVal0" type="number" class="form-control" id="cValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.cVal1" type="number" class="form-control" id="cValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">d</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="dType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="dType" ng-model="neuronTemp.dType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.dExact" type="number" class="form-control" id="dValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.dVal0" type="number" class="form-control" id="dValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.dVal1" type="number" class="form-control" id="dValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">u</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="uType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="uType" ng-model="neuronTemp.uType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="uValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.uExact" type="number" class="form-control" id="uValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="uValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.uVal0" type="number" class="form-control" id="uValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="uValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.uVal1" type="number" class="form-control" id="uValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">v</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="vType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="vType" ng-model="neuronTemp.vType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="vValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.vExact" type="number" class="form-control" id="vValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="vValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.vVal0" type="number" class="form-control" id="vValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="vValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.vVal1" type="number" class="form-control" id="vValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+
+    <h3 style="text-decoration: underline;">Threshold</h3>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="tType" class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <select id="thresholdType" ng-model="neuronTemp.thresholdType" class="form-control">
+            <option selected></option>
+            <option value="exact">Exact</option>
+            <option value="uniform">Uniform</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="thresholdValue0" class="col-sm-2 control-label">Value0</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.thresholdExact" type="number" class="form-control" id="tValue0" placeholder="Enter Exact">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="thresholdValue1" class="col-sm-2 control-label">Value1</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.thresholdVal0" type="number" class="form-control" id="tValue1" placeholder="Enter Min/Mean">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="thresholdValue2" class="col-sm-2 control-label">Value2</label>
+        <div class="col-sm-10">
+          <input ng-model="neuronTemp.thresholdVal1" type="number" class="form-control" id="tValue2" placeholder="Enter Max/Derivative">
+        </div>
+      </div>
+    </form>
+  </script>
+
 
   <!-- Start Breadcrumbs -->
   <ol class="breadcrumb col-md-12">
@@ -103,22 +357,12 @@
       <div class="panel-heading">Current Model
         <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html"><span class="glyphicon glyphicon-plus"></span> Add Imported Entities</button>
         <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl2.html"><span class="glyphicon glyphicon-plus"></span> Add New Entities</button>
-
-                <button data-ng-click="addIzh();">Add</button>
-                <div class="body" data-ng-repeat="t in root.neurons track by $index">
-                 B {{ t }}
-                </div>
-
-
       </div>
       <div class="panel-body">
         <div class="panel-body col-md-4">
     	    <div class="list-group">
-    	    	<a href="#" class="list-group-item">Element1</a>
-    	    	<a href="#" class="list-group-item active">Element2</a>
-    	    	<a href="#" class="list-group-item">Element3</a>
-    	    	<a href="#" class="list-group-item">Element4</a>
-    	  	  <a href="#" class="list-group-item">Element5</a>
+    	    	<a href="#" data-ng-click="setSelectedIndex($index)" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
+
     	    </div>
         </div>
         <div class="panel-body col-md-4">
