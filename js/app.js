@@ -21,6 +21,12 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       this.selected = 'active';
     };
 
+    $scope.output = function($index) {
+      $scope.root = model.getElements();
+      console.log($scope.root.neurons[0]);
+      console.log($scope.root.neurons[1]);
+    };
+
   }]);
 
   app.factory('model', function() {
