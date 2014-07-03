@@ -35,6 +35,11 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       $scope.modelTemp = {};
     };
 
+    $scope.removeElement = function() {
+      $scope.root = model.removeElement($scope.selectedIndex, $scope.lastSelected.type);
+      $scope.lastSelected = null;
+    };
+
     $scope.clearModelTemp = function() {
       $scope.modelTemp = {};
     };
@@ -158,6 +163,17 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
         root.name = name;
         root.description = desc;
         root.author = author;
+        return root;
+      },
+      removeElement: function(index, type) {
+        console.log(index);
+        console.log(type);
+        if(type === 'Izhikevich' || 'Hodgkin-Huxley' || 'Leaky Integrate-and-Fire') {
+          root.neurons.splice(index, 1);
+        }
+        else {
+
+        }
         return root;
       }
     };

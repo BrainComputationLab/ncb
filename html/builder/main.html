@@ -19,8 +19,7 @@
       <div class="panel-body">
         <div class="panel-body col-md-4">
      <div class="list-group">
-     <a href="#" data-ng-click="setSelectedIndex($index);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
-
+        <a href="" data-ng-click="setSelectedIndex($index);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name" ></a>
      </div>
         </div>
         <div class="panel-body col-md-4">
@@ -58,6 +57,7 @@
                   <a data-toggle="collapse" data-parent="#propertiesAccordian" href="#collapseOne">
                     Model Description
                   </a>
+                  <button class="btn btn-xs btn-danger" data-ng-click="removeElement()" >Remove</button>
                 </h4>
               </div>
               <div id="collapseOne" class="panel-collapse collapse in">
