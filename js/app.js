@@ -8,23 +8,18 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     $scope.modelTemp = {};
     $scope.root.name = "Current Model";
     $scope.selectedIndex = undefined;
+    $scope.selectedChanIndex = undefined;
     $scope.selectedIndexEmptyNeuron = undefined;
     $scope.lastSelected = null;
+    $scope.lastChanSelected = {};
     $scope.propTemplate = undefined;
+    $scope.test1 = "123";
+    $scope.tempChan = {};
     var izhikevich = {name: "Empty Izhikevich"};
     var hh = {name: "Empty Hodgkin-Huxley"};
     var lif = {name: "Empty Leaky Integrate-and-Fire"};
 
     $scope.EmptyNeurons = [izhikevich, hh, lif];
-
-    $scope.createElement = function() {
-      if(!_.isEmpty($scope.channelTemp)) {
-        $scope.neuronTemp.channels = {};
-        $scope.neuronTemp.channels.push(channelTemp);
-      }
-      $scope.root = model.addElement("neuron", $scope.neuronTemp);
-      $scope.neuronTemp = {};
-    };
 
     $scope.getName = function() {
       return $scope.root.name;
@@ -38,6 +33,7 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     $scope.removeElement = function() {
       $scope.root = model.removeElement($scope.selectedIndex, $scope.lastSelected.type);
       $scope.lastSelected = null;
+      $scope.selectedIndex = undefined;
     };
 
     $scope.clearModelTemp = function() {
@@ -59,6 +55,12 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       this.selected = 'active';
     };
 
+    $scope.setSelectedChanIndex = function($index) {
+      $scope.selectedChanIndex = $index;
+      $scope.lastChanSelected = model.getElements().neurons[$scope.selectedIndex].channels[$scope.selectedChanIndex];
+      this.selected = 'active';
+    };
+
     $scope.setSelectedIndexEmptyNeuron = function($index) {
       $scope.selectedIndexEmptyNeuron = $index;
       this.selected = 'active';
@@ -70,9 +72,11 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       }
       else if($scope.selectedIndexEmptyNeuron === 1) {
         $scope.neuronTemp = {name: "HH"+count, type: "Hodgkin-Huxley"};
+        $scope.neuronTemp.channels = [];
       }
       else if($scope.selectedIndexEmptyNeuron === 2) {
         $scope.neuronTemp = {name: "LIF"+count, type: "Leaky Integrate-and-Fire"};
+        $scope.neuronTemp.channels = [];
       }
       count++;
       $scope.root = model.addElement("neuron", $scope.neuronTemp);
@@ -98,11 +102,13 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     };
 
     $scope.resetChannel = function() {
-      $scope.channelTemp = {};
+      $scope.tempChan = {};
     };
 
     $scope.addChannel = function() {
-
+      console.log($scope.test1);
+      $scope.lastSelected.channels.push($scope.tempChan);
+      $scope.tempChan = {};
     };
 
   }]);
@@ -147,7 +153,8 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     };
 
     var addNeuron = function(element) {
-      root.neurons.push(element);};
+      root.neurons.push(element);
+    };
 
     return {
       addElement: function(id, element){

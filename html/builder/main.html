@@ -111,16 +111,15 @@
                   <a data-toggle="collapse" data-parent="#propertiesAccordion" href="#collapseThree">
                     Channels
                   </a>
+                  <button class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/addChannel.html">Add Channel</button>
                 </h4>
               </div>
               <div id="collapseThree" class="panel-collapse collapse">
                 <div class="panel-body">
-                  <div class="panel-heading">
-                    <h4 class="panel-title"> Channel 1 </h4>
-                      <div class="panel-body">
-                        Here there could be all the channel stuff if its in the model.
-                      </div>
+                  <div class="list-group">
+                    <a href="" data-ng-click="setSelectedChanIndex($index); " data-ng-class="{active: selectedChanIndex == $index}" class="list-group-item" data-ng-repeat="channels in root.neurons[selectedIndex].channels track by $index | orderBy: 'channels.name'" data-ng-bind="channels.name" ></a>
                   </div>
+                  <button class="btn btn-success btn-xs">Edit Channel</button>
                 </div>
               </div>
             </div>
@@ -131,6 +130,488 @@
       </div>
     </div>
   <!-- End Properties Window -->
+
+  <!-- Template for adding a channel -->
+  <script type="text/ng-template" id="/addChannel.html">
+  <div class="aside" tabindex="-1" role="dialog">
+    <div class="aside-dialog">
+      <div class="aside-content">
+        <div class="aside-header">
+          <button type="button" class="close" ng-click="$hide()">&times;</button>
+          <h4 class="aside-title">Add Channel</h4>
+        </div>
+        <div class="aside-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="channelType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="channelType" ng-model="tempChan.type" class="form-control">
+                  <option ng-click="currentTemplate='/vgi.html'" value="vgi">Voltage Gated Ion</option>
+                  <option ng-click="currentTemplate='/vg.html'" value="vg">Voltage Gated</option>
+                  <option ng-click="currentTemplate='/cd.html'" value="cd">Calcium Dependant</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="channelName" class="col-sm-4 control-label">Name</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.name" class="form-control" id="channelName" placeholder="Enter Channel Name">
+              </div>
+            </div>
+          </form>
+          <div ng-include src="currentTemplate">
+
+          </div>
+        </div>
+        <div class="aside-footer">
+          <button type="button" class="btn btn-success" ng-click="$hide(); addChannel()">Add Channel</button>
+          <button type="button" class="btn btn-danger" ng-click="$hide(); resetChannel()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </script>
+  <!-- End template for adding a channel -->
+
+  <!-- Template for voltage gated Ion channel -->
+  <script type="text/ng-template" id="/vgi.html">
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">v Half</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editvHalfType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editvHalfType" ng-model="tempChan.vHalfType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vHalfEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.vHalfValue" class="form-control" id="vHalfEditValue" placeholder="{{ getPlaceholder(tempChan.vHalfType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">r</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editrType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editrType" ng-model="tempChan.rType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="rEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.rValue" class="form-control" id="rEditValue" placeholder="{{ getPlaceholder(tempChan.rType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Activation Slope</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editActivationSlopeType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editActivationSlopeType" ng-model="tempChan.activationSlopeType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="activationSlopeEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.activationSlopeValue" class="form-control" id="activationSlopeEditValue" placeholder="{{ getPlaceholder(tempChan.activationSlopeType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Deactivation Slope</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editDeactivationSlopeType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editDeactivationSlopeType" ng-model="tempChan.deactivationSlopeType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="deactivationSlopeEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.deactivationSlopeValue" class="form-control" id="deactivationSlopeEditValue" placeholder="{{ getPlaceholder(tempChan.deactivationSlopeType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Equilibrium Slope</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editEquilibriumSlopeType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editEquilibriumSlopeType" ng-model="tempChan.equilibriumSlopeType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="equilibriumSlopeEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.equilibriumSlopeValue" class="form-control" id="equilibriumSlopeEditValue" placeholder="{{ getPlaceholder(tempChan.equilibriumSlopeType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Conductance</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editConductanceType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editConductanceType" ng-model="tempChan.conductanceType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="conductanceEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.conductanceValue" class="form-control" id="conductanceEditValue" placeholder="{{ getPlaceholder(tempChan.conductanceType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Reversal Potential</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editReversalPotentialType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editReversalPotentialType" ng-model="tempChan.reversalPotentialType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="reversalPotentialEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.reversalPotentialValue" class="form-control" id="reversalPotentialEditValue" placeholder="{{ getPlaceholder(tempChan.reversalPotentialType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">m Initial</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editmInitialType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editmInitialType" ng-model="tempChan.mInitialType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mInitialEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.mInitialValue" class="form-control" id="mInitialEditValue" placeholder="{{ getPlaceholder(tempChan.mInitialType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </script>
+  <!-- End template for voltage gated ion channel -->
+
+
+  <!-- Template for voltage gated channel -->
+  <script type="text/ng-template" id="/vg.html">
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Reversal Potential</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editReversalPotentialType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editReversalPotentialType" ng-model="tempChan.reversalPotentialType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="reversalPotentialEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.reversalPotentialValue" class="form-control" id="reversalPotentialEditValue" placeholder="{{ getPlaceholder(tempChan.reversalPotentialType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Conductance</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editConductanceType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editConductanceType" ng-model="tempChan.conductanceType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="conductanceEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.conductanceValue" class="form-control" id="conductanceEditValue" placeholder="{{ getPlaceholder(tempChan.conductanceType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </script>
+  <!-- End template for voltage gated channel -->
+
+
+  <!-- Template for calcium dependant channel -->
+  <script type="text/ng-template" id="/cd.html">
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">m Initial</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editmInitialType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editmInitialType" ng-model="tempChan.mInitialType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mInitialEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.mInitialValue" class="form-control" id="mInitialEditValue" placeholder="{{ getPlaceholder(tempChan.mInitialType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Reversal Potential</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editReversalPotentialType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editReversalPotentialType" ng-model="tempChan.reversalPotentialType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="reversalPotentialEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.reversalPotentialValue" class="form-control" id="reversalPotentialEditValue" placeholder="{{ getPlaceholder(tempChan.reversalPotentialType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Conductance</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editConductanceType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editConductanceType" ng-model="tempChan.conductanceType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="conductanceEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.conductanceValue" class="form-control" id="conductanceEditValue" placeholder="{{ getPlaceholder(tempChan.conductanceType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Backwards Rate</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editBackwardsRateType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editBackwardsRateType" ng-model="tempChan.backwardsRateType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="backwardsRateEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.backwardsRateValue" class="form-control" id="backwardsRateEditValue" placeholder="{{ getPlaceholder(tempChan.backwardsRateType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Forward Scale</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editForwardScaleType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editForwardScaleType" ng-model="tempChan.forwardScaleType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="forwardScaleEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.forwardScaleValue" class="form-control" id="forwardScaleEditValue" placeholder="{{ getPlaceholder(tempChan.forwardScaleType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Forward Exponent</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editForwardExponentType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editForwardExponentType" ng-model="tempChan.forwardExponentType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="forwardExponentEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.forwardExponentValue" class="form-control" id="forwardExponentEditValue" placeholder="{{ getPlaceholder(tempChan.forwardExponentType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Tau Scale</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editTauScaleType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editTauScaleType" ng-model="tempChan.tauScaleType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="tauScaleEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="tempChan.tauScaleValue" class="form-control" id="tauScaleEditValue" placeholder="{{ getPlaceholder(tempChan.tauScaleType) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </script>
+  <!-- End template for calcium dependant channel -->
+
 
   <!-- Template for editing current model -->
   <script type="text/ng-template" id="/editModel.html">
@@ -711,7 +1192,7 @@
   <!--End Template for editing hh neurons -->
 
   <!-- Template for voltage gated ion channel -->
-  <script type="text/ng-template" id="/vgi.html">
+  <script type="text/ng-template" id="/vgi2.html">
     <div class="panel-heading">
       <h4 style="text-decoration: underline;">m Initial</h4>
         <div class="panel-body">
