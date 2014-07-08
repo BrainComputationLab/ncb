@@ -20,10 +20,14 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     $scope.propTemplate = undefined;
     $scope.lastSelected = null;
     $scope.nextSelected = null;
-    $scope.prevSelected = null;
+    $scope.prevSelected = model.getElements().groups;
     $scope.prevprevSelected = null;
     $scope.nextnextSelected = null;
     $scope.lastChanSelected = {};
+
+    $scope.select1 = null;
+    $scope.select2 = null;
+    $scope.select3 = null;
 
     var home = true;
     var izhikevich = {name: "Empty Izhikevich"};
@@ -53,6 +57,20 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       $scope.modelTemp = {};
     };
 
+    $scope.updateLevel = function(id, element) {
+      var x = 0;
+      if(id === "up") {
+        for(x = 0; x < element.groups.length; x++) {
+          element.groups[x].level++;
+        }
+      }
+      else if(id === "down") {
+        for(x = 0; x < element.groups.length; x++) {
+          element.groups[x].level--;
+        }
+      }
+    };
+
     $scope.setSelectedNeuronIndex = function($index) {
       $scope.selectedIndex = $index;
       $scope.selectedGroupIndex = undefined;
@@ -71,53 +89,66 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       $scope.myScopes.l3.groups = [];
     };
 
-    $scope.setSelectedGroupIndex = function($index) {
+    $scope.setSelectedIndex = function($index) {
       $scope.selectedGroupIndex = $index;
       if(home) {
-        $scope.lastSelected = model.getElements().groups[$scope.selectedGroupIndex];
-        $scope.myScopes.l1.groups = model.getElements().groups;
+        $scope.select1 = $scope.prevSelected[$index];
       }
       else {
-        if($scope.nextnextSelected !== null) { $scope.lastSelected = $scope.nextnextSelected.groups[$scope.selectedSubSubIndex]; console.log($scope.lastSelected); }
-        $scope.nextnextSelected = null;
-        $scope.nextSelected = null;
-        console.log($scope.lastSelected);
+        $scope.select1 = $scope.myScopes.l1.groups[$index];
       }
 
-      $scope.selectedIndex = undefined;
-      $scope.selectedSubIndex = undefined;
-      $scope.selectedSubSubIndex = undefined;
+      $scope.lastSelected = $scope.select1;
+      $scope.myScopes.l2.groups = $scope.select1.groups;
 
-
-      $scope.myScopes.l2.groups = $scope.lastSelected.groups;
-      $scope.myScopes.l3.groups = [];
       this.selected = 'active';
-      console.log($scope.lastSelected);
     };
 
     $scope.setSelectedSubIndex = function($index) {
-      if($scope.nextSelected !== null) {
-        if($scope.lastSelected.level === $scope.nextSelected.level) {
-          $scope.lastSelected = $scope.prevSelected;
-        }
-      }
-      $scope.prevprevSelected = $scope.lastSelected;
       $scope.selectedSubIndex = $index;
-      $scope.nextSelected = $scope.lastSelected.groups[$index];
-      $scope.myScopes.l1.groups = $scope.prevprevSelected.groups;
-      $scope.myScopes.l3.groups = $scope.nextSelected.groups;
+      console.log($scope.select1);
+      $scope.select2 = $scope.select1.groups[$index];
+      $scope.lastSelected = $scope.select2;
+      $scope.myScopes.l3.groups = $scope.select2.groups;
+
       this.selected = 'active';
-      console.log($scope.lastSelected);
     };
 
     $scope.setSelectedSubSubIndex = function($index) {
+      $scope.breadTrack.push({name: $scope.select1.name, id: $scope.selectedGroupIndex });
       $scope.selectedSubSubIndex = $index;
-      $scope.prevSelected = $scope.lastSelected;
-      $scope.lastSelected = $scope.nextSelected;
-      $scope.nextnextSelected = $scope.lastSelected.groups[$index];
-      $scope.myScopes.l1.groups = $scope.nextnextSelected.groups;
+      $scope.select3 = $scope.select2.groups[$index];
+      $scope.lastSelected = $scope.select3;
+      $scope.myScopes.l1.groups = $scope.select1.groups;
+      $scope.myScopes.l2.groups = $scope.select2.groups;
+      $scope.myScopes.l3.groups = $scope.select3.groups;
+      $scope.select1 = $scope.myScopes.l1.groups[$scope.selectedSubIndex];
+      $scope.select2 = $scope.myScopes.l2.groups[$scope.selectedSubSubIndex];
+      $scope.selectedGroupIndex = $scope.selectedSubIndex;
+      $scope.selectedSubIndex = $scope.selectedSubSubIndex;
+      $scope.updateLevel("down", $scope.myScopes.l1);
+      $scope.updateLevel("down", $scope.myScopes.l2);
+      home = false;
+
       this.selected = 'active';
-      console.log($scope.lastSelected);
+
+    };
+
+    $scope.handleBreadcrumbs = function($index) {
+      var group = model.getElements().groups;
+      var x = 0;
+      for(x = 0; x < $index; x++) {
+        console.log(group);
+        console.log($scope.breadTrack[$index-1].id);
+        group = group[$scope.breadTrack[$index-1].id].groups;
+        console.log(group);
+      }
+      $scope.myScopes.l1.groups = group;
+      $scope.select1 = $scope.myScopes.l1.groups[$index];
+      $scope.myScopes.l2.groups = {};
+      $scope.myScopes.l3.groups = {};
+
+
     };
 
     $scope.setSelectedChanIndex = function($index) {
@@ -152,13 +183,9 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       if($scope.lastSelected !== null) {
         if($scope.lastSelected.enterable) {
           if($scope.selectedIndexEmptyNeuron === 3) {
-            var temp = $scope.lastSelected;
-            if($scope.nextnextSelected !== null) {$scope.lastSelected = $scope.nextnextSelected; $scope.selectedGroupIndex = undefined;}
-            else if($scope.nextSelected !== null) {$scope.lastSelected = $scope.nextSelected;}
             if($scope.lastSelected.level === 1) { $scope.groupTemp = {name: "Empty Group"+count, type: "none", enterable: true, level: 2, groups: []}; $scope.lastSelected.groups.push($scope.groupTemp); $scope.myScopes.l2.groups = $scope.lastSelected.groups;}
             if($scope.lastSelected.level === 2) { $scope.groupTemp = {name: "Empty Group"+count, type: "none", enterable: true, level: 3, groups: []}; $scope.lastSelected.groups.push($scope.groupTemp); $scope.myScopes.l3.groups = $scope.lastSelected.groups;}
-            if($scope.lastSelected.level === 3) { $scope.groupTemp = {name: "Empty Group"+count, type: "none", enterable: true, level: 1, groups: []}; home = false; $scope.lastSelected.groups.push($scope.groupTemp); $scope.myScopes.l1.groups = $scope.lastSelected.groups;}
-            $scope.lastSelected = temp;
+            if($scope.lastSelected.level === 3) { $scope.groupTemp = {name: "Empty Group"+count, type: "none", enterable: true, level: 1, groups: []}; $scope.lastSelected.groups.push($scope.groupTemp); $scope.myScopes.l1.groups = $scope.lastSelected.groups;}
           }
           else if($scope.selectedIndexEmptyNeuron === 4) {
             $scope.groupTemp = {name: "Empty Neuron Group"+count, type: "none", enterable: false};

@@ -3,10 +3,7 @@
   <!-- Start Breadcrumbs -->
   <ol class="breadcrumb col-md-12">
     <li><strong>Current Model Navigation</strong></li>
-    <li data-ng-repeat="neurons in root.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name" ><a href="" data-ng-click="setSelectedNeuronIndex($index);" data-ng-class="{active: selectedIndex == $index}"></a> </li>
-    <li>An item</li>
-    <li>Another item</li>
-    <li>Another item</li>
+    <li data-ng-repeat="groups in breadTrack track by $index | orderBy: 'groups.name'" ><a href="" data-ng-click="handleBreadcrumbs($index);" data-ng-bind="groups.name"></a> </li>
   </ol>
   <!-- End Breadcrumbs -->
 
@@ -21,7 +18,7 @@
         <div class="panel-body col-md-4">
           <div class="list-group">
             <a href="" data-ng-click="setSelectedNeuronIndex($index);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in myScopes.l1.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
-            <a href="" data-ng-click="setSelectedGroupIndex($index);" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l1.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name"></a>
+            <a href="" data-ng-click="setSelectedIndex($index)" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l1.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name"></a>
             <!-- <a href="" data-ng-click="setSelectedNeuronIndex($index);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name" ></a> -->
             <!-- <a href="" data-ng-click="setSelectedGroupIndex($index);" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in root.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a> -->
           </div>
