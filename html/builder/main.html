@@ -3,34 +3,33 @@
   <!-- Start Breadcrumbs -->
   <ol class="breadcrumb col-md-12">
     <li><strong>Current Model Navigation</strong></li>
-    <li data-ng-repeat="groups in breadTrack track by $index | orderBy: 'groups.name'" ><a href="" data-ng-click="handleBreadcrumbs($index);" data-ng-bind="groups.name"></a> </li>
+    <li data-ng-repeat="groups in breadTrack track by $index | orderBy: 'groups.name'" ><a href="" data-ng-click="handleBreadcrumbs($index, $event);" data-ng-bind="groups.name"></a> </li>
   </ol>
   <!-- End Breadcrumbs -->
 
   <!-- Start Model Window -->
-  <div class="col-md-6">
+  <div class="col-md-6" >
     <div class="panel panel-default">
       <div class="panel-heading"> {{getName()}}
         <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/editModel.html"><span class="glyphicon glyphicon-plus"></span>Edit</button>
         <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html"><span class="glyphicon glyphicon-plus"></span> Add Element</button>
+        <button data-ng-click="callClick($event)" type="button" class="btn btn-default btn-xs" >Temporary deselect</button>
       </div>
       <div class="panel-body">
         <div class="panel-body col-md-4">
           <div class="list-group">
-            <a href="" data-ng-click="setSelectedNeuronIndex($index);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in myScopes.l1.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
-            <a href="" data-ng-click="setSelectedIndex($index)" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l1.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name"></a>
-            <!-- <a href="" data-ng-click="setSelectedNeuronIndex($index);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in root.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name" ></a> -->
-            <!-- <a href="" data-ng-click="setSelectedGroupIndex($index);" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in root.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a> -->
+            <a href="" data-ng-click="setSelectedNeuronIndex($index, $event);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in myScopes.l1.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
+            <a href="" data-ng-click="setSelectedIndex($index, $event)" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l1.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name"></a>
           </div>
         </div>
         <div class="panel-body col-md-4">
           <div class="list-group">
-            <a href="" data-ng-click="setSelectedSubIndex($index);" data-ng-class="{active: selectedSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l2.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
+            <a href="" data-ng-click="setSelectedSubIndex($index, $event);" data-ng-class="{active: selectedSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l2.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
           </div>
         </div>
         <div class="panel-body col-md-4">
           <div class="list-group">
-            <a href="" data-ng-click="setSelectedSubSubIndex($index);" data-ng-class="{active: selectedSubSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l3.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
+            <a href="" data-ng-click="setSelectedSubSubIndex($index, $event);" data-ng-class="{active: selectedSubSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l3.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
           </div>
         </div>
       </div>
@@ -39,7 +38,7 @@
   <!-- End Model Window -->
 
   <!-- Start Properties Window -->
-  <div class="col-md-6">
+  <div class="col-md-6" >
     <div class="panel panel-default">
       <div class="panel-heading" data-ng-bind="lastSelected.name"></div>
         <div class="panel-body" style="max-height:500px; overflow-y:scroll;">
@@ -54,7 +53,7 @@
                   <a data-toggle="collapse" data-parent="#propertiesAccordian" href="#collapseOne">
                     Model Description
                   </a>
-                  <button class="btn btn-xs btn-danger" data-ng-click="removeElement()" >Remove</button>
+                  <button class="btn btn-xs btn-danger" data-ng-click="removeElement($event)" >Remove</button>
                 </h4>
               </div>
               <div id="collapseOne" class="panel-collapse collapse in">
@@ -114,7 +113,7 @@
               <div id="collapseThree" class="panel-collapse collapse">
                 <div class="panel-body">
                   <div class="list-group">
-                    <a href="" data-ng-click="setSelectedChanIndex($index); " data-ng-class="{active: selectedChanIndex == $index}" class="list-group-item" data-ng-repeat="channels in root.neurons[selectedIndex].channels track by $index | orderBy: 'channels.name'" data-ng-bind="channels.name" ></a>
+                    <a href="" data-ng-click="setSelectedChanIndex($index, $event); " data-ng-class="{active: selectedChanIndex == $index}" class="list-group-item" data-ng-repeat="channels in root.neurons[selectedIndex].channels track by $index | orderBy: 'channels.name'" data-ng-bind="channels.name" ></a>
                   </div>
                   <button class="btn btn-success btn-xs">Edit Channel</button>
                 </div>
@@ -702,7 +701,23 @@
   <!-- End Template for adding elements -->
 
   <script type="text/ng-template" id="/emptyElements.html">
-     <a href="#" data-ng-click="setSelectedIndexEmptyNeuron($index);" data-ng-class="{active: selectedIndexEmptyNeuron == $index}" class="list-group-item" data-ng-repeat="neurons in emptyElements track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
+     <a href="#" data-ng-click="setSelectedIndexEmptyNeuron($index, $event);" data-ng-class="{active: selectedIndexEmptyNeuron == $index}" class="list-group-item" data-ng-repeat="neurons in emptyElements track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
+
+    <div ng-show="selectedIndexEmptyNeuron === 4">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="selectNeuronGroup" class="col-sm-4 control-label">Type</label>
+          <div class="col-sm-8">
+            <select id="selectNeuronGroup" ng-model="groupTemp.neuron" class="form-control">
+              <option value="Izhikevich">Empty Izhikevich</option>
+              <option value="Hodgkin-Huxley">Empty Hodgkin-Huxley</option>
+              <option value="Leaky Integrate-and-Fire">Empty Leaky Integrate-and-Fire</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
      <button id="addEmptyElementBtn" type="button" class="btn btn-success pull-right" ng-click="addEmptyElement()">Add</button>
   </script>
   
