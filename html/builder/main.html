@@ -3,7 +3,7 @@
   <!-- Start Breadcrumbs -->
   <ol class="breadcrumb col-md-12">
     <li><strong>Current Model Navigation</strong></li>
-    <li data-ng-repeat="groups in breadTrack track by $index | orderBy: 'groups.name'" ><a href="" data-ng-click="handleBreadcrumbs($index, $event);" data-ng-bind="groups.name"></a> </li>
+    <li data-ng-repeat="groups in breadTrack track by $index | orderBy: 'groups.name'" ><a href="" data-ng-click="handleBreadcrumbs($index);" data-ng-bind="groups.name"></a> </li>
   </ol>
   <!-- End Breadcrumbs -->
 
@@ -13,23 +13,22 @@
       <div class="panel-heading"> {{getName()}}
         <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/editModel.html"><span class="glyphicon glyphicon-plus"></span>Edit</button>
         <button type="button" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/tpl.html"><span class="glyphicon glyphicon-plus"></span> Add Element</button>
-        <button data-ng-click="callClick($event)" type="button" class="btn btn-default btn-xs" >Temporary deselect</button>
+        <button data-ng-click="callClick()" type="button" class="btn btn-default btn-xs" >Temporary deselect</button>
       </div>
       <div class="panel-body">
         <div class="panel-body col-md-4">
           <div class="list-group">
-            <a href="" data-ng-click="setSelectedNeuronIndex($index, $event);" data-ng-class="{active: selectedIndex == $index}" class="list-group-item" data-ng-repeat="neurons in myScopes.l1.neurons track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
-            <a href="" data-ng-click="setSelectedIndex($index, $event)" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l1.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name"></a>
+            <a href="" data-ng-click="setSelectedIndex($index)" data-ng-class="{active: selectedGroupIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l1.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name"></a>
           </div>
         </div>
         <div class="panel-body col-md-4">
           <div class="list-group">
-            <a href="" data-ng-click="setSelectedSubIndex($index, $event);" data-ng-class="{active: selectedSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l2.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
+            <a href="" data-ng-click="setSelectedSubIndex($index);" data-ng-class="{active: selectedSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l2.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
           </div>
         </div>
         <div class="panel-body col-md-4">
           <div class="list-group">
-            <a href="" data-ng-click="setSelectedSubSubIndex($index, $event);" data-ng-class="{active: selectedSubSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l3.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
+            <a href="" data-ng-click="setSelectedSubSubIndex($index);" data-ng-class="{active: selectedSubSubIndex == $index}" class="list-group-item" data-ng-repeat="groups in myScopes.l3.groups track by $index | orderBy: 'groups.name'" data-ng-bind="groups.name" ></a>
           </div>
         </div>
       </div>
@@ -40,7 +39,9 @@
   <!-- Start Properties Window -->
   <div class="col-lg-6" >
     <div class="panel panel-default">
-      <div class="panel-heading" data-ng-bind="lastSelected.name"></div>
+      <div class="panel-heading">{{getName()}}
+        <button class="btn btn-xs btn-danger pull-right" data-ng-click="removeElement()" >Remove</button>
+      </div>
         <div class="panel-body" style="max-height:800px; overflow-y:scroll;">
       
           <!-- Start Accordian -->
@@ -53,7 +54,6 @@
                   <a data-toggle="collapse" data-parent="#propertiesAccordian" href="#collapseOne">
                     Model Description
                   </a>
-                  <button class="btn btn-xs btn-danger" data-ng-click="removeElement($event)" >Remove</button>
                 </h4>
               </div>
               <div id="collapseOne" class="panel-collapse collapse in">
@@ -72,13 +72,13 @@
                   <a data-toggle="collapse" data-parent="#propertiesAccordion" href="#collapseTwo">
                     Channels
                   </a>
-                  <button class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/addChannel.html">Add Channel</button>
+                  <button data-ng-click="resetChannel()" class="btn btn-default btn-xs pull-right" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/addChannel.html">Add Channel</button>
                 </h4>
               </div>
               <div id="collapseTwo" class="panel-collapse collapse">
                 <div class="panel-body">
                   <div class="list-group">
-                    <a href="" data-ng-click="setSelectedChanIndex($index, $event); " data-ng-class="{active: selectedChanIndex == $index}" class="list-group-item" data-ng-repeat="channels in myChanScope track by $index | orderBy: 'channels.name'" data-ng-bind="channels.name" ></a>
+                    <a href="" data-ng-click="setSelectedChanIndex($index); " data-ng-class="{active: selectedChanIndex == $index}" class="list-group-item" data-ng-repeat="channels in myChanScope track by $index | orderBy: 'channels.name'" data-ng-bind="channels.name" ></a>
                   </div>
                   <button class="btn btn-success btn-xs">Edit Channel</button>
                 </div>
@@ -99,7 +99,7 @@
               <div id="collapseThree" class="panel-collapse collapse">
                 <div class="panel-body">
                   <div class="list-group">
-                    <a href="" data-ng-click="setSelectedChanIndex($index, $event); " data-ng-class="{active: selectedChanIndex == $index}" class="list-group-item" data-ng-repeat="channels in myChanScope track by $index | orderBy: 'channels.name'" data-ng-bind="channels.name" ></a>
+                    <a href="" data-ng-click="setSelectedChanIndex($index); " data-ng-class="{active: selectedChanIndex == $index}" class="list-group-item" data-ng-repeat="channels in myChanScope track by $index | orderBy: 'channels.name'" data-ng-bind="channels.name" ></a>
                   </div>
                   <button class="btn btn-success btn-xs">Edit Channel</button>
                 </div>
@@ -213,14 +213,11 @@
                 <input ng-model="connectionTemp.name" class="form-control" id="connectionName" placeholder="Enter Connection Name">
               </div>
             </div>
-            <div class="form-group">
-              <label for="connectionPre" class="col-sm-4 control-label">Pre-Synaptic</label>
-              <div class="col-sm-8">
-                <select id="connectionPre" ng-model="option" class="form-control" ng-option="objects.name as objects.name for objects in loadedConnections">
-                </select>
-                <div data-ng-repeat="objects in loadedConnections track by $index | orderBy: 'objects.name'" data-ng-bind="objects.name" ></div<
-              </div>
-            </div>
+            Pre-Synaptic
+            <a href="#" data-ng-click="preChoice()" data-ng-class="{active: preChoiceIndex == $index}" class="list-group-item" data-ng-repeat="objects in loadedConnections track by $index | orderBy: 'objects.name'" data-ng-bind="objects.name"></a>
+            -----
+            Post-Synaptic
+            <a href="#" data-ng-click="postChoice()" data-ng-class="{active: postChoiceIndex == $index}" class="list-group-item" data-ng-repeat="objects in loadedConnections track by $index | orderBy: 'objects.name'" data-ng-bind="objects.name"></a>
           </form>
           <div ng-include src="currentTemplate">
 
@@ -251,9 +248,9 @@
               <label for="channelType" class="col-sm-4 control-label">Type</label>
               <div class="col-sm-8">
                 <select id="channelType" ng-model="channelTemp.type" class="form-control">
-                  <option ng-click="currentTemplate='/vgi.html'" value="vgi">Voltage Gated Ion</option>
-                  <option ng-click="currentTemplate='/vg.html'" value="vg">Voltage Gated</option>
-                  <option ng-click="currentTemplate='/cd.html'" value="cd">Calcium Dependant</option>
+                  <option ng-click="currentTemplate='/vgi.html'; channelTemp.particles = undefined;" value="vgi">Voltage Gated Ion</option>
+                  <option ng-click="currentTemplate='/vg.html'; channelTemp.particles = undefined;" value="vg">Voltage Gated</option>
+                  <option ng-click="currentTemplate='/cd.html'; channelTemp.particles = undefined;" value="cd">Calcium Dependant</option>
                 </select>
               </div>
             </div>
@@ -277,6 +274,90 @@
   </div>
   </script>
   <!-- End template for adding a channel -->
+
+  <!-- Template for flat synapse --> 
+  <script type="text/ng-template" id="/flatCon.html">
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Delay</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editDelayType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editDelayType" ng-model="" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="delayEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="" class="form-control" id="delayEditValue" placeholder="">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Current</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editCurrentType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editCurrentType" ng-model="" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="currentEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="" class="form-control" id="currentEditValue" placeholder="">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </script>
+  <!-- End template for flat synapse -->
+
+  <!-- Template for flat synapse --> 
+  <script type="text/ng-template" id="/lifCon.html">
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Delay</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editDelayType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editDelayType" ng-model="" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="delayEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="" class="form-control" id="delayEditValue" placeholder="">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+  </script>
+  <!-- End template for flat synapse -->
 
   <!-- Template for voltage gated Ion channel -->
   <script type="text/ng-template" id="/vgi.html">
@@ -479,6 +560,360 @@
           </form>
         </div>
     </div>
+
+    <h4 style="text-decoration: underline;">Particles</h4>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Power</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editPowerType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editPowerType" ng-model="channelTemp.particles.powerType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="powerEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.powerValue" class="form-control" id="powerEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.powerValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">x Initial</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editxInitialType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editxInitialType" ng-model="channelTemp.particles.xInitialType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="xInitialEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.xInitialValue" class="form-control" id="powerEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.xInitialValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Alpha a</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editAlphaAType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editAlphaAType" ng-model="channelTemp.particles.alphaAType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alphaAEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.alphaAValue" class="form-control" id="alphaAEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.alphaAValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Alpha b</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editAlphaBType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editAlphaBType" ng-model="channelTemp.particles.alphaBType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alphaBEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.alphaBValue" class="form-control" id="alphaBEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.alphaBValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Alpha c</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editAlphaCType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editAlphaCType" ng-model="channelTemp.particles.alphaCType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alphaCEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.alphaCValue" class="form-control" id="alphaCEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.alphaCValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Alpha d</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editAlphaDType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editAlphaDType" ng-model="channelTemp.particles.alphaDType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alphaDEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.alphaDValue" class="form-control" id="alphaDEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.alphaDValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Alpha f</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editAlphaFType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editAlphaFType" ng-model="channelTemp.particles.alphaFType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alphaFEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.alphaFValue" class="form-control" id="alphaFEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.alphaFValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Alpha h</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editAlphaHType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editAlphaHType" ng-model="channelTemp.particles.alphaHType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alphaHEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.alphaHValue" class="form-control" id="alphaHEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.alphaHValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Beta a</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editBetaAType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editBetaAType" ng-model="channelTemp.particles.betaAType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="betaAEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.betaAValue" class="form-control" id="betaAEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.betaAValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Beta b</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editBetaBType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editBetaBType" ng-model="channelTemp.particles.betaBType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="betaBEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.betaBValue" class="form-control" id="betaBEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.betaBValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Beta c</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editBetaCType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editBetaCType" ng-model="channelTemp.particles.betaCType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="betaCEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.betaCValue" class="form-control" id="betaCEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.betaCValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Beta d</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editBetaDType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editBetaDType" ng-model="channelTemp.particles.betaDType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="betaDEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.betaDValue" class="form-control" id="betaDEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.betaDValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Beta f</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editBetaFType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editBetaFType" ng-model="channelTemp.particles.betaFType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="betaFEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.betaFValue" class="form-control" id="betaFEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.betaFValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="panel-heading">
+      <h4 style="text-decoration: underline;">Beta h</h4>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="editBetaHType" class="col-sm-4 control-label">Type</label>
+              <div class="col-sm-8">
+                <select id="editBetaHType" ng-model="channelTemp.particles.betaHType" class="form-control">
+                  <option value=""></option>
+                  <option value="exact">Exact</option>
+                  <option value="uniform">Uniform</option>
+                  <option value="normal">Normal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="betaHEditValue" class="col-sm-4 control-label">Value</label>
+              <div class="col-sm-8">
+                <input ng-model="channelTemp.particles.betaHValue" class="form-control" id="betaHEditValue" placeholder="{{ getPlaceholder(channelTemp.particles.betaHValue) }}">
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
   </script>
   <!-- End template for voltage gated ion channel -->
 
@@ -801,7 +1236,8 @@
               </ul>
             </div>
           <div class="aside-footer">
-            <button type="button" class="btn btn-danger" ng-click="$hide()">Close</button>
+            <button type="button" class="btn btn-success" ng-click="addEmptyElement(); $hide()">Add</button>
+            <button type="button" class="btn btn-danger" ng-click="resetTemp(); $hide()">cancel</button>
           </div>
         </div>
       </div>
@@ -810,24 +1246,29 @@
   <!-- End Template for adding elements -->
 
   <script type="text/ng-template" id="/emptyElements.html">
-     <a href="#" data-ng-click="setSelectedIndexEmptyNeuron($index, $event);" data-ng-class="{active: selectedIndexEmptyNeuron == $index}" class="list-group-item" data-ng-repeat="neurons in emptyElements track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
-
-    <div ng-show="selectedIndexEmptyNeuron === 4">
-      <form class="form-horizontal" role="form">
-        <div class="form-group">
-          <label for="selectNeuronGroup" class="col-sm-4 control-label">Type</label>
-          <div class="col-sm-8">
-            <select id="selectNeuronGroup" ng-model="groupTemp.neuron" class="form-control">
-              <option value="Izhikevich">Empty Izhikevich</option>
-              <option value="Hodgkin-Huxley">Empty Hodgkin-Huxley</option>
-              <option value="Leaky Integrate-and-Fire">Empty Leaky Integrate-and-Fire</option>
-            </select>
+   <a href="#" data-ng-click="setSelectedIndexEmptyNeuron($index);" data-ng-class="{active: selectedIndexEmptyNeuron == $index}" class="list-group-item" data-ng-repeat="neurons in emptyElements track by $index | orderBy: 'neurons.name'" data-ng-bind="neurons.name"></a>
+    <div class="panel-body">
+      <div ng-show="selectedIndexEmptyNeuron === 1">
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="selectNeuronGroup" class="col-sm-4 control-label">Type</label>
+            <div class="col-sm-8">
+              <select id="selectNeuronGroup" ng-model="groupTemp.neuron" class="form-control">
+                <option ng-click="" value="Izhikevich">Empty Izhikevich</option>
+                <option ng-click="" value="Hodgkin-Huxley">Empty Hodgkin-Huxley</option>
+                <option ng-click="" value="Leaky Integrate-and-Fire">Empty Leaky Integrate-and-Fire</option>
+              </select>
+            </div>
           </div>
-        </div>
-      </form>
+          <div class="form-group">
+            <label for="selectNeuronAmount" class="col-sm-4 control-label">Amount</label>
+            <div class="col-sm-8">
+              <input ng-model="groupTemp.amount" class="form-control" id="selectNeuronAmount" placeholder="# of Neurons">
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-
-     <button id="addEmptyElementBtn" type="button" class="btn btn-success pull-right" ng-click="addEmptyElement()">Add</button>
   </script>
   
   <!-- Template for editing izhikevich neurons -->
@@ -838,8 +1279,8 @@
           <form class="form-horizontal" role="form">
             <div class="form-group">
               <label for="editAType" class="col-sm-4 control-label">Type</label>
-              <div class="col-sm-8">
-                <select id="editAType" ng-model="lastSelected.aType" class="form-control">
+              <div class="col-md-8">
+                <select id="editAType" ng-model="neuronTemp.aType" class="form-control">
                   <option value="exact">Exact</option>
                   <option value="uniform">Uniform</option>
                   <option value="normal">Normal</option>
@@ -848,8 +1289,8 @@
             </div>
             <div class="form-group">
               <label for="aEditValue" class="col-sm-4 control-label">Value</label>
-              <div class="col-sm-8">
-                <input ng-model="lastSelected.aValue" class="form-control" id="aEditValue" placeholder="{{ getPlaceholder(lastSelected.aType) }}">
+              <div class="col-md-8">
+                <input ng-model="neuronTemp.aValue" class="form-control" id="aEditValue" placeholder="{{ getPlaceholder(neuronTemp.aType) }}">
               </div>
             </div>
           </form>
@@ -863,7 +1304,7 @@
             <div class="form-group">
               <label for="editBType" class="col-sm-4 control-label">Type</label>
               <div class="col-sm-8">
-                <select id="editBType" ng-model="lastSelected.bType" class="form-control">
+                <select id="editBType" ng-model="neuronTemp.bType" class="form-control">
                   <option value="exact">Exact</option>
                   <option value="uniform">Uniform</option>
                   <option value="normal">Normal</option>
@@ -873,7 +1314,7 @@
             <div class="form-group">
               <label for="bEditValue" class="col-sm-4 control-label">Value</label>
               <div class="col-sm-8">
-                <input ng-model="lastSelected.bValue" class="form-control" id="bEditValue" placeholder="{{ getPlaceholder(lastSelected.bType) }}">
+                <input ng-model="neuronTemp.bValue" class="form-control" id="bEditValue" placeholder="{{ getPlaceholder(neuronTemp.bType) }}">
               </div>
             </div>
           </form>
@@ -887,7 +1328,7 @@
             <div class="form-group">
               <label for="editCType" class="col-sm-4 control-label">Type</label>
               <div class="col-sm-8">
-                <select id="editCType" ng-model="lastSelected.cType" class="form-control">
+                <select id="editCType" ng-model="neuronTemp.cType" class="form-control">
                   <option value="exact">Exact</option>
                   <option value="uniform">Uniform</option>
                   <option value="normal">Normal</option>
@@ -897,7 +1338,7 @@
             <div class="form-group">
               <label for="cEditValue" class="col-sm-4 control-label">Value</label>
               <div class="col-sm-8">
-                <input ng-model="lastSelected.cValue" class="form-control" id="cEditValue" placeholder="{{ getPlaceholder(lastSelected.cType) }}">
+                <input ng-model="neuronTemp.cValue" class="form-control" id="cEditValue" placeholder="{{ getPlaceholder(neuronTemp.cType) }}">
               </div>
             </div>
           </form>
@@ -911,7 +1352,7 @@
             <div class="form-group">
               <label for="editDType" class="col-sm-4 control-label">Type</label>
               <div class="col-sm-8">
-                <select id="editDType" ng-model="lastSelected.dType" class="form-control">
+                <select id="editDType" ng-model="neuronTemp.dType" class="form-control">
                   <option value="exact">Exact</option>
                   <option value="uniform">Uniform</option>
                   <option value="normal">Normal</option>
@@ -921,7 +1362,7 @@
             <div class="form-group">
               <label for="dEditValue" class="col-sm-4 control-label">Value</label>
               <div class="col-sm-8">
-                <input ng-model="lastSelected.dValue" class="form-control" id="dEditValue" placeholder="{{ getPlaceholder(lastSelected.dType) }}">
+                <input ng-model="neuronTemp.dValue" class="form-control" id="dEditValue" placeholder="{{ getPlaceholder(neuronTemp.dType) }}">
               </div>
             </div>
           </form>
@@ -935,7 +1376,7 @@
             <div class="form-group">
               <label for="editUType" class="col-sm-4 control-label">Type</label>
               <div class="col-sm-8">
-                <select id="editUType" ng-model="lastSelected.uType" class="form-control">
+                <select id="editUType" ng-model="neuronTemp.uType" class="form-control">
                   <option value="exact">Exact</option>
                   <option value="uniform">Uniform</option>
                   <option value="normal">Normal</option>
@@ -945,7 +1386,7 @@
             <div class="form-group">
               <label for="uEditValue" class="col-sm-4 control-label">Value</label>
               <div class="col-sm-8">
-                <input ng-model="lastSelected.uValue" class="form-control" id="uEditValue" placeholder="{{ getPlaceholder(lastSelected.uType) }}">
+                <input ng-model="neuronTemp.uValue" class="form-control" id="uEditValue" placeholder="{{ getPlaceholder(neuronTemp.uType) }}">
               </div>
             </div>
           </form>
@@ -959,7 +1400,7 @@
             <div class="form-group">
               <label for="editVType" class="col-sm-4 control-label">Type</label>
               <div class="col-sm-8">
-                <select id="editVType" ng-model="lastSelected.vType" class="form-control">
+                <select id="editVType" ng-model="neuronTemp.vType" class="form-control">
                   <option value="exact">Exact</option>
                   <option value="uniform">Uniform</option>
                   <option value="normal">Normal</option>
@@ -969,7 +1410,7 @@
             <div class="form-group">
               <label for="vEditValue" class="col-sm-4 control-label">Value</label>
               <div class="col-sm-8">
-                <input ng-model="lastSelected.vValue" class="form-control" id="vEditValue" placeholder="{{ getPlaceholder(lastSelected.vType) }}">
+                <input ng-model="neuronTemp.vValue" class="form-control" id="vEditValue" placeholder="{{ getPlaceholder(neuronTemp.vType) }}">
               </div>
             </div>
           </form>
@@ -983,7 +1424,7 @@
             <div class="form-group">
               <label for="editThresholdType" class="col-sm-4 control-label">Type</label>
               <div class="col-sm-8">
-                <select id="editThresholdType" ng-model="lastSelected.thresholdType" class="form-control">
+                <select id="editThresholdType" ng-model="neuronTemp.thresholdType" class="form-control">
                   <option value="exact">Exact</option>
                   <option value="uniform">Uniform</option>
                   <option value="normal">Normal</option>
@@ -993,7 +1434,7 @@
             <div class="form-group">
               <label for="tEditValue" class="col-sm-4 control-label">Value</label>
               <div class="col-sm-8">
-                <input ng-model="lastSelected.thresholdValue" class="form-control" id="tEditValue" placeholder="{{ getPlaceholder(lastSelected.thresholdType) }}">
+                <input ng-model="neuronTemp.thresholdValue" class="form-control" id="tEditValue" placeholder="{{ getPlaceholder(neuronTemp.thresholdType) }}">
               </div>
             </div>
           </form>

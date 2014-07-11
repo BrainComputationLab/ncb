@@ -13,19 +13,19 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     $scope.root = {};                                 // Holds the root of the model
     $scope.modelTemp = {};                            // Temporary location for current models name, description, etc
     $scope.root.name = "Current Model";               // Default name of the model
-    $scope.selectedIndex = undefined;                 // Index for which neuron is selected
     $scope.selectedSubIndex = undefined;              // Index for what is selected in second column
     $scope.selectedSubSubIndex = undefined;           // Index for what is selected in third column
     $scope.selectedGroupIndex = undefined;            // Index for which group is selected in first column
     $scope.selectedChanIndex = undefined;             // Index for which channel is selected
     $scope.selectedIndexEmptyNeuron = undefined;      // Index for which empty element is being chosen in add element button
     $scope.propTemplate = undefined;                  // Selects template for izh, hh, or lif depending on what the user selects
-    $scope.descTemplate = undefined;
+    $scope.descTemplate = undefined;                  // Selects template for model Description section
     $scope.lastSelected = null;                       // Keeps track of the last selected element
     $scope.prevSelected = model.getElements().groups; // Keeps track of previously selected element
     $scope.lastChanSelected = {};                     // Keeps track of last channel selected
     $scope.loadedConnections = [];
-    $scope.option = undefined;
+    $scope.preChoiceIndex = undefined;
+    $scope.postChoiceIndex = undefined;
 
     // These help select what the user clicks on in the model traversal
     $scope.select1 = null;
@@ -39,7 +39,7 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     var emptygroup = {name: "Empty Group"};             // Default Empty Group
     var neurongroup = {name: "Neuron Group"};           // Default Neuron Group
 
-    $scope.emptyElements = [izhikevich, hh, lif, emptygroup, neurongroup]; // For ng-repeat in main.html
+    $scope.emptyElements = [emptygroup, neurongroup]; // For ng-repeat in main.html
 
     // Function to return name of current model
     $scope.getName = function() {
@@ -47,7 +47,7 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     };
 
     // Temporary function to clear last selected model to allow user to add more models if the last selected element is un-enterable
-    $scope.callClick = function(ev) {
+    $scope.callClick = function() {
       // First check if something is selected
       if($scope.lastSelected !== null) {
         // If selected and in first column then clear that index
@@ -58,16 +58,10 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
         else if($scope.lastSelected.level === 2) {
           $scope.selectedSubIndex = undefined;
         }
-        // Clear neuron index 
-        $scope.selectedIndex = undefined;
+
       }
       // Clear last selected element
       $scope.lastSelected = null;
-    };
-
-    // Stops events from traveling through html elements
-    $scope.stopPropogation = function(ev) {
-      ev.stopPropogation();
     };
 
     // Save the new model name, desc, etc and then clear the temp holder
@@ -77,11 +71,21 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     };
 
     // Remove whatever is selected
-    $scope.removeElement = function(ev) {
-      $scope.root = model.removeElement($scope.selectedIndex, $scope.lastSelected.type);
+    $scope.removeElement = function() {
+      if($scope.lastSelected.level === 1) {
+        $scope.myScopes.l1.groups.splice($scope.selectedGroupIndex, 1);
+        $scope.myScopes.l2.groups = [];
+        $scope.myScopes.l3.groups = [];
+        $scope.root = model.removeElement($scope.selectedGroupIndex, $scope.selectedSubIndex, $scope.breadTrack);
+        $scope.selectedGroupIndex = undefined;
+      }
+      else {
+        $scope.myScopes.l2.groups.splice($scope.selectedSubIndex, 1);
+        $scope.myScopes.l3.groups = [];
+        $scope.root = model.removeElement($scope.selectedGroupIndex, $scope.selectedSubIndex, $scope.breadTrack);
+        $scope.selectedSubIndex = undefined;
+      }
       $scope.lastSelected = null;
-      $scope.selectedIndex = undefined;
-      ev.stopPropagation();
     };
 
     // Clear modeltemp in case user does not want to update model name, desc, etc
@@ -97,45 +101,8 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       }
     };
 
-    // Set selected neuron element and load that template to show its properties
-    $scope.setSelectedNeuronIndex = function($index, ev) {
-      // Set the neuron index
-      $scope.selectedIndex = $index;
-
-      $scope.selectedChanIndex = undefined;
-
-      $scope.descTemplate = "/neuronDesc.html";
-
-      // Clear group index to get rid of active blue class on its html element
-      $scope.selectedGroupIndex = undefined;
-
-      // Set last selected to last selected neuron
-      $scope.lastSelected = model.getElements().neurons[$scope.selectedIndex];
-
-      // Load corresponding template
-      if($scope.lastSelected.type === 'Izhikevich'){
-        $scope.propTemplate = "izhEdit.html";
-      }
-      else if($scope.lastSelected.type === 'Hodgkin-Huxley') {
-        $scope.propTemplate = "hhEdit.html";
-      }
-      else if($scope.lastSelected.type === 'Leaky Integrate-and-Fire') {
-        $scope.propTemplate = "lifEdit.html";
-      }
-
-      // Set this element to active to make it blue
-      this.selected = 'active';
-
-      // Clear second and third columns
-      $scope.myScopes.l2.groups = [];
-      $scope.myScopes.l3.groups = [];
-
-      // Stop propogation
-      ev.stopPropagation();
-    };
-
     // Set selected group element and load the correspond template if the group is a neuron group
-    $scope.setSelectedIndex = function($index, ev) {
+    $scope.setSelectedIndex = function($index) {
       // Set the group index
       $scope.selectedGroupIndex = $index;
 
@@ -161,20 +128,27 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
 
       // Load the correct template
       if($scope.lastSelected.neuron === 'Izhikevich'){
+        $scope.neuronTemp = $scope.lastSelected.properties;
         $scope.propTemplate = "izhEdit.html";
       }
       else if($scope.lastSelected.neuron === 'Hodgkin-Huxley') {
+        $scope.neuronTemp = $scope.lastSelected.properties;
         $scope.propTemplate = "hhEdit.html";
       }
       else if($scope.lastSelected.neuron === 'Leaky Integrate-and-Fire') {
+        $scope.neuronTemp = $scope.lastSelected.properties;
         $scope.propTemplate = "lifEdit.html";
       }
       else if($scope.lastSelected.neuron === undefined) {
+        $scope.neuronTemp = undefined;
         $scope.propTemplate = undefined;
       }
 
       // Set the second column to the sub groups of whatever the user selected
       $scope.myScopes.l2.groups = $scope.select1.groups;
+      $scope.setLevel(1, $scope.myScopes.l1);
+
+      $scope.myChanScope = $scope.lastSelected.channels;
 
       // Set this element to active to make it blue
       this.selected = 'active';
@@ -182,12 +156,21 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       $scope.myScopes.l3 = [];
       $scope.selectedSubIndex = undefined;
 
-      // Stop propogation
-      ev.stopPropagation();
+    };
+
+    // Connection pre and post choice
+    $scope.preChoice = function() {
+      $scope.preChoiceIndex = $index;
+      this.selected = 'active';
+    };
+
+    $scope.postChoice = function() {
+      $scope.postChoiceIndex = $index;
+      this.selected = 'active';
     };
 
     // Set selected group element from second column
-    $scope.setSelectedSubIndex = function($index, ev) {
+    $scope.setSelectedSubIndex = function($index) {
       // Set the sub group index
       $scope.selectedSubIndex = $index;
 
@@ -215,12 +198,12 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
 
       // Set the third column to the sub groups of whatever the user selected
       $scope.myScopes.l3.groups = $scope.select2.groups;
+      $scope.setLevel(2, $scope.myScopes.l2);
+
+      $scope.myChanScope = $scope.lastSelected.channels;
 
       // Set this element to active to make it blue
       this.selected = 'active';
-
-      // Stop propogation
-      ev.stopPropagation();
     };
 
     $scope.loadConnections = function(toLoad) {
@@ -232,8 +215,7 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     };
 
     // Set selected group element from third column
-    $scope.setSelectedSubSubIndex = function($index, ev) {
-      console.log($scope.loadedConnections);
+    $scope.setSelectedSubSubIndex = function($index) {
       // Load breadcrumb track with first column
       $scope.breadTrack.push({name: $scope.select1.name, id: $scope.selectedGroupIndex });
 
@@ -284,24 +266,18 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       // Clear column3 index
       $scope.selectedSubSubIndex = undefined;
 
+      $scope.myChanScope = $scope.lastSelected.channels;
+
       // Set this element to active to make it blue
       this.selected = 'active';
-
-      // Stop propogation
-      ev.stopPropagation();
     };
 
     // Function for handeling breadcrumbs
-    $scope.handleBreadcrumbs = function($index, ev) {
+    $scope.handleBreadcrumbs = function($index) {
       // Get the groups from current model
       var group = model.getElements().groups;
 
       $scope.selectedChanIndex = undefined;
-
-      // If the chosen breadcrumb is the first then reload the neurons
-      if($index === 0) {
-        $scope.myScopes.l1.neurons = model.getElements().neurons;
-      }
 
       // Loop to the correct group 
       var x = 0;
@@ -323,12 +299,9 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       $scope.selectedGroupIndex = undefined;
       $scope.selectedSubIndex = undefined;
       $scope.selectedSubSubIndex = undefined;
-
-      // Stop propogation
-      ev.stopPropagation();
     };
 
-    $scope.setSelectedChanIndex = function($index, ev) {
+    $scope.setSelectedChanIndex = function($index) {
       $scope.selectedChanIndex = $index;
       $scope.lastChanSelected = $scope.lastSelected.channels[$index];
       this.selected = 'active';
@@ -346,33 +319,27 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       }
     };
 
-    $scope.setSelectedIndexEmptyNeuron = function($index, ev) {
+    $scope.setSelectedIndexEmptyNeuron = function($index) {
       $scope.selectedIndexEmptyNeuron = $index;
       this.selected = 'active';
-      ev.stopPropagation();
     };
 
-    $scope.addEmptyElement = function(ev) {
-      if($scope.selectedIndexEmptyNeuron === 0) {
-        $scope.neuronTemp = {name: "Izhikevich"+count, type: "Izhikevich"};
-        $scope.root = model.addNeuron($scope.neuronTemp);
-        $scope.myScopes.l1.neurons.push($scope.neuronTemp);
+    $scope.setPreview = function(value) {
+      if(value === "Izhikevich") {
+        $scope.previewTemp = "izhEdit.html";
       }
-      else if($scope.selectedIndexEmptyNeuron === 1) {
-        $scope.neuronTemp = {name: "HH"+count, type: "Hodgkin-Huxley"};
-        $scope.neuronTemp.channels = [];
-        $scope.root = model.addNeuron($scope.neuronTemp);
-        $scope.myScopes.l1.neurons.push($scope.neuronTemp);
+      else if(value === "Hodgkin-Huxley") {
+        $scope.previewTemp = "hhEdit.html";
       }
-      else if($scope.selectedIndexEmptyNeuron === 2) {
-        $scope.neuronTemp = {name: "LIF"+count, type: "Leaky Integrate-and-Fire"};
-        $scope.neuronTemp.channels = [];
-        $scope.root = model.addNeuron($scope.neuronTemp);
-        $scope.myScopes.l1.neurons.push($scope.neuronTemp);
+      else if(value === "Leaky Integrate-and-Fire") {
+        $scope.previewTemp = "lifEdit.html";
       }
+    };
+
+    $scope.addEmptyElement = function() {
       if($scope.lastSelected !== null) {
         if($scope.lastSelected.enterable) {
-          if($scope.selectedIndexEmptyNeuron === 3) {
+          if($scope.selectedIndexEmptyNeuron === 0) {
             if($scope.lastSelected.level === 1) {
               $scope.groupTemp = {name: "Empty Group"+count, type: "none", enterable: true, level: 2, groups: []};
               $scope.lastSelected.groups.push($scope.groupTemp);
@@ -389,19 +356,19 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
               $scope.myScopes.l1.groups = $scope.lastSelected.groups;
             }
           }
-          else if($scope.selectedIndexEmptyNeuron === 4) {
+          else if($scope.selectedIndexEmptyNeuron === 1) {
             if($scope.lastSelected.level === 1) {
-              $scope.groupTemp = {name: "Empty Neuron Group"+count, neuron: $scope.groupTemp.neuron, type: "none", enterable: false, level: 2, groups: []};
+              $scope.groupTemp = {name: "Empty "+$scope.groupTemp.neuron+"Group"+count, neuron: $scope.groupTemp.neuron, amount: $scope.groupTemp.amount, type: "none", enterable: false, level: 2, groups: []};
               $scope.lastSelected.groups.push($scope.groupTemp);
               $scope.myScopes.l2.groups = $scope.lastSelected.groups;
             }
             else if($scope.lastSelected.level === 2) {
-              $scope.groupTemp = {name: "Empty Neuron Group"+count, neuron: $scope.groupTemp.neuron, type: "none", enterable: false, level: 3, groups: []};
+              $scope.groupTemp = {name: "Empty "+$scope.groupTemp.neuron+" Group"+count, neuron: $scope.groupTemp.neuron, amount: $scope.groupTemp.amount, type: "none", enterable: false, level: 3, groups: []};
               $scope.lastSelected.groups.push($scope.groupTemp);
               $scope.myScopes.l3.groups = $scope.lastSelected.groups;
             }
             else if($scope.lastSelected.level === 3) {
-              $scope.groupTemp = {name: "Empty Neuron Group"+count, neuron: $scope.groupTemp.neuron, type: "none", enterable: false, level: 1, groups: []};
+              $scope.groupTemp = {name: "Empty "+$scope.groupTemp.neuron+" Group"+count, neuron: $scope.groupTemp.neuron, amount: $scope.groupTemp.amount, type: "none", enterable: false, level: 1, groups: []};
               $scope.lastSelected.groups.push($scope.groupTemp);
               $scope.myScopes.l1.groups = $scope.lastSelected.groups;
             }
@@ -409,20 +376,20 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
         }
       }
       else {
-        if($scope.selectedIndexEmptyNeuron === 3) {
+        if($scope.selectedIndexEmptyNeuron === 0) {
           $scope.groupTemp = {name: "Empty Group"+count, type: "none", enterable: true, level: 1, groups: []};
           $scope.root = model.addGroup($scope.groupTemp);
           $scope.myScopes.l1.groups.push($scope.groupTemp);
         }
-        else if($scope.selectedIndexEmptyNeuron === 4) {
-          $scope.groupTemp = {name: "Empty Neuron Group"+count, neuron: $scope.groupTemp.neuron, type: "none", enterable: false, level: 1};
+        else if($scope.selectedIndexEmptyNeuron === 1) {
+          $scope.groupTemp = {name: "Empty "+$scope.groupTemp.neuron+" Group"+count, neuron: $scope.groupTemp.neuron, amount: $scope.groupTemp.amount, type: "none", enterable: false, level: 1};
           $scope.root = model.addGroup($scope.groupTemp);
           $scope.myScopes.l1.groups.push($scope.groupTemp);
         }
       }
       count++;
-      $scope.neuronTemp = {};
       $scope.groupTemp = {};
+      $scope.resetTemp();
     };
 
     $scope.getPlaceholder = function(type) {
@@ -439,8 +406,7 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
 
     $scope.resetTemp = function(name, type) {
       $scope.neuronTemp = {};
-      $scope.neuronTemp.name = name;
-      $scope.neuronTemp.type = type;
+      $scope.selectedIndexEmptyNeuron = undefined;
     };
 
     $scope.resetChannel = function() {
@@ -448,9 +414,22 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     };
 
     $scope.addChannel = function() {
-      $scope.lastSelected.channels.push($scope.channelTemp);
-      $scope.myChanScope = $scope.lastSelected.channels;
-      $scope.channelTemp = {};
+      if($scope.lastSelected.channels === undefined) {
+        $scope.lastSelected.channels = [];
+      }
+
+      if($scope.lastSelected.neuron === "Izhikevich") {
+        alert("You cannot add a channel to an Izhikevich neuron.");
+      }
+      else {
+        $scope.lastSelected.channels.push($scope.channelTemp);
+        $scope.myChanScope = $scope.lastSelected.channels;
+        $scope.channelTemp = {};
+      }
+    };
+
+    $scope.addConnection = function() {
+
     };
 
   }]);
@@ -482,13 +461,24 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
         root.author = author;
         return root;
       },
-      removeElement: function(index, type) {
-        if(type === 'Izhikevich' || 'Hodgkin-Huxley' || 'Leaky Integrate-and-Fire') {
-          root.neurons.splice(index, 1);
+      removeElement: function(index0, index1, indexes) {
+        var removedElement = root.groups;
+        var x = 0;
+        if(indexes.id !== undefined) {
+          while(indexes[x].id !== undefined) {
+            removedElement = removedElement[indexes[x]].groups;
+            x++;
+          }
         }
-        else if(type === 'none') {
-          root.groups.splice(index, 1);
+
+        if(index1 !== undefined) {
+          removedElement = removedElement[index0].groups;
+          removedElement.splice(index1, 1);
         }
+        else {
+          removedElement.splice(index0, 1);
+        }
+
         return root;
       }
     };
