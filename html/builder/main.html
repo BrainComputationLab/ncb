@@ -93,7 +93,7 @@
                   <a data-toggle="collapse" data-parent="#propertiesAccordion" href="#collapseThree">
                     Connections
                   </a>
-                  <button class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/addConnection.html">Add Connection</button>
+                  <button data-ng-click="loadConnections(lastSelected)" class="btn btn-default btn-xs" data-bs-aside="aside" data-placement="left" data-animation="am-slide-left" data-template="/addConnection.html">Add Connection</button>
                 </h4>
               </div>
               <div id="collapseThree" class="panel-collapse collapse">
@@ -211,6 +211,14 @@
               <label for="connectionName" class="col-sm-4 control-label">Name</label>
               <div class="col-sm-8">
                 <input ng-model="connectionTemp.name" class="form-control" id="connectionName" placeholder="Enter Connection Name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="connectionPre" class="col-sm-4 control-label">Pre-Synaptic</label>
+              <div class="col-sm-8">
+                <select id="connectionPre" ng-model="option" class="form-control" ng-option="objects.name as objects.name for objects in loadedConnections">
+                </select>
+                <div data-ng-repeat="objects in loadedConnections track by $index | orderBy: 'objects.name'" data-ng-bind="objects.name" ></div<
               </div>
             </div>
           </form>

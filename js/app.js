@@ -24,6 +24,8 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
     $scope.lastSelected = null;                       // Keeps track of the last selected element
     $scope.prevSelected = model.getElements().groups; // Keeps track of previously selected element
     $scope.lastChanSelected = {};                     // Keeps track of last channel selected
+    $scope.loadedConnections = [];
+    $scope.option = undefined;
 
     // These help select what the user clicks on in the model traversal
     $scope.select1 = null;
@@ -221,8 +223,17 @@ var app = angular.module('builder', ['mgcrea.ngStrap']);
       ev.stopPropagation();
     };
 
+    $scope.loadConnections = function(toLoad) {
+      var x = 0;
+      $scope.loadedConnections.push(toLoad);
+      for(x; x < toLoad.groups.length; x++) {
+        $scope.loadConnections(toLoad.groups[x]);
+      }
+    };
+
     // Set selected group element from third column
     $scope.setSelectedSubSubIndex = function($index, ev) {
+      console.log($scope.loadedConnections);
       // Load breadcrumb track with first column
       $scope.breadTrack.push({name: $scope.select1.name, id: $scope.selectedGroupIndex });
 
