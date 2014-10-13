@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, send_from_directory
 import json
 
 # Create new application
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='')
 # Debugging is okay for now
 app.debug = True
 
