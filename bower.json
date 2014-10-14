@@ -11,7 +11,8 @@
     "angular-ui-bootstrap-bower": "*",
     "underscore": "*",
     "almond": "*",
-    "angular-motion": "~0.3.2"
+    "angular-motion": "~0.3.2",
+    "angular-snap": "~1.6.0"
   },
   "devDependencies": {
     "mocha": "*"
