@@ -65,6 +65,24 @@ module.exports = function(grunt) {
         files: {
           'tmp/vendorjs/sha256.js': 'jssha/src/sha256.js'
         }
+      },
+      snapjs: {
+        files: {
+          'tmp/vendorjs/snap.js': 'snapjs/snap.js',
+          'tmp/css/snap.css': 'snapjs/snap.css'
+        }
+      },
+      'angular-snap': {
+        files: {
+          'tmp/vendorjs/angular-snap.js': 'angular-snap/angular-snap.js',
+          'tmp/css/angular-snap.css': 'angular-snap/angular-snap.css'
+        }
+      },
+      'angular-bootstrap-colorpicker': {
+        files: {
+          'tmp/vendorjs/bootstrap-colorpicker-module.js': 'angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
+          'tmp/css/colorpicker.css': 'angular-bootstrap-colorpicker/css/colorpicker.css'
+        }
       }
     },
     copy: {
@@ -168,7 +186,9 @@ module.exports = function(grunt) {
           'tmp/vendorjs/angular-strap.js',
           'tmp/vendorjs/angular-strap.tpl.js',
           'tmp/vendorjs/ui-bootstrap.js',
-          'tmp/vendorjs/sha256.js'
+          'tmp/vendorjs/sha256.js',
+          'tmp/vendorjs/snap.js',
+          'tmp/vendorjs/angular-snap.js'
         ],
         dest: 'tmp/vendorjs/vendor.js'
       },
