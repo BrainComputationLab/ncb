@@ -188,7 +188,8 @@ module.exports = function(grunt) {
           'tmp/vendorjs/ui-bootstrap.js',
           'tmp/vendorjs/sha256.js',
           'tmp/vendorjs/snap.js',
-          'tmp/vendorjs/angular-snap.js'
+          'tmp/vendorjs/angular-snap.js',
+          'tmp/vendorjs/bootstrap-colorpicker-module.js'
         ],
         dest: 'tmp/vendorjs/vendor.js'
       },
