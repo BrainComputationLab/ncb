@@ -1,16 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="ncbApp">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="University of Nevada Brain Computation Lab">
         <title>NeoCortical Builder</title>
-        <!--(bake styles.html)-->
+        <!--(bake global/styles.html)-->
     </head>
     <body>
-        <!--(bake header.html)-->
-        <!--(bake builder/main.html)-->
-        <!--(bake scripts.html)-->
+      <!-- Modularization of each tab -->
+      <div snap-drawers>
+          <div snap-drawer class="ncb-left-drawer" ng-controller="DrawerController as drawerCtrl">
+            <!--(bake global/leftdrawer.html)-->
+          </div>
+      </div>
+      <div snap-content  style="width : 100%; background-color : white">
+        <!--(bake global/header.html)-->
+          <div class = "row">
+              <div class="col-lg-2" style="background-color : #f8f8f8; height: 100%"ng-controller="SidePanelController as sideCtrl">
+                <!--(bake global/sidepanel.html)-->
+              </div>
+              <div class="col-lg-8">
+                  <div id="pages">
+                    <!--(bake pages/builder/brainbuilder.html)-->
+                    <!--(bake pages/simulation/simbuilder.html)-->
+                    <!--(bake pages/reports/reports.html)-->
+                    <!--(bake pages/database/database.html)-->
+
+                    <!-- Footer -->
+                     <div style="width : 100%; background-color : white" >
+                        <!--(bake global/footer.html)-->
+                    </div>
+                    <!-- End Footer -->
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- End Modularization of each tab -->
+      <!--(bake global/scripts.html)-->
     </body>
 </html>

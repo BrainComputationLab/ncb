@@ -1,0 +1,65 @@
+
+<!--Simulation Parameters Panel BEGIN-->
+<div class="panel panel-default">
+	<div class="panel-heading">
+	    <h3 class="panel-title">Simulation Parameters <button type="button" ng-click="simCtrl.toggleParamVisibility()"class="btn btn-xs btn-info pull-right">{{ '{{simCtrl.buttonText}}' }}</button> </h3>
+	</div>
+	<div class="panel-body" ng-show="simCtrl.getParamVisibility()">
+		<div class="row">
+			<form id="simulationParameterForm">
+			    <div class="col-lg-4">
+				    <!-- Name of Simulation input -->
+					<div class="form-group">
+						<label for="simNameInput">Simulation Name</label>
+						<input id="simNameInput" type="text" placeholder="Name" class="form-control">
+					</div>
+					<!-- End Name of Simulation input -->
+					
+					<!-- Duration Input -->
+					<div class="form-group">
+						<label for="simDurationInput">Duration</label>
+						<input id="simDurationInput" type="number" placeholder="Duration" class="form-control">
+					</div>
+					<!-- End Duration Input -->
+				</div>
+
+				<div class="col-lg-4">
+					<!-- FSV Input -->
+					<div class="form-group">
+						<label for="simFSVInput">FSV</label>
+						<input id="simFSVInput" type="number" placeholder="FSV" class="form-control">
+					</div>
+					<!-- End FSV Input -->
+					
+					<!-- Interactive Input -->
+					<div class="form-group">
+						<label for="simInteractiveInput">Interactive?</label>
+						<select class="form-control" id="simInteractiveInput">
+							<option value="No">No</option>
+							<option value="Yes">Yes</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<!-- Seed Input -->
+					<div class="form-group">
+						<label for="simSeedInput">Seed</label>
+						<input id="simSeedInput" type="number" placeholder="Seed" class="form-control">
+					</div>
+					<!-- End Seed Input -->
+					
+					<!-- Distance Input -->
+					<div class="form-group">
+						<label for="simDistanceInput">Include Distance?</label>
+						<select class="form-control" id="simDistanceInput">
+							<option value="No">No</option>
+							<option value="Yes">Yes</option>
+						</select>
+					</div>
+					<!-- End Distance Input -->
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

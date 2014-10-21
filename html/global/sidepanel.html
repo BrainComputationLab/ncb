@@ -1,0 +1,89 @@
+<!-- SIDE PANEL -->
+
+<!-- Current model list which contains the list of models a user is working on -->
+<div class="panel panel-default ncb-side-panel" ng-show="sideCtrl.isSidePanelVisible()" >
+	<div class="panel-heading ncb-heading" ng-style="sideCtrl.styleElement()">
+        <div id="currentModelName">
+            {{ '{{data.name}}' }}
+        </div>
+        <button type="button" ng-click="sideCtrl.close()" class="btn btn-xs btn-danger pull-right">x</button>
+	</div>
+	<div>
+		<ol id="bread" class="breadcrumb" ng-breadcrumbs>
+  			<li><a id="bc1" class="active" href="javascript:">Home</a></li>
+		</ol>
+	</div>
+	<!-- filtering is done here -->
+	<div class="panel-body" >
+		<div class="row">
+			<div class="col-lg-12">
+				<button id="addPreview" class="btn btn-info btn-xs" ng-click="sideCtrl.addToModel()" type="button">Add to Current Model</button>
+			</div>
+
+        	<!-- show subcomponenets of model if not a cell -->
+        	<div class="col-lg-12" ng-show="data.classification != 'cell'">
+        	    <span class="label label-default" style="display:block;">Componenets</span>
+        	</div>
+
+        	<!-- show different params based on cell type -->
+        	<div class="col-lg-12">
+        	    <span class="label label-default" style="display:block;">Parameters Preview</span>
+        	</div>
+			<div ng-show="data.classification == 'cell'">
+	                <div id="parameters" class="col-lg-12">
+	                    <div id="izParam" ng-show="data.type == 'Izhikevich'">
+	                        <a class="list-group-item"> Type: {{ '{{data.type}}' }}</a>
+	                        <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
+	                        <a class="list-group-item"> A: </a>
+	                        <a class="list-group-item"> B: </a>
+	                        <a class="list-group-item"> C: </a>
+	                        <a class="list-group-item"> D: </a>
+	                        <a class="list-group-item"> U: </a>
+	                        <a class="list-group-item"> V: </a>
+	                        <a class="list-group-item"> Threshold: </a>
+	                    </div>
+	                    <div id="ncsParam" ng-show="data.type == 'NCS'">
+	                        <a class="list-group-item"> Type: {{ '{{data.type}}' }}</a>
+	                        <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
+	                        <a class="list-group-item"> Threshold: </a>
+	                        <a class="list-group-item"> Resting Potential: </a>
+	                        <a class="list-group-item"> Calcium: </a>
+	                        <a class="list-group-item"> Calc. Spike Incr.: </a>
+	                        <a class="list-group-item"> Tau Calcium: </a>
+	                        <a class="list-group-item"> Leak Reversal Pot.: </a>
+	                        <a class="list-group-item"> Tau Membrane: </a>
+	                        <a class="list-group-item"> R Membrane: </a>
+	                        <a class="list-group-item"> Spike Shape: </a>
+	                    </div>
+	                    <div id="hhParam" ng-show="data.type == 'Hodgkin Huxley'">
+	                        <a class="list-group-item"> Type: {{ '{{data.type}}' }}</a>
+	                        <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
+	                        <a class="list-group-item"> Threshold: </a>
+	                        <a class="list-group-item"> Resting Potential: </a>
+	                        <a class="list-group-item"> Capacitance: </a>
+	                    </div>
+	                </div>
+			</div>
+			<div ng-show="data.classification == 'cellGroup'">
+                <div id="cellgroup" class="col-lg-12">
+                    <div id="cellParams">
+	                    <a class="list-group-item"> Type: Cell Group</a>
+                        <a class="list-group-item"> Quantity: </a>
+                        <a class="list-group-item"> Geometry: </a>
+                    </div>
+                </div>
+			</div>
+			<div ng-show="data.classification == 'model'">
+				model
+			</div>
+		</div>
+		<ul>
+						
+		</ul>
+	</div>
+	<!-- end filtering -->
+	
+</div>
+<!-- end current model list -->
+	
+<!-- SIDE PANEL END -->

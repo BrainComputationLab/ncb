@@ -1,8 +1,91 @@
-body {
-    padding-top: 60px;
+
+.navbar-brand {
+    background: url('/assets/img/ncs_logo.png');
+    background-position: 16px 6px;
+    background-size: 32px 32px;
+    background-repeat:no-repeat;
+    padding-left:56px;
+}
+.footer {
+    color:#CCC;
+    padding-top: 8px;
+    border-top:1px solid #CCC;
 }
 
-.ncs-brand {
-    margin-top:-5px;
-    height: 100%;
+#bread {
+  font-size: 10px;
+  margin-bottom: 0px;
+}
+
+.ncb-full-panel {
+    height:600px;
+}
+
+.ncb-side-panel {
+   height:700px;
+   width: 100%;
+   margin-left: 6px;
+   margin-top: 60px;
+}
+
+.ncb-heading {
+    height:40px;
+}
+
+.ncb-tabs-button {
+    margin: 8px;
+}
+
+.ncb-no-margins {
+    margin: 0px;
+}
+
+.ncb-borderless-btn {
+    border: 0px;
+}
+
+.modal-backdrop.am-fade {
+  opacity: .5;
+  transition: opacity .15s linear;
+  &.ng-enter {
+    opacity: 0;
+    &.ng-enter-active {
+      opacity: .5;
+    }
+  }
+  &.ng-leave {
+    opacity: .5;
+    &.ng-leave-active {
+      opacity: 0;
+    }
+  }
+}
+
+.ncb-cell-list-item {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.ncb-cell-type-txt {
+  font-size: 10px;
+  padding: 0px;
+  color: #555;
+}
+
+.ncb-cell-name-txt {
+  font-size: 14px;
+  padding: 0px;
+}
+
+.ncb-list-text-color {
+  color: #555;
+}
+
+.ncb-default-blank-row {
+  min-height: 20px;
+}
+
+#addPreview {
+  margin-bottom: 8px;
+  width: 100%;
 }

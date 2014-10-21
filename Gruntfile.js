@@ -3,6 +3,9 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     clean: ['build/', 'tmp/'],
     bowercopy: {
+      options: {
+        runBower: false
+      },
       'angular-strap': {
         files: {
           'tmp/vendorjs/angular-strap.js': 'angular-strap/dist/angular-strap.js',
@@ -201,7 +204,8 @@ module.exports = function(grunt) {
         src: [
           'js/app.js',
           'js/builder.services.js',
-          'js/builder.controllers.js'
+          'js/builder.controllers.js',
+          'js/sim.controllers.js'
         ],
         dest: 'tmp/ncbjs/ncb.js'
       },

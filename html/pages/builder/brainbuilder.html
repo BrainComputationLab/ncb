@@ -1,0 +1,31 @@
+<!-- Main Div for containing the Model Builder page -->
+<div id="model" class="container" ng-controller="ModelBuilderController as modelCtrl">
+
+    <!-- Model Configuration Header -->
+    <div class="page-header">
+    <div class="row">
+    	<div class='col-lg-12'>
+    		<h3>
+    		<button type="button" class="btn btn-default" snap-toggle="left" ng-click="modelCtrl.hideSidePanel()">
+    			<span class="glyphicon glyphicon-th-list"></span>
+    		</button>
+    		Model Configuration
+    		</h3>
+    	</div>
+    </div>
+    </div>
+    <!-- End Header -->
+
+
+	<!-- Modularization of Each Element of the page broken up into pieces -->
+    <div class="row">
+        <div class="col-lg-4">
+          <!--(bake components/leftmenu.html)-->
+        </div>
+        <div class="col-lg-8">
+          <!--(bake components/rightmenu.html)-->
+        </div>
+    </div>
+    <!-- End Modularization -->
+</div>
+<!-- End Main Div -->
