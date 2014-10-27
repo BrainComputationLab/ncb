@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="ncbApp">
+<html lang="en" data-ng-app="ncbApp">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,15 +10,15 @@
     </head>
     <body>
       <!-- Modularization of each tab -->
-      <div snap-drawers>
-          <div snap-drawer class="ncb-left-drawer" ng-controller="DrawerController as drawerCtrl">
+      <div data-snap-drawers>
+          <div data-snap-drawer class="ncb-left-drawer" data-ng-controller="DrawerController as drawerCtrl">
             <!--(bake global/leftdrawer.html)-->
           </div>
       </div>
-      <div snap-content  style="width : 100%; background-color : white">
+      <div data-snap-content  style="width : 100%; background-color : white">
         <!--(bake global/header.html)-->
           <div class = "row">
-              <div class="col-lg-2" style="background-color : #f8f8f8; height: 100%"ng-controller="SidePanelController as sideCtrl">
+              <div class="col-lg-2" style="background-color : #f8f8f8; height: 100%" data-ng-controller="SidePanelController as sideCtrl">
                 <!--(bake global/sidepanel.html)-->
               </div>
               <div class="col-lg-8">

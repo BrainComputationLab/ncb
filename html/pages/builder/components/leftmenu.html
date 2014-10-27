@@ -3,43 +3,43 @@
 <!-- Current model list which contains the list of models a user is working on -->
 <div id="currentModelList" class="panel panel-default ncb-full-panel" >
 	<div class="panel-heading ncb-heading">
-        <div id="currentModelName">
+        <div>
             Current Model
         </div>
-        <button type="button"  bs-modal="modal" data-animation="am-fade-and-scale" data-placement="center" class="btn btn-xs btn-info pull-right">+ Cell</button>
-        <button type="button" id="addCellGroup" bs-modal="modal" data-template="static/assets/html/directives/new-cell-group-modal.html" class="btn btn-xs btn-info pull-right">+ Cell Group</button>
+        <button type="button"  data-bs-modal="modal" data-animation="am-fade-and-scale" data-placement="center" class="btn btn-xs btn-info pull-right">+ Cell</button>
+        <button type="button" id="addCellGroup" data-bs-modal="modal" data-template="static/assets/html/directives/new-cell-group-modal.html" class="btn btn-xs btn-info pull-right">+ Cell Group</button>
 	</div>
 	<div>
-		<ol id="bread" class="breadcrumb" ng-breadcrumbs>
-  			<li><a id="bc1" class="active" href="javascript:">Home</a></li>
+		<ol class="breadcrumb" data-ng-breadcrumbs>
+  			<li><a id="bc-1" class="active" href="javascript:">Home</a></li>
 		</ol>
 	</div>
-	
+
 	<!-- filtering is done here -->
 	<div class="panel-body" >
-		<div ng-repeat="model in modelCtrl.currentModel">
-                <div ng-style="modelCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item">
+		<div data-ng-repeat="model in modelCtrl.currentModel">
+                <div data-ng-style="modelCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item">
                     <div class="row">
-                        <div class="col-lg-12"
-                            <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{ '{{model.name}}' }} <button type="button" ng-click="modelCtrl.removeModel(model)" class="btn btn-xs btn-danger pull-right">x</button></a>
+                        <div class="col-lg-12">
+                            <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{ '{{model.name}}' }} <button type="button" data-ng-click="modelCtrl.removeModel(model)" class="btn btn-xs btn-danger pull-right">x</button></a>
                         </div>
                     </div>
                     <div class="row ncb-default-blank-row">
                         <div class="col-lg-12 ">
-                            <a ng-show="model.classification == 'cell'"class="ncb-cell-type-txt" href="">{{ '{{model.type}}' }}</a>
-                            <a ng-show="model.classification == 'cellGroup'"class="ncb-cell-type-txt" href="">Cell Group</a>
-                            <a ng-show="model.classification == 'model'"class="ncb-cell-type-txt" href="">Model</a>
+                            <a data-ng-show="model.classification == 'cell'" class="ncb-cell-type-txt" href="">{{ '{{model.type}}' }}</a>
+                            <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
+                            <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
                         </div>
                     </div>
                 </div>
-						
+
 		</div>
 	</div>
 	<!-- end filtering -->
-	
+
 </div>
 <!-- end current model list -->
-	
+
 <!-- LEFT MENU END -->
 
 <!--NEW CELL MODAL BEGIN -->

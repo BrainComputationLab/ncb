@@ -1,5 +1,5 @@
 <!-- Template for the application menu bar -->
-<div class="navbar navbar-default navbar-fixed-top" ng-controller="NavigationController as navCtrl">
+<div class="navbar navbar-default navbar-fixed-top" data-ng-controller="NavigationController as navCtrl">
     <div class="container">
         <div class="navbar-header">
             <span class="navbar-brand">NCS</span>
@@ -11,8 +11,8 @@
             <!-- Tab links to Model Builder, Simulation Builder, Reports, Model Database, Documentation and Github -->
             <ul id="mainNav" class="nav navbar-nav">
                 <li class="active"><a href="#model"><span class="glyphicon glyphicon-pencil"></span> Model Builder</a></li>
-                <li><a href="#simulation" snap-close="left" ng-click="navCtrl.hideSidePanel()"><span class="glyphicon glyphicon-th"></span> Simulation Builder</a></li>
-                <li><a href="#reports" snap-close="left" ng-click="navCtrl.hideSidePanel()"><span class="glyphicon glyphicon-stats"></span> Reports</a></li>
+                <li><a href="#simulation" data-snap-close="left" data-ng-click="navCtrl.hideSidePanel()"><span class="glyphicon glyphicon-th"></span> Simulation Builder</a></li>
+                <li><a href="#reports" data-snap-close="left" data-ng-click="navCtrl.hideSidePanel()"><span class="glyphicon glyphicon-stats"></span> Reports</a></li>
                 <li><a href="#database"><span class="glyphicon glyphicon-hdd"></span> Model Database</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
