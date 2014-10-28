@@ -203,7 +203,7 @@ module.exports = function(grunt) {
       ncbjs: {
         src: [
           'js/app.js',
-          'js/builder.services.js',
+          'js/model.services.js',
           'js/builder.controllers.js',
           'js/sim.controllers.js'
         ],
