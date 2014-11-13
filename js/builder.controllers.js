@@ -1,9 +1,13 @@
-ncbApp.controller("DrawerController", ['$scope', 'sidePanelService', 'colorService', function($scope, sidePanelService, colorService){
+// controller for the model import/export drawer
+ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorService', 'CurrentModelService', 
+  function($scope, sidePanelService, colorService, currentModelService){
+
   $scope.viewed = sidePanelService.getData();
   $scope.colors = colorService.getColors();
   this.tab = 0;
-  this.localModels = [{name: 'Cell 1', classification:'cell', type: 'Izhikevich'} ,{name: 'Cell Group 2', classification:'cellGroup'}, {name: 'Model 1', classification:'model'}, {name: 'Cell 3', classification:'cell', type: 'Izhikevich'}];
-  this.dbModels = [{name: 'Cell 4', classification:'cell', type: 'Hodgkin Huxley'} ,{name: 'Cell Group 5', classification:'cellGroup'}, {name: 'Model 3', classification:'model'}, {name: 'Cell 6', classification:'cell', type: 'NCS'}];
+
+  this.localModels = myModels;
+  this.dbModels = myDBModels;
 
   this.colorPickerPopover = {
       "title": "Title",
@@ -12,32 +16,19 @@ ncbApp.controller("DrawerController", ['$scope', 'sidePanelService', 'colorServi
 
   this.selectTab = function(setTab){
     this.tab = setTab;
-  };
+  }
 
   this.isSelected = function(checkTab){
     return this.tab === checkTab;
-  };
+  }
 
   this.styleElement = function(model){
-    // style element based off type (cell, cell group, model)
-    if (model.classification === 'cell'){
-      return {
-                'background-image': 'linear-gradient(left, '+$scope.colors.cell+', '+$scope.colors.cell+' 5%, transparent 5%, transparent 100%)',
-                'background-image': '-webkit-linear-gradient(left, '+$scope.colors.cell+', '+$scope.colors.cell+' 5%, transparent 5%, transparent 100%)',
-            };
-    }
-    else if (model.classification === 'cellGroup'){
-      return {
-                'background-image': 'linear-gradient(left, '+$scope.colors.cellGroup+', '+$scope.colors.cellGroup+' 5%, transparent 5%, transparent 100%)',
-                'background-image': '-webkit-linear-gradient(left, '+$scope.colors.cellGroup+', '+$scope.colors.cellGroup+' 5%, transparent 5%, transparent 100%)',
-            };
-    }
-    else if (model.classification === 'model'){
-      return {
-                'background-image': 'linear-gradient(left, '+$scope.colors.model+', '+$scope.colors.model+' 5%, transparent 5%, transparent 100%)',
-                'background-image': '-webkit-linear-gradient(left, '+$scope.colors.model+', '+$scope.colors.model+' 5%, transparent 5%, transparent 100%)',
-            };
-    }
+    // get styled component from color service
+    return colorService.styleElement(model);
+  }
+
+  this.addToModel = function(model){
+    currentModelService.addToModel(model);
   };
 
   this.quickView = function(element){
@@ -51,13 +42,14 @@ ncbApp.controller("DrawerController", ['$scope', 'sidePanelService', 'colorServi
   $scope.$watch('viewed', function (newValue) {
         if (newValue) sidePanelService.setData(newValue);
     });
-
+  
 }]);
 
 
-ncbApp.controller("SidePanelController", ['$scope', 'sidePanelService', 'colorService', function($scope, sidePanelService, colorService){
+// controller for the side panel preview
+ncbApp.controller("SidePanelController", ['$scope', "CurrentModelService", 'SidePanelService', 'ColorService', function($scope, currentModelService, sidePanelService, colorService){
   $scope.data = sidePanelService.getData();
-  this.colors = colorService.getColors();
+  $scope.colors = colorService.getColors();
 
   // get visibility from side panel service
   this.isSidePanelVisible = function(){
@@ -69,38 +61,59 @@ ncbApp.controller("SidePanelController", ['$scope', 'sidePanelService', 'colorSe
     sidePanelService.setVisible(false);
   };
 
-  this.addToModel = function(){
-
+  this.addToModel = function(model){
+    currentModelService.addToModel(model);
   };
 
-  this.styleElement = function(){
-
+  this.styleHeader = function(){
+    //alert($scope.data.name);
     // style element based off type (cell, cell group, model)
     if ($scope.data.classification === 'cell'){
       return {
-        'background-color': this.colors.cell
+        'background-color': $scope.colors.cell
             };
     }
     else if ($scope.data.classification === 'cellGroup'){
       return {
-        'background-color': this.colors.cellGroup
+        'background-color': $scope.colors.cellGroup
             };
     }
     else if ($scope.data.classification === 'model'){
       return {
-                'background-color': this.colors.model
+                'background-color': $scope.colors.model
             };
     }
   };
 
+  this.styleElement = function(model){
+    // get styled component from color service
+    return colorService.styleElement(model);
+  };
+
+  this.selectComponent = function(component, index){
+    sidePanelService.setComponent(component, index);
+  };
+
+  // go to model home
+  this.goToBreadCrumb = function(index){
+    sidePanelService.goToBreadCrumb(index);
+  };
+
+  // get bread crumbs
+  this.getBreadCrumbs = function(){
+    return sidePanelService.breadCrumbs;
+  };
+
     $scope.$watch(function () { return sidePanelService.getData(); }, function (newValue) {
         if (newValue){
+          // update the data
           $scope.data = newValue;
-        }
+        } 
     });
 }]);
 
-ncbApp.controller("NavigationController", ['$scope', 'sidePanelService', function($scope, sidePanelService){
+// controller for the nav bar
+ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', function($scope, sidePanelService){
   // get visibility from side panel service
   this.isSidePanelVisible = function(){
     return sidePanelService.visible;
@@ -112,49 +125,163 @@ ncbApp.controller("NavigationController", ['$scope', 'sidePanelService', functio
   };
 }]);
 
+// controller for add cell modal
+ncbApp.controller("AddCellModalController", ['CurrentModelService', function(currentModelService){
 
-ncbApp.controller("ModelBuilderController", ['$scope', '$modal', 'currentModelService', 'sidePanelService', 'colorService',  
-	function($scope, $modal, currentModelService, sidePanelService, colorService){
-	this.currentModel = currentModelService.getCurrentModel();
+  this.cellName;
+  this.cellType = "Izhikevich";
+  this.channelType = "Voltage Gated Ion Channel";
 
-	$scope.colors = colorService.getColors();
+  this.addCell = function(){
+    var params;
 
-	$scope.modal = {
-	  "title": "Title",
-	  "content": "Hello Modal<br />This is a multiline message!"
-	};
+    // create params based on type
+    if(this.cellType == "Izhikevich")
+      params = new izhikevichParam();
+    else if(this.cellType == "NCS")
+      params = new ncsParam();
+    else
+      params = new hodgkinHuxleyParam();
 
-	// get visibility from side panel service
-	this.isSidePanelVisible = function(){
-		return sidePanelService.visible;
-	};
+    // add the cell to the current model
+    currentModelService.addToModel(new cell(this.cellName, this.cellType, params));
+  };
 
-	this.hideSidePanel = function(){
-		sidePanelService.setVisible(false);
-	};
-
-	this.removeModel = function(model){
-	};
-
-	this.styleElement = function(model){
-		// style element based off type (cell, cell group, model)
-		if (model.classification === 'cell'){
-			return {
-                'background-image': 'linear-gradient(left, '+$scope.colors.cell+', '+$scope.colors.cell+' 5%, transparent 5%, transparent 100%)',
-                'background-image': '-webkit-linear-gradient(left, '+$scope.colors.cell+', '+$scope.colors.cell+' 5%, transparent 5%, transparent 100%)',
-            };
-		}
-		else if (model.classification === 'cellGroup'){
-			return {
-                'background-image': 'linear-gradient(left, '+$scope.colors.cellGroup+', '+$scope.colors.cellGroup+' 5%, transparent 5%, transparent 100%)',
-                'background-image': '-webkit-linear-gradient(left, '+$scope.colors.cellGroup+', '+$scope.colors.cellGroup+' 5%, transparent 5%, transparent 100%)',
-            };
-		}
-		else if (model.classification === 'model'){
-			return {
-                'background-image': 'linear-gradient(left, '+$scope.colors.model+', '+$scope.colors.model+' 5%, transparent 5%, transparent 100%)',
-                'background-image': '-webkit-linear-gradient(left, '+$scope.colors.model+', '+$scope.colors.model+' 5%, transparent 5%, transparent 100%)',
-            };
-		}
-	}
 }]);
+
+// controller for add cell modal
+ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', function(currentModelService){
+
+  this.cellGroupName;
+  this.amount;
+  this.cellType = "Izhikevich";
+  this.channelType = "Voltage Gated Ion Channel";
+
+  this.addCellGroup = function(){
+    var params;
+
+    // create params based on type
+    if(this.cellType == "Izhikevich")
+      params = new izhikevichParam();
+    else if(this.cellType == "NCS")
+      params = new ncsParam();
+    else
+      params = new hodgkinHuxleyParam();
+
+    // add the cell to the current model
+    currentModelService.addToModel(new cellGroup(this.cellGroupName, this.amount, this.cellType, params));
+  };
+
+}]);
+
+// controller for add cell modal
+ncbApp.controller("AddSimInputModalController", ['CurrentModelService', function(currentModelService){
+
+  /*this.cellGroupName;
+  this.amount;
+  this.cellType = "Izhikevich";
+  this.channelType = "Voltage Gated Ion Channel";
+
+  this.addSimInput = function(){
+    var params;
+
+    // create params based on type
+    if(this.cellType == "Izhikevich")
+      params = new izhikevichParam();
+    else if(this.cellType == "NCS")
+      params = new ncsParam();
+    else
+      params = new hodgkinHuxleyParam();
+
+    // add the cell to the current model
+    currentModelService.addToModel(new cellGroup(this.cellGroupName, this.amount, this.cellType, params));
+  };*/
+
+}]);
+
+
+// left panel controller (model navigation)
+ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
+  function($scope, currentModelService, sidePanelService, colorService){
+  $scope.colors = colorService.getColors();
+
+  // get visibility from side panel service
+  this.isSidePanelVisible = function(){
+    return sidePanelService.visible;
+  };
+
+  this.hideSidePanel = function(){
+    sidePanelService.setVisible(false);
+  };
+
+  this.removeModel = function(model){
+    currentModelService.removeModel(model);
+  };
+
+  this.styleElement = function(model){
+    // get styled component from color service
+    return colorService.styleElement(model);
+  }
+
+  this.selectComponent = function(component, index){
+    currentModelService.setComponent(component, index);
+  };
+
+  // get bread crumbs
+  this.getBreadCrumbs = function(){
+    return currentModelService.getBreadCrumbs();
+  };
+
+  // go to model home
+  this.goToBreadCrumb = function(index){
+    currentModelService.goToBreadCrumb(index);
+  };
+
+  this.getComponents = function(){
+    return currentModelService.getData();
+  };
+
+  // set the cell group or cell to display in the parameters section
+  this.displayParameters = function(component){
+    currentModelService.setDisplayedComponent(component);
+  };
+
+    /*$scope.$watch(function () { return currentModelService.getData(); }, function (newValue) {
+        if (newValue){
+          // update the data
+          $scope.data = newValue;
+        } 
+    });*/
+
+}]);
+
+// controller for the right panel that displays cell or cell group parameters
+ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService', function($scope, currentModelService){
+
+  $scope.displayed = currentModelService.getDisplayedComponent();
+
+  // param types
+  $scope.types = [
+    {value: "exact", text: "exact"},
+    {value: "uniform", text: "uniform"},
+    {value: "normal", text: "normal"}
+  ];
+
+  $scope.showType = function() {
+    var selected = $filter('filter')($scope.statuses, {value: $scope.displayed.a.type});
+    return ($scope.displayed.a.type && selected.length) ? selected[0].text : 'Not set';
+  };
+
+  // update component show if changed
+    $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
+
+        if (newComponent){
+          // update the data
+          $scope.title = newComponent.name;
+          $scope.displayed = newComponent;
+        } 
+    });
+
+}]);
+
+

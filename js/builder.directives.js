@@ -1,4 +1,5 @@
-angular.module('ncb.builder.directives').directive(
+/*angular.module('ncb.builder.directives').directive(
     'ncbChangeEntity', [function() {
         // Do Stuff
 }]);
+*/

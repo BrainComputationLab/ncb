@@ -5,13 +5,255 @@
 
     <!-- Tab bar menu buttons for Cell group Parameters, Model Parameters, User Parameters -->
     <div id="groupName" class="panel-heading ncb-heading">
-
+        <div id="currentModelName">
+            {{title || "Parameters"}}
+        </div>        
     </div>
     <!-- end tab bar menu buttons -->
 
     <!-- Accordion -->
     <div class="panel-body">
+        <div class="panel-group" id="accordion">
 
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'cellGroup'">
+                <div class="panel-heading">
+                    <h4 class="panel-title" >
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse0" style="display:block">
+                            CellGroup Parameters
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse0" class="panel-collapse collapse in">
+                  <table class="table table-bordered table-hover table-condensed ncb-table">
+                    <tr>
+                      <td colspan="1"><span>CellGroup Name:</span></td>
+                      <td colspan="1" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Quantity:</span></td>
+                      <td colspan="1"><span>{{displayed.num}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Geometry:</span></td>
+                      <td colspan="1"><span>{{displayed.geometry}}</span></td>
+                    </tr>
+                  </table>
+                </div>
+            </div>
+
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'cellGroup' || displayed.classification == 'cell'">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" style="display:block">
+                            Cell Parameters
+                        </a>
+                    </h4>
+                </div>
+
+                <div id="collapse1" class="panel-collapse collapse in">
+
+                  <!-- Izhikevich Cell Parameters -->
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.type == 'Izhikevich'">
+                    <tr>
+                      <td colspan="2"><span>Name:</span></td>
+                      <td colspan="4"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Type:</span></td>
+                      <td colspan="4"><span>{{displayed.type}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>ParameterName:</span></td>
+                      <td colspan="1"><span>Type:</span></td>
+                      <td colspan="1"><span>Value:</span></td>
+                      <td colspan="1"><span>Min:</span></td>
+                      <td colspan="1"><span>Max:</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>A:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.a.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.a.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.a.value" buttons="no"><span>{{displayed.parameters.a.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.a.minValue" buttons="no"><span>{{displayed.parameters.a.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.a.maxValue" buttons="no"><span>{{displayed.parameters.a.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>B:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.b.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.b.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.b.value" buttons="no"><span>{{displayed.parameters.b.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.b.minValue" buttons="no"><span>{{displayed.parameters.b.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.b.maxValue" buttons="no"><span>{{displayed.parameters.b.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>C:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.c.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.c.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.c.value" buttons="no"><span>{{displayed.parameters.c.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.c.minValue" buttons="no"><span>{{displayed.parameters.c.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.c.maxValue" buttons="no"><span>{{displayed.parameters.c.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>D:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.d.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.d.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.d.value" buttons="no"><span>{{displayed.parameters.d.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.d.minValue" buttons="no"><span>{{displayed.parameters.d.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.d.maxValue" buttons="no"><span>{{displayed.parameters.d.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>U:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.u.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.u.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.u.value" buttons="no"><span>{{displayed.parameters.u.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.u.minValue" buttons="no"><span>{{displayed.parameters.u.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.u.maxValue" buttons="no"><span>{{displayed.parameters.u.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>V:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.v.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.v.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.v.value" buttons="no"><span>{{displayed.parameters.v.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.v.minValue" buttons="no"><span>{{displayed.parameters.v.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.v.maxValue" buttons="no"><span>{{displayed.parameters.v.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Threshold:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.threshold.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.threshold.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.value" buttons="no"><span>{{displayed.parameters.threshold.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.minValue" buttons="no"><span>{{displayed.parameters.threshold.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.maxValue" buttons="no"><span>{{displayed.parameters.threshold.maxValue}}</span></td>
+                    </tr>
+                  </table>
+                  <!-- End Izhikevich Cell Parameters -->
+
+                  <!-- NCS Cell Parameters -->
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.type == 'NCS'">
+                    <tr>
+                      <td colspan="2"><span>Name:</span></td>
+                      <td colspan="4"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Type:</span></td>
+                      <td colspan="4"><span>{{displayed.type}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>ParameterName:</span></td>
+                      <td colspan="1"><span>Type:</span></td>
+                      <td colspan="1"><span>Value:</span></td>
+                      <td colspan="1"><span>Min:</span></td>
+                      <td colspan="1"><span>Max:</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Threshold:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.threshold.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.threshold.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.value" buttons="no"><span>{{displayed.parameters.threshold.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.minValue" buttons="no"><span>{{displayed.parameters.threshold.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.maxValue" buttons="no"><span>{{displayed.parameters.threshold.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Resting Potential:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.restingPotential.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.restingPotential.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.restingPotential.value" buttons="no"><span>{{displayed.parameters.restingPotential.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.restingPotential.minValue" buttons="no"><span>{{displayed.parameters.restingPotential.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.restingPotential.maxValue" buttons="no"><span>{{displayed.parameters.restingPotential.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Calcium:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.calcium.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.calcium.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.calcium.value" buttons="no"><span>{{displayed.parameters.calcium.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.calcium.minValue" buttons="no"><span>{{displayed.parameters.calcium.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.calcium.maxValue" buttons="no"><span>{{displayed.parameters.calcium.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Calc. Spike Incr.:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.calciumSpikeIncrement.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.calciumSpikeIncrement.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.calciumSpikeIncrement.value" buttons="no"><span>{{displayed.parameters.calciumSpikeIncrement.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.calciumSpikeIncrement.minValue" buttons="no"><span>{{displayed.parameters.calciumSpikeIncrement.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.calciumSpikeIncrement.maxValue" buttons="no"><span>{{displayed.parameters.calciumSpikeIncrement.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Tau Calcium:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.tauCalcium.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.tauCalcium.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauCalcium.value" buttons="no"><span>{{displayed.parameters.tauCalcium.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauCalcium.minValue" buttons="no"><span>{{displayed.parameters.tauCalcium.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauCalcium.maxValue" buttons="no"><span>{{displayed.parameters.tauCalcium.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Leak Reversal Pot.:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.leakReversalPotential.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.leakReversalPotential.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.leakReversalPotential.value" buttons="no"><span>{{displayed.parameters.leakReversalPotential.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.leakReversalPotential.minValue" buttons="no"><span>{{displayed.parameters.leakReversalPotential.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.leakReversalPotential.maxValue" buttons="no"><span>{{displayed.parameters.leakReversalPotential.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Tau Membrane:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.tauMembrane.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.tauMembrane.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauMembrane.value" buttons="no"><span>{{displayed.parameters.tauMembrane.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauMembrane.minValue" buttons="no"><span>{{displayed.parameters.tauMembrane.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauMembrane.maxValue" buttons="no"><span>{{displayed.parameters.tauMembrane.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>R Membrane:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.rMembrane.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.rMembrane.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.rMembrane.value" buttons="no"><span>{{displayed.parameters.rMembrane.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.rMembrane.minValue" buttons="no"><span>{{displayed.parameters.rMembrane.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.rMembrane.maxValue" buttons="no"><span>{{displayed.parameters.rMembrane.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Spike Shape:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.spikeShape.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.spikeShape.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.spikeShape.value" buttons="no"><span>{{displayed.parameters.spikeShape.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.spikeShape.minValue" buttons="no"><span>{{displayed.parameters.spikeShape.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.spikeShape.maxValue" buttons="no"><span>{{displayed.parameters.spikeShape.maxValue}}</span></td>
+                    </tr>
+                  </table>
+                  <!-- End NCS Cell Parameters -->
+
+                  <!-- HodgkinHuxley Cell Parameters -->
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.type == 'HodgkinHuxley'">
+                    <tr>
+                      <td colspan="2"><span>Name:</span></td>
+                      <td colspan="4"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Type:</span></td>
+                      <td colspan="4"><span>{{displayed.type}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>ParameterName:</span></td>
+                      <td colspan="1"><span>Type:</span></td>
+                      <td colspan="1"><span>Value:</span></td>
+                      <td colspan="1"><span>Min:</span></td>
+                      <td colspan="1"><span>Max:</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Threshold:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.threshold.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.threshold.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.value" buttons="no"><span>{{displayed.parameters.threshold.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.minValue" buttons="no"><span>{{displayed.parameters.threshold.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.threshold.maxValue" buttons="no"><span>{{displayed.parameters.threshold.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Resting Potential:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.restingPotential.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.restingPotential.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.restingPotential.value" buttons="no"><span>{{displayed.parameters.restingPotential.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.restingPotential.minValue" buttons="no"><span>{{displayed.parameters.restingPotential.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.restingPotential.maxValue" buttons="no"><span>{{displayed.parameters.restingPotential.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Capicitance:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.capacitance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.capacitance.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.capacitance.value" buttons="no"><span>{{displayed.parameters.capacitance.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.capacitance.minValue" buttons="no"><span>{{displayed.parameters.capacitance.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.capacitance.maxValue" buttons="no"><span>{{displayed.parameters.capacitance.maxValue}}</span></td>
+                    </tr>
+                  </table>
+                  <!-- End HodgkinHuxley Cell Parameters -->
+                </div>
+
+
+            </div>
+
+        </div>    
     </div>
 </div>
-    <!-- end Accordion -->
+<!-- end Accordion -->
+    
+
+
+

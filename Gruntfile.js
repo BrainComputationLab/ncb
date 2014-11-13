@@ -86,6 +86,12 @@ module.exports = function(grunt) {
           'tmp/vendorjs/bootstrap-colorpicker-module.js': 'angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
           'tmp/css/colorpicker.css': 'angular-bootstrap-colorpicker/css/colorpicker.css'
         }
+      },
+      'angular-xeditable': {
+        files: {
+          'tmp/vendorjs/xeditable.js': 'angular-xeditable/dist/js/xeditable.js',
+          'tmp/css/xeditable.css': 'angular-xeditable/dist/css/xeditable.css'
+        }
       }
     },
     copy: {
@@ -144,8 +150,11 @@ module.exports = function(grunt) {
         ]
       }
     },
-    bake: {
+    bake: {	
       build: {
+      	options:{
+      		parsePattern:false
+      	},
         files: {
           'tmp/index.html': 'html/index.html'
         }
@@ -192,7 +201,8 @@ module.exports = function(grunt) {
           'tmp/vendorjs/sha256.js',
           'tmp/vendorjs/snap.js',
           'tmp/vendorjs/angular-snap.js',
-          'tmp/vendorjs/bootstrap-colorpicker-module.js'
+          'tmp/vendorjs/bootstrap-colorpicker-module.js',
+          'tmp/vendorjs/xeditable.js'
         ],
         dest: 'tmp/vendorjs/vendor.js'
       },
@@ -202,6 +212,10 @@ module.exports = function(grunt) {
       },
       ncbjs: {
         src: [
+          'js/init.js',
+          'js/json.js',
+          'js/utilityFcns.js',
+          'js/parameters.js',
           'js/app.js',
           'js/model.services.js',
           'js/builder.controllers.js',

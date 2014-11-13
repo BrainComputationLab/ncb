@@ -1,7 +1,7 @@
 <!-- Main Div for containing the Model Builder page -->
     <div class="row">
         <div class="col-lg-2">
-            <button type="button" class="btn btn-default ncb-drawer-margin" title="{{ '{{drawerCtrl.colorPickerPopover.title}}' }}" data-content="{{ '{{drawerCtrl.colorPickerPopover.content}}' }}" data-template="assets/html/colorpicker-popover.html" data-trigger="click" data-placement="bottom-left"  data-bs-popover> <span class="glyphicon glyphicon-cog"></span></button>
+            <button type="button" class="btn btn-default ncb-drawer-margin" title="{{drawerCtrl.colorPickerPopover.title}}" data-content="{{drawerCtrl.colorPickerPopover.content}}" data-template="assets/html/colorpicker-popover.html" data-trigger="click" data-placement="bottom-left"  data-bs-popover> <span class="glyphicon glyphicon-cog"></span></button>
         </div>
         <div class="col-lg-10">
             <button class="btn btn-info pull-right ncb-drawer-margin" type="button">Import</button>
@@ -32,45 +32,44 @@
 
             <span class="label label-default" style="display:block;" data-ng-show="(drawerCtrl.isSelected(0) || drawerCtrl.isSelected(1)) && localFiltered.length > 0">Local</span>
             <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(1)" data-ng-repeat="model in localFiltered = (drawerCtrl.localModels | filter : searchText)">
-
-                <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item">
+            
+                <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item" data-ng-dblclick="drawerCtrl.addToModel(model)">
                     <div class="row">
                         <div class="col-lg-12">
-                            <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{ '{{model.name}}' }}<button class="btn btn-default btn-xs ncb-borderless-btn pull-right " data-ng-click="drawerCtrl.quickView(model)" type="button"><span class="glyphicon glyphicon-eye-open"></span></button></a>
+                            <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}<button class="btn btn-default btn-xs ncb-borderless-btn pull-right" data-ng-click="drawerCtrl.quickView(model)" type="button"><span class="glyphicon glyphicon-eye-open"></span></button></a>
                         </div>
                     </div>
                     <div class="row ncb-default-blank-row">
                         <div class="col-lg-12 ">
-                            <a data-ng-show="model.classification == 'cell'" class="ncb-cell-type-txt" href="">{{ '{{model.type}}' }}</a>
+                            <a data-ng-show="model.classification == 'cell'" class="ncb-cell-type-txt" href="">{{model.type}}</a>
                             <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
                             <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
                         </div>
                     </div>
                 </div>
-
+                        
             </div>
 
             <span class="label label-default" style="display:block;" data-ng-show="(drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)) && dbFiltered.length > 0">Database</span>
             <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)" data-ng-repeat="model in dbFiltered = (drawerCtrl.dbModels | filter : searchText)">
 
-                <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item">
+                <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item" data-data-ng-dblclick="drawerCtrl.addToModel(model)">
                     <div class="row">
                         <div class="col-lg-12">
-                            <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{ '{{model.name}}' }}<button class="btn btn-default btn-xs ncb-borderless-btn pull-right " data-ng-click="drawerCtrl.quickView(model)" type="button"><span class="glyphicon glyphicon-eye-open"></span></button></a>
+                            <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}<button class="btn btn-default btn-xs ncb-borderless-btn pull-right " data-ng-click="drawerCtrl.quickView(model)" type="button"><span class="glyphicon glyphicon-eye-open"></span></button></a>
                         </div>
                     </div>
                     <div class="row ncb-default-blank-row">
                         <div class="col-lg-12 ">
-                            <a data-ng-show="model.classification == 'cell'" class="ncb-cell-type-txt" href="">{{ '{{model.type}}' }}</a>
+                            <a data-ng-show="model.classification == 'cell'" class="ncb-cell-type-txt" href="">{{model.type}}</a>
                             <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
                             <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
                         </div>
                     </div>
                 </div>
 
-
+            </div>             
         </div>
 
-    </div>
-  </div>
+    </div>  
 <!-- End Main Div -->

@@ -2,88 +2,1302 @@
 
 <!-- Current model list which contains the list of models a user is working on -->
 <div class="panel panel-default ncb-side-panel" data-ng-show="sideCtrl.isSidePanelVisible()" >
-	<div class="panel-heading ncb-heading" data-ng-style="sideCtrl.styleElement()">
+	<div class="panel-heading ncb-heading" data-ng-style="sideCtrl.styleHeader()">
         <div id="currentModelName">
-            {{ '{{data.name}}' }}
+            {{data.name}}
         </div>
         <button type="button" data-ng-click="sideCtrl.close()" class="btn btn-xs btn-danger pull-right">x</button>
 	</div>
 	<div>
-		<ol id="bread" class="breadcrumb" data-ng-breadcrumbs>
-  			<li><a id="bc1" class="active" href="javascript:">Home</a></li>
+		<ol class="breadcrumb ncb-bread">
+  			<li data-ng-repeat="breadCrumb in sideCtrl.getBreadCrumbs()">
+                <a href="#" data-ng-click="sideCtrl.goToBreadCrumb($index)">{{breadCrumb.name}}</a>
+            </li>
 		</ol>
 	</div>
 	<!-- filtering is done here -->
-	<div class="panel-body" >
-		<div class="row">
+	<div class="panel-body ncb-full-panel-body" >
+		<div class="row ncb-full-row">
 			<div class="col-lg-12">
-				<button id="addPreview" class="btn btn-info btn-xs" data-ng-click="sideCtrl.addToModel()" type="button">Add to Current Model</button>
+				<button id="addPreview" class="btn btn-info btn-xs" data-ng-click="sideCtrl.addToModel(data)" type="button">Add to Current Model</button>
 			</div>
 
-        	<!-- show subcomponenets of model if not a cell -->
-        	<div class="col-lg-12" data-ng-show="data.classification != 'cell'">
-        	    <span class="label label-default" style="display:block;">Componenets</span>
-        	</div>
+    	<!-- show subcomponenets of model if not a cell -->
+      <div class="col-lg-12" data-ng-show="data.classification != 'cell' && data.cellGroups.length > 0">
+          <span class="label label-default" style="display:block;">Components</span>
+      </div>
+      <div class="col-lg-12" id="subComponents" data-ng-show="data.classification != 'cell' && data.cellGroups.length > 0">
+				<a class="list-group-item ncb-cell-list-item" data-ng-style="sideCtrl.styleElement(group)" data-ng-show="data.classification != 'cell'" data-ng-repeat="group in data.cellGroups" data-ng-dblclick="sideCtrl.selectComponent(group, $index)">
+                    <p class="ncb-cell-name-txt ncb-list-text-color">{{group.name}}</p>
+                    <h4 data-ng-show="group.classification == 'cell'" class="ncb-cell-type-txt">{{group.type}}</h4>
+                    <h4 data-ng-show="group.classification == 'cellGroup'" class="ncb-cell-type-txt">Cell Group</h4>
+				</a>
+      </div>
 
         	<!-- show different params based on cell type -->
-        	<div class="col-lg-12">
-        	    <span class="label label-default" style="display:block;">Parameters Preview</span>
-        	</div>
-			<div data-ng-show="data.classification == 'cell'">
-	                <div id="parameters" class="col-lg-12">
-	                    <div id="izParam" data-ng-show="data.type == 'Izhikevich'">
-	                        <a class="list-group-item"> Type: {{ '{{data.type}}' }}</a>
-	                        <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
-	                        <a class="list-group-item"> A: </a>
-	                        <a class="list-group-item"> B: </a>
-	                        <a class="list-group-item"> C: </a>
-	                        <a class="list-group-item"> D: </a>
-	                        <a class="list-group-item"> U: </a>
-	                        <a class="list-group-item"> V: </a>
-	                        <a class="list-group-item"> Threshold: </a>
-	                    </div>
-	                    <div id="ncsParam" data-ng-show="data.type == 'NCS'">
-	                        <a class="list-group-item"> Type: {{ '{{data.type}}' }}</a>
-	                        <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
-	                        <a class="list-group-item"> Threshold: </a>
-	                        <a class="list-group-item"> Resting Potential: </a>
-	                        <a class="list-group-item"> Calcium: </a>
-	                        <a class="list-group-item"> Calc. Spike Incr.: </a>
-	                        <a class="list-group-item"> Tau Calcium: </a>
-	                        <a class="list-group-item"> Leak Reversal Pot.: </a>
-	                        <a class="list-group-item"> Tau Membrane: </a>
-	                        <a class="list-group-item"> R Membrane: </a>
-	                        <a class="list-group-item"> Spike Shape: </a>
-	                    </div>
-	                    <div id="hhParam" data-ng-show="data.type == 'Hodgkin Huxley'">
-	                        <a class="list-group-item"> Type: {{ '{{data.type}}' }}</a>
-	                        <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
-	                        <a class="list-group-item"> Threshold: </a>
-	                        <a class="list-group-item"> Resting Potential: </a>
-	                        <a class="list-group-item"> Capacitance: </a>
-	                    </div>
-	                </div>
-			</div>
-			<div data-ng-show="data.classification == 'cellGroup'">
-                <div id="cellgroup" class="col-lg-12">
-                    <div id="cellParams">
-	                    <a class="list-group-item"> Type: Cell Group</a>
-                        <a class="list-group-item"> Quantity: </a>
-                        <a class="list-group-item"> Geometry: </a>
+        <div class="col-lg-12">
+	        <span class="label label-default" style="display:block;">Parameters Preview</span>
+        </div>
+        <div class="col-lg-12" id="paramsPreview">
+				  <div data-ng-show="data.classification == 'cell'">
+            <div id="izParam" data-ng-show="data.type == 'Izhikevich'">
+                <a class="list-group-item"> Type: {{data.type}}</a>
+                <!-- A Parameter for Izhikevich Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              a
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.a.type}}</li>
+                        <li class="list-group-item">Value: {{data.parameters.a.value}}</li>
+                        <li class="list-group-item">Min Value: {{data.parameters.a.minValue}}</li>
+                        <li class="list-group-item">Max Value: {{data.parameters.a.maxValue}}</li>
+                      </ul>
+                    </div>
+
                     </div>
                 </div>
-			</div>
-			<div data-ng-show="data.classification == 'model'">
-				model
-			</div>
+                <!-- End A Parameter for Izhikevich Cell -->
+                <!-- B Parameter for Izhikevich Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              b
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.b.type}}</li>
+                        <li class="list-group-item">Value: {{data.parameters.b.value}}</li>
+                        <li class="list-group-item">Min Value: {{data.parameters.b.minValue}}</li>
+                        <li class="list-group-item">Max Value: {{data.parameters.b.maxValue}}</li>
+                      </ul>
+                    </div>
+
+                    </div>
+                </div>
+                <!-- End B Parameter for Izhikevich Cell -->
+                <!-- C Parameter for Izhikevich Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              c
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.c.type}}</li>
+                        <li class="list-group-item">Value: {{data.parameters.c.value}}</li>
+                        <li class="list-group-item">Min Value: {{data.parameters.c.minValue}}</li>
+                        <li class="list-group-item">Max Value: {{data.parameters.c.maxValue}}</li>
+                      </ul>
+                    </div>
+
+                    </div>
+                </div>
+                <!-- End C Parameter for Izhikevich Cell -->
+                <!-- D Parameter for Izhikevich Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              d
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.d.type}}</li>
+                        <li class="list-group-item">Value: {{data.parameters.d.value}}</li>
+                        <li class="list-group-item">Min Value: {{data.parameters.d.minValue}}</li>
+                        <li class="list-group-item">Max Value: {{data.parameters.d.maxValue}}</li>
+                      </ul>
+                    </div>
+
+                    </div>
+                </div>
+                <!-- End U Parameter for Izhikevich Cell -->
+                <!-- U Parameter for Izhikevich Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              u
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.u.type}}</li>
+                        <li class="list-group-item">Value: {{data.parameters.u.value}}</li>
+                        <li class="list-group-item">Min Value: {{data.parameters.u.minValue}}</li>
+                        <li class="list-group-item">Max Value: {{data.parameters.u.maxValue}}</li>
+                      </ul>
+                    </div>
+
+                    </div>
+                </div>
+                <!-- End U Parameter for Izhikevich Cell -->
+                <!-- V Parameter for Izhikevich Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              v
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.v.type}}</li>
+                        <li class="list-group-item">Value: {{data.parameters.v.value}}</li>
+                        <li class="list-group-item">Min Value: {{data.parameters.v.minValue}}</li>
+                        <li class="list-group-item">Max Value: {{data.parameters.v.maxValue}}</li>
+                      </ul>
+                    </div>
+
+                    </div>
+                </div>
+                <!-- End V Parameter for Izhikevich Cell -->
+                <!-- Threshold Parameter for Izhikevich Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              Threshold
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.threshold.value}}</li>
+                      </ul>
+                    </div>
+
+                    </div>
+                </div>
+                <!-- End Threshold Parameter for Izhikevich Cell -->
+            </div>
+            <div id="ncsParam" data-ng-show="data.type == 'NCS'">
+
+
+                <a class="list-group-item"> Type: {{data.type}}</a>
+
+                <!-- Threshold Parameter for NCS Cell -->
+                  <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Threshold
+                        </h4>
+                      </div>
+                    
+                        <div class="panel-body">
+                          <ul class="list-group">
+                            <li class="list-group-item">Type: {{data.parameters.threshold.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.threshold.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.threshold.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.threshold.maxValue}}</li>
+                          </ul>
+                        </div>
+
+                    
+                    </div>
+                  </div>
+                <!-- End Threshold Parameter for NCS Cell -->
+
+
+               <!-- Resting Potential Parameter for NCS Cell -->
+                  <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Resting Potential
+                        </h4>
+                      </div>
+                    
+                        <div class="panel-body">
+                          <ul class="list-group">
+                            <li class="list-group-item">Type: {{data.parameters.restingPotential.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.restingPotential.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.restingPotential.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.restingPotential.maxValue}}</li>
+                          </ul>
+                        </div>
+                    
+                    </div>
+                  </div>
+               <!-- End Resting Potential Parameter for NCS Cell -->
+
+                <!-- Calcium Parameter for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              Calcium
+                        </h4>
+                      </div>
+
+                        <div class="panel-body">
+                          <ul class="list-group">
+                            <li class="list-group-item">Type: {{data.parameters.calcium.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.calcium.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.calcium.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.calcium.maxValue}}</li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End Calcium Parameter for NCS Cell -->
+
+                <!-- Calcium Spike Increment Parameter for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              Calcium Spike Increment
+                        </h4>
+                      </div>
+
+                        <div class="panel-body">
+                          <ul class="list-group" >
+                            <li class="list-group-item">Type: {{data.parameters.calciumSpikeIncrement.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.calciumSpikeIncrement.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.calciumSpikeIncrement.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.calciumSpikeIncrement.maxValue}}</li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End Calcium Spike Increment Parameter for NCS Cell -->
+
+
+                <!-- Tau Calcium Parameter for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Tau Calcium
+                        </h4>
+                      </div>
+
+                    <div class="panel-body">
+                      <ul class="list-group" >
+                        <li class="list-group-item">Type: {{data.parameters.tauCalcium.type}}</li>
+                        <li class="list-group-item">Value: {{data.parameters.tauCalcium.value}}</li>
+                        <li class="list-group-item">Min Value: {{data.parameters.tauCalcium.minValue}}</li>
+                        <li class="list-group-item">Max Value: {{data.parameters.tauCalcium.maxValue}}</li>
+                      </ul>
+                    </div>
+
+                    </div>
+                </div>
+                <!-- End Tau Calcium Parameter for NCS Cell -->
+
+                <!-- Leak Reversal Potential Parameter for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Leak Reversal Potential
+                        </h4>
+                      </div>
+
+                        <div class="panel-body">
+                          <ul class="list-group" >
+                            <li class="list-group-item">Type: {{data.parameters.leakReversalPotential.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.leakReversalPotential.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.leakReversalPotential.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.leakReversalPotential.maxValue}}</li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End Leak Reversal Potential Parameter for NCS Cell -->
+
+                <!-- Tau Membrane Parameter for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              Tau Membrane
+                        </h4>
+                      </div>
+
+                        <div class="panel-body">
+                          <ul class="list-group" >
+                            <li class="list-group-item">Type: {{data.parameters.tauMembrane.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.tauMembrane.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.tauMembrane.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.tauMembrane.maxValue}}</li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End Tau Membrane Parameter for NCS Cell -->
+
+                <!-- R Membrane for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              R Membrane
+                        </h4>
+                      </div>
+
+                        <div class="panel-body">
+                          <ul class="list-group" >
+                            <li class="list-group-item">Type: {{data.parameters.rMembrane.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.rMembrane.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.rMembrane.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.rMembrane.maxValue}}</li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End R Membrane Parameter for NCS Cell -->
+
+                <!-- Spike Shape Parameter for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              Spike Shape
+                        </h4>
+                      </div>
+
+                        <div class="panel-body">
+                          <ul class="list-group" >
+                            <li class="list-group-item">Type: {{data.parameters.spikeShape.type}}</li>
+                            <li class="list-group-item">Value: {{data.parameters.spikeShape.value}}</li>
+                            <li class="list-group-item">Min Value: {{data.parameters.spikeShape.minValue}}</li>
+                            <li class="list-group-item">Max Value: {{data.parameters.spikeShape.maxValue}}</li>
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End Spike Shape Parameter for NCS Cell -->
+
+
+                <!-- Channel Parameter for NCS Cell -->
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              Channels
+                        </h4>
+                      </div>
+
+                        <div class="panel-body">
+                          <ul class="list-group col-lg-6" data-data-ng-repeat="channel in data.parameters.channel">
+                            <div  data-ng-if="channel.name == 'Voltage Gated Ion Channel'">
+
+                              <div class="panel-group">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Voltage Gated Ion
+                                    </h4>
+                                  </div>
+
+                                    <div class="panel-body">
+                                      <!-- Start Voltage Gate Ion vHalf Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                vHalf
+                                            </h4>
+                                          </div>
+
+                                          
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.vHalf.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.vHalf.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.vHalf.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.vHalf.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                           
+                                        </div>
+                                      </div>
+                                      <!-- EndVoltage Gate Ion vHalf Parameters -->
+
+                                      <!-- Start Voltage Gate Ion r Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                r
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.vHalf.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.vHalf.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.vHalf.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.vHalf.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion r Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Activation Slope Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Activation Slope
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.activationSlope.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.activationSlope.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.activationSlope.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.activationSlope.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion Activation Slope Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Deactivation Slope Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Deactivation Slope
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.deactivationSlope.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.deactivationSlope.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.deactivationSlope.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.deactivationSlope.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion Deactivation Slope Parameters -->
+
+                                      <!-- Start Voltage Gate Ion equilibrium Slope Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Equilibrium Slope
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.equilibriumSlope.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.equilibriumSlope.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.equilibriumSlope.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.equilibriumSlope.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion equilibrium Slope Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Conductance Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Conductance
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group col-lg-6" >
+                                                <li class="list-group-item">Type: {{channel.conductance.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.conductance.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.conductance.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.conductance.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion Conductance Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Reversal Potential Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Reversal Potential
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.reversalPotential.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.reversalPotential.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.reversalPotential.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion Reversal Potential Parameters -->
+
+                                      <!-- Start Voltage Gate Ion m_Initial Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                m_Initial
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group">
+                                                <li class="list-group-item">Type: {{channel.mInitial.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.mInitial.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.mInitial.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.mInitial.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion m_Initial Parameters -->
+
+
+                                    </div>
+                                </div>
+                              </div>
+                            </div> <!-- End If Statement -->
+
+                            <div data-ng-if="channel.name == 'Calcium Dependant Channel'">
+                              <div class="panel-group">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Calcium Dependant Channel
+                                    </h4>
+                                  </div>
+
+                                  <div id="collapseCalciumDependant" class="panel-collapse collapse out">
+                                    <div class="panel-body">
+                                      <!-- Start Calcium Dependant Channel m Initial Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                m_Initial
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.mInitial.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.mInitial.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.mInitial.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.mInitial.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel m Initial Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Reversal Potential Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Reversal Potential
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.reversalPotential.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.reversalPotential.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.reversalPotential.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Reversal Potential Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Backwards Rate Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Backwards Rate
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.backwardsRate.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.backwardsRate.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.backwardsRate.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.backwardsRate.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Backwards Rate Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Forward Scale Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Forward Scale
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.forwardScale.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.forwardScale.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.forwardScale.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.forwardScale.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Forward Scale Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Forward Exponent Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Forward Exponent
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.forwardExponent.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.forwardExponent.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.forwardExponent.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.forwardExponent.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Forward Exponent Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Tau Scale Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Tau Scale
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.tauScale.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.tauScale.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.tauScale.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.tauScale.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Tau Scale Parameters -->
+
+                                    </div>
+                                  </div> 
+                                </div>
+                              </div>
+                            </div> <!-- End If Statement -->
+
+                            <div  data-ng-if="channel.name == 'Voltage Gated Channel'">
+                              <div class="panel-group">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Voltage Gated
+                                    </h4>
+                                  </div>
+
+                                    <div class="panel-body">
+
+                                    
+                                      <!-- Start Voltage Gate Conductance Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Conductance
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.conductance.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.conductance.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.conductance.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.conductance.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Conductance Parameters -->
+
+                                      <!-- Start Voltage Gate Reversal Potential Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Reversal Potential
+                                            </h4>
+                                          </div>
+
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.reversalPotential.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.reversalPotential.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.reversalPotential.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Reversal Potential Parameters -->
+
+                                    </div>
+                                </div>
+                              </div>
+                            </div> <!-- End If Statement -->
+
+                          </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End Channel Parameter for NCS Cell -->
+
+
+
+                
+            </div>
+
+            <div id="hhParam" data-ng-show="data.type == 'HodgkinHuxley'">
+
+
+                <a class="list-group-item"> Type: {{data.type}}</a>
+                <a class="list-group-item"> <span style="text-decoration: underline;">Parameter Name</span></a>
+
+                     <!-- Threshold Parameter for Hodgkin Huxley Cell -->
+                    <div class="panel-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                                Threshold
+                          </h4>
+                        </div>
+                      
+                          <div class="panel-body">
+                            <ul class="list-group" >
+                              <li class="list-group-item">Type: {{data.parameters.threshold.type}}s</li>
+                              <li class="list-group-item">Value: {{data.parameters.threshold.value}}s</li>
+                              <li class="list-group-item">Min Value: {{data.parameters.threshold.minValue}}s</li>
+                              <li class="list-group-item">Max Value: {{data.parameters.threshold.maxValue}}s</li>
+                            </ul>
+                          </div>
+                      
+                      </div>
+                    </div>
+                     <!-- End Threshold Parameter for Hodgkin Huxley Cell -->
+
+                      <!-- Resting Potential Parameter for Hodgkin Huxley Cell -->
+                      <div class="panel-group">
+                        <div class="panel panel-default">
+                          <div class="panel-heading">
+                            <h4 class="panel-title">
+                                  Resting Potential
+                            </h4>
+                          </div>
+                        
+                            <div class="panel-body">
+                              <ul class="list-group" >
+                                <li class="list-group-item">Type: {{data.parameters.restingPotential.type}}</li>
+                                <li class="list-group-item">Value: {{data.parameters.restingPotential.value}}</li>
+                                <li class="list-group-item">Min Value: {{data.parameters.restingPotential.minValue}}</li>
+                                <li class="list-group-item">Max Value: {{data.parameters.restingPotential.maxValue}}</li>
+                              </ul>
+                            </div>
+                        
+                        </div>
+                      </div>
+                       <!-- End Resting Potential Parameter for Hodgkin Huxley Cell -->
+
+                     <!-- Calcium Parameter for Hodgkin Huxley Cell -->
+                    <div class="panel-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                                Capacitance
+                          </h4>
+                        </div>
+                      
+                          <div class="panel-body">
+                            <ul class="list-group" >
+                              <li class="list-group-item">Type: {{data.parameters.capacitance.type}}</li>
+                              <li class="list-group-item">Value: {{data.parameters.capacitance.value}}</li>
+                              <li class="list-group-item">Min Value: {{data.parameters.capacitance.minValue}}</li>
+                              <li class="list-group-item">Max Value: {{data.parameters.capacitance.maxValue}}</li>
+                            </ul>
+                          </div>
+                      
+                      </div>
+                    </div>
+                     <!-- End Calcium Parameter for Hodgkin Huxley Cell -->
+
+             <!-- Calcium Spike Increment Parameter for Hodgkin Huxley Cell 250-->
+                  <div class="panel-group">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                              Channels
+                        </h4>
+                      </div>
+                    
+                        <div class="panel-body">
+                          <ul class="list-group" data-data-ng-repeat="channel in data.parameters.channel">
+                            <div  data-ng-if="channel.name == 'Voltage Gated Ion Channel'">
+
+                              <div class="panel-group">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Voltage Gated Ion
+                                    </h4>
+                                  </div>
+
+                                    <div class="panel-body">
+                                      <!-- Start Voltage Gate Ion vHalf Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                vHalf
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.vHalf.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.vHalf.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.vHalf.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.vHalf.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- EndVoltage Gate Ion vHalf Parameters -->
+
+                                      <!-- Start Voltage Gate Ion r Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                r
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.vHalf.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.vHalf.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.vHalf.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.vHalf.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion r Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Activation Slope Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Activation Slope
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.activationSlope.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.activationSlope.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.activationSlope.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.activationSlope.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion Activation Slope Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Deactivation Slope Parameters -->
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Deactivation Slope
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.deactivationSlope.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.deactivationSlope.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.deactivationSlope.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.deactivationSlope.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      <!-- End Voltage Gate Ion Deactivation Slope Parameters -->
+
+                                      <!-- Start Voltage Gate Ion equilibrium Slope Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Equilibrium Slope
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.equilibriumSlope.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.equilibriumSlope.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.equilibriumSlope.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.equilibriumSlope.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion equilibrium Slope Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Conductance Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Conductance
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group col-lg-6" >
+                                                <li class="list-group-item">Type: {{channel.conductance.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.conductance.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.conductance.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.conductance.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion Conductance Parameters -->
+
+                                      <!-- Start Voltage Gate Ion Reversal Potential Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Reversal Potential
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.reversalPotential.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.reversalPotential.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.reversalPotential.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion Reversal Potential Parameters -->
+
+                                      <!-- Start Voltage Gate Ion m_Initial Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                m_Initial
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.mInitial.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.mInitial.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.mInitial.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.mInitial.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Ion m_Initial Parameters -->
+
+
+                                    </div>
+                                </div>
+                              </div>
+                            </div> <!-- End If Statement -->
+
+                            <div  data-ng-if="channel.name == 'Calcium Dependant Channel'">
+                              <div class="panel-group">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Calcium Dependant Channel
+                                    </h4>
+                                  </div>
+
+                                    <div class="panel-body">
+                                      <!-- Start Calcium Dependant Channel m Initial Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                m_Initial
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.mInitial.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.mInitial.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.mInitial.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.mInitial.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel m Initial Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Reversal Potential Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Reversal Potential
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.reversalPotential.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.reversalPotential.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.reversalPotential.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Reversal Potential Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Backwards Rate Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Backwards Rate
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.backwardsRate.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.backwardsRate.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.backwardsRate.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.backwardsRate.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Backwards Rate Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Forward Scale Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Forward Scale
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.forwardScale.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.forwardScale.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.forwardScale.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.forwardScale.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Forward Scale Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Forward Exponent Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Forward Exponent
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.forwardExponent.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.forwardExponent.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.forwardExponent.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.forwardExponent.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Forward Exponent Parameters -->
+
+                                      <!-- Start Calcium Dependant Channel Tau Scale Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Tau Scale
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.tauScale.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.tauScale.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.tauScale.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.tauScale.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Calcium Dependant Channel Tau Scale Parameters -->
+
+                                    </div>
+                                </div>
+                              </div>
+                            </div> <!-- End If Statement -->
+
+                            <div  data-ng-if="channel.name == 'Voltage Gated Channel'">
+                              <div class="panel-group">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        Voltage Gated
+                                    </h4>
+                                  </div>
+
+                                    <div class="panel-body">
+
+                                      
+                                      <!-- Start Voltage Gate Conductance Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Conductance
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.conductance.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.conductance.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.conductance.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.conductance.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Conductance Parameters -->
+
+                                      <!-- Start Voltage Gate Reversal Potential Parameters -->
+                                      <div class="panel-group">
+                                        <div class="panel panel-default">
+                                          <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                Reversal Potential
+                                            </h4>
+                                          </div>
+                    
+                                            <div class="panel-body">
+                                              <ul class="list-group" >
+                                                <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
+                                                <li class="list-group-item">Value: {{channel.reversalPotential.value}}</li>
+                                                <li class="list-group-item">Min Value: {{channel.reversalPotential.minValue}}</li>
+                                                <li class="list-group-item">Max Value: {{channel.reversalPotential.maxValue}}</li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <!-- End Voltage Gate Reversal Potential Parameters -->
+
+                                    </div>
+                                </div>
+                              </div>
+                            </div> <!-- End If Statement -->
+
+                          </ul>
+                        </div>
+                    
+                    </div>
+                  </div>
+                   <!-- End Calcium Spike Increment Parameter for Hodgkin Huxley Cell -->
+            </div>
+				</div>
+				<div data-ng-show="data.classification == 'cellGroup'">
+                    <div id="cellParams">
+	                    <a class="list-group-item"> Type: Cell Group</a>
+                        <a class="list-group-item"> Quantity: {{data.num}}</a>
+                        <a class="list-group-item"> Geometry: {{data.geometry}}</a>
+                    </div>
+				</div>
+				<div data-ng-show="data.classification == 'model'">
+				</div>
+        	</div>
 		</div>
 		<ul>
-
+						
 		</ul>
 	</div>
 	<!-- end filtering -->
-
+	
 </div>
 <!-- end current model list -->
-
+	
 <!-- SIDE PANEL END -->

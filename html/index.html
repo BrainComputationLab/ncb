@@ -1,28 +1,51 @@
+<!-- Main HTML Page -->
 <!DOCTYPE html>
 <html lang="en" data-ng-app="ncbApp">
+    <!-- Loading CSS and Initializing Global MetaTags -->
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="University of Nevada Brain Computation Lab">
+
         <title>NeoCortical Builder</title>
-        <!--(bake global/styles.html)-->
+<!--
+        <link rel="icon" type="image/png" href="/assets/ico/ncs_favicon.png">
+        <link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/css/lib/snap.css" rel="stylesheet">
+        <link href="assets/css/lib/angular-snap.css" rel="stylesheet">
+        <link href="assets/css/lib/colorpicker.css" rel="stylesheet">
+        <link href="assets/css/lib/xeditable.css" rel="stylesheet">
+        <link href="assets/css/ncb/main.css" rel="stylesheet">
+        <link href="assets/css/ncb/modelbuilder.css" rel="stylesheet">
+        <link href="assets/css/ncb/simulationbuilder.css" rel="stylesheet">
+        <link href="assets/css/ncb/leftdrawer.css" rel="stylesheet">
+-->
+    <!--(bake global/styles.html)-->
+
     </head>
+    <!-- End Loading CSS and Initialization -->
+
     <body>
-      <!-- Modularization of each tab -->
-      <div data-snap-drawers>
-          <div data-snap-drawer class="ncb-left-drawer" data-ng-controller="DrawerController as drawerCtrl">
+
+    <!-- Include Modals -->
+    <!--(bake pages/builder/components/new-cell-group-modal.html)-->
+    <!--(bake pages/builder/components/new-cell-modal.html)-->
+
+    <!-- Modularization of each tab -->
+    <div data-snap-drawers>
+        <div data-snap-drawer class="ncb-left-drawer" data-ng-controller="DrawerController as drawerCtrl">
             <!--(bake global/leftdrawer.html)-->
-          </div>
-      </div>
-      <div data-snap-content style="width : 100%; background-color : white">
+        </div>
+    </div>
+    <div data-snap-content  style="width : 100%; background-color : white">
         <!--(bake global/header.html)-->
-          <div class = "row">
-              <div class="col-lg-2" style="background-color : #f8f8f8; height: 100%" data-ng-controller="SidePanelController as sideCtrl">
+        <div class = "row">
+            <div class="col-lg-2" style="background-color : #f8f8f8; height: 100%" data-ng-controller="SidePanelController as sideCtrl">
                 <!--(bake global/sidepanel.html)-->
-              </div>
-              <div class="col-lg-8">
-                  <div id="pages">
+            </div>
+            <div class="col-lg-8">
+                <div id="pages">
                     <!--(bake pages/builder/brainbuilder.html)-->
                     <!--(bake pages/simulation/simbuilder.html)-->
                     <!--(bake pages/reports/reports.html)-->
@@ -33,11 +56,47 @@
                         <!--(bake global/footer.html)-->
                     </div>
                     <!-- End Footer -->
-                  </div>
-              </div>
-          </div>
-      </div>
-      <!-- End Modularization of each tab -->
-      <!--(bake global/scripts.html)-->
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!-- End Modularization of each tab -->
+
+    <div id="import-export-modals">
+        <!--(bake pages/import-export/import.html)-->
+        <!--(bake pages/import-export/export.html)-->
+    </div>
+
+    <!--(bake global/scripts.html)-->
+
+
+    <!-- Load the scripts via Require.js -->
+    <!--<script src="assets/js/lib/require.js" data-main="assets/js/ncb/main"></script>-->
+<!--
+    <script src="assets/js/lib/jquery.js"></script>
+	<script src="assets/js/lib/angular.min.js"></script>
+    <script src="assets/js/lib/bootstrap.js"></script>
+    <script src="assets/js/lib/snap.min.js"></script>
+    <script src="assets/js/lib/angular-snap.js"></script>
+
+    <script src="assets/js/lib/angular-modal-service.min.js"></script>
+    <script src="assets/js/lib/angular-strap.min.js"></script>
+    <script src="assets/js/lib/angular-strap.tpl.min.js"></script>
+    <script src="assets/js/lib/bootstrap-colorpicker-module.js"></script>
+    <script src="assets/js/lib/xeditable.min.js"></script>
+
+    <script src="assets/js/ncb/init.js"></script>
+    <script src="assets/js/ncb/json.js"></script>
+    <script src="assets/js/ncb/utilityFcns.js"></script>
+    <script src="assets/js/ncb/parameters.js"></script>
+    <script src="assets/js/ncb/mainController.js"></script>
+	<script src="assets/js/ncb/modelbuilder.js"></script>
+    <script src="assets/js/ncb/simbuilder.js"></script>
+-->
+    <!-- End Load Controllers and Scripts -->
+
     </body>
 </html>
+<!-- End Main HTML Page -->
