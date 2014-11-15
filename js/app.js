@@ -58,10 +58,10 @@ ncbApp.config(function(snapRemoteProvider) {
       touchToDrag: false,
       tapToClose: false
       // ... others options
-    }
+    };
 });
 
 // set editable theme
 ncbApp.run(function(editableOptions){
-  editableOptions.theme = 'bs3' // bootstrap 3 theme
+  editableOptions.theme = 'bs3'; // bootstrap 3 theme
 });

@@ -16,16 +16,16 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
 
   this.selectTab = function(setTab){
     this.tab = setTab;
-  }
+  };
 
   this.isSelected = function(checkTab){
     return this.tab === checkTab;
-  }
+  };
 
   this.styleElement = function(model){
     // get styled component from color service
     return colorService.styleElement(model);
-  }
+  };
 
   this.addToModel = function(model){
     currentModelService.addToModel(model);
@@ -128,7 +128,7 @@ ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', functio
 // controller for add cell modal
 ncbApp.controller("AddCellModalController", ['CurrentModelService', function(currentModelService){
 
-  this.cellName;
+  this.cellName = "";
   this.cellType = "Izhikevich";
   this.channelType = "Voltage Gated Ion Channel";
 
@@ -152,8 +152,8 @@ ncbApp.controller("AddCellModalController", ['CurrentModelService', function(cur
 // controller for add cell modal
 ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', function(currentModelService){
 
-  this.cellGroupName;
-  this.amount;
+  this.cellGroupName = "";
+  this.amount = 0;
   this.cellType = "Izhikevich";
   this.channelType = "Voltage Gated Ion Channel";
 
@@ -221,7 +221,7 @@ ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'S
   this.styleElement = function(model){
     // get styled component from color service
     return colorService.styleElement(model);
-  }
+  };
 
   this.selectComponent = function(component, index){
     currentModelService.setComponent(component, index);

@@ -35,7 +35,7 @@ ncbApp.factory('SidePanelService', function($rootScope) {
 
   sidePanelService.goToBreadCrumb = function(index){
     // go home if bread crumb index is 0
-    if(index == 0)
+    if(index === 0)
       this.goHome();
     else if(index < this.breadCrumbs.length){
       // if not home loop through breadcumbs to reach selected index
@@ -54,7 +54,7 @@ ncbApp.factory('SidePanelService', function($rootScope) {
   // get bread crumbs
   sidePanelService.getBreadCrumbs = function(){
     return this.breadCrumbs;
-  }
+  };
 
   sidePanelService.getData = function(){
     return this.component;
@@ -98,7 +98,7 @@ ncbApp.factory('ColorService', function($rootScope){
                 'background-image': '-webkit-linear-gradient(left, '+this.colors.model+', '+this.colors.model+' 10px, transparent 10px, transparent 100%)',
             };
     }
-  }
+  };
 
   return colorService;
 });
@@ -159,7 +159,7 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   currentModelService.goToBreadCrumb = function(index){
 
     // go home if bread crumb index is 0
-    if(index == 0)
+    if(index === 0)
       this.goHome();
 
     // if not home loop through breadcumbs to reach selected index
@@ -196,11 +196,11 @@ ncbApp.factory('CurrentModelService', function($rootScope){
 
   currentModelService.setDisplayedComponent = function(component){
     this.displayedComponent = component;
-  }
+  };
 
   currentModelService.getDisplayedComponent = function(component){
     return this.displayedComponent;
-  }
+  };
 
   return currentModelService;
 });

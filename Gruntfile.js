@@ -146,6 +146,12 @@ module.exports = function(grunt) {
             flatten: true,
             src: ['ncb/server.py', 'ncb/db.py', 'ncb/__init__.py'],
             dest: 'build'
+          },
+          {
+          	expand: true,
+          	flatten: true,
+          	src: ['tmp/templates/colorpicker-popover.html'],
+          	dest: 'build/static/assets/html'
           }
         ]
       }
@@ -156,7 +162,8 @@ module.exports = function(grunt) {
       		parsePattern:false
       	},
         files: {
-          'tmp/index.html': 'html/index.html'
+          'tmp/index.html': 'html/index.html',
+          'tmp/templates/colorpicker-popover.html': 'html/global/colorpicker-popover.html'
         }
       }
     },

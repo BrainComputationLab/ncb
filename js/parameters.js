@@ -98,7 +98,7 @@ function flatSynapse() {
 }
 
 function ncsSynapse() {
-	this.name = "ncsSynapse"
+	this.name = "ncsSynapse";
 	this.utilization = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 				  //double
 	this.redistribution = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 			  //double
 	this.lastPrefireTime = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; 			  //double
@@ -154,7 +154,7 @@ function cellAlias(name, cellGroup, cellAlias) {
 }
 
 function synapseGroup(name, pre, post, prob, parameters) {
-	this.className = "synapseGroup"
+	this.className = "synapseGroup";
 	this.name = name;
 	this.pre = pre;
 	this.post = post;
