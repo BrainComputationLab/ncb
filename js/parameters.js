@@ -167,6 +167,25 @@ function synapseAlias(synapseGroup, synapseAlias) {
 	this.synapseAlias = synapseAlias;
 }
 
+function simulationInput(name){
+	this.className = "simulationInput";
+	this.name = name;
+	this.stimulustype = "Rectangular Current";
+	this.amplitude = 2;
+	this.width = 3;
+	this.frequency = 10;
+	this.probability = 0.5;
+	this.inputTarget = "None";
+	this.startTime = 500000;
+	this.endTime = 1000000;
+}
+
+function simulationOutput(name){
+	this.className = "simulationOutput";
+	this.name = name;
+}
+
+
 function inputGroup() {
 
 }

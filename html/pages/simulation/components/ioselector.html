@@ -6,12 +6,34 @@
 				<ul class="nav nav-tabs ncb-nav-tabs" role="tablist">
 					<li data-ng-class="{active: simCtrl.isSelected(0)}" data-ng-click="simCtrl.selectTab(0)"><a href="#">Input</a></li>
 					<li data-ng-class="{active: simCtrl.isSelected(1)}" data-ng-click="simCtrl.selectTab(1)"><a href="#">Output</a></li>	
-					<li class="pull-right ncb-tabs-button"><button type="button" class="btn btn-xs btn-info pull-right">New</button></li>	
+					<li class="pull-right ncb-tabs-button"><button type="button" data-ng-click="simCtrl.addNewParam()" class="btn btn-xs btn-info pull-right">New</button></li>	
 				</ul>
 			</div>
 		</div>
 
-	<div class="panel-body">
+	<div class="panel-body ncb-scrollview">
+
+    	<div class="list-group" data-ng-show="simCtrl.tab == 0">
+	      <li data-ng-repeat="param in simCtrl.simInput" class="row list-group-item ncb-io-list-item ncb-item-center">
+	          <div class="col-lg-10">
+	              <a class="ncb-no-underline" data-editable-text="param.name" buttons="no">{{param.name}}</a>
+	          </div>
+	          <div class="col-lg-2">
+	              <div class="row"><button type="button" data-ng-click="simCtrl.removeParam(param)" class="btn btn-xs btn-danger pull-right">x</button></div>
+	          </div>
+	      </li>
+    	</div>
+
+    	<div class="list-group" data-ng-show="simCtrl.tab == 1">
+	      <li data-ng-repeat="param in simCtrl.simOutput" class="row list-group-item ncb-io-list-item ncb-item-center">
+	          <div class="col-lg-10">
+	              <a class="ncb-no-underline" data-editable-text="param.name" buttons="no">{{param.name}}</a>
+	          </div>
+	          <div class="col-lg-2">
+	              <div class="row"><button type="button" data-ng-click="simCtrl.removeParam(param)" class="btn btn-xs btn-danger pull-right">x</button></div>
+	          </div>
+	      </li>
+    	</div>
 
 	</div>
 </div>

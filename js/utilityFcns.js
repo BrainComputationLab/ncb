@@ -18,6 +18,14 @@ function getCellIndex(component, value){
     return -1;
 }
 
+function getParamIndex(params, value){
+    for(var i=0; i<params.length; i++){
+        if(params[i].name === value)
+            return i;
+    }
+    return -1;
+}
+
 function cloneParam(source) {
     if(source.className === "izhikevichParam") {
         var ret = new izhikevichParam();
