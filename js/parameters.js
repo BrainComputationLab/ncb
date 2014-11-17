@@ -170,12 +170,12 @@ function synapseAlias(synapseGroup, synapseAlias) {
 function simulationInput(name){
 	this.className = "simulationInput";
 	this.name = name;
-	this.stimulustype = "Rectangular Current";
+	this.stimulusType = "Rectangular Current";
 	this.amplitude = 2;
 	this.width = 3;
 	this.frequency = 10;
 	this.probability = 0.5;
-	this.inputTarget = "None";
+	this.inputTarget = "No Cell Groups Available";
 	this.startTime = 500000;
 	this.endTime = 1000000;
 }
@@ -183,6 +183,14 @@ function simulationInput(name){
 function simulationOutput(name){
 	this.className = "simulationOutput";
 	this.name = name;
+	this.outputType = "View Report";
+	this.reportType = "Channel Conductance";
+	this.reportTarget = "No Cell Groups Available";
+	this.frequency = 10;
+	this.probability = 0.5;
+	this.startTime = 0;
+	this.endTime = 0;
+	this.numberFormat = "ascii";
 }
 
 

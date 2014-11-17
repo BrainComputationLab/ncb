@@ -2,92 +2,191 @@
 <!--Input/Output Specification Panel BEGIN-->
 <div class="panel panel-default ncb-full-panel">
 	<div class="panel-heading">
-	    <h3 class="panel-title">Input/Output Specification</h3>
+	    <h3 class="panel-title">{{(simCtrl.selected.name || "Input/Output") + " Specification"}}</h3>
 	</div>
-	<div class="panel-body">
-		<form id="simulationParameterForm">
 
-			<div class="row">
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Stimulus Type</label>
-						<input id="simNameInput" type="text" placeholder="Rectangular Current" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
-				</div>
-
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Amplitude</label>
-						<input id="simNameInput" type="text" placeholder="ex. 2" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
-				</div>
+	<div class="panel-body" data-ng-show="simCtrl.selected.className == 'simulationInput'">
+		<div class="row">
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+			    <div class="form-group">
+				    <label for="simNameInput">Stimulus Type</label>
+	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.stimulusType">
+	                    <option value='Rectangular Current'>Rectangular Current</option>
+	                    <option value='Rectangular Voltage'>Rectangular Voltage</option>
+	                    <option value='Linear Current'>Linear Current</option>
+	                    <option value='Linear Voltage'>Linear Voltage</option>
+	                    <option value='Sine Current'>Sine Current</option>
+	                    <option value='Sine Voltage'>Sine Voltage</option>
+	                </select>
+                </div>
+				<!-- End Name of Simulation input -->
 			</div>
 
-			<div class="row">
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Width</label>
-						<input id="simNameInput" type="text" placeholder="ex. 3" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Amplitude</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.amplitude" type="text" placeholder="ex. 2" class="form-control">
 				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
 
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Frequency</label>
-						<input id="simNameInput" type="text" placeholder="ex. 10" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
+		<div class="row">
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Width</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.width" type="text" placeholder="ex. 3" class="form-control">
 				</div>
+				<!-- End Name of Simulation input -->
 			</div>
 
-			<div class="row">
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Probability</label>
-						<input id="simNameInput" type="text" placeholder="ex. 0.5" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Frequency</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.frequency" type="text" placeholder="ex. 10" class="form-control">
 				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
 
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Input Target</label>
-						<input id="simNameInput" type="text" placeholder="No Cell Groups Available" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
+		<div class="row">
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Probability</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.probability" type="text" placeholder="ex. 0.5" class="form-control">
 				</div>
+				<!-- End Name of Simulation input -->
 			</div>
 
-			<div class="row">
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Start Time</label>
-						<input id="simNameInput" type="text" placeholder="ex. 612789" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
-				</div>
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+			    <div class="form-group">
+				    <label for="simNameInput">Input Target</label>
+	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.inputTarget">
+	                    <option value='No Cell Groups Available'>No Cell Groups Available</option>
+	                </select>
+                </div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
 
-			    <div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">End Time</label>
-						<input id="simNameInput" type="text" placeholder="ex. 1378454" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
+		<div class="row">
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Start Time</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
 				</div>
+				<!-- End Name of Simulation input -->
 			</div>
 
-		</form>
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">End Time</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.endTime" type="text" placeholder="ex. 1378454" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
 	</div>
+
+	<div class="panel-body" data-ng-show="simCtrl.selected.className == 'simulationOutput'">
+		<div class="row">
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+			    <div class="form-group">
+				    <label for="simNameInput">Output Type</label>
+	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.outputType">
+	                    <option value='View Report'>View Report</option>
+	                    <option value='Save As File'>Save As File</option>
+	                </select>
+                </div>
+				<div class="form-group" data-ng-show="simCtrl.selected.outputType == 'Save As File'">
+					<label for="simNameInput">File Name</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.outputType" type="text" placeholder="File Name" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+			    <div class="form-group">
+				    <label for="simNameInput">Report Type</label>
+	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.reportType">
+	                    <option value='Channel Conductance'>Channel Conductance</option>
+	                </select>
+                </div>
+
+			    <div class="form-group" data-ng-show="simCtrl.selected.outputType == 'Save As File'">
+				    <label for="simNameInput">Number Format</label>
+	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.numberFormat">
+	                    <option value='ascii'>ascii</option>
+	                </select>
+                </div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
+
+		<div class="row">
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Report target</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.reportTarget" type="text" placeholder="ex. 3" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Frequency</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.frequency" type="text" placeholder="ex. 10" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
+
+		<div class="row">
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Probability</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.probability" type="text" placeholder="ex. 0.5" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+
+			<div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Start Time</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+
+		</div>
+
+		<div class="row">
+
+
+		    <div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">End Time</label>
+					<input id="simNameInput" data-ng-model="simCtrl.selected.endTime" type="text" placeholder="ex. 1378454" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
+	</div>
+
 </div>
 <!--Input/Output Specification Panel END-->

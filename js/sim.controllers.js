@@ -4,10 +4,21 @@ ncbApp.controller("SimulationCtrl", function(){
   this.paramsMinimized = true;
   this.buttonText = "- Minimize";
 
+  // sim inputs / outputs
   this.simOutput = [];
   this.simInput = [];
+  this.selected = null;
   this.inputNum = 1;
   this.outputNum = 1;
+
+  // simulation parameters
+  this.simName = null;
+  this.FSV = null;
+  this.seed = null;
+  this.duration = null;
+  this.interactive = "No";
+  this.includeDistance = "No";
+
 
   this.selectTab = function(setTab){
     this.tab = setTab;
@@ -42,6 +53,7 @@ ncbApp.controller("SimulationCtrl", function(){
     }
   };
 
+  // remove an input or output from the simulation
   this.removeParam = function(param){
     // remove param if found
     var myIndex; 
@@ -60,6 +72,10 @@ ncbApp.controller("SimulationCtrl", function(){
         this.simOutput.splice(myIndex, 1);
       }
     }
-  }
+  };
+
+  this.selectParam = function(param){
+    this.selected = param;
+  };
 
 });
