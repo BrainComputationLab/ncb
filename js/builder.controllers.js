@@ -169,7 +169,7 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
       params = new hodgkinHuxleyParam();
 
     // add the cell to the current model
-    currentModelService.addToModel(new cellGroup(this.cellGroupName, this.amount, this.cellType, params));
+    currentModelService.addToModel(new cellGroup(this.cellGroupName, this.amount, params, this.cellType, this.geometry));
   };
 
 }]);

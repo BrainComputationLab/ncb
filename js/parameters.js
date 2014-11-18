@@ -137,7 +137,7 @@ function cellGroup(name, num, modelParameters, type, geometry) {
 	this.num = num;
 	this.type = type;
 	this.parameters = modelParameters;
-	this.geometry = geometry;
+	this.geometry = geometry || "Box";
 	this.cellGroups = [];
 }
 
