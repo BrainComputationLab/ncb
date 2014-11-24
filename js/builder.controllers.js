@@ -125,7 +125,7 @@ ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', functio
   };
 }]);
 
-// controller for add cell modal
+// controller for add cell group modal
 ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', function(currentModelService){
 
   this.cellGroupName = "";
@@ -157,6 +157,24 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 
 }]);
 
+// controller for add connection modal
+ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', function($scope, currentModelService){
+
+  $scope.selected1 = null;
+  $scope.selected2 = null;
+  $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
+  $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
+  $scope.components1 = null;
+  $scope.components2 = null;
+
+  $scope.$on('connectionModal', function(event){
+    $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
+    $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
+  });
+
+}]);
+
+
 // controller for add cell modal
 ncbApp.controller("AddSimInputModalController", ['CurrentModelService', function(currentModelService){
 
@@ -184,8 +202,8 @@ ncbApp.controller("AddSimInputModalController", ['CurrentModelService', function
 
 
 // left panel controller (model navigation)
-ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
-  function($scope, currentModelService, sidePanelService, colorService){
+ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
+  function($rootScope, $scope, currentModelService, sidePanelService, colorService){
   $scope.colors = colorService.getColors();
 
   // get visibility from side panel service
@@ -222,6 +240,10 @@ ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'S
 
   this.getComponents = function(){
     return currentModelService.getData();
+  };
+
+  this.updateConnectionModel = function(){
+    $rootScope.$broadcast('connectionModal');
   };
 
   // set the cell group or cell to display in the parameters section

@@ -192,6 +192,10 @@ ncbApp.factory('CurrentModelService', function($rootScope){
     return this.selected.cellGroups;
   };
 
+  currentModelService.getParent = function(){
+    return this.selected;
+  };
+
   // end bread crumb functions ////////////////////////////////////////////
 
   currentModelService.setDisplayedComponent = function(component){

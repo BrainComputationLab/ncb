@@ -142,6 +142,7 @@ function cellGroup(name) {
 
 function baseCellGroup(){
 	this.classification = "baseCellGroup";
+	this.name = "Home";
 	this.cellGroups = [];
 }
 
