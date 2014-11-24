@@ -30,18 +30,14 @@
                       <td colspan="1" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
-                      <td colspan="1"><span>Quantity:</span></td>
-                      <td colspan="1"><span>{{displayed.num}}</span></td>
-                    </tr>
-                    <tr>
-                      <td colspan="1"><span>Geometry:</span></td>
-                      <td colspan="1"><span>{{displayed.geometry}}</span></td>
+                      <td colspan="1"><span>Number of Subgroups:</span></td>
+                      <td colspan="1"><span>{{displayed.cellGroups.length}}</span></td>
                     </tr>
                   </table>
                 </div>
             </div>
 
-            <div class="panel panel-default" data-ng-show="displayed.classification == 'cellGroup' || displayed.classification == 'cell'">
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'cells'">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" style="display:block">
@@ -53,17 +49,25 @@
                 <div id="collapse1" class="panel-collapse collapse in">
 
                   <!-- Izhikevich Cell Parameters -->
-                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.type == 'Izhikevich'">
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.type == 'Izhikevich'">
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
-                      <td colspan="4"><span>{{displayed.name}}</span></td>
+                      <td colspan="4" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
-                      <td colspan="4"><span>{{displayed.type}}</span></td>
+                      <td colspan="4"><span>{{displayed.parameters.type}}</span></td>
                     </tr>
                     <tr>
-                      <td colspan="2"><span>ParameterName:</span></td>
+                      <td colspan="2"><span>Quantity:</span></td>
+                      <td colspan="4" data-editable-text="displayed.num" buttons="no"><span>{{displayed.num}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Geometry:</span></td>
+                      <td colspan="4"><span>{{displayed.geometry}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Parameter Name:</span></td>
                       <td colspan="1"><span>Type:</span></td>
                       <td colspan="1"><span>Value:</span></td>
                       <td colspan="1"><span>Min:</span></td>
@@ -122,17 +126,25 @@
                   <!-- End Izhikevich Cell Parameters -->
 
                   <!-- NCS Cell Parameters -->
-                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.type == 'NCS'">
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.type == 'NCS'">
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
-                      <td colspan="4"><span>{{displayed.name}}</span></td>
+                      <td colspan="4" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
-                      <td colspan="4"><span>{{displayed.type}}</span></td>
+                      <td colspan="4" ><span>{{displayed.parameters.type}}</span></td>
                     </tr>
                     <tr>
-                      <td colspan="2"><span>ParameterName:</span></td>
+                      <td colspan="2"><span>Quantity:</span></td>
+                      <td colspan="4" data-editable-text="displayed.num" buttons="no"><span>{{displayed.num}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Geometry:</span></td>
+                      <td colspan="4"><span>{{displayed.geometry}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Parameter Name:</span></td>
                       <td colspan="1"><span>Type:</span></td>
                       <td colspan="1"><span>Value:</span></td>
                       <td colspan="1"><span>Min:</span></td>
@@ -205,17 +217,25 @@
                   <!-- End NCS Cell Parameters -->
 
                   <!-- HodgkinHuxley Cell Parameters -->
-                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.type == 'HodgkinHuxley'">
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.type == 'HodgkinHuxley'">
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
-                      <td colspan="4"><span>{{displayed.name}}</span></td>
+                      <td colspan="4" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
-                      <td colspan="4"><span>{{displayed.type}}</span></td>
+                      <td colspan="4"><span>{{displayed.parameters.type}}</span></td>
                     </tr>
                     <tr>
-                      <td colspan="2"><span>ParameterName:</span></td>
+                      <td colspan="2"><span>Quantity:</span></td>
+                      <td colspan="4" data-editable-text="displayed.num" buttons="no"><span>{{displayed.num}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Geometry:</span></td>
+                      <td colspan="4"><span>{{displayed.geometry}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Parameter Name:</span></td>
                       <td colspan="1"><span>Type:</span></td>
                       <td colspan="1"><span>Value:</span></td>
                       <td colspan="1"><span>Min:</span></td>

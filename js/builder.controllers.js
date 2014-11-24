@@ -126,50 +126,33 @@ ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', functio
 }]);
 
 // controller for add cell modal
-ncbApp.controller("AddCellModalController", ['CurrentModelService', function(currentModelService){
-
-  this.cellName = "";
-  this.cellType = "Izhikevich";
-  this.channelType = "Voltage Gated Ion Channel";
-
-  this.addCell = function(){
-    var params;
-
-    // create params based on type
-    if(this.cellType == "Izhikevich")
-      params = new izhikevichParam();
-    else if(this.cellType == "NCS")
-      params = new ncsParam();
-    else
-      params = new hodgkinHuxleyParam();
-
-    // add the cell to the current model
-    currentModelService.addToModel(new cell(this.cellName, this.cellType, params));
-  };
-
-}]);
-
-// controller for add cell modal
 ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', function(currentModelService){
 
   this.cellGroupName = "";
   this.amount = 0;
+  this.cellGroupType = "cellGroup"
   this.cellType = "Izhikevich";
   this.channelType = "Voltage Gated Ion Channel";
 
   this.addCellGroup = function(){
     var params;
 
-    // create params based on type
-    if(this.cellType == "Izhikevich")
-      params = new izhikevichParam();
-    else if(this.cellType == "NCS")
-      params = new ncsParam();
-    else
-      params = new hodgkinHuxleyParam();
+    // create cells or a cell group folder
+    if(this.cellGroupType == "cells"){
 
-    // add the cell to the current model
-    currentModelService.addToModel(new cellGroup(this.cellGroupName, this.amount, params, this.cellType, this.geometry));
+      // create params based on type
+      if(this.cellType == "Izhikevich")
+        params = new izhikevichParam();
+      else if(this.cellType == "NCS")
+        params = new ncsParam();
+      else
+        params = new hodgkinHuxleyParam();
+
+      currentModelService.addToModel(new cells(this.cellGroupName, this.amount, params, "Box"));
+    }
+    else{
+      currentModelService.addToModel(new cellGroup(this.cellGroupName));
+    }
   };
 
 }]);

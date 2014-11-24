@@ -10,26 +10,39 @@
             <div id="ElementBody" class="modal-body">
                 <form class="form-horizontal" role="form">
                     <div class="form-group cellGroupTypes">
+
                         <label for="modalcellGroupName" class="col-sm-4 control-label"> Name</label>
                         <div class="col-sm-8">
-                        <input id="modalcellGroupName" type="text" placeholder="Name" class="form-control" data-ng-model="addCellGroupCtrl.cellGroupName">
-                        <br>
-                      </div>
-                      <label for="modalcellGroupNum" class="col-sm-4 control-label"> Amount</label>
+                            <input id="modalcellGroupName" type="text" placeholder="Name" class="form-control" data-ng-model="addCellGroupCtrl.cellGroupName">
+                            <br>
+                        </div>
+
+                        <label for="modalType" class="col-sm-4 control-label"> Type</label>
                         <div class="col-sm-8">
-                        <input id="modalcellGroupNum" type="number" placeholder="Amount" class="form-control" data-ng-model="addCellGroupCtrl.amount">
-                        <br>
-                      </div>
-                      <label for="modalcellGroupType" class="col-sm-4 control-label"> Type</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="cellGroupType" data-ng-model="addCellGroupCtrl.cellType">
+                            <select class="form-control" data-ng-model="addCellGroupCtrl.cellGroupType">
+                                <option value='cellGroup'>Cell Group Folder</option>
+                                <option value='cells'>Cells</option>
+                            </select>
+                            <br>
+                        </div>
+
+                        <label for="modalcellGroupNum" class="col-sm-4 control-label" data-ng-show="addCellGroupCtrl.cellGroupType == 'cells'"> Amount</label>
+                        <div class="col-sm-8" data-ng-show="addCellGroupCtrl.cellGroupType == 'cells'">
+                            <input id="modalcellGroupNum" type="number" placeholder="Amount" class="form-control" data-ng-model="addCellGroupCtrl.amount">
+                            <br>
+                        </div>
+
+                        <label for="modalcellType" data-ng-show="addCellGroupCtrl.cellGroupType == 'cells'" class="col-sm-4 control-label">Cell Type</label>
+                        <div class="col-sm-8" data-ng-show="addCellGroupCtrl.cellGroupType == 'cells'">
+                            <select class="form-control" data-ng-model="addCellGroupCtrl.cellType">
                                 <option value='Izhikevich'>Izhikevich</option>
                                 <option value='NCS'>NCS</option>
                                 <option value='HodgkinHuxley'>Hodgkin Huxley</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group cellChannelType" data-ng-show="addCellGroupCtrl.cellType == 'NCS' || addCellGroupCtrl.cellType == 'HodgkinHuxley'">
+
+                    <div class="form-group cellChannelType" data-ng-show="addCellGroupCtrl.cellGroupType == 'cells' && (addCellGroupCtrl.cellType == 'NCS' || addCellGroupCtrl.cellType == 'HodgkinHuxley')">
                         <label for="cellChannelType" class="col-sm-4 control-label"> Channel</label>
                         <div class="col-sm-8">
                             <select class="form-control" id="cellChannelType" data-ng-model="addCellGroupCtrl.channelType">

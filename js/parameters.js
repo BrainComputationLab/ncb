@@ -10,7 +10,7 @@ function model() {
 }
 
 function izhikevichParam() {
-	this.className = "izhikevichParam";
+	this.type = "Izhikevich";
 	this.a = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0}; 		 //double
 	this.b = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0}; 		 //double
 	this.c = {type: "exact", value: -65.0, minValue: 0.0, maxValue: 0.0}; 		 //double
@@ -21,7 +21,7 @@ function izhikevichParam() {
 }
 
 function ncsParam() {
-	this.className = "ncsParam";
+	this.type = "NCS";
 	this.threshold = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0}; 				  //double
 	this.restingPotential = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0}; 			  //double
 	this.calcium = {type: "exact", value: -65.0, minValue: 0.0, maxValue: 0.0}; 				  //double
@@ -35,7 +35,7 @@ function ncsParam() {
 }
 
 function hodgkinHuxleyParam() {
-	this.className = "hodgkinHuxleyParam";
+	this.type = "HodgkinHuxley";
 	this.threshold = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};	    //double
 	this.restingPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 	this.capacitance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};		//double
@@ -124,20 +124,19 @@ function reportParameters() {
 
 }
 
-function cell(name, type, parameters) {
+// a group of similar cells
+function cells(name, num, parameters, geometry) {
 	this.name = name;
-	this.type = type;
-	this.classification = "cell";
+	this.num = num;
+	this.classification = "cells";
+	this.geometry = geometry || "Box";
 	this.parameters = parameters;
 }
 
-function cellGroup(name, num, modelParameters, type, geometry) {
+// a cell group containing other cell groups and cells used for organization
+function cellGroup(name) {
 	this.classification = "cellGroup";
 	this.name = name;
-	this.num = num;
-	this.type = type;
-	this.parameters = modelParameters;
-	this.geometry = geometry || "Box";
 	this.cellGroups = [];
 }
 

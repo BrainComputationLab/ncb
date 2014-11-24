@@ -19,32 +19,26 @@ var flatS = new flatSynapse();
 var ncsS = new ncsSynapse();
 
 // hard code modals for testing purposes
-var newNcs = new ncsParam();
-var newhh = new hodgkinHuxleyParam();
-var newIzhi = new izhikevichParam();
-var param = new cell("Param", "HodgkinHuxley", newhh);
-var param2 = new cell("Param2", "NCS", newNcs);
-var param3 = new cell("Param3", "Izhikevich", newIzhi);
 myModels = [
-  new cell("Cell 1", "NCS", newNcs),
-  new cell("Cell 2", "HodgkinHuxley", newhh),
-    new cellGroup('Cell Group 1', 1, new izhikevichParam(), "Izhikevich", 'box'),
-    new cellGroup('Cell Group 2', 2, new ncsParam(), "NCS", 'box'),
+  new cells("Cell 1", 100, new ncsParam(), "Box"),
+  new cells("Cell 2", 50, new hodgkinHuxleyParam(), "Box"),
+  new cellGroup('Cell Group 1'),
+  new cellGroup('Cell Group 2'),
 ];
 myDBModels  = [
-  new cell("Cell 3", "Izhikevich", newIzhi),
-    new cellGroup('Cell Group 3', 3, new hodgkinHuxleyParam(), "HodgkinHuxley", 'box'),
-    new cellGroup('Cell Group 4', 4, new ncsParam(), "NCS", 'box'),
+  new cells("Cell 3", 150, new izhikevichParam(), "Sphere"),
+  new cellGroup('Cell Group 3'),
+  new cellGroup('Cell Group 4'),
 ];
 
-myModels[2].cellGroups.push(new cell("Cell 4", "NCS", newNcs));
-myModels[2].cellGroups.push(new cell("Cell 5", "Izhikevich", newIzhi));
-myModels[2].cellGroups.push(new cellGroup('Cell Group 5', 5, new hodgkinHuxleyParam(), "HodgkinHuxley", 'box'));
-myModels[2].cellGroups.push(new cell("Cell 6", "NCS", newNcs));
-myModels[2].cellGroups.push(new cell("Cell 7", "Izhikevich", newIzhi));
-myModels[2].cellGroups.push(new cellGroup('Cell Group 7', 5, new hodgkinHuxleyParam(), "HodgkinHuxley", 'box'));
-myModels[2].cellGroups[2].cellGroups.push(new cell("Cell 8", "Izhikevich", newIzhi));
-myModels[2].cellGroups[2].cellGroups.push(new cellGroup('Cell Group 8', 6, new ncsParam(), "NCS", 'box'));
+myModels[2].cellGroups.push(new cells("Cell 4", 5, new ncsParam(), "Box"));
+myModels[2].cellGroups.push(new cells("Cell 5", 100, new izhikevichParam(), "Box"));
+myModels[2].cellGroups.push(new cellGroup('Cell Group 5'));
+myModels[2].cellGroups.push(new cells("Cell 6", 13, new ncsParam(), "Box"));
+myModels[2].cellGroups.push(new cells("Cell 3", 150, new izhikevichParam(), "Sphere"));
+myModels[2].cellGroups.push(new cellGroup('Cell Group 7'));
+myModels[2].cellGroups[2].cellGroups.push(new cells("Cell 3", 300, new izhikevichParam(), "Sphere"));
+myModels[2].cellGroups[2].cellGroups.push(new cellGroup('Cell Group 8'));
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

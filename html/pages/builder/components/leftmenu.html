@@ -6,7 +6,6 @@
         <div id="currentModelName">
             Current Model
         </div>
-        <button type="button" data-toggle="modal" data-target="#addCellModal" class="btn btn-xs btn-info pull-right">+ Cell</button>
         <button type="button" id="addCellGroup" data-toggle="modal" data-target="#addCellGroupModal" class="btn btn-xs btn-info pull-right">+ Cell Group</button>
 	</div>
 	<div>
@@ -29,7 +28,7 @@
               <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}</a>
             </div>
             <div class="row">
-              <a data-ng-show="model.classification == 'cell'" class="ncb-cell-type-txt" href="">{{model.type}}</a>
+              <a data-ng-show="model.classification == 'cells'" class="ncb-cell-type-txt" href="">{{model.parameters.type}}</a>
               <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
               <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
             </div>

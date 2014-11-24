@@ -80,7 +80,7 @@ ncbApp.factory('ColorService', function($rootScope){
   colorService.styleElement = function(model){
     //alert(model.name);
     // style element based off type (cell, cell group, model)
-    if (model.classification === 'cell'){
+    if (model.classification === 'cells'){
       return {
                 'background-image': 'linear-gradient(left, '+this.colors.cell+', '+this.colors.cell+' 10px, transparent 10px, transparent 100%)',
                 'background-image': '-webkit-linear-gradient(left, '+this.colors.cell+', '+this.colors.cell+' 10px, transparent 10px, transparent 100%)',
