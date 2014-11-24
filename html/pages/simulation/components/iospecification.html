@@ -11,7 +11,7 @@
 			    <!-- Name of Simulation input -->
 			    <div class="form-group">
 				    <label for="simNameInput">Stimulus Type</label>
-	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.stimulusType">
+	                <select class="form-control" data-ng-model="simCtrl.selected.stimulusType">
 	                    <option value='Rectangular Current'>Rectangular Current</option>
 	                    <option value='Rectangular Voltage'>Rectangular Voltage</option>
 	                    <option value='Linear Current'>Linear Current</option>
@@ -27,7 +27,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Amplitude</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.amplitude" type="text" placeholder="ex. 2" class="form-control">
+					<input data-ng-model="simCtrl.selected.amplitude" type="text" placeholder="ex. 2" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -38,7 +38,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Width</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.width" type="text" placeholder="ex. 3" class="form-control">
+					<input data-ng-model="simCtrl.selected.width" type="text" placeholder="ex. 3" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -47,7 +47,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Frequency</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.frequency" type="text" placeholder="ex. 10" class="form-control">
+					<input data-ng-model="simCtrl.selected.frequency" type="text" placeholder="ex. 10" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -58,7 +58,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Probability</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.probability" type="text" placeholder="ex. 0.5" class="form-control">
+					<input data-ng-model="simCtrl.selected.probability" type="text" placeholder="ex. 0.5" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -67,7 +67,7 @@
 			    <!-- Name of Simulation input -->
 			    <div class="form-group">
 				    <label for="simNameInput">Input Target</label>
-	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.inputTarget">
+	                <select class="form-control" data-ng-model="simCtrl.selected.inputTarget">
 	                    <option value='No Cell Groups Available'>No Cell Groups Available</option>
 	                </select>
                 </div>
@@ -80,7 +80,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Start Time</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
+					<input data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -89,7 +89,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">End Time</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.endTime" type="text" placeholder="ex. 1378454" class="form-control">
+					<input data-ng-model="simCtrl.selected.endTime" type="text" placeholder="ex. 1378454" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -102,14 +102,14 @@
 			    <!-- Name of Simulation input -->
 			    <div class="form-group">
 				    <label for="simNameInput">Output Type</label>
-	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.outputType">
+	                <select class="form-control" data-ng-model="simCtrl.selected.outputType">
 	                    <option value='View Report'>View Report</option>
 	                    <option value='Save As File'>Save As File</option>
 	                </select>
                 </div>
 				<div class="form-group" data-ng-show="simCtrl.selected.outputType == 'Save As File'">
 					<label for="simNameInput">File Name</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.outputType" type="text" placeholder="File Name" class="form-control">
+					<input data-ng-model="simCtrl.selected.fileName" type="text" placeholder="File Name" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -118,14 +118,14 @@
 			    <!-- Name of Simulation input -->
 			    <div class="form-group">
 				    <label for="simNameInput">Report Type</label>
-	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.reportType">
+	                <select class="form-control" data-ng-model="simCtrl.selected.reportType">
 	                    <option value='Channel Conductance'>Channel Conductance</option>
 	                </select>
                 </div>
 
 			    <div class="form-group" data-ng-show="simCtrl.selected.outputType == 'Save As File'">
 				    <label for="simNameInput">Number Format</label>
-	                <select class="form-control" id="cellChannelType" data-ng-model="simCtrl.selected.numberFormat">
+	                <select class="form-control" data-ng-model="simCtrl.selected.numberFormat">
 	                    <option value='ascii'>ascii</option>
 	                </select>
                 </div>
@@ -138,7 +138,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Report target</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.reportTarget" type="text" placeholder="ex. 3" class="form-control">
+					<input data-ng-model="simCtrl.selected.reportTarget" type="text" placeholder="ex. 3" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -147,7 +147,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Frequency</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.frequency" type="text" placeholder="ex. 10" class="form-control">
+					<input data-ng-model="simCtrl.selected.frequency" type="text" placeholder="ex. 10" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -158,7 +158,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Probability</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.probability" type="text" placeholder="ex. 0.5" class="form-control">
+					<input data-ng-model="simCtrl.selected.probability" type="text" placeholder="ex. 0.5" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -167,7 +167,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">Start Time</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
+					<input data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -181,7 +181,7 @@
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
 					<label for="simNameInput">End Time</label>
-					<input id="simNameInput" data-ng-model="simCtrl.selected.endTime" type="text" placeholder="ex. 1378454" class="form-control">
+					<input data-ng-model="simCtrl.selected.endTime" type="text" placeholder="ex. 1378454" class="form-control">
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>

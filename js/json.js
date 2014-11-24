@@ -41,7 +41,7 @@ $().ready(function() {
 
     $("#exportFileName").on('input', function() {
         var fileName = $("#exportFileName").val();
-        
+
         if(fileName === '' || fileName === undefined) {
             $("#exportOkButton").prop("disabled", true);
         }
@@ -63,8 +63,9 @@ function clearUploadFileInput()
 function exportSim() {
     var stimuli = [];
     var reports = [];
+    var i = 0;
     var id;
-    for(var i = 0; i < simInput.length; i++) {
+    for(i = 0; i < simInput.length; i++) {
         id = simInput[i];
         stimuli.push({
             entity_name: $("#simInputFormCollapse" + id).html().trim(),
@@ -82,7 +83,7 @@ function exportSim() {
         });
     }
 
-    for(var i = 0, obj; i < simOutput.length; i++) {
+    for(i = 0, obj; i < simOutput.length; i++) {
         id = simOutput[i];
         obj = {
             entity_name: $("#simOutputFormCollapse" + id).html().trim(),
@@ -195,7 +196,7 @@ function importSim() {
         cache: false,
         contentType: false,
         processData: false
-    });  
+    });
 }
 
 function updateModelDetails() {
@@ -206,23 +207,26 @@ function updateModelDetails() {
 }
 
 function updateSimElements() {
+    var i = 0;
+    var id = null;
+    
     simBuilderUpdateTargets();
     // remove current inputs
-    for(var i = 0; i < simInput.length; i++) {
+    for(i = 0; i < simInput.length; i++) {
         $("#simInputFormCollapseRemove" + simInput[i]).trigger("confirmDialog");
     }
 
     // remove current outputs
-    for(var i = 0; i < simOutput.length; i++) {
+    for(i = 0; i < simOutput.length; i++) {
         $("#simOutputFormCollapseRemove" + simOutput[i]).trigger("confirmDialog");
     }
 
     simInput = [];
     simOutput = [];
 
-    for(var i = 0; i < currentModel.stimuli.length; i++) {
+    for(i = 0; i < currentModel.stimuli.length; i++) {
         var stim = currentModel.stimuli[i];
-        var id = inputID;
+        id = inputID;
 
         generateInputForm(stim.name);
         $("#simInputType" + id).val(stim.specification.type);
@@ -234,9 +238,9 @@ function updateSimElements() {
         $("#simInputTarget" + id).val(stim.specification.target);
     }
 
-    for(var i = 0; i < currentModel.reports.length; i++) {
+    for(i = 0; i < currentModel.reports.length; i++) {
         var rep = currentModel.reports[i];
-        var id = outputID;
+        id = outputID;
 
         generateOutputForm(rep.name);
         $("#simOutputReportType" + id).val(rep.specification.type);
@@ -299,4 +303,3 @@ function updateSimElements() {
     if(currentModel.sim_distance !== undefined)
         $("#simDistanceInput").val(currentModel.sim_distance);
 }
-

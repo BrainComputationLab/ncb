@@ -1,10 +1,10 @@
-// create side panel service 
+// create side panel service
 ncbApp.factory('SidePanelService', function($rootScope) {
   var sidePanelService = {};
 
   sidePanelService.breadCrumbs = [{name: "Home", index: 0}];
   sidePanelService.visible = false;
-  sidePanelService.data;
+  sidePanelService.data = null;
   sidePanelService.component = {};
 
   sidePanelService.setVisible = function(isVisible) {
@@ -113,7 +113,7 @@ ncbApp.factory('CurrentModelService', function($rootScope){
 
   currentModelService.breadCrumbs = [{name: "Home", index: 0}];
   currentModelService.selected = currentModelService.currentModel.baseCellGroups;
-  currentModelService.displayedComponent;
+  currentModelService.displayedComponent = null;
 
   currentModelService.setName = function(name){
     this.currentModel.name = name;
@@ -130,7 +130,7 @@ ncbApp.factory('CurrentModelService', function($rootScope){
 
   currentModelService.removeModel = function(model){
     // remove model if found
-    var myIndex = getCellIndex(this.selected.cellGroups, model.name)
+    var myIndex = getCellIndex(this.selected.cellGroups, model.name);
     if(myIndex != -1){
       this.selected.cellGroups.splice(myIndex, 1);
     }

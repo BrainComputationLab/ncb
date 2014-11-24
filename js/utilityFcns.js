@@ -27,23 +27,25 @@ function getParamIndex(params, value){
 }
 
 function cloneParam(source) {
+  var ret = null;
+  var i = 0;
     if(source.className === "izhikevichParam") {
-        var ret = new izhikevichParam();
+        ret = new izhikevichParam();
         clone(ret, source);
         return ret;
     }
     else if(source.className === "ncsParam") {
-        var ret = new ncsParam();
+        ret = new ncsParam();
         clone(ret, source);
-        for(var i=0; i<source.channel.length; i++) {
+        for(i=0; i<source.channel.length; i++) {
             ret.channel[i] = cloneChan(source.channel[i]);
         }
         return ret;
     }
     else if(source.className === "hodgkinHuxleyParam") {
-        var ret = new hodgkinHuxleyParam();
+        ret = new hodgkinHuxleyParam();
         clone(ret, source);
-        for(var i=0; i<source.channel.length; i++) {
+        for(i=0; i<source.channel.length; i++) {
             ret.channel[i] = cloneChan(source.channel[i]);
         }
         return ret;

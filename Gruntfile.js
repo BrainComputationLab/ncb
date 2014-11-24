@@ -156,7 +156,7 @@ module.exports = function(grunt) {
         ]
       }
     },
-    bake: {	
+    bake: {
       build: {
       	options:{
       		parsePattern:false
@@ -180,6 +180,7 @@ module.exports = function(grunt) {
     },
     jshint: {
     	options: {
+        '-W075': true,
     		force: true
     	},
       all: ['Gruntfile.js', 'js/**.js']
@@ -259,10 +260,10 @@ module.exports = function(grunt) {
     },
     htmllint: {
     	options: {
-    		ignore: ['Attribute “buttons” not allowed on XHTML element “td” at this point.', 
-    		'Table column 2 established by element “td” has no cells beginning in it.', 
-    		'XHTML element “div” not allowed as child of XHTML element “ul” in this context. (Suppressing further errors from this subtree.)', 
-    		'The element “button” must not appear as a descendant of the “a” element.', 
+    		ignore: ['Attribute “buttons” not allowed on XHTML element “td” at this point.',
+    		'Table column 2 established by element “td” has no cells beginning in it.',
+    		'XHTML element “div” not allowed as child of XHTML element “ul” in this context. (Suppressing further errors from this subtree.)',
+    		'The element “button” must not appear as a descendant of the “a” element.',
     		'XHTML element “li” not allowed as child of XHTML element “div” in this context. (Suppressing further errors from this subtree.)',
     		'The “for” attribute of the “label” element must refer to a form control.']
     	},

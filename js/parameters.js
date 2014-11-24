@@ -145,11 +145,11 @@ function baseCellGroup(){
 	this.cellGroups = [];
 }
 
-function cellAlias(name, cellGroup, cellAlias) {
+function cellAlias(name, cellGroup, cAlias) {
 	this.className = "cellAlias";
 	this.name = name;
 	this.cellGroup = cellGroup;
-	this.cellAlias = cellAlias;
+	this.cellAlias = cAlias;
 }
 
 function synapseGroup(name, pre, post, prob, parameters) {
@@ -161,9 +161,9 @@ function synapseGroup(name, pre, post, prob, parameters) {
 	this.parameters = parameters;
 }
 
-function synapseAlias(synapseGroup, synapseAlias) {
+function synapseAlias(synapseGroup, synAlias) {
 	this.synapseGroup = synapseGroup;
-	this.synapseAlias = synapseAlias;
+	this.synapseAlias = synAlias;
 }
 
 function simulationInput(name){
@@ -200,4 +200,3 @@ function inputGroup() {
 function report() {
 
 }
-

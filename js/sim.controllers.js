@@ -42,7 +42,7 @@ ncbApp.controller("SimulationCtrl", function(){
   this.addNewParam = function(){
 
     // if input tab selected add input param
-    if(this.tab == 0){
+    if(this.tab === 0){
       this.simInput.push(new simulationInput("Input" + this.inputNum));
       this.inputNum++;
     }
@@ -56,18 +56,18 @@ ncbApp.controller("SimulationCtrl", function(){
   // remove an input or output from the simulation
   this.removeParam = function(param){
     // remove param if found
-    var myIndex; 
+    var myIndex;
 
     // attempt to remove input
     if(param.className === "simulationInput"){
-      myIndex = getParamIndex(this.simInput, param.name)
+      myIndex = getParamIndex(this.simInput, param.name);
       if(myIndex != -1){
         this.simInput.splice(myIndex, 1);
       }
     }
     // attempt to remove output
     else{
-      myIndex = getParamIndex(this.simOutput, param.name)
+      myIndex = getParamIndex(this.simOutput, param.name);
       if(myIndex != -1){
         this.simOutput.splice(myIndex, 1);
       }

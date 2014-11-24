@@ -1,5 +1,5 @@
 // controller for the model import/export drawer
-ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorService', 'CurrentModelService', 
+ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorService', 'CurrentModelService',
   function($scope, sidePanelService, colorService, currentModelService){
 
   $scope.viewed = sidePanelService.getData();
@@ -42,7 +42,7 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
   $scope.$watch('viewed', function (newValue) {
         if (newValue) sidePanelService.setData(newValue);
     });
-  
+
 }]);
 
 
@@ -108,7 +108,7 @@ ncbApp.controller("SidePanelController", ['$scope', "CurrentModelService", 'Side
         if (newValue){
           // update the data
           $scope.data = newValue;
-        } 
+        }
     });
 }]);
 
@@ -130,7 +130,7 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 
   this.cellGroupName = "";
   this.amount = 0;
-  this.cellGroupType = "cellGroup"
+  this.cellGroupType = "cellGroup";
   this.cellType = "Izhikevich";
   this.channelType = "Voltage Gated Ion Channel";
 
@@ -184,7 +184,7 @@ ncbApp.controller("AddSimInputModalController", ['CurrentModelService', function
 
 
 // left panel controller (model navigation)
-ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
+ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'SidePanelService', 'ColorService',
   function($scope, currentModelService, sidePanelService, colorService){
   $scope.colors = colorService.getColors();
 
@@ -233,7 +233,7 @@ ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'S
         if (newValue){
           // update the data
           $scope.data = newValue;
-        } 
+        }
     });*/
 
 }]);
@@ -262,9 +262,7 @@ ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService',
           // update the data
           $scope.title = newComponent.name;
           $scope.displayed = newComponent;
-        } 
+        }
     });
 
 }]);
-
-
