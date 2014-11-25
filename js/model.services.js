@@ -133,6 +133,9 @@ ncbApp.factory('CurrentModelService', function($rootScope){
 
   currentModelService.removeModel = function(model){
 
+    // gaurantees model is not null
+    this.setDisplayedComponent(model)
+
     // clear displayed parameters data if the model being removed is the one displayed
     if (model.name == currentModelService.displayedComponent.name) {
         currentModelService.displayedComponent = null;
