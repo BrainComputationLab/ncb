@@ -27,21 +27,21 @@ function getParamIndex(params, value){
 }
 
 function deepCopy(p,c) {
- 
-    var c = c||{}; 
 
-    for (var i in p) {  
+    var c2 = c||{};
 
-        if (typeof p[i] === 'object') {     
-            c[i] = (p[i].constructor === Array)?[]:{};     
-            deepCopy(p[i],c[i]);   
-        } 
-        else 
-            c[i] = p[i];
-    } 
+    for (var i in p) {
 
-  return c; 
-} 
+        if (typeof p[i] === 'object') {
+            c2[i] = (p[i].constructor === Array)?[]:{};
+            deepCopy(p[i],c2[i]);
+        }
+        else
+            c2[i] = p[i];
+    }
+
+  return c2;
+}
 
 function cloneParam(source) {
   var ret = null;

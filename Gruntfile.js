@@ -180,8 +180,7 @@ module.exports = function(grunt) {
     },
     jshint: {
     	options: {
-        '-W075': true,
-    		force: true
+        '-W075': true
     	},
       all: ['Gruntfile.js', 'js/**.js']
     },
