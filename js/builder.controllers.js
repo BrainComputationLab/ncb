@@ -158,7 +158,8 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 }]);
 
 // controller for add connection modal
-ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', function($scope, currentModelService){
+ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService', 
+  function($scope, currentModelService, colorService){
 
   $scope.selected1 = null;
   $scope.selected2 = null;
@@ -168,9 +169,20 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
   $scope.components2 = null;
 
   $scope.$on('connectionModal', function(event){
+
+    // sync bread crumbs
     $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
     $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
+
+    // sync components
+    $scope.components1 = currentModelService.getData();
+    $scope.components2 = currentModelService.getData();
   });
+
+  this.styleElement = function(model){
+    // get styled component from color service
+    return colorService.styleElement(model);
+  };
 
 }]);
 

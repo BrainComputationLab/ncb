@@ -27,6 +27,23 @@
                         
                         <div class="panel-body" >
 
+                            <div class="list-group ncb-scrollview">
+                              <li data-ng-repeat="model in components1" class="row list-group-item ncb-cell-list-item ncb-item-center"   data-ng-style="connectionCtrl.styleElement(model)">
+                                  <div class="col-lg-10">
+                                    <div class="row">
+                                      <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}</a>
+                                    </div>
+                                    <div class="row">
+                                      <a data-ng-show="model.classification == 'cells'" class="ncb-cell-type-txt" href="">{{model.parameters.type}}</a>
+                                      <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
+                                      <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-2 ncb-remove-component-btn">
+                                      <div class="row" data-ng-show="model.classification == 'cells'"><button type="button" class="btn btn-xs btn-success pull-right"><span class="glyphicon glyphicon-ok"></span></button></div>
+                                  </div>
+                              </li>
+                            </div>
 
                         </div>
                     </div>
