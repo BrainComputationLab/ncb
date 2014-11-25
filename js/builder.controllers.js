@@ -66,21 +66,52 @@ ncbApp.controller("SidePanelController", ['$scope', "CurrentModelService", 'Side
   };
 
   this.styleHeader = function(){
-    //alert($scope.data.name);
+    var deciVal = null;
+    var color = null;
+
     // style element based off type (cell, cell group, model)
-    if ($scope.data.classification === 'cell'){
+    if ($scope.data.classification === 'cells'){
+      // checks background color to make sure text is always white or black depending on the background color
+      deciVal = parseInt($scope.colors.cell.replace("#", ""), 16);
+      if (deciVal < 8388607.5){
+        color = '#FFFFFF';
+      }
+      else{
+        color = '#000000';
+      }
       return {
-        'background-color': $scope.colors.cell
+                'background-color': $scope.colors.cell,
+                'color': color
             };
     }
     else if ($scope.data.classification === 'cellGroup'){
+      // checks background color to make sure text is always white or black depending on the background color
+      deciVal = parseInt($scope.colors.cellGroup.replace("#", ""), 16);
+      if (deciVal < 8388607.5){
+        color = '#FFFFFF';
+      }
+      else{
+        color = '#000000';
+      }
+
       return {
-        'background-color': $scope.colors.cellGroup
+                'background-color': $scope.colors.cellGroup,
+                'color': color
             };
     }
     else if ($scope.data.classification === 'model'){
+      // checks background color to make sure text is always white or black depending on the background color
+      deciVal = parseInt($scope.colors.model.replace("#", ""), 16);
+      if (deciVal < 8388607.5){
+        color = '#FFFFFF';
+      }
+      else{
+        color = '#000000';
+      }
+
       return {
-                'background-color': $scope.colors.model
+                'background-color': $scope.colors.model,
+                'color': color
             };
     }
   };

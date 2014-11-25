@@ -200,7 +200,7 @@
                             Threshold
                         </h4>
                       </div>
-                    
+
                         <div class="panel-body">
                           <ul class="list-group">
                             <li class="list-group-item">Type: {{data.parameters.threshold.type}}</li>
@@ -210,7 +210,7 @@
                           </ul>
                         </div>
 
-                    
+
                     </div>
                   </div>
                 <!-- End Threshold Parameter for NCS Cell -->
@@ -224,7 +224,7 @@
                             Resting Potential
                         </h4>
                       </div>
-                    
+
                         <div class="panel-body">
                           <ul class="list-group">
                             <li class="list-group-item">Type: {{data.parameters.restingPotential.type}}</li>
@@ -233,7 +233,7 @@
                             <li class="list-group-item">Max Value: {{data.parameters.restingPotential.maxValue}}</li>
                           </ul>
                         </div>
-                    
+
                     </div>
                   </div>
                <!-- End Resting Potential Parameter for NCS Cell -->
@@ -425,7 +425,7 @@
                                             </h4>
                                           </div>
 
-                                          
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.vHalf.type}}</li>
@@ -434,7 +434,7 @@
                                                 <li class="list-group-item">Max Value: {{channel.vHalf.maxValue}}</li>
                                               </ul>
                                             </div>
-                                           
+
                                         </div>
                                       </div>
                                       <!-- EndVoltage Gate Ion vHalf Parameters -->
@@ -731,7 +731,7 @@ tle">
                                       <!-- End Calcium Dependant Channel Tau Scale Parameters -->
 
                                     </div>
-                                  </div> 
+                                  </div>
                                 </div>
                               </div>
                             </div> <!-- End If Statement -->
@@ -747,7 +747,7 @@ tle">
 
                                     <div class="panel-body">
 
-                                    
+
                                       <!-- Start Voltage Gate Conductance Parameters -->
                                       <div class="panel-group">
                                         <div class="panel panel-default">
@@ -804,7 +804,7 @@ tle">
 
 
 
-                
+
             </div>
 
             <div id="hhParam" data-ng-show="data.parameters.type == 'HodgkinHuxley'">
@@ -821,16 +821,16 @@ tle">
                                 Threshold
                           </h4>
                         </div>
-                      
+
                           <div class="panel-body">
                             <ul class="list-group" >
-                              <li class="list-group-item">Type: {{data.parameters.threshold.type}}s</li>
-                              <li class="list-group-item">Value: {{data.parameters.threshold.value}}s</li>
-                              <li class="list-group-item">Min Value: {{data.parameters.threshold.minValue}}s</li>
-                              <li class="list-group-item">Max Value: {{data.parameters.threshold.maxValue}}s</li>
+                              <li class="list-group-item">Type: {{data.parameters.threshold.type}}</li>
+                              <li class="list-group-item">Value: {{data.parameters.threshold.value}}</li>
+                              <li class="list-group-item">Min Value: {{data.parameters.threshold.minValue}}</li>
+                              <li class="list-group-item">Max Value: {{data.parameters.threshold.maxValue}}</li>
                             </ul>
                           </div>
-                      
+
                       </div>
                     </div>
                      <!-- End Threshold Parameter for Hodgkin Huxley Cell -->
@@ -843,7 +843,7 @@ tle">
                                   Resting Potential
                             </h4>
                           </div>
-                        
+
                             <div class="panel-body">
                               <ul class="list-group" >
                                 <li class="list-group-item">Type: {{data.parameters.restingPotential.type}}</li>
@@ -852,7 +852,7 @@ tle">
                                 <li class="list-group-item">Max Value: {{data.parameters.restingPotential.maxValue}}</li>
                               </ul>
                             </div>
-                        
+
                         </div>
                       </div>
                        <!-- End Resting Potential Parameter for Hodgkin Huxley Cell -->
@@ -865,7 +865,7 @@ tle">
                                 Capacitance
                           </h4>
                         </div>
-                      
+
                           <div class="panel-body">
                             <ul class="list-group" >
                               <li class="list-group-item">Type: {{data.parameters.capacitance.type}}</li>
@@ -874,7 +874,7 @@ tle">
                               <li class="list-group-item">Max Value: {{data.parameters.capacitance.maxValue}}</li>
                             </ul>
                           </div>
-                      
+
                       </div>
                     </div>
                      <!-- End Calcium Parameter for Hodgkin Huxley Cell -->
@@ -887,7 +887,7 @@ tle">
                               Channels
                         </h4>
                       </div>
-                    
+
                         <div class="panel-body">
                           <ul class="list-group" data-data-ng-repeat="channel in data.parameters.channel">
                             <div  data-ng-if="channel.name == 'Voltage Gated Ion Channel'">
@@ -909,7 +909,7 @@ tle">
                                                 vHalf
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.vHalf.type}}</li>
@@ -930,7 +930,7 @@ tle">
                                                 r
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.vHalf.type}}</li>
@@ -951,7 +951,7 @@ tle">
                                                 Activation Slope
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.activationSlope.type}}</li>
@@ -971,7 +971,7 @@ tle">
                                                 Deactivation Slope
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.deactivationSlope.type}}</li>
@@ -991,7 +991,7 @@ tle">
                                                 Equilibrium Slope
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.equilibriumSlope.type}}</li>
@@ -1012,7 +1012,7 @@ tle">
                                                 Conductance
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group col-lg-6" >
                                                 <li class="list-group-item">Type: {{channel.conductance.type}}</li>
@@ -1033,7 +1033,7 @@ tle">
                                                 Reversal Potential
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
@@ -1054,7 +1054,7 @@ tle">
                                                 m_Initial
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.mInitial.type}}</li>
@@ -1091,7 +1091,7 @@ tle">
                                                 m_Initial
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.mInitial.type}}</li>
@@ -1112,7 +1112,7 @@ tle">
                                                 Reversal Potential
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
@@ -1133,7 +1133,7 @@ tle">
                                                 Backwards Rate
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.backwardsRate.type}}</li>
@@ -1154,7 +1154,7 @@ tle">
                                                 Forward Scale
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.forwardScale.type}}</li>
@@ -1175,7 +1175,7 @@ tle">
                                                 Forward Exponent
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.forwardExponent.type}}</li>
@@ -1196,7 +1196,7 @@ tle">
                                                 Tau Scale
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.tauScale.type}}</li>
@@ -1225,7 +1225,7 @@ tle">
 
                                     <div class="panel-body">
 
-                                      
+
                                       <!-- Start Voltage Gate Conductance Parameters -->
                                       <div class="panel-group">
                                         <div class="panel panel-default">
@@ -1234,7 +1234,7 @@ tle">
                                                 Conductance
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.conductance.type}}</li>
@@ -1255,7 +1255,7 @@ tle">
                                                 Reversal Potential
                                             </h4>
                                           </div>
-                    
+
                                             <div class="panel-body">
                                               <ul class="list-group" >
                                                 <li class="list-group-item">Type: {{channel.reversalPotential.type}}</li>
@@ -1275,7 +1275,7 @@ tle">
 
                           </ul>
                         </div>
-                    
+
                     </div>
                   </div>
                    <!-- End Calcium Spike Increment Parameter for Hodgkin Huxley Cell -->
@@ -1293,12 +1293,12 @@ tle">
         	</div>
 		</div>
 		<ul>
-						
+
 		</ul>
 	</div>
 	<!-- end filtering -->
-	
+
 </div>
 <!-- end current model list -->
-	
+
 <!-- SIDE PANEL END -->
