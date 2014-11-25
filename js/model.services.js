@@ -120,15 +120,22 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   };
 
   currentModelService.addToModel = function(model){
+    // create a copy of the model to be added
+    var newComponent = deepCopy(model);
+
     // add component if not already in the current model
     var index = getCellIndex(this.selected.cellGroups, model.name);
 
     if(this.selected.cellGroups.length === 0 || index === -1){
-      this.selected.cellGroups.push(model);
+      this.selected.cellGroups.push(newComponent);
     }
   };
 
   currentModelService.removeModel = function(model){
+    if (model.name == currentModelService.displayedComponent.name) {
+alert("hi")
+      currentModelService.displayedComponent.clear();
+    };
     // remove model if found
     var myIndex = getCellIndex(this.selected.cellGroups, model.name);
     if(myIndex != -1){
