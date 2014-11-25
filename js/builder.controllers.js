@@ -263,6 +263,11 @@ ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService',
           $scope.title = newComponent.name;
           $scope.displayed = newComponent;
         }
+        else{
+          // clear data being displayed
+          $scope.title = "";
+          $scope.displayed = null;
+        }
     });
 
 }]);

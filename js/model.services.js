@@ -132,10 +132,12 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   };
 
   currentModelService.removeModel = function(model){
+
+    // clear displayed parameters data if the model being removed is the one displayed
     if (model.name == currentModelService.displayedComponent.name) {
-alert("hi")
-      currentModelService.displayedComponent.clear();
+        currentModelService.displayedComponent = null;
     };
+
     // remove model if found
     var myIndex = getCellIndex(this.selected.cellGroups, model.name);
     if(myIndex != -1){
