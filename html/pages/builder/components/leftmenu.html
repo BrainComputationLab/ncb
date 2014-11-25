@@ -41,7 +41,21 @@
     </div>
 
     <span class="label label-default" data-ng-show="modelCtrl.getComponents().length > 0" style="display:block;">Model Connections</span>
+
     <div class="list-group" id="currentModelConnections">
+      <li data-ng-repeat="synapse in modelCtrl.getSynapses()" class="row list-group-item ncb-cell-list-item ncb-item-center" data-ng-click="modelCtrl.displayParameters(synapse)">
+          <div class="col-lg-10">
+            <div class="row">
+              <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{synapse.pre}}</a>
+            </div>
+            <div class="row">
+              <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{synapse.post}}</a>
+            </div>
+          </div>
+          <div class="col-lg-2 ncb-remove-component-btn">
+              <div class="row"><button type="button" data-ng-click="modelCtrl.removeSynapse(synapse)" class="btn btn-xs btn-danger pull-right">x</button></div>
+          </div>
+      </li>
     </div>
   </div>
 </div>

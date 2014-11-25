@@ -269,6 +269,54 @@
 
             </div>
 
+
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'synapseGroup'">
+                <div class="panel-heading">
+                    <h4 class="panel-title" >
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse0" style="display:block">
+                            Synapse Parameters
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse0" class="panel-collapse collapse in">
+                  <table class="table table-bordered table-hover table-condensed ncb-table">
+                    <tr>
+                      <td colspan="2"><span>Presynaptic Name:</span></td>
+                      <td colspan="4"><span>{{displayed.pre}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Postsynapic Name:</span></td>
+                      <td colspan="4"><span>{{displayed.post}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Probability:</span></td>
+                      <td colspan="4" data-editable-text="displayed.prob" buttons="no"><span>{{displayed.prob}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Parameter Name:</span></td>
+                      <td colspan="1"><span>Type:</span></td>
+                      <td colspan="1"><span>Value:</span></td>
+                      <td colspan="1"><span>Min:</span></td>
+                      <td colspan="1"><span>Max:</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Delay:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.delay.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.delay.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.value" buttons="no"><span>{{displayed.parameters.delay.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.minValue" buttons="no"><span>{{displayed.parameters.delay.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.maxValue" buttons="no"><span>{{displayed.parameters.delay.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Current:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.current.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.current.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.current.value" buttons="no"><span>{{displayed.parameters.current.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.current.minValue" buttons="no"><span>{{displayed.parameters.current.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.current.maxValue" buttons="no"><span>{{displayed.parameters.current.maxValue}}</span></td>
+                    </tr>
+                  </table>
+                </div>
+            </div>
+
         </div>    
     </div>
 </div>

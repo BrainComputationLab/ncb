@@ -206,5 +206,21 @@ ncbApp.factory('CurrentModelService', function($rootScope){
     return this.displayedComponent;
   };
 
+  currentModelService.addSynapse = function(synapse){
+    this.currentModel.synapses.push(synapse);
+  };
+
+  currentModelService.getSynapses = function(){
+    return this.currentModel.synapses;
+  }
+
+  currentModelService.removeSynapse = function(synapse){
+    // remove model if found
+    var myIndex = getSynapseIndex(this.currentModel.synapses, synapse.pre, synapse.post)
+    if(myIndex != -1){
+      this.currentModel.synapses.splice(myIndex, 1);
+    }
+  };
+
   return currentModelService;
 });

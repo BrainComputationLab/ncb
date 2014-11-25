@@ -18,6 +18,14 @@ function getCellIndex(component, value){
     return -1;
 }
 
+function getSynapseIndex(component, pre, post){
+    for(var i=0; i<component.length; i++){
+        if(component[i].pre === pre && component[i].post === post)
+            return i;
+    }
+    return -1;
+}
+
 function getParamIndex(params, value){
     for(var i=0; i<params.length; i++){
         if(params[i].name === value)

@@ -161,23 +161,122 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService', 
   function($scope, currentModelService, colorService){
 
+  this.synapseCount = 0;
   $scope.selected1 = null;
   $scope.selected2 = null;
   $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
   $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
-  $scope.components1 = null;
-  $scope.components2 = null;
+  $scope.component1 = null;
+  $scope.component2 = null;
 
+  // function to sync the modal's data
   $scope.$on('connectionModal', function(event){
+
+    // reset selected
+    $scope.selected1 = null;
+    $scope.selected2 = null;
 
     // sync bread crumbs
     $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
     $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
 
-    // sync components
-    $scope.components1 = currentModelService.getData();
-    $scope.components2 = currentModelService.getData();
+    // sync component
+    $scope.component1 = currentModelService.getParent();
+    $scope.component2 = currentModelService.getParent();
   });
+
+  // functions to go down a level in the tree
+  this.setComponent1 = function(component, index){
+    if(component.classification == "cellGroup"){
+      // set current component and create breadcrumb for it
+      $scope.component1 = component;
+      $scope.breadCrumbs1.push({name: component.name, index: index});
+    }
+  };
+
+  this.setComponent2 = function(component, index){
+    if(component.classification == "cellGroup"){
+      // set current component and create breadcrumb for it
+      $scope.component2 = component;
+      $scope.breadCrumbs2.push({name: component.name, index: index});
+    }
+  };
+
+  // functions to go to breadcrumb
+  this.goToBreadCrumb1 = function(index){
+
+    // go home if bread crumb index is 0
+    if(index === 0){
+      $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
+      $scope.component1 = currentModelService.getParent();
+    }
+
+    // if not home loop through breadcumbs to reach selected index
+    else if(index < $scope.breadCrumbs1.length){
+
+      // go down the first layer (starts at 1 : home has a useless index)
+      $scope.component1 = currentModelService.getParent().cellGroups[$scope.breadCrumbs1[1].index];
+
+      // go down each following layer index you hit the bread crumb index
+      var setIndex;
+
+      for(var i=2; i<=index; i++){
+
+        // go down to the next level (component is always an array of cell groups / component[i] is a cellGroup class)
+        setIndex = $scope.breadCrumbs1[i].index;
+        $scope.component1 = $scope.component1.cellGroups[setIndex];
+      }
+
+      // shorten breadcrumbs to selected index
+      $scope.breadCrumbs1.splice(index+1);
+    }
+  };
+
+  // functions to go to breadcrumb
+  this.goToBreadCrumb2 = function(index){
+
+    // go home if bread crumb index is 0
+    if(index === 0){
+      $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
+      $scope.component2 = currentModelService.getParent();
+    }
+
+    // if not home loop through breadcumbs to reach selected index
+    else if(index < $scope.breadCrumbs2.length){
+
+      // go down the first layer (starts at 1 : home has a useless index)
+      $scope.component2 = currentModelService.getParent().cellGroups[$scope.breadCrumbs2[1].index];
+
+      // go down each following layer index you hit the bread crumb index
+      var setIndex;
+
+      for(var i=2; i<=index; i++){
+
+        // go down to the next level (component is always an array of cell groups / component[i] is a cellGroup class)
+        setIndex = $scope.breadCrumbs2[i].index;
+        $scope.component2 = $scope.component2.cellGroups[setIndex];
+      }
+
+      // shorten breadcrumbs to selected index
+      $scope.breadCrumbs2.splice(index+1);
+    }
+  };
+
+  // functions to select component
+  this.setSelected1 = function(component){
+    $scope.selected1 = component;
+  };
+
+  this.setSelected2 = function(component){
+    $scope.selected2 = component;
+  };
+
+  // function to add connection to current model
+  this.addConnectionToModel = function(){
+    synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, .5, new flatSynapse());
+
+    currentModelService.addSynapse(synapse);
+  };
 
   this.styleElement = function(model){
     // get styled component from color service
@@ -231,6 +330,10 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
     currentModelService.removeModel(model);
   };
 
+  this.removeSynapse = function(synapse){
+    currentModelService.removeSynapse(synapse);
+  };
+
   this.styleElement = function(model){
     // get styled component from color service
     return colorService.styleElement(model);
@@ -252,6 +355,10 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
 
   this.getComponents = function(){
     return currentModelService.getData();
+  };
+
+  this.getSynapses = function(){
+    return currentModelService.getSynapses();
   };
 
   this.updateConnectionModel = function(){

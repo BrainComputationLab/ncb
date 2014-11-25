@@ -153,9 +153,8 @@ function cellAlias(name, cellGroup, cellAlias) {
 	this.cellAlias = cellAlias;
 }
 
-function synapseGroup(name, pre, post, prob, parameters) {
-	this.className = "synapseGroup";
-	this.name = name;
+function synapseGroup(pre, post, prob, parameters) {
+	this.classification = "synapseGroup";
 	this.pre = pre;
 	this.post = post;
 	this.prob = prob;
