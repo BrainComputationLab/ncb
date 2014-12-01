@@ -164,25 +164,25 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
   this.synapseCount = 0;
   $scope.selected1 = null;
   $scope.selected2 = null;
-  $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
-  $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
+  $scope.breadCrumbs1 = currentModelService.getBreadCrumbs();
+  $scope.breadCrumbs2 = currentModelService.getBreadCrumbs();
   $scope.component1 = null;
   $scope.component2 = null;
 
   // function to sync the modal's data
-  $scope.$on('connectionModal', function(event){
+  $scope.$on('connectionModal', function(event, currentLocation, currentComponent){
 
     // reset selected
     $scope.selected1 = null;
     $scope.selected2 = null;
 
     // sync bread crumbs
-    $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
-    $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
+    $scope.breadCrumbs1 = currentLocation;
+    $scope.breadCrumbs2 = currentLocation;
 
     // sync component
-    $scope.component1 = currentModelService.getParent();
-    $scope.component2 = currentModelService.getParent();
+    $scope.component1 = currentComponent;
+    $scope.component2 = currentComponent;
   });
 
   // functions to go down a level in the tree
@@ -207,15 +207,15 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 
     // go home if bread crumb index is 0
     if(index === 0){
-      $scope.breadCrumbs1 = [{name: currentModelService.getParent().name, index: 0}];
-      $scope.component1 = currentModelService.getParent();
+      $scope.breadCrumbs1 = [{name: "Home", index: 0}];
+      $scope.component1 = currentModelService.getCurrentModel().baseCellGroups;
     }
 
     // if not home loop through breadcumbs to reach selected index
     else if(index < $scope.breadCrumbs1.length){
 
       // go down the first layer (starts at 1 : home has a useless index)
-      $scope.component1 = currentModelService.getParent().cellGroups[$scope.breadCrumbs1[1].index];
+      $scope.component1 = currentModelService.getCurrentModel().baseCellGroups.cellGroups[$scope.breadCrumbs1[1].index];
 
       // go down each following layer index you hit the bread crumb index
       var setIndex;
@@ -237,15 +237,15 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 
     // go home if bread crumb index is 0
     if(index === 0){
-      $scope.breadCrumbs2 = [{name: currentModelService.getParent().name, index: 0}];
-      $scope.component2 = currentModelService.getParent();
+      $scope.breadCrumbs2 = [{name: "Home", index: 0}];
+      $scope.component2 = currentModelService.getCurrentModel().baseCellGroups;
     }
 
     // if not home loop through breadcumbs to reach selected index
     else if(index < $scope.breadCrumbs2.length){
 
       // go down the first layer (starts at 1 : home has a useless index)
-      $scope.component2 = currentModelService.getParent().cellGroups[$scope.breadCrumbs2[1].index];
+      $scope.component2 = currentModelService.getCurrentModel().baseCellGroups.cellGroups[$scope.breadCrumbs2[1].index];
 
       // go down each following layer index you hit the bread crumb index
       var setIndex;
@@ -273,7 +273,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 
   // function to add connection to current model
   this.addConnectionToModel = function(){
-    synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, .5, new flatSynapse());
+    synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, .5, new ncsSynapse());
 
     currentModelService.addSynapse(synapse);
   };
@@ -362,7 +362,7 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
   };
 
   this.updateConnectionModel = function(){
-    $rootScope.$broadcast('connectionModal');
+    $rootScope.$broadcast('connectionModal', currentModelService.getBreadCrumbs(), currentModelService.getParent());
   };
 
   // set the cell group or cell to display in the parameters section
@@ -391,20 +391,30 @@ ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService',
     {value: "normal", text: "normal"}
   ];
 
+  $scope.synapseTypes = [
+    {value: "Flat", text: "Flat"},
+    {value: "NCS", text: "NCS"}
+  ];
+
   $scope.showType = function() {
     var selected = $filter('filter')($scope.statuses, {value: $scope.displayed.a.type});
     return ($scope.displayed.a.type && selected.length) ? selected[0].text : 'Not set';
   };
 
   // update component show if changed
-    $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
+  $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
 
-        if (newComponent){
-          // update the data
-          $scope.title = newComponent.name;
-          $scope.displayed = newComponent;
-        } 
-    });
+      if (newComponent){
+        // update the data
+        $scope.title = newComponent.name;
+        $scope.displayed = newComponent;
+      } 
+  });
+
+  // edit groups in connection
+  $scope.editConnectionGroups = function(){
+    $('#addConnectionModal').modal("show");
+  };
 
 }]);
 
