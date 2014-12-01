@@ -13,7 +13,7 @@
     <div class="panel-body">
         <div class="panel-group" id="accordion">
 
-            <div class="panel panel-default" data-ng-show="displayed.classification == 'cellGroup'">
+            <div class="panel panel-default ncb-params-panel" data-ng-show="displayed.classification == 'cellGroup'">
                 <div class="panel-heading">
                     <h4 class="panel-title" >
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse0" style="display:block">
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-default" data-ng-show="displayed.classification == 'cells'">
+            <div class="panel panel-default ncb-params-panel" data-ng-show="displayed.classification == 'cells'">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" style="display:block">
@@ -265,6 +265,195 @@
                 </div>
 
 
+            </div>
+
+
+            <div class="panel panel-default ncb-params-panel" data-ng-show="displayed.classification == 'synapseGroup'">
+                <div class="panel-heading">
+                    <h4 class="panel-title" >
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" style="display:block">
+                            Synapse Parameters
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse in">
+
+                  <!-- Start Flat Synapse -->
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name == 'flatSynapse'">
+                    <tr>
+                      <td colspan="2"><span>Presynaptic Name:</span></td>
+                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Postsynapic Name:</span></td>
+                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Synapse Type:</span></td>
+                      <td colspan="4" data-editable-select="displayed.parameters.delay.type" data-e-ng-options="s.value as s.text for s in synapseTypes" buttons="no"><span>{{displayed.parameters.name == 'flatSynapse' ? 'Flat' : 'NCS'}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Probability:</span></td>
+                      <td colspan="4" data-editable-text="displayed.prob" buttons="no"><span>{{displayed.prob}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Parameter Name:</span></td>
+                      <td colspan="1"><span>Type:</span></td>
+                      <td colspan="1"><span>Value:</span></td>
+                      <td colspan="1"><span>Min:</span></td>
+                      <td colspan="1"><span>Max:</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Delay:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.delay.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.delay.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.value" buttons="no"><span>{{displayed.parameters.delay.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.minValue" buttons="no"><span>{{displayed.parameters.delay.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.maxValue" buttons="no"><span>{{displayed.parameters.delay.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Current:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.current.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.current.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.current.value" buttons="no"><span>{{displayed.parameters.current.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.current.minValue" buttons="no"><span>{{displayed.parameters.current.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.current.maxValue" buttons="no"><span>{{displayed.parameters.current.maxValue}}</span></td>
+                    </tr>
+                  </table>
+                  <!-- End Flat Synapse -->
+
+                  <!-- Start NCS Synapse -->
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name == 'ncsSynapse'">
+                    <tr>
+                      <td colspan="2"><span>Presynaptic Name:</span></td>
+                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Postsynapic Name:</span></td>
+                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Synapse Type:</span></td>
+                      <td colspan="4" data-editable-select="displayed.parameters.delay.type" data-e-ng-options="s.value as s.text for s in synapseTypes" buttons="no"><span>{{displayed.parameters.name == 'flatSynapse' ? 'Flat' : 'NCS'}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Probability:</span></td>
+                      <td colspan="4" data-editable-text="displayed.prob" buttons="no"><span>{{displayed.prob}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Parameter Name:</span></td>
+                      <td colspan="1"><span>Type:</span></td>
+                      <td colspan="1"><span>Value:</span></td>
+                      <td colspan="1"><span>Min:</span></td>
+                      <td colspan="1"><span>Max:</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>utilization:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.utilization.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.utilization.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.utilization.value" buttons="no"><span>{{displayed.parameters.utilization.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.utilization.minValue" buttons="no"><span>{{displayed.parameters.utilization.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.utilization.maxValue" buttons="no"><span>{{displayed.parameters.utilization.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>redistribution:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.redistribution.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.redistribution.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.redistribution.value" buttons="no"><span>{{displayed.parameters.redistribution.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.redistribution.minValue" buttons="no"><span>{{displayed.parameters.redistribution.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.redistribution.maxValue" buttons="no"><span>{{displayed.parameters.redistribution.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>lastPrefireTime:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.lastPrefireTime.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.lastPrefireTime.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.lastPrefireTime.value" buttons="no"><span>{{displayed.parameters.lastPrefireTime.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.lastPrefireTime.minValue" buttons="no"><span>{{displayed.parameters.lastPrefireTime.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.lastPrefireTime.maxValue" buttons="no"><span>{{displayed.parameters.lastPrefireTime.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>lastPostfireTime:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.lastPostfireTime.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.lastPostfireTime.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.lastPostfireTime.value" buttons="no"><span>{{displayed.parameters.lastPostfireTime.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.lastPostfireTime.minValue" buttons="no"><span>{{displayed.parameters.lastPostfireTime.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.lastPostfireTime.maxValue" buttons="no"><span>{{displayed.parameters.lastPostfireTime.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>tauFacilitation:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.tauFacilitation.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.tauFacilitation.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauFacilitation.value" buttons="no"><span>{{displayed.parameters.tauFacilitation.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauFacilitation.minValue" buttons="no"><span>{{displayed.parameters.tauFacilitation.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauFacilitation.maxValue" buttons="no"><span>{{displayed.parameters.tauFacilitation.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>tauDepression:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.tauDepression.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.tauDepression.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauDepression.value" buttons="no"><span>{{displayed.parameters.tauDepression.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauDepression.minValue" buttons="no"><span>{{displayed.parameters.tauDepression.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauDepression.maxValue" buttons="no"><span>{{displayed.parameters.tauDepression.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>tauLtp:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.tauLtp.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.tauLtp.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauLtp.value" buttons="no"><span>{{displayed.parameters.tauLtp.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauLtp.minValue" buttons="no"><span>{{displayed.parameters.tauLtp.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauLtp.maxValue" buttons="no"><span>{{displayed.parameters.tauLtp.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>tauLtd:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.tauLtd.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.tauLtd.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauLtd.value" buttons="no"><span>{{displayed.parameters.tauLtd.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauLtd.minValue" buttons="no"><span>{{displayed.parameters.tauLtd.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauLtd.maxValue" buttons="no"><span>{{displayed.parameters.tauLtd.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>aLtpMinimum:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.aLtpMinimum.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.aLtpMinimum.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.aLtpMinimum.value" buttons="no"><span>{{displayed.parameters.aLtpMinimum.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.aLtpMinimum.minValue" buttons="no"><span>{{displayed.parameters.aLtpMinimum.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.aLtpMinimum.maxValue" buttons="no"><span>{{displayed.parameters.aLtpMinimum.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>aLtdMinimum:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.aLtdMinimum.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.aLtdMinimum.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.aLtdMinimum.value" buttons="no"><span>{{displayed.parameters.aLtdMinimum.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.aLtdMinimum.minValue" buttons="no"><span>{{displayed.parameters.aLtdMinimum.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.aLtdMinimum.maxValue" buttons="no"><span>{{displayed.parameters.aLtdMinimum.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>maxConductance:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.maxConductance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.maxConductance.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.maxConductance.value" buttons="no"><span>{{displayed.parameters.maxConductance.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.maxConductance.minValue" buttons="no"><span>{{displayed.parameters.maxConductance.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.maxConductance.maxValue" buttons="no"><span>{{displayed.parameters.maxConductance.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>reversalPotential:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.reversalPotential.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.reversalPotential.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.reversalPotential.value" buttons="no"><span>{{displayed.parameters.reversalPotential.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.reversalPotential.minValue" buttons="no"><span>{{displayed.parameters.reversalPotential.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.reversalPotential.maxValue" buttons="no"><span>{{displayed.parameters.reversalPotential.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>tauPostSynapticConductance:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.tauPostSynapticConductance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.tauPostSynapticConductance.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauPostSynapticConductance.value" buttons="no"><span>{{displayed.parameters.tauPostSynapticConductance.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauPostSynapticConductance.minValue" buttons="no"><span>{{displayed.parameters.tauPostSynapticConductance.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.tauPostSynapticConductance.maxValue" buttons="no"><span>{{displayed.parameters.tauPostSynapticConductance.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>psgWaveformDuration:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.psgWaveformDuration.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.psgWaveformDuration.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.psgWaveformDuration.value" buttons="no"><span>{{displayed.parameters.psgWaveformDuration.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.psgWaveformDuration.minValue" buttons="no"><span>{{displayed.parameters.psgWaveformDuration.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.psgWaveformDuration.maxValue" buttons="no"><span>{{displayed.parameters.psgWaveformDuration.maxValue}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>delay:</span></td>
+                      <td colspan="1" data-editable-select="displayed.parameters.delay.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.delay.type}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.value" buttons="no"><span>{{displayed.parameters.delay.value}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.minValue" buttons="no"><span>{{displayed.parameters.delay.minValue}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.parameters.delay.maxValue" buttons="no"><span>{{displayed.parameters.delay.maxValue}}</span></td>
+                    </tr>
+                  </table>
+                  <!-- End NCS Synapse -->
+
+                </div>
             </div>
 
         </div>

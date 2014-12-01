@@ -156,7 +156,7 @@ ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', functio
   };
 }]);
 
-// controller for add cell modal
+// controller for add cell group modal
 ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', function(currentModelService){
 
   this.cellGroupName = "";
@@ -188,6 +188,135 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 
 }]);
 
+// controller for add connection modal
+ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService', 
+  function($scope, currentModelService, colorService){
+
+  this.synapseCount = 0;
+  $scope.selected1 = null;
+  $scope.selected2 = null;
+  $scope.breadCrumbs1 = currentModelService.getBreadCrumbs();
+  $scope.breadCrumbs2 = currentModelService.getBreadCrumbs();
+  $scope.component1 = null;
+  $scope.component2 = null;
+
+  // function to sync the modal's data
+  $scope.$on('connectionModal', function(event, currentLocation, currentComponent){
+
+    // reset selected
+    $scope.selected1 = null;
+    $scope.selected2 = null;
+
+    // sync bread crumbs
+    $scope.breadCrumbs1 = currentLocation;
+    $scope.breadCrumbs2 = currentLocation;
+
+    // sync component
+    $scope.component1 = currentComponent;
+    $scope.component2 = currentComponent;
+  });
+
+  // functions to go down a level in the tree
+  this.setComponent1 = function(component, index){
+    if(component.classification == "cellGroup"){
+      // set current component and create breadcrumb for it
+      $scope.component1 = component;
+      $scope.breadCrumbs1.push({name: component.name, index: index});
+    }
+  };
+
+  this.setComponent2 = function(component, index){
+    if(component.classification == "cellGroup"){
+      // set current component and create breadcrumb for it
+      $scope.component2 = component;
+      $scope.breadCrumbs2.push({name: component.name, index: index});
+    }
+  };
+
+  // functions to go to breadcrumb
+  this.goToBreadCrumb1 = function(index){
+
+    // go home if bread crumb index is 0
+    if(index === 0){
+      $scope.breadCrumbs1 = [{name: "Home", index: 0}];
+      $scope.component1 = currentModelService.getCurrentModel().baseCellGroups;
+    }
+
+    // if not home loop through breadcumbs to reach selected index
+    else if(index < $scope.breadCrumbs1.length){
+
+      // go down the first layer (starts at 1 : home has a useless index)
+      $scope.component1 = currentModelService.getCurrentModel().baseCellGroups.cellGroups[$scope.breadCrumbs1[1].index];
+
+      // go down each following layer index you hit the bread crumb index
+      var setIndex;
+
+      for(var i=2; i<=index; i++){
+
+        // go down to the next level (component is always an array of cell groups / component[i] is a cellGroup class)
+        setIndex = $scope.breadCrumbs1[i].index;
+        $scope.component1 = $scope.component1.cellGroups[setIndex];
+      }
+
+      // shorten breadcrumbs to selected index
+      $scope.breadCrumbs1.splice(index+1);
+    }
+  };
+
+  // functions to go to breadcrumb
+  this.goToBreadCrumb2 = function(index){
+
+    // go home if bread crumb index is 0
+    if(index === 0){
+      $scope.breadCrumbs2 = [{name: "Home", index: 0}];
+      $scope.component2 = currentModelService.getCurrentModel().baseCellGroups;
+    }
+
+    // if not home loop through breadcumbs to reach selected index
+    else if(index < $scope.breadCrumbs2.length){
+
+      // go down the first layer (starts at 1 : home has a useless index)
+      $scope.component2 = currentModelService.getCurrentModel().baseCellGroups.cellGroups[$scope.breadCrumbs2[1].index];
+
+      // go down each following layer index you hit the bread crumb index
+      var setIndex;
+
+      for(var i=2; i<=index; i++){
+
+        // go down to the next level (component is always an array of cell groups / component[i] is a cellGroup class)
+        setIndex = $scope.breadCrumbs2[i].index;
+        $scope.component2 = $scope.component2.cellGroups[setIndex];
+      }
+
+      // shorten breadcrumbs to selected index
+      $scope.breadCrumbs2.splice(index+1);
+    }
+  };
+
+  // functions to select component
+  this.setSelected1 = function(component){
+    $scope.selected1 = component;
+  };
+
+  this.setSelected2 = function(component){
+    $scope.selected2 = component;
+  };
+
+  // function to add connection to current model
+  this.addConnectionToModel = function(){
+    synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, .5, new ncsSynapse());
+
+    currentModelService.addSynapse(synapse);
+  };
+
+  this.styleElement = function(model){
+    // get styled component from color service
+    return colorService.styleElement(model);
+  };
+
+}]);
+
+
 // controller for add cell modal
 ncbApp.controller("AddSimInputModalController", ['CurrentModelService', function(currentModelService){
 
@@ -215,8 +344,8 @@ ncbApp.controller("AddSimInputModalController", ['CurrentModelService', function
 
 
 // left panel controller (model navigation)
-ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'SidePanelService', 'ColorService',
-  function($scope, currentModelService, sidePanelService, colorService){
+ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
+  function($rootScope, $scope, currentModelService, sidePanelService, colorService){
   $scope.colors = colorService.getColors();
 
   // get visibility from side panel service
@@ -230,6 +359,10 @@ ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'S
 
   this.removeModel = function(model){
     currentModelService.removeModel(model);
+  };
+
+  this.removeSynapse = function(synapse){
+    currentModelService.removeSynapse(synapse);
   };
 
   this.styleElement = function(model){
@@ -253,6 +386,14 @@ ncbApp.controller("ModelBuilderController", ['$scope', 'CurrentModelService', 'S
 
   this.getComponents = function(){
     return currentModelService.getData();
+  };
+
+  this.getSynapses = function(){
+    return currentModelService.getSynapses();
+  };
+
+  this.updateConnectionModel = function(){
+    $rootScope.$broadcast('connectionModal', currentModelService.getBreadCrumbs(), currentModelService.getParent());
   };
 
   // set the cell group or cell to display in the parameters section
@@ -281,24 +422,34 @@ ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService',
     {value: "normal", text: "normal"}
   ];
 
+  $scope.synapseTypes = [
+    {value: "Flat", text: "Flat"},
+    {value: "NCS", text: "NCS"}
+  ];
+
   $scope.showType = function() {
     var selected = $filter('filter')($scope.statuses, {value: $scope.displayed.a.type});
     return ($scope.displayed.a.type && selected.length) ? selected[0].text : 'Not set';
   };
 
   // update component show if changed
-    $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
+  $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
 
-        if (newComponent){
-          // update the data
-          $scope.title = newComponent.name;
-          $scope.displayed = newComponent;
+      if (newComponent){
+        // update the data
+        $scope.title = newComponent.name;
+        $scope.displayed = newComponent;
         }
         else{
           // clear data being displayed
           $scope.title = "";
           $scope.displayed = null;
         }
-    });
+  });
+
+  // edit groups in connection
+  $scope.editConnectionGroups = function(){
+    $('#addConnectionModal').modal("show");
+  };
 
 }]);
