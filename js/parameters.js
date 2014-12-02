@@ -153,10 +153,12 @@ function cellAlias(name, cellGroup, cAlias) {
 	this.cellAlias = cAlias;
 }
 
-function synapseGroup(pre, post, prob, parameters) {
+function synapseGroup(pre, post, prePath, postPath, prob, parameters) {
 	this.classification = "synapseGroup";
 	this.pre = pre;
 	this.post = post;
+	this.prePath = prePath;
+	this.postPath = postPath;
 	this.prob = prob;
 	this.parameters = parameters;
 }

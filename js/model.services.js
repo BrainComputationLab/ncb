@@ -132,19 +132,28 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   };
 
   currentModelService.removeModel = function(model){
-
     // gaurantees model is not null
-    this.setDisplayedComponent(model);
+    if(this.displayedComponent === null)
+      this.setDisplayedComponent(model);
 
     // clear displayed parameters data if the model being removed is the one displayed
-    if (model.name == currentModelService.displayedComponent.name) {
-        currentModelService.displayedComponent = null;
+    if (model.name == this.displayedComponent.name) {
+        this.displayedComponent = null;
     }
 
     // remove model if found
     var myIndex = getCellIndex(this.selected.cellGroups, model.name);
     if(myIndex != -1){
       this.selected.cellGroups.splice(myIndex, 1);
+
+      // remove any connections the model was connected to
+      if(model.classification === "cells"){
+        for(i=this.currentModel.synapses.length-1; i>=0; i--){
+          if(this.currentModel.synapses[i].pre === model.name || this.currentModel.synapses[i].post === model.name){
+            this.currentModel.synapses.splice(i, 1);
+          }
+        }
+      }
     }
   };
 
@@ -227,6 +236,16 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   };
 
   currentModelService.removeSynapse = function(synapse){
+    // gaurantees model is not null
+    if(this.displayedComponent === null)
+      this.setDisplayedComponent(synapse);
+
+    // clear displayed parameters data if the model being removed is the one displayed
+    if (this.displayedComponent.classification === 'synapseGroup' && synapse.pre === this.displayedComponent.pre &&
+      synapse.post === this.displayedComponent.post) {
+        this.displayedComponent = null;
+    }    
+
     // remove model if found
     var myIndex = getSynapseIndex(this.currentModel.synapses, synapse.pre, synapse.post);
     if(myIndex != -1){

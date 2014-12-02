@@ -27,7 +27,7 @@
           <span class="label label-default" style="display:block;">Components</span>
       </div>
       <div class="col-lg-12" id="subComponents" data-ng-show="data.classification != 'cells' && data.cellGroups.length > 0">
-				<a class="list-group-item ncb-cell-list-item" data-ng-style="sideCtrl.styleElement(group)" data-ng-show="data.classification != 'cells'" data-ng-repeat="group in data.cellGroups" data-ng-dblclick="sideCtrl.selectComponent(group, $index)">
+				<a class="list-group-item ncb-cell-list-item" data-ng-style="sideCtrl.styleElement(group)" data-ng-show="data.classification != 'cells'" data-ng-repeat="group in data.cellGroups | orderBy: 'classification'" data-ng-dblclick="sideCtrl.selectComponent(group, $index)">
                     <p class="ncb-cell-name-txt ncb-list-text-color">{{group.name}}</p>
                     <h4 data-ng-show="group.classification == 'cells'" class="ncb-cell-type-txt">{{group.parameters.type}}</h4>
                     <h4 data-ng-show="group.classification == 'cellGroup'" class="ncb-cell-type-txt">Cell Group</h4>

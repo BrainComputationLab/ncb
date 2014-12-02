@@ -51,6 +51,10 @@ function deepCopy(p,c) {
   return c2;
 }
 
+function deepCopyArray(array){
+    return $.extend(true, [], array);
+}
+
 function cloneParam(source) {
   var ret = null;
   var i = 0;

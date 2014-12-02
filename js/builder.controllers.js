@@ -193,6 +193,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
   function($scope, currentModelService, colorService){
 
   this.synapseCount = 0;
+  $scope.editModal = false;
   $scope.selected1 = null;
   $scope.selected2 = null;
   $scope.breadCrumbs1 = currentModelService.getBreadCrumbs();
@@ -201,19 +202,45 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
   $scope.component2 = null;
 
   // function to sync the modal's data
-  $scope.$on('connectionModal', function(event, currentLocation, currentComponent){
+  $scope.$on('connectionModal', function(event, currentLocation1, currentLocation2, currentComponent1, currentComponent2){
+
+    // set modal type
+    if(currentComponent1 !== null)
+      $scope.editModal = true;
+    else
+      $scope.editModal = false;
 
     // reset selected
     $scope.selected1 = null;
     $scope.selected2 = null;
 
     // sync bread crumbs
-    $scope.breadCrumbs1 = currentLocation;
-    $scope.breadCrumbs2 = currentLocation;
+    $scope.breadCrumbs1 = currentLocation1;
+    $scope.breadCrumbs2 = currentLocation2;
 
     // sync component
-    $scope.component1 = currentComponent;
-    $scope.component2 = currentComponent;
+    $scope.goToBreadCrumb1(currentLocation1.length -1);
+    $scope.goToBreadCrumb2(currentLocation2.length -1);
+
+    // set selected
+    if(currentComponent1 !== null){
+      // loop through components at the selected level and find the selected one
+      for(i=0; i<$scope.component1.cellGroups.length; i++){
+        if($scope.component1.cellGroups[i].name === currentComponent1){
+          $scope.selected1 = $scope.component1.cellGroups[i];
+          break;
+        }
+      }
+    }
+    if(currentComponent2 !== null){
+      // loop through components at the selected level and find the selected one
+      for(i=0; i<$scope.component2.cellGroups.length; i++){
+        if($scope.component2.cellGroups[i].name == currentComponent2){
+          $scope.selected2 = $scope.component2.cellGroups[i];
+          break;
+        }
+      }
+    }
   });
 
   // functions to go down a level in the tree
@@ -234,7 +261,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
   };
 
   // functions to go to breadcrumb
-  this.goToBreadCrumb1 = function(index){
+  $scope.goToBreadCrumb1 = function(index){
 
     // go home if bread crumb index is 0
     if(index === 0){
@@ -264,7 +291,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
   };
 
   // functions to go to breadcrumb
-  this.goToBreadCrumb2 = function(index){
+  $scope.goToBreadCrumb2 = function(index){
 
     // go home if bread crumb index is 0
     if(index === 0){
@@ -304,9 +331,22 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 
   // function to add connection to current model
   this.addConnectionToModel = function(){
-    synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, 0.5, new ncsSynapse());
 
-    currentModelService.addSynapse(synapse);
+    // add connection to model if not in edit mode
+    if(!$scope.editModal){
+      synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, $scope.breadCrumbs1, $scope.breadCrumbs2,
+       0.5, new ncsSynapse());
+
+      currentModelService.addSynapse(synapse);
+    }
+    // modify selected connection if in edit mode
+    else{
+      var connection = currentModelService.getDisplayedComponent();
+      connection.prePath = deepCopyArray($scope.breadCrumbs1);
+      connection.postPath = deepCopyArray($scope.breadCrumbs2);
+      connection.pre = $scope.selected1.name;
+      connection.post = $scope.selected2.name;
+    }
   };
 
   this.styleElement = function(model){
@@ -393,12 +433,51 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
   };
 
   this.updateConnectionModel = function(){
-    $rootScope.$broadcast('connectionModal', currentModelService.getBreadCrumbs(), currentModelService.getParent());
+    $rootScope.$broadcast('connectionModal', deepCopyArray(currentModelService.getBreadCrumbs()), deepCopyArray(currentModelService.getBreadCrumbs()),
+     null, null);
   };
 
   // set the cell group or cell to display in the parameters section
   this.displayParameters = function(component){
     currentModelService.setDisplayedComponent(component);
+  };
+
+  this.isConnectionVisible = function(connection){
+    var crumbs = currentModelService.getBreadCrumbs();
+
+    // if part of connection is at a higher level than current path return false
+    if(connection.prePath.length < crumbs.length && connection.postPath.length < crumbs.length){
+      return false;
+    }
+
+    // if connection is not within current path return false
+    for(i=0; i<crumbs.length; i++){
+      if((connection.prePath.length > i && connection.prePath[i].name !== crumbs[i].name) || 
+        (connection.postPath.length > i && connection.postPath[i].name !== crumbs[i].name)){
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  this.pathString = function(path){
+    var string = "";
+    var i = 0;
+
+    // show up to the last 3 breadcrumbs
+    if(path.length > 3){
+      string += ".../";
+      i = path.length - 3;
+    }
+
+    for(i; i<path.length; i++){
+      string += path[i].name;
+      if(i != path.length-1){
+        string += "/";
+      }
+    }
+    return string;
   };
 
     /*$scope.$watch(function () { return currentModelService.getData(); }, function (newValue) {
@@ -411,8 +490,9 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
 }]);
 
 // controller for the right panel that displays cell or cell group parameters
-ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService', function($scope, currentModelService){
+ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'CurrentModelService', function($rootScope, $scope, currentModelService){
 
+  $scope.synapseType = 'NCS';
   $scope.displayed = currentModelService.getDisplayedComponent();
 
   // param types
@@ -439,17 +519,34 @@ ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService',
         // update the data
         $scope.title = newComponent.name;
         $scope.displayed = newComponent;
-        }
-        else{
-          // clear data being displayed
-          $scope.title = "";
-          $scope.displayed = null;
-        }
+        //$scope.displayedCrumbs = deepCopy(currentModelService.getBreadCrumbs());
+      }
+      else{
+        // clear data being displayed
+        $scope.title = "";
+        $scope.displayed = null;
+      }
   });
 
   // edit groups in connection
   $scope.editConnectionGroups = function(){
+    // update and show the modal to edit groups with
+    $rootScope.$broadcast('connectionModal', $scope.displayed.prePath, $scope.displayed.postPath,
+     $scope.displayed.pre, $scope.displayed.post);
     $('#addConnectionModal').modal("show");
   };
+
+  // watch to see if synapse type changes
+  $scope.$watch(function () { return $scope.synapseType; }, function (newValue) {
+      if($scope.displayed !== null){
+        // change the sypnapse type
+        if (newValue == 'Flat'){
+          $scope.displayed.parameters = new flatSynapse();
+        }
+        else{
+          $scope.displayed.parameters = new ncsSynapse();
+        }
+      }
+  });
 
 }]);
