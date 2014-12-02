@@ -39,6 +39,13 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
     $scope.viewed = element;
   };
 
+  this.exportModel = function(){
+    // gets the currentModel and jsonifies it
+    var savedModel = currentModelService.getCurrentModel();
+    var json = JSON.stringify(savedModel, null, "\t"); // pretify with a tab at each level
+    console.log(json);
+  };
+
   $scope.$watch('viewed', function (newValue) {
         if (newValue) sidePanelService.setData(newValue);
     });
