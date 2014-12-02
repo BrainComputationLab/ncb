@@ -235,7 +235,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
     if(currentComponent2 !== null){
       // loop through components at the selected level and find the selected one
       for(i=0; i<$scope.component2.cellGroups.length; i++){
-        if($scope.component2.cellGroups[i].name == currentComponent2){
+        if($scope.component2.cellGroups[i].name === currentComponent2){
           $scope.selected2 = $scope.component2.cellGroups[i];
           break;
         }
@@ -279,7 +279,6 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
       var setIndex;
 
       for(var i=2; i<=index; i++){
-
         // go down to the next level (component is always an array of cell groups / component[i] is a cellGroup class)
         setIndex = $scope.breadCrumbs1[i].index;
         $scope.component1 = $scope.component1.cellGroups[setIndex];
@@ -519,7 +518,11 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
         // update the data
         $scope.title = newComponent.name;
         $scope.displayed = newComponent;
-        //$scope.displayedCrumbs = deepCopy(currentModelService.getBreadCrumbs());
+
+        if(newComponent.classification === "synapseGroup" && newComponent.parameters.name === 'flatSynapse')
+          $scope.synapseType = 'Flat';
+        else
+          $scope.synapseType = 'NCS';
       }
       else{
         // clear data being displayed

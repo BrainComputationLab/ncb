@@ -21,7 +21,7 @@
     <span class="label label-default" data-ng-show="modelCtrl.getComponents().length > 0 || modelCtrl.getSynapses().length > 0" style="display:block;">Model Components</span>
 
     <div class="list-group" id="currentModelComponents">
-      <li data-ng-repeat="model in modelCtrl.getComponents() | orderBy : 'classification'" class="row list-group-item ncb-cell-list-item ncb-item-center"  data-ng-dblclick="modelCtrl.selectComponent(model, $index)" data-ng-click="modelCtrl.displayParameters(model)" data-ng-style="modelCtrl.styleElement(model)">
+      <li data-ng-repeat="model in modelCtrl.getComponents()" class="row list-group-item ncb-cell-list-item ncb-item-center"  data-ng-dblclick="modelCtrl.selectComponent(model, $index)" data-ng-click="modelCtrl.displayParameters(model)" data-ng-style="modelCtrl.styleElement(model)">
           <div class="col-lg-10">
             <div class="row">
               <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}</a>
@@ -42,7 +42,7 @@
 
     <div class="list-group" id="currentModelConnections">
       <li data-ng-repeat="synapse in modelCtrl.getSynapses()" class="row list-group-item ncb-cell-list-item ncb-item-center" data-ng-click="modelCtrl.displayParameters(synapse)" data-ng-show="modelCtrl.isConnectionVisible(synapse)">
-          <div class="col-lg-10">
+          <div class="col-lg-11">
             <div class="row">
               <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{synapse.pre + " - "}}</a>
               <a class="ncb-cell-type-txt ncb-list-text-color" href="">{{modelCtrl.pathString(synapse.prePath)}}</a>
@@ -52,7 +52,7 @@
               <a class="ncb-cell-type-txt ncb-list-text-color" href="">{{modelCtrl.pathString(synapse.postPath)}}</a>
             </div>
           </div>
-          <div class="col-lg-2 ncb-remove-component-btn">
+          <div class="col-lg-1 ncb-remove-component-btn">
               <div class="row"><button type="button" data-ng-click="modelCtrl.removeSynapse(synapse)" class="btn btn-xs btn-danger pull-right">x</button></div>
           </div>
       </li>

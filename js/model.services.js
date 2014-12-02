@@ -150,7 +150,15 @@ ncbApp.factory('CurrentModelService', function($rootScope){
       if(model.classification === "cells"){
         for(i=this.currentModel.synapses.length-1; i>=0; i--){
           if(this.currentModel.synapses[i].pre === model.name || this.currentModel.synapses[i].post === model.name){
-            this.currentModel.synapses.splice(i, 1);
+
+            // if connection was removed, clear right panel if it was selected
+            if (this.displayedComponent.classification === 'synapseGroup' && this.currentModel.synapses[i].pre === this.displayedComponent.pre &&
+              this.currentModel.synapses[i].post === this.displayedComponent.post) {
+                this.displayedComponent = null;
+            }
+
+            // remove the connection
+            this.currentModel.synapses.splice(i, 1);  
           }
         }
       }

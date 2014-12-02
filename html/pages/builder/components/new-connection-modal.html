@@ -47,7 +47,7 @@
                             <div class="panel-body ncb-connection-listgroup" >
 
                                 <div class="list-group">
-                                  <li data-ng-repeat="model in component1.cellGroups | orderBy: 'classification'" class="row list-group-item ncb-cell-list-item ncb-item-center"   data-ng-style="connectionCtrl.styleElement(model)" data-ng-dblclick="connectionCtrl.setComponent1(model, $index)">
+                                  <li data-ng-repeat="model in component1.cellGroups" class="row list-group-item ncb-cell-list-item ncb-item-center"   data-ng-style="connectionCtrl.styleElement(model)" data-ng-dblclick="connectionCtrl.setComponent1(model, $index)">
                                       <div class="col-lg-10">
                                         <div class="row">
                                           <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}</a>
@@ -84,7 +84,7 @@
                             <div class="panel-body ncb-connection-listgroup" >
 
                                 <div class="list-group">
-                                  <li data-ng-repeat="model in component2.cellGroups | orderBy: 'classification'" class="row list-group-item ncb-cell-list-item ncb-item-center"   data-ng-style="connectionCtrl.styleElement(model)" data-ng-dblclick="connectionCtrl.setComponent2(model, $index)">
+                                  <li data-ng-repeat="model in component2.cellGroups" class="row list-group-item ncb-cell-list-item ncb-item-center"   data-ng-style="connectionCtrl.styleElement(model)" data-ng-dblclick="connectionCtrl.setComponent2(model, $index)">
                                       <div class="col-lg-10">
                                         <div class="row">
                                           <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}</a>
