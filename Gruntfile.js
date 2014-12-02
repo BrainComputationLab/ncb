@@ -92,6 +92,11 @@ module.exports = function(grunt) {
           'tmp/vendorjs/xeditable.js': 'angular-xeditable/dist/js/xeditable.js',
           'tmp/css/xeditable.css': 'angular-xeditable/dist/css/xeditable.css'
         }
+      },
+      'jquery-ui': {
+        files: {
+          'tmp/vendorjs/jquery-ui.js': 'jquery-ui/jquery-ui.js'
+        }
       }
     },
     copy: {
@@ -212,7 +217,8 @@ module.exports = function(grunt) {
           'tmp/vendorjs/snap.js',
           'tmp/vendorjs/angular-snap.js',
           'tmp/vendorjs/bootstrap-colorpicker-module.js',
-          'tmp/vendorjs/xeditable.js'
+          'tmp/vendorjs/xeditable.js',
+          'tmp/vendorjs/jquery-ui.js'
         ],
         dest: 'tmp/vendorjs/vendor.js'
       },
