@@ -304,7 +304,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 
   // function to add connection to current model
   this.addConnectionToModel = function(){
-    synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, .5, new ncsSynapse());
+    synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, 0.5, new ncsSynapse());
 
     currentModelService.addSynapse(synapse);
   };
