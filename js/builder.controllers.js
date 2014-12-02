@@ -6,8 +6,8 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
   $scope.colors = colorService.getColors();
   this.tab = 0;
 
-  this.localModels = myModels;
-  this.dbModels = myDBModels;
+  $scope.localModels = myModels;
+  $scope.dbModels = myDBModels;
 
   this.colorPickerPopover = {
       "title": "Title",
@@ -39,12 +39,20 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
     $scope.viewed = element;
   };
 
-  this.exportModel = function(){
-    // gets the currentModel and jsonifies it
-    var savedModel = currentModelService.getCurrentModel();
-    var json = JSON.stringify(savedModel, null, "\t"); // pretify with a tab at each level
-    console.log(json);
-  };
+    // function to sync database with newly added model
+  $scope.$on('AddModelToList', function(event, model, listType){
+
+    if (listType == "local"){
+      // adds model to local list
+      $scope.localModels.push(deepCopy(model));
+    }
+    else if (listType == "database"){
+      // add model to database list
+      $scope.dbModels.push(deepCopy(model));
+    }
+    
+  });
+
 
   $scope.$watch('viewed', function (newValue) {
         if (newValue) sidePanelService.setData(newValue);
@@ -457,6 +465,45 @@ ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService',
   // edit groups in connection
   $scope.editConnectionGroups = function(){
     $('#addConnectionModal').modal("show");
+  };
+
+}]);
+
+// controller for the model Export 
+ncbApp.controller("ExportModelController", ['$rootScope', '$scope', 'SidePanelService', 'ColorService', 'CurrentModelService',
+  function($rootScope, $scope, sidePanelService, colorService, currentModelService){
+
+  this.modelName = null;
+  this.modelDescription = null;
+  this.modelAuthor = null;
+  this.saveType = "file";
+
+  this.exportModel = function(){
+
+    var savedModel = currentModelService.getCurrentModel();
+
+    // set saved model description and name
+    savedModel.name = this.modelName;
+    savedModel.description = this.modelDescription;
+    savedModel.author = this.modelAuthor;
+
+    // export model based on type of export
+    if (this.saveType == "local") {
+      // add to local database
+      $rootScope.$broadcast('AddModelToList', savedModel, "local");
+    }
+    else if (this.saveType == "database"){
+      // add to database
+      $rootScope.$broadcast('AddModelToList', savedModel, "database");
+    }
+    else if (this.saveType == "file"){
+      // save to file
+      var json = JSON.stringify(savedModel, null, "\t"); // pretify with a tab at each level
+      console.log(json);
+    }
+
+
+    
   };
 
 }]);
