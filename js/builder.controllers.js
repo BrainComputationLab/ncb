@@ -470,8 +470,8 @@ ncbApp.controller("ModelParametersController", ['$scope', 'CurrentModelService',
 }]);
 
 // controller for the model Export 
-ncbApp.controller("ExportModelController", ['$rootScope', '$scope', 'SidePanelService', 'ColorService', 'CurrentModelService',
-  function($rootScope, $scope, sidePanelService, colorService, currentModelService){
+ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
+  function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
   this.modelName = null;
   this.modelDescription = null;
@@ -499,9 +499,35 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', 'SidePanelSe
     else if (this.saveType == "file"){
       // save to file
       var json = JSON.stringify(savedModel, null, "\t"); // pretify with a tab at each level
-      console.log(json);
+      $http.post('/export', json);
     }
 
+
+    
+  };
+
+}]);
+
+// controller for the model Import 
+ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
+  function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
+
+  this.file = null;
+
+  this.importModel = function(){
+
+    // import from file
+    $http.get('/import').
+      success(function(data, status, headers, config) {
+        // this callback will be called asynchronously
+        // when the response is available
+        console.log(data);
+      }).
+      error(function(data, status, headers, config) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        console.log(status);
+      });
 
     
   };

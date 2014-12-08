@@ -157,6 +157,12 @@ module.exports = function(grunt) {
           	flatten: true,
           	src: ['tmp/templates/colorpicker-popover.html'],
           	dest: 'build/static/assets/html'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['exports/**'],
+            dest: 'build/'
           }
         ]
       }

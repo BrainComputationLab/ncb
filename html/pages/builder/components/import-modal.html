@@ -1,0 +1,40 @@
+<!-- EXPORT MODEL MODAL BEGIN -->
+<!-- Modal -->
+<div class="modal fade" id="importModelModal" tabindex="-1" role="dialog" data-ng-controller="ImportModelController as importCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Import Model</h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal" role="form">
+
+
+                    <div class="form-group">
+                        <label for="fileupload" class="col-sm-4 control-label"> Model Name</label>
+                        <div class="col-sm-8">
+                            <input id="fileupload" type="file" class="form-control" data-ng-model="importCtrl.file">
+                            <br>
+                        </div>
+                    </div>
+
+<!--
+                    <div class="form-group" data-ng-show="importCtrl.saveType == 'file'">
+                        <label for="filename" class="col-sm-4 control-label"> Filename</label>
+                        <div class="col-sm-8">
+                            <input id="filename" type="text" placeholder="Filename" class="form-control" data-ng-model="importCtrl.filename">
+                            <br>
+                        </div>
+                    </div>
+-->
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-success" data-dismiss="modal" data-ng-click="importCtrl.importModel()">Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- EXPORT MODEL MODAL END -->
