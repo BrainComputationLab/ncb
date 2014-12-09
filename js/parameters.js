@@ -1,9 +1,9 @@
 function model() {
 	this.name = "Current Model";
 	this.classification = "model";
-	this.description = "";
+	this.description = "Description";
 	this.author = "";
-	this.baseCellGroups = new baseCellGroup();
+	this.cellGroups = new cellGroup("Home");
 	this.cellAliases = [];
 	this.synapses = [];
 
@@ -45,6 +45,7 @@ function hodgkinHuxleyParam() {
 function voltageGatedIonChannel() {
 	this.className = "voltageGatedIonChannel";
 	this.name="Voltage Gated Ion Channel";
+	this.description = "Description";
 	this.vHalf = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};			 //double
 	this.r = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};				 //double
 	this.activationSlope = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};	 //double
@@ -58,6 +59,7 @@ function voltageGatedIonChannel() {
 function calciumDependantChannel() {
 	this.className = "calciumDependantChannel";
 	this.name="Calcium Dependant Channel";
+	this.description = "Description";
 	this.mInitial = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};			 //double
 	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 	this.backwardsRate = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};	 //double
@@ -69,9 +71,10 @@ function calciumDependantChannel() {
 function voltageGatedChannel(particles) {
 	this.className = "voltageGatedChannel";
 	this.name="Voltage Gated Channel";
+	this.description = "Description";
 	this.particles = particles;															//list of parameters for particles
 	this.conductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0};		//double
-	this.reversePotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
+	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0}; //double
 }
 
 function voltageGatedParticle(alpha, beta) {
@@ -131,6 +134,7 @@ function cells(name, num, parameters, geometry) {
 	this.classification = "cells";
 	this.geometry = geometry || "Box";
 	this.parameters = parameters;
+	this.description = "Description";
 }
 
 // a cell group containing other cell groups and cells used for organization
@@ -138,12 +142,7 @@ function cellGroup(name) {
 	this.classification = "cellGroup";
 	this.name = name;
 	this.cellGroups = [];
-}
-
-function baseCellGroup(){
-	this.classification = "baseCellGroup";
-	this.name = "Home";
-	this.cellGroups = [];
+	this.description = "Description";
 }
 
 function cellAlias(name, cellGroup, cAlias) {
@@ -161,6 +160,7 @@ function synapseGroup(pre, post, prePath, postPath, prob, parameters) {
 	this.postPath = postPath;
 	this.prob = prob;
 	this.parameters = parameters;
+	this.description = "Description";
 }
 
 function synapseAlias(synapseGroup, synAlias) {

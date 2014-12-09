@@ -67,7 +67,7 @@ ncbApp.factory('SidePanelService', function($rootScope) {
 ncbApp.factory('ColorService', function($rootScope){
   var colorService = {};
 
-  colorService.colors = {cell: '#8781BD' , cellGroup: '#00568C', model:'#5D6B74'};
+  colorService.colors = {cell: '#8781BD' , cellGroup: '#00568C', model:'#5D6B74', synapse:'#333333'};
 
   colorService.getColors = function(){
     return this.colors;
@@ -98,6 +98,63 @@ ncbApp.factory('ColorService', function($rootScope){
                 'background-image': '-webkit-linear-gradient(left, '+this.colors.model+', '+this.colors.model+' 10px, transparent 10px, transparent 100%)',
             };
     }
+    else if (model.classification === 'synapseGroup'){
+      return {
+                'background-image': 'linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 10px, transparent 10px, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 10px, transparent 10px, transparent 100%)',
+            };
+    }
+  };
+
+  colorService.styleSelected = function(model){
+    var textColor;
+
+    // style element based off type (cell, cell group, model)
+    if (model.classification === 'cells'){
+      // checks background color to make sure text is always white or black depending on the background color
+      deciVal = parseInt(this.colors.cell.replace("#", ""), 16);
+      if (deciVal < 8388607.5){
+        textColor = '#FFFFFF';
+      }
+      else{
+        textColor = '#000000';
+      }
+      return {
+                'background-image': 'linear-gradient(left, '+this.colors.cell+', '+this.colors.cell+' 100%, transparent 100%, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, '+this.colors.cell+', '+this.colors.cell+' 100%, transparent 100%, transparent 100%)',
+                'color' : textColor,
+            };
+    }
+    else if (model.classification === 'cellGroup'){
+      // checks background color to make sure text is always white or black depending on the background color
+      deciVal = parseInt(this.colors.cellGroup.replace("#", ""), 16);
+      if (deciVal < 8388607.5){
+        textColor = '#FFFFFF';
+      }
+      else{
+        textColor = '#000000';
+      }
+      return {
+                'background-image': 'linear-gradient(left, '+this.colors.cellGroup+', '+this.colors.cellGroup+' 100%, transparent 100%, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, '+this.colors.cellGroup+', '+this.colors.cellGroup+' 100%, transparent 100%, transparent 100%)',
+                'color' : ""+textColor,
+            };
+    }
+    else if (model.classification === 'synapseGroup'){
+      // checks background color to make sure text is always white or black depending on the background color
+      deciVal = parseInt(this.colors.synapse.replace("#", ""), 16);
+      if (deciVal < 8388607.5){
+        textColor = '#FFFFFF';
+      }
+      else{
+        textColor = '#000000';
+      }
+      return {
+                'background-image': 'linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 100%, transparent 100%, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 100%, transparent 100%, transparent 100%)',
+                'color' : ""+textColor,
+            };
+    }
   };
 
   return colorService;
@@ -112,7 +169,7 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   currentModelService.currentModel = new model();
 
   currentModelService.breadCrumbs = [{name: "Home", index: 0}];
-  currentModelService.selected = currentModelService.currentModel.baseCellGroups;
+  currentModelService.selected = currentModelService.currentModel.cellGroups;
   currentModelService.displayedComponent = null;
 
   currentModelService.setName = function(name){
@@ -120,14 +177,29 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   };
 
   currentModelService.addToModel = function(model){
-    // create a copy of the model to be added
-    var newComponent = deepCopy(model);
 
-    // add component if not already in the current model
-    var index = getCellIndex(this.selected.cellGroups, model.name);
+    // handle case of cell or cell group
+    if(model.classification == "cells" || model.classification == "cellGroup"){
+      // create a copy of the model to be added
+      var newComponent = deepCopy(model);
 
-    if(this.selected.cellGroups.length === 0 || index === -1){
-      this.selected.cellGroups.push(newComponent);
+      // add component if not already in the current model
+      var index = getCellIndex(this.selected.cellGroups, model.name);
+
+      if(this.selected.cellGroups.length === 0 || index === -1){
+        this.selected.cellGroups.push(newComponent);
+      }
+    }
+    // handle case of model
+    else{
+      // get the contents of the model and place them in a cell group
+      var group = new cellGroup(model.name);
+      group.cellGroups = deepCopyArray(model.cellGroups.cellGroups);
+      group.description = model.description;
+      this.selected.cellGroups.push(group);
+
+      // place the synapses of the model into your model
+      this.currentModel.synapses.push.apply(this.currentModel.synapses, model.synapses);
     }
   };
 
@@ -175,14 +247,14 @@ ncbApp.factory('CurrentModelService', function($rootScope){
     // set component to sub component if a cell group is selected
     if(component.classification == "cellGroup"){
       // set current component and create breadcrumb for it
-      this.selected = component;
       this.breadCrumbs.push({name: component.name, index: index});
+      this.selected = component;
     }
   };
 
   currentModelService.goHome = function(){
     this.breadCrumbs = [{name: "Home", index: 0}];
-    this.selected = this.currentModel.baseCellGroups;
+    this.selected = this.currentModel.cellGroups;
   };
 
   currentModelService.goToBreadCrumb = function(index){
@@ -195,7 +267,7 @@ ncbApp.factory('CurrentModelService', function($rootScope){
     else if(index < this.breadCrumbs.length){
 
       // go down the first layer (starts at 1 : home has a useless index)
-      this.selected = this.currentModel.baseCellGroups.cellGroups[this.breadCrumbs[1].index];
+      this.selected = this.currentModel.cellGroups.cellGroups[this.breadCrumbs[1].index];
 
       // go down each following layer index you hit the bread crumb index
       var setIndex;

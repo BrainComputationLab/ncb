@@ -50,6 +50,8 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
 ncbApp.controller("SidePanelController", ['$scope', "CurrentModelService", 'SidePanelService', 'ColorService', function($scope, currentModelService, sidePanelService, colorService){
   $scope.data = sidePanelService.getData();
   $scope.colors = colorService.getColors();
+  this.showComponents = true;
+  this.showParams = true;
 
   // get visibility from side panel service
   this.isSidePanelVisible = function(){
@@ -188,6 +190,27 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 
 }]);
 
+// controller for add channel modal
+ncbApp.controller("AddChannelModalController", ['CurrentModelService', function(currentModelService){
+
+  this.channelType = "Voltage Gated Ion Channel";
+
+  this.addChannel = function(){
+
+    // add channel based on selection
+    if(this.channelType == "Voltage Gated Ion Channel")
+      currentModelService.getDisplayedComponent().parameters.channel.push(new voltageGatedIonChannel());
+    else if(this.channelType == "Calcium Dependant Channel")
+      currentModelService.getDisplayedComponent().parameters.channel.push(new calciumDependantChannel());
+    else if(this.channelType == "Voltage Gated Channel"){
+      particles = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
+      currentModelService.getDisplayedComponent().parameters
+      .channel.push(new voltageGatedChannel(particles));
+    }
+  };
+
+}]);
+
 // controller for add connection modal
 ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService', 
   function($scope, currentModelService, colorService){
@@ -266,14 +289,14 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
     // go home if bread crumb index is 0
     if(index === 0){
       $scope.breadCrumbs1 = [{name: "Home", index: 0}];
-      $scope.component1 = currentModelService.getCurrentModel().baseCellGroups;
+      $scope.component1 = currentModelService.getCurrentModel().cellGroups;
     }
 
     // if not home loop through breadcumbs to reach selected index
     else if(index < $scope.breadCrumbs1.length){
 
       // go down the first layer (starts at 1 : home has a useless index)
-      $scope.component1 = currentModelService.getCurrentModel().baseCellGroups.cellGroups[$scope.breadCrumbs1[1].index];
+      $scope.component1 = currentModelService.getCurrentModel().cellGroups.cellGroups[$scope.breadCrumbs1[1].index];
 
       // go down each following layer index you hit the bread crumb index
       var setIndex;
@@ -295,14 +318,14 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
     // go home if bread crumb index is 0
     if(index === 0){
       $scope.breadCrumbs2 = [{name: "Home", index: 0}];
-      $scope.component2 = currentModelService.getCurrentModel().baseCellGroups;
+      $scope.component2 = currentModelService.getCurrentModel().cellGroups;
     }
 
     // if not home loop through breadcumbs to reach selected index
     else if(index < $scope.breadCrumbs2.length){
 
       // go down the first layer (starts at 1 : home has a useless index)
-      $scope.component2 = currentModelService.getCurrentModel().baseCellGroups.cellGroups[$scope.breadCrumbs2[1].index];
+      $scope.component2 = currentModelService.getCurrentModel().cellGroups.cellGroups[$scope.breadCrumbs2[1].index];
 
       // go down each following layer index you hit the bread crumb index
       var setIndex;
@@ -355,37 +378,12 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 
 }]);
 
-
-// controller for add cell modal
-ncbApp.controller("AddSimInputModalController", ['CurrentModelService', function(currentModelService){
-
-  /*this.cellGroupName;
-  this.amount;
-  this.cellType = "Izhikevich";
-  this.channelType = "Voltage Gated Ion Channel";
-
-  this.addSimInput = function(){
-    var params;
-
-    // create params based on type
-    if(this.cellType == "Izhikevich")
-      params = new izhikevichParam();
-    else if(this.cellType == "NCS")
-      params = new ncsParam();
-    else
-      params = new hodgkinHuxleyParam();
-
-    // add the cell to the current model
-    currentModelService.addToModel(new cellGroup(this.cellGroupName, this.amount, this.cellType, params));
-  };*/
-
-}]);
-
-
 // left panel controller (model navigation)
 ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
   function($rootScope, $scope, currentModelService, sidePanelService, colorService){
   $scope.colors = colorService.getColors();
+  this.showComponents = true;
+  this.showSynapses = true;
 
   // get visibility from side panel service
   this.isSidePanelVisible = function(){
@@ -406,7 +404,10 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
 
   this.styleElement = function(model){
     // get styled component from color service
-    return colorService.styleElement(model);
+    if(model == currentModelService.getDisplayedComponent())
+      return colorService.styleSelected(model);
+    else
+      return colorService.styleElement(model);
   };
 
   this.selectComponent = function(component, index){
@@ -493,6 +494,8 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
 
   $scope.synapseType = 'NCS';
   $scope.displayed = currentModelService.getDisplayedComponent();
+  $scope.levelInCrumbs = 0;
+  $scope.nameWatch = null;
 
   // param types
   $scope.types = [
@@ -506,6 +509,11 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
     {value: "NCS", text: "NCS"}
   ];
 
+  $scope.updateBreadCrumbs = function(){
+    // change name of breadcrumb corresponding to the displayed cell group
+    currentModelService.getBreadCrumbs()[$scope.levelInCrumbs].name = currentModelService.getDisplayedComponent().name;
+  };
+
   $scope.showType = function() {
     var selected = $filter('filter')($scope.statuses, {value: $scope.displayed.a.type});
     return ($scope.displayed.a.type && selected.length) ? selected[0].text : 'Not set';
@@ -518,11 +526,29 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
         // update the data
         $scope.title = newComponent.name;
         $scope.displayed = newComponent;
+        //alert("new component", newComponent);
 
         if(newComponent.classification === "synapseGroup" && newComponent.parameters.name === 'flatSynapse')
           $scope.synapseType = 'Flat';
-        else
+        else if(newComponent.classification === "synapseGroup")
           $scope.synapseType = 'NCS';
+
+        // if component was a cell group track its path level
+        if(newComponent.classification == "cellGroup"){
+          $scope.levelInCrumbs = currentModelService.getBreadCrumbs().length;     
+
+          /*    // update component show if changed
+          $scope.nameWatch = $scope.$watch(function () { return currentModelService.getDisplayedComponent().name; }, function (newName) {
+                if (currentModelService.getDisplayedComponent().classification == "cellGroup"){
+                  alert("name changed");
+                  currentModelService.getBreadCrumbs()[$scope.levelInCrumbs].name = currentModelService.getDisplayedComponent().name;
+                }
+              });     */
+        }
+        /*else{
+          // remove watch if not correct type
+          $scope.nameWatch();
+        }*/
       }
       else{
         // clear data being displayed
@@ -552,4 +578,13 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
       }
   });
 
+}]);
+
+// controller for the right panel that displays cell or cell group parameters
+ncbApp.controller("ModelHeaderController", ['SidePanelService', function(sidePanelService){
+
+  this.hideSidePanel = function(){
+    sidePanelService.setVisible(false);
+  };
+  
 }]);

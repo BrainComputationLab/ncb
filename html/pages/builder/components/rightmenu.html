@@ -13,7 +13,7 @@
     <div class="panel-body">
         <div class="panel-group" id="accordion">
 
-            <div class="panel panel-default ncb-params-panel" data-ng-show="displayed.classification == 'cellGroup'">
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'cellGroup'">
                 <div class="panel-heading">
                     <h4 class="panel-title" >
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse0" style="display:block">
@@ -25,7 +25,11 @@
                   <table class="table table-bordered table-hover table-condensed ncb-table">
                     <tr>
                       <td colspan="1"><span>CellGroup Name:</span></td>
-                      <td colspan="1" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
+                      <td colspan="1" data-editable-text="displayed.name" data-onaftersave="updateBreadCrumbs()" buttons="no"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Description:</span></td>
+                      <td colspan="1" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="1"><span>Number of Subgroups:</span></td>
@@ -35,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-default ncb-params-panel" data-ng-show="displayed.classification == 'cells'">
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'cells'">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" style="display:block">
@@ -51,6 +55,10 @@
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
                       <td colspan="4" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Description:</span></td>
+                      <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
@@ -128,6 +136,10 @@
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
                       <td colspan="4" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Description:</span></td>
+                      <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
@@ -221,6 +233,10 @@
                       <td colspan="4" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
+                      <td colspan="2"><span>Description:</span></td>
+                      <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
+                    </tr>
+                    <tr>
                       <td colspan="2"><span>Type:</span></td>
                       <td colspan="4"><span>{{displayed.parameters.type}}</span></td>
                     </tr>
@@ -268,7 +284,7 @@
             </div>
 
 
-            <div class="panel panel-default ncb-params-panel" data-ng-show="displayed.classification == 'synapseGroup'">
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'synapseGroup'">
                 <div class="panel-heading">
                     <h4 class="panel-title" >
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" style="display:block">
@@ -287,6 +303,10 @@
                     <tr>
                       <td colspan="2"><span>Postsynapic Name:</span></td>
                       <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Description:</span></td>
+                      <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Synapse Type:</span></td>
@@ -329,6 +349,10 @@
                     <tr>
                       <td colspan="2"><span>Postsynapic Name:</span></td>
                       <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Description:</span></td>
+                      <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Synapse Type:</span></td>
@@ -457,6 +481,318 @@
             </div>
 
         </div>
+
+        <!-- Channels -->
+        <div class="panel-group">
+
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'cells' && displayed.parameters.type != 'Izhikevich'">
+                <div class="panel-heading">
+                      <div class="row">
+                        <div class="col-lg-10">
+                          <h4 class="panel-title" >
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseChannels" style="display:block">
+                              Channels
+                            </a>
+                          </h4>
+                        </div>
+                        <div class="col-lg-2">
+                          <button type="button" data-toggle="modal" data-target="#addChannelModal" class="btn btn-xs btn-info pull-right">+ Channel</button>
+                        </div>
+                      </div>
+
+                </div>
+                <div id="collapseChannels" class="panel-collapse collapse in">
+                  <div data-ng-repeat="channel in displayed.parameters.channel">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion" href="#channel{{$index+1}}" style="display:block">
+                                  {{ "Channel" + ($index+1) }}
+                              </a>                                
+                            </h4>
+                        </div>
+                        <div id="channel{{$index+1}}" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+                              <!-- Voltage Gated Ion Channel Parameters -->
+                              <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="channel.className == 'voltageGatedIonChannel'">
+                                <tr>
+                                  <td colspan="2"><span>Name:</span></td>
+                                  <td colspan="4"><span>{{channel.name}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Description:</span></td>
+                                  <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{channel.description}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Parameter Name:</span></td>
+                                  <td colspan="1"><span>Type:</span></td>
+                                  <td colspan="1"><span>Value:</span></td>
+                                  <td colspan="1"><span>Min:</span></td>
+                                  <td colspan="1"><span>Max:</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>vHalf:</span></td>
+                                  <td colspan="1" data-editable-select="channel.vHalf.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.vHalf.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.vHalf.value" buttons="no"><span>{{channel.vHalf.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.vHalf.minValue" buttons="no"><span>{{channel.vHalf.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.vHalf.maxValue" buttons="no"><span>{{channel.vHalf.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>r:</span></td>
+                                  <td colspan="1" data-editable-select="channel.r.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.r.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.r.value" buttons="no"><span>{{channel.r.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.r.minValue" buttons="no"><span>{{channel.r.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.r.maxValue" buttons="no"><span>{{channel.r.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Activation Slope:</span></td>
+                                  <td colspan="1" data-editable-select="channel.activationSlope.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.activationSlope.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.activationSlope.value" buttons="no"><span>{{channel.activationSlope.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.activationSlope.minValue" buttons="no"><span>{{channel.activationSlope.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.activationSlope.maxValue" buttons="no"><span>{{channel.activationSlope.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>De-Activation Slope:</span></td>
+                                  <td colspan="1" data-editable-select="channel.deactivationSlope.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.deactivationSlope.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.deactivationSlope.value" buttons="no"><span>{{channel.deactivationSlope.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.deactivationSlope.minValue" buttons="no"><span>{{channel.deactivationSlope.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.deactivationSlope.maxValue" buttons="no"><span>{{channel.deactivationSlope.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Equilibrium Slope:</span></td>
+                                  <td colspan="1" data-editable-select="channel.equilibriumSlope.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.equilibriumSlope.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.equilibriumSlope.value" buttons="no"><span>{{channel.equilibriumSlope.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.equilibriumSlope.minValue" buttons="no"><span>{{channel.equilibriumSlope.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.equilibriumSlope.maxValue" buttons="no"><span>{{channel.equilibriumSlope.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Conductance:</span></td>
+                                  <td colspan="1" data-editable-select="channel.conductance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.conductance.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.conductance.value" buttons="no"><span>{{channel.conductance.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.conductance.minValue" buttons="no"><span>{{channel.conductance.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.conductance.maxValue" buttons="no"><span>{{channel.conductance.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Reversal Potential:</span></td>
+                                  <td colspan="1" data-editable-select="channel.reversalPotential.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.reversalPotential.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.value" buttons="no"><span>{{channel.reversalPotential.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.minValue" buttons="no"><span>{{channel.reversalPotential.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.maxValue" buttons="no"><span>{{channel.reversalPotential.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>mInitial:</span></td>
+                                  <td colspan="1" data-editable-select="channel.mInitial.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.mInitial.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.mInitial.value" buttons="no"><span>{{channel.mInitial.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.mInitial.minValue" buttons="no"><span>{{channel.mInitial.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.mInitial.maxValue" buttons="no"><span>{{channel.mInitial.maxValue}}</span></td>
+                                </tr>
+                              </table>
+                              <!-- End Voltage Gated Ion Channel Parameters -->
+
+                              <!-- Voltage Calcium Dependant Channel Parameters -->
+                              <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="channel.className == 'calciumDependantChannel'">
+                                <tr>
+                                  <td colspan="2"><span>Name:</span></td>
+                                  <td colspan="4"><span>{{channel.name}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Description:</span></td>
+                                  <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{channel.description}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Parameter Name:</span></td>
+                                  <td colspan="1"><span>Type:</span></td>
+                                  <td colspan="1"><span>Value:</span></td>
+                                  <td colspan="1"><span>Min:</span></td>
+                                  <td colspan="1"><span>Max:</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Backwards Rate:</span></td>
+                                  <td colspan="1" data-editable-select="channel.backwardsRate.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.backwardsRate.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.backwardsRate.value" buttons="no"><span>{{channel.backwardsRate.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.backwardsRate.minValue" buttons="no"><span>{{channel.backwardsRate.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.backwardsRate.maxValue" buttons="no"><span>{{channel.backwardsRate.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Forward Scale:</span></td>
+                                  <td colspan="1" data-editable-select="channel.forwardScale.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.forwardScale.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.forwardScale.value" buttons="no"><span>{{channel.forwardScale.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.forwardScale.minValue" buttons="no"><span>{{channel.forwardScale.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.forwardScale.maxValue" buttons="no"><span>{{channel.forwardScale.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Forward Exponent:</span></td>
+                                  <td colspan="1" data-editable-select="channel.forwardExponent.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.forwardExponent.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.forwardExponent.value" buttons="no"><span>{{channel.forwardExponent.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.forwardExponent.minValue" buttons="no"><span>{{channel.forwardExponent.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.forwardExponent.maxValue" buttons="no"><span>{{channel.forwardExponent.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>tauScale:</span></td>
+                                  <td colspan="1" data-editable-select="channel.tauScale.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.tauScale.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.tauScale.value" buttons="no"><span>{{channel.tauScale.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.tauScale.minValue" buttons="no"><span>{{channel.tauScale.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.tauScale.maxValue" buttons="no"><span>{{channel.tauScale.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Reversal Potential:</span></td>
+                                  <td colspan="1" data-editable-select="channel.reversalPotential.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.reversalPotential.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.value" buttons="no"><span>{{channel.reversalPotential.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.minValue" buttons="no"><span>{{channel.reversalPotential.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.maxValue" buttons="no"><span>{{channel.reversalPotential.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>mInitial:</span></td>
+                                  <td colspan="1" data-editable-select="channel.mInitial.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.mInitial.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.mInitial.value" buttons="no"><span>{{channel.mInitial.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.mInitial.minValue" buttons="no"><span>{{channel.mInitial.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.mInitial.maxValue" buttons="no"><span>{{channel.mInitial.maxValue}}</span></td>
+                                </tr>
+                              </table>
+                              <!-- End Calcium Dependant Channel Parameters -->
+
+                              <!-- Voltage Gated Channel Parameters -->
+                              <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="channel.className == 'voltageGatedChannel'">
+                                <tr>
+                                  <td colspan="2"><span>Name:</span></td>
+                                  <td colspan="4"><span>{{channel.name}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Description:</span></td>
+                                  <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{channel.description}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Parameter Name:</span></td>
+                                  <td colspan="1"><span>Type:</span></td>
+                                  <td colspan="1"><span>Value:</span></td>
+                                  <td colspan="1"><span>Min:</span></td>
+                                  <td colspan="1"><span>Max:</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Conductance:</span></td>
+                                  <td colspan="1" data-editable-select="channel.conductance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.conductance.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.conductance.value" buttons="no"><span>{{channel.conductance.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.conductance.minValue" buttons="no"><span>{{channel.conductance.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.conductance.maxValue" buttons="no"><span>{{channel.conductance.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Reversal Potential:</span></td>
+                                  <td colspan="1" data-editable-select="channel.reversalPotential.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.reversalPotential.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.value" buttons="no"><span>{{channel.reversalPotential.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.minValue" buttons="no"><span>{{channel.reversalPotential.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.reversalPotential.maxValue" buttons="no"><span>{{channel.reversalPotential.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Power:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.power.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.power.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.power.value" buttons="no"><span>{{channel.particles.power.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.power.minValue" buttons="no"><span>{{channel.particles.power.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.power.maxValue" buttons="no"><span>{{channel.particles.power.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle X Initial:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.xInitial.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.xInitial.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.xInitial.value" buttons="no"><span>{{channel.particles.xInitial.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.xInitial.minValue" buttons="no"><span>{{channel.particles.xInitial.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.xInitial.maxValue" buttons="no"><span>{{channel.particles.xInitial.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Alpha A:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.alpha.a.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.a.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.a.value" buttons="no"><span>{{channel.particles.alpha.a.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.a.minValue" buttons="no"><span>{{channel.particles.alpha.a.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.a.maxValue" buttons="no"><span>{{channel.particles.alpha.a.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Alpha B:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.alpha.b.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.b.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.b.value" buttons="no"><span>{{channel.particles.alpha.b.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.b.minValue" buttons="no"><span>{{channel.particles.alpha.b.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.b.maxValue" buttons="no"><span>{{channel.particles.alpha.b.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Alpha C:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.alpha.c.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.c.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.c.value" buttons="no"><span>{{channel.particles.alpha.c.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.c.minValue" buttons="no"><span>{{channel.particles.alpha.c.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.c.maxValue" buttons="no"><span>{{channel.particles.alpha.c.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Alpha D:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.alpha.d.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.d.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.d.value" buttons="no"><span>{{channel.particles.alpha.d.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.d.minValue" buttons="no"><span>{{channel.particles.alpha.d.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.d.maxValue" buttons="no"><span>{{channel.particles.alpha.d.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Alpha F:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.alpha.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.h.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.h.value" buttons="no"><span>{{channel.particles.alpha.h.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.h.minValue" buttons="no"><span>{{channel.particles.alpha.h.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.h.maxValue" buttons="no"><span>{{channel.particles.alpha.h.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Alpha H:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.alpha.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.h.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.h.value" buttons="no"><span>{{channel.particles.alpha.h.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.h.minValue" buttons="no"><span>{{channel.particles.alpha.h.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.alpha.h.maxValue" buttons="no"><span>{{channel.particles.alpha.h.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Beta A:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.beta.a.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.a.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.a.value" buttons="no"><span>{{channel.particles.beta.a.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.a.minValue" buttons="no"><span>{{channel.particles.beta.a.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.a.maxValue" buttons="no"><span>{{channel.particles.beta.a.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Beta B:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.beta.b.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.b.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.b.value" buttons="no"><span>{{channel.particles.beta.b.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.b.minValue" buttons="no"><span>{{channel.particles.beta.b.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.b.maxValue" buttons="no"><span>{{channel.particles.beta.b.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Beta C:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.beta.c.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.c.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.c.value" buttons="no"><span>{{channel.particles.beta.c.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.c.minValue" buttons="no"><span>{{channel.particles.beta.c.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.c.maxValue" buttons="no"><span>{{channel.particles.beta.c.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Beta D:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.beta.d.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.d.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.d.value" buttons="no"><span>{{channel.particles.beta.d.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.d.minValue" buttons="no"><span>{{channel.particles.beta.d.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.d.maxValue" buttons="no"><span>{{channel.particles.beta.d.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Beta F:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.beta.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.h.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.h.value" buttons="no"><span>{{channel.particles.beta.h.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.h.minValue" buttons="no"><span>{{channel.particles.beta.h.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.h.maxValue" buttons="no"><span>{{channel.particles.beta.h.maxValue}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Particle Beta H:</span></td>
+                                  <td colspan="1" data-editable-select="channel.particles.beta.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.h.type}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.h.value" buttons="no"><span>{{channel.particles.beta.h.value}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.h.minValue" buttons="no"><span>{{channel.particles.beta.h.minValue}}</span></td>
+                                  <td colspan="1" data-editable-text="channel.particles.beta.h.maxValue" buttons="no"><span>{{channel.particles.beta.h.maxValue}}</span></td>
+                                </tr>
+                              </table>
+                              <!-- End Voltage Gated Channel Parameters -->
+
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Channels -->
+
     </div>
 </div>
 <!-- end Accordion -->

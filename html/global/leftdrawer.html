@@ -36,14 +36,14 @@
                 <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item" data-ng-dblclick="drawerCtrl.addToModel(model)">
                     <div class="row">
                         <div class="col-lg-12">
-                            <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}<button class="btn btn-default btn-xs ncb-borderless-btn pull-right" data-ng-click="drawerCtrl.quickView(model)" type="button"><span class="glyphicon glyphicon-eye-open"></span></button></a>
+                            {{model.name}}<button class="btn btn-default btn-xs ncb-borderless-btn pull-right" data-ng-click="drawerCtrl.quickView(model)" type="button"><span class="glyphicon glyphicon-eye-open"></span></button>
                         </div>
                     </div>
-                    <div class="row ncb-default-blank-row">
+                    <div class="row ncb-current-components">
                         <div class="col-lg-12 ">
-                            <a data-ng-show="model.classification == 'cells'" class="ncb-cell-type-txt" href="">{{model.parameters.type}}</a>
-                            <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
-                            <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
+                            <div class="ncb-cell-type-txt" data-ng-show="model.classification == 'cells'">{{model.parameters.type}}</div>
+                            <div class="ncb-cell-type-txt" data-ng-show="model.classification == 'cellGroup'">Cell Group</div>
+                            <div class="ncb-cell-type-txt" data-ng-show="model.classification == 'model'">Model</div>
                         </div>
                     </div>
                 </div>
@@ -59,11 +59,11 @@
                             <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}<button class="btn btn-default btn-xs ncb-borderless-btn pull-right " data-ng-click="drawerCtrl.quickView(model)" type="button"><span class="glyphicon glyphicon-eye-open"></span></button></a>
                         </div>
                     </div>
-                    <div class="row ncb-default-blank-row">
+                    <div class="row ncb-current-components">
                         <div class="col-lg-12 ">
-                            <a data-ng-show="model.classification == 'cells'" class="ncb-cell-type-txt" href="">{{model.parameters.type}}</a>
-                            <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
-                            <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
+                            <div class="ncb-cell-type-txt" data-ng-show="model.classification == 'cells'">{{model.parameters.type}}</div>
+                            <div class="ncb-cell-type-txt" data-ng-show="model.classification == 'cellGroup'">Cell Group</div>
+                            <div class="ncb-cell-type-txt" data-ng-show="model.classification == 'model'">Model</div>
                         </div>
                     </div>
                 </div>
