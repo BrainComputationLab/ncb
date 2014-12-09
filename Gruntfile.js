@@ -163,6 +163,12 @@ module.exports = function(grunt) {
             flatten: true,
             src: ['exports/**'],
             dest: 'build/'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: ['uploads/**'],
+            dest: 'build/'
           }
         ]
       }

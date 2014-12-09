@@ -499,7 +499,20 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     else if (this.saveType == "file"){
       // save to file
       var json = JSON.stringify(savedModel, null, "\t"); // pretify with a tab at each level
-      $http.post('/export', json);
+      $http.post('/export', json).
+      success(function(data, status, headers, config) {
+        // this callback will be called asynchronously
+        // when the response is available
+        window.location.href = 'export';
+        console.log(data);
+      }).
+      error(function(data, status, headers, config) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        console.log(status);
+      });
+
+      
     }
 
 
@@ -514,10 +527,17 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
 
   this.file = null;
 
+  this.setFile = function(f){
+    this.file = f;
+    console.log(f);
+  };
+
   this.importModel = function(){
 
+    this.file = document.getElementById("import-file").files[0];
     // import from file
-    $http.get('/import').
+    console.log(this.file);
+    $http.post('/import', this.file).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
         // when the response is available
