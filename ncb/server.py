@@ -82,7 +82,8 @@ def exportFile():
 @app.route('/import', methods=['POST', 'GET'])
 def importFile():
     if request.method == 'POST':
-        webFile = request.files['uploadFile']
+    	print ("%r" %(request.files))
+        webFile = request.files
         # if file exists and is allowed extension
         if webFile: #and allowed_file(webFile.filename):
             # save file to server filesystem

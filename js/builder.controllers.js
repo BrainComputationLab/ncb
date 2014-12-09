@@ -527,16 +527,12 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
 
   this.file = null;
 
-  this.setFile = function(f){
-    this.file = f;
-    console.log(f);
-  };
-
   this.importModel = function(){
 
-    this.file = document.getElementById("import-file").files[0];
+    this.file = new FormData($("#uploadFileForm")[0]);//document.getElementById("import-file").files[0];
+
     // import from file
-    console.log(this.file);
+    console.log($("#uploadFileForm")[0]);
     $http.post('/import', this.file).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
