@@ -512,7 +512,6 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
         console.log(status);
       });
 
-      
     }
 
 
@@ -529,21 +528,29 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
 
   this.importModel = function(){
 
-    this.file = new FormData($("#uploadFileForm")[0]);//document.getElementById("import-file").files[0];
+    this.file = new FormData();
+    this.file.append("import-file", document.getElementById("import-file").files[0]);
 
     // import from file
-    console.log($("#uploadFileForm")[0]);
-    $http.post('/import', this.file).
-      success(function(data, status, headers, config) {
-        // this callback will be called asynchronously
-        // when the response is available
-        console.log(data);
-      }).
-      error(function(data, status, headers, config) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
-        console.log(status);
-      });
+    console.log(this.file);
+    $http({
+      method: 'POST',
+      url: '/import',
+      transformRequest: false,
+      headers: {'Content-Type': undefined},
+      data: this.file
+    }).
+    success(function(data, status, headers, config) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("File uploaded");
+      console.log(data);
+    }).
+    error(function(data, status, headers, config) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      console.log(status);
+    });
 
     
   };
