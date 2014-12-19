@@ -82,20 +82,20 @@ def exportFile():
 @app.route('/import', methods=['POST', 'GET'])
 def importFile():
     if request.method == 'POST':
-    	print ("files: %r" %(request.files))
+    	#print ("files: %r" %(request.files))
         webFile = request.files['import-file'];
         # if file exists and is allowed extension
         if webFile: #and allowed_file(webFile.filename):
             # save file to server filesystem
             #name = secure_filename(importFile)
             #print(name)
-            print ("webfile: %r" %(webFile))
+            #print ("webfile: %r" %(webFile))
             webFile.save(importFilePath)
             #print("Here2")
             jsonObj = loadJSONFile(importFilePath)
             # return JSON object to determine success
-            print("GOT: ", end="")
-            print(jsonObj)
+            #print("GOT: ", end="")
+            #print(jsonObj)
             return jsonify(jsonObj)
 
     elif request.method == 'GET':

@@ -43,6 +43,7 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
   $scope.$on('AddModelToList', function(event, model, listType){
 
     if (listType == "local"){
+
       // adds model to local list
       $scope.localModels.push(deepCopy(model));
     }
@@ -474,8 +475,6 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
   function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
   this.modelName = null;
-  this.modelDescription = null;
-  this.modelAuthor = null;
   this.saveType = "file";
 
   this.exportModel = function(){
@@ -484,8 +483,6 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
 
     // set saved model description and name
     savedModel.name = this.modelName;
-    savedModel.description = this.modelDescription;
-    savedModel.author = this.modelAuthor;
 
     // export model based on type of export
     if (this.saveType == "local") {
@@ -525,14 +522,14 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
   function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
   this.file = null;
+  this.importType = "local";
 
   this.importModel = function(){
 
     this.file = new FormData();
     this.file.append("import-file", document.getElementById("import-file").files[0]);
-
+    var type = this.importType;
     // import from file
-    console.log(this.file);
     $http({
       method: 'POST',
       url: '/import',
@@ -543,8 +540,11 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
     success(function(data, status, headers, config) {
       // this callback will be called asynchronously
       // when the response is available
-      console.log("File uploaded");
-      console.log(data);
+
+      // send a broadcast with the import data to add to model list
+      $rootScope.$broadcast('AddModelToList', data, type);
+
+      
     }).
     error(function(data, status, headers, config) {
       // called asynchronously if an error occurs
