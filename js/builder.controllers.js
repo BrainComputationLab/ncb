@@ -501,7 +501,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
         // this callback will be called asynchronously
         // when the response is available
         window.location.href = 'export';
-        console.log(data);
+        //console.log(data);
       }).
       error(function(data, status, headers, config) {
         // called asynchronously if an error occurs
