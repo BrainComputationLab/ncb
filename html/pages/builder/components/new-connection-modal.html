@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">New Connection</h4>
+                <h4 class="modal-title">{{editModal ? 'Edit Connection' : 'New Connection'}}</h4>
             </div>
             <div class="modal-body">
 
@@ -39,7 +39,7 @@
                             <div>
                             <ol class="breadcrumb ncb-bread">
                                 <li data-ng-repeat="breadCrumb in breadCrumbs1">
-                                  <a href="#" data-ng-click="connectionCtrl.goToBreadCrumb1($index)">{{breadCrumb.name}}</a>
+                                  <a href="#" data-ng-click="goToBreadCrumb1($index)">{{breadCrumb.name}}</a>
                                 </li>
                             </ol>
                             </div>
@@ -76,7 +76,7 @@
                             <div>
                             <ol class="breadcrumb ncb-bread">
                                 <li data-ng-repeat="breadCrumb in breadCrumbs2">
-                                  <a href="#" data-ng-click="connectionCtrl.goToBreadCrumb2($index)">{{breadCrumb.name}}</a>
+                                  <a href="#" data-ng-click="goToBreadCrumb2($index)">{{breadCrumb.name}}</a>
                                 </li>
                             </ol>
                             </div>
@@ -110,7 +110,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal" data-ng-click="connectionCtrl.addConnectionToModel()">Add</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" data-ng-click="connectionCtrl.addConnectionToModel()" data-ng-disabled="!selected1 || !selected2 || (selected1 == selected2)">{{editModal ? 'Edit' : 'Add'}}</button>
             </div>
         </div>
     </div>

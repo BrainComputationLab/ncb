@@ -23,10 +23,10 @@
 			</div>
 
     	<!-- show subcomponenets of model if not a cell -->
-      <div class="col-lg-12" data-ng-show="data.classification != 'cells' && data.cellGroups.length > 0">
-          <span class="label label-default" style="display:block;">Components</span>
+      <div class="col-lg-12" data-ng-show="(data.classification == 'cellGroup' && data.cellGroups.length > 0) || (data.classification == 'model' && data.cellGroups.cellGroups.length > 0)">
+          <span class="label label-default" style="display:block;" data-ng-click="sideCtrl.showComponents = !sideCtrl.showComponents">{{sideCtrl.showComponents ? "Components -" : "Components +"}}</span>
       </div>
-      <div class="col-lg-12" id="subComponents" data-ng-show="data.classification != 'cells' && data.cellGroups.length > 0">
+      <div class="col-lg-12" data-ng-show="sideCtrl.showComponents && data.classification == 'cellGroup' && data.cellGroups.length > 0">
 				<a class="list-group-item ncb-cell-list-item" data-ng-style="sideCtrl.styleElement(group)" data-ng-show="data.classification != 'cells'" data-ng-repeat="group in data.cellGroups" data-ng-dblclick="sideCtrl.selectComponent(group, $index)">
                     <p class="ncb-cell-name-txt ncb-list-text-color">{{group.name}}</p>
                     <h4 data-ng-show="group.classification == 'cells'" class="ncb-cell-type-txt">{{group.parameters.type}}</h4>
@@ -34,13 +34,21 @@
 				</a>
       </div>
 
+      <div class="col-lg-12" data-ng-show="sideCtrl.showComponents && data.classification == 'model' && data.cellGroups.cellGroups.length > 0">
+        <a class="list-group-item ncb-cell-list-item" data-ng-style="sideCtrl.styleElement(group)" data-ng-show="data.classification != 'cells'" data-ng-repeat="group in data.cellGroups.cellGroups" data-ng-dblclick="sideCtrl.selectComponent(group, $index)">
+                    <p class="ncb-cell-name-txt ncb-list-text-color">{{group.name}}</p>
+                    <h4 data-ng-show="group.classification == 'cells'" class="ncb-cell-type-txt">{{group.parameters.type}}</h4>
+                    <h4 data-ng-show="group.classification == 'cellGroup'" class="ncb-cell-type-txt">Cell Group</h4>
+        </a>
+      </div>
+
         	<!-- show different params based on cell type -->
         <div class="col-lg-12">
-	        <span class="label label-default" style="display:block;">Parameters Preview</span>
+	        <span class="label label-default" style="display:block;" data-ng-click="sideCtrl.showParams = !sideCtrl.showParams">{{SideCtrl.showParams ? "Parameters -" : "Parameters +"}}</span>
         </div>
         <div class="col-lg-12" id="paramsPreview">
 				  <div data-ng-show="data.classification == 'cells'">
-            <div id="izParam" data-ng-show="data.parameters.type == 'Izhikevich'">
+            <div id="izParam" data-ng-show="sideCtrl.showParams && data.parameters.type == 'Izhikevich'">
                 <a class="list-group-item"> Type: {{data.parameters.type}}</a>
                 <!-- A Parameter for Izhikevich Cell -->
                 <div class="panel-group">
@@ -187,7 +195,7 @@
                 </div>
                 <!-- End Threshold Parameter for Izhikevich Cell -->
             </div>
-            <div id="ncsParam" data-ng-show="data.parameters.type == 'NCS'">
+            <div id="ncsParam" data-ng-show="sideCtrl.showParams &&  data.parameters.type == 'NCS'">
 
 
                 <a class="list-group-item"> Type: {{data.parameters.type}}</a>
@@ -807,7 +815,7 @@ tle">
 
             </div>
 
-            <div id="hhParam" data-ng-show="data.parameters.type == 'HodgkinHuxley'">
+            <div id="hhParam" data-ng-show="sideCtrl.showParams && data.parameters.type == 'HodgkinHuxley'">
 
 
                 <a class="list-group-item"> Type: {{data.parameters.type}}</a>
@@ -1281,14 +1289,21 @@ tle">
                    <!-- End Calcium Spike Increment Parameter for Hodgkin Huxley Cell -->
             </div>
 				</div>
-				<div data-ng-show="data.classification == 'cellGroup'">
-                    <div id="cellParams">
-	                    <a class="list-group-item"> Type: Cell Group</a>
-                        <a class="list-group-item"> Quantity: {{data.num}}</a>
-                        <a class="list-group-item"> Geometry: {{data.geometry}}</a>
-                    </div>
+				<div data-ng-show="sideCtrl.showParams && data.classification == 'cellGroup'">
+          <div>
+            <a class="list-group-item"> Type: Cell Group</a>
+              <a class="list-group-item"> Description: {{data.description}}</a>
+              <a class="list-group-item"> Number of Subgroups: {{data.cellGroups.length}}</a>
+          </div>
 				</div>
-				<div data-ng-show="data.classification == 'model'">
+				<div data-ng-show="sideCtrl.showParams && data.classification == 'model'">
+          <div>
+            <a class="list-group-item"> Type: Model</a>
+              <a class="list-group-item"> Description: {{data.description}}</a>
+              <a class="list-group-item"> Author: {{data.author}}</a>
+              <a class="list-group-item"> Number of Subgroups: {{data.cellGroups.cellGroups.length}}</a>
+              <a class="list-group-item"> Number of Synapses: {{data.synapses.length}}</a>
+          </div>
 				</div>
         	</div>
 		</div>

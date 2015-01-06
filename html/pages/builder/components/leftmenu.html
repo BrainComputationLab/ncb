@@ -18,19 +18,17 @@
 	<!-- filtering is done here -->
 	<div class="panel-body" >
 
-    <span class="label label-default" data-ng-show="modelCtrl.getComponents().length > 0" style="display:block;">Model Components</span>
+    <span class="label label-default ncb-clickable" data-ng-show="modelCtrl.getComponents().length > 0" style="display:block;" data-ng-click="modelCtrl.showComponents = !modelCtrl.showComponents">{{modelCtrl.showComponents ? "Model Components -" : "Model Components +"}}</span>
 
-    <div class="list-group" id="currentModelComponents">
-      <li data-ng-repeat="model in modelCtrl.getComponents()" class="row list-group-item ncb-cell-list-item ncb-item-center"  data-ng-dblclick="modelCtrl.selectComponent(model, $index)" data-ng-click="modelCtrl.displayParameters(model)" data-ng-style="modelCtrl.styleElement(model)">
+    <div class="list-group ncb-current-components">
+      <li data-ng-repeat="model in modelCtrl.getComponents()" class="row list-group-item ncb-cell-list-item ncb-item-center"  data-ng-dblclick="modelCtrl.selectComponent(model, $index)" data-ng-click="modelCtrl.displayParameters(model)" data-ng-style="modelCtrl.styleElement(model)" data-ng-show="modelCtrl.showComponents">
           <div class="col-lg-10">
             <div class="row">
-              <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}</a>
+              {{model.name}}
             </div>
-            <div class="row">
-              <a data-ng-show="model.classification == 'cells'" class="ncb-cell-type-txt" href="">{{model.parameters.type}}</a>
-              <a data-ng-show="model.classification == 'cellGroup'" class="ncb-cell-type-txt" href="">Cell Group</a>
-              <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
-            </div>
+            <div class="row ncb-cell-type-txt" data-ng-show="model.classification == 'cells'">{{model.parameters.type}}</div>
+            <div class="row ncb-cell-type-txt" data-ng-show="model.classification == 'cellGroup'">Cell Group</div>
+            <div class="row ncb-cell-type-txt" data-ng-show="model.classification == 'model'">Model</div>
           </div>
           <div class="col-lg-2 ncb-remove-component-btn">
               <div class="row"><button type="button" data-ng-click="modelCtrl.removeModel(model)" class="btn btn-xs btn-danger pull-right">x</button></div>
@@ -38,19 +36,21 @@
       </li>
     </div>
 
-    <span class="label label-default" data-ng-show="modelCtrl.getComponents().length > 0" style="display:block;">Model Connections</span>
+    <span class="label label-default ncb-clickable" data-ng-show="modelCtrl.getSynapses().length > 0" style="display:block;" data-ng-click="modelCtrl.showSynapses = !modelCtrl.showSynapses">{{modelCtrl.showSynapses ? "Model Connections -" : "Model Connections +"}}</span>
 
-    <div class="list-group" id="currentModelConnections">
-      <li data-ng-repeat="synapse in modelCtrl.getSynapses()" class="row list-group-item ncb-cell-list-item ncb-item-center" data-ng-click="modelCtrl.displayParameters(synapse)">
-          <div class="col-lg-10">
+    <div class="list-group ncb-current-components">
+      <li data-ng-repeat="synapse in modelCtrl.getSynapses()" class="row list-group-item ncb-cell-list-item ncb-item-center" data-ng-click="modelCtrl.displayParameters(synapse)" data-ng-show="modelCtrl.showSynapses && modelCtrl.isConnectionVisible(synapse)" data-ng-style="modelCtrl.styleElement(synapse)">
+          <div class="col-lg-11">
             <div class="row">
-              <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{synapse.pre}}</a>
+              <span class="ncb-cell-type-txt">{{modelCtrl.pathString(synapse.prePath) + " - "}}</span>
+              <span>{{synapse.pre}}</span>
             </div>
             <div class="row">
-              <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{synapse.post}}</a>
+              <span class="ncb-cell-type-txt">{{modelCtrl.pathString(synapse.postPath) + " - "}}</span>
+              <span>{{synapse.post}}</span>
             </div>
           </div>
-          <div class="col-lg-2 ncb-remove-component-btn">
+          <div class="col-lg-1 ncb-remove-component-btn">
               <div class="row"><button type="button" data-ng-click="modelCtrl.removeSynapse(synapse)" class="btn btn-xs btn-danger pull-right">x</button></div>
           </div>
       </li>

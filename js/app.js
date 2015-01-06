@@ -29,6 +29,7 @@ myDBModels  = [
   new cells("Cell 3", 150, new izhikevichParam(), "Sphere"),
   new cellGroup('Cell Group 3'),
   new cellGroup('Cell Group 4'),
+  new model()
 ];
 
 myModels[2].cellGroups.push(new cells("Cell 4", 5, new ncsParam(), "Box"));
@@ -39,6 +40,9 @@ myModels[2].cellGroups.push(new cells("Cell 3", 150, new izhikevichParam(), "Sph
 myModels[2].cellGroups.push(new cellGroup('Cell Group 7'));
 myModels[2].cellGroups[2].cellGroups.push(new cells("Cell 3", 300, new izhikevichParam(), "Sphere"));
 myModels[2].cellGroups[2].cellGroups.push(new cellGroup('Cell Group 8'));
+myDBModels[3].name = "Test Model";
+myDBModels[3].author ="The wonderful NCB Team";
+myDBModels[3].cellGroups.cellGroups = deepCopyArray(myModels[2].cellGroups);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
