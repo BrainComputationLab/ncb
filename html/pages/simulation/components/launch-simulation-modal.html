@@ -1,0 +1,65 @@
+<!-- NEW CELL GROUP MODAL BEGIN -->
+<!-- Modal -->
+<div class="modal fade" id="launchSimulationModal" tabindex="-1" role="dialog" data-ng-controller="LaunchSimulationController as launchCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Launch Simulation</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-lg-12">
+
+                      <div class="form-group">
+                        <label for="selectedModel">Selected Model</label>
+                        <select class="form-control" data-ng-model="launchCtrl.selectedDropDown">
+                          <option value="current">Current Model</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+                    <div class="col-lg-12">
+
+
+                        <div class="panel panel-default" data-ng-show="launchCtrl.selectedDropDown == 'other'">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">Model List</h3>
+                            </div>
+                            
+                            <div class="panel-body ncb-connection-listgroup" >
+
+                                <div class="list-group">
+                                  <li data-ng-repeat="model in modelList" class="row list-group-item ncb-cell-list-item ncb-item-center" data-ng-style="launchCtrl.styleModel(model)" data-ng-show="model.classification == 'model'">
+                                      <div class="col-lg-10">
+                                        <div class="row">
+                                          <a class="ncb-cell-name-txt ncb-list-text-color" href="">{{model.name}}</a>
+                                        </div>
+                                        <div class="row">
+                                          <a data-ng-show="model.classification == 'model'" class="ncb-cell-type-txt" href="">Model</a>
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-2 ncb-remove-component-btn">
+                                          <div class="row"><button type="button" data-ng-class="model != selected ? 'btn btn-xs btn-info pull-right' : 'btn btn-xs btn-success pull-right'" data-ng-click="setSelected(model)"><span ng-class="model != selected ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-cloud-upload'"></span></button></div>
+                                      </div>
+                                  </li>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" data-ng-click="launchCtrl.launch()" data-ng-disabled="(!selected && launchCtrl.selectedDropDown != 'current')">Launch</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- NEW CELL GROUP MODAL END -->

@@ -1,5 +1,5 @@
 
-ncbApp.controller("SimulationCtrl", function(){
+ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
   this.tab = 0;
   this.paramsMinimized = true;
   this.buttonText = "- Minimize";
@@ -10,6 +10,7 @@ ncbApp.controller("SimulationCtrl", function(){
   this.selected = null;
   this.inputNum = 1;
   this.outputNum = 1;
+  this.selectedModel = null;
 
   // simulation parameters
   this.simName = null;
@@ -78,4 +79,45 @@ ncbApp.controller("SimulationCtrl", function(){
     this.selected = param;
   };
 
-});
+  this.launchSimulation = function(){
+    $rootScope.$broadcast('launchModal');
+  };
+
+}]);
+
+ncbApp.controller("LaunchSimulationController", ['$rootScope', '$scope', 'ColorService', 'CurrentModelService',
+ function($rootScope, $scope, colorService, currentModelService){
+
+  this.selectedDropDown = "current";
+  $scope.selected = null;
+  $scope.modelList = null;
+
+  $scope.$on('launchModal', function(event){
+
+    $scope.modelList = deepCopyArray(myModels);
+    for(var i=0; i < myDBModels.length; i++){
+      $scope.modelList.push(myDBModels[i]);
+    }
+
+    $scope.selected = null;
+
+  });
+
+  $scope.setSelected = function(model){
+    $scope.selected = model;
+  };
+
+  this.styleModel = function(model){
+    return colorService.styleElement(model);
+  };
+
+  this.launch = function(){
+    if(this.selectedDropDown == "current"){
+      alert(currentModelService.getCurrentModel().name);
+    }
+    else{
+      alert($scope.selected.name);
+    }
+  };
+
+}]);
