@@ -61,6 +61,21 @@ def saveJSONFile(fileName, JSON):
 	with open(fileName, 'w') as fout:
 		json.dump(JSON, fout, indent=4)
 
+
+#initiates transfer to ncs
+@app.route('/transfer', methods=['POST', 'GET'])
+def transferData():
+	if request.method == 'POST':
+		# jsonObj now has simulation parameters and model
+		jsonObj = request.get_json(False, False, False)
+
+		# send jsonObj to NCS here
+		#print ("jsonObj: %r" %(jsonObj))
+		return jsonify({'success': True})
+
+	return jsonify({'success': False})
+
+
 # initiates export
 @app.route('/export', methods=['POST', 'GET'])
 def exportFile():

@@ -80,20 +80,24 @@ ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
   };
 
   this.launchSimulation = function(){
-    $rootScope.$broadcast('launchModal');
+    var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: this.simOutput, inputs: this.simInput};
+
+    $rootScope.$broadcast('launchModal', simParams);
   };
 
 }]);
 
-ncbApp.controller("LaunchSimulationController", ['$rootScope', '$scope', 'ColorService', 'CurrentModelService',
- function($rootScope, $scope, colorService, currentModelService){
+ncbApp.controller("LaunchSimulationController", ['$rootScope', '$scope', '$http', 'ColorService', 'CurrentModelService',
+ function($rootScope, $scope, $http, colorService, currentModelService){
 
   this.selectedDropDown = "current";
   $scope.selected = null;
   $scope.modelList = null;
+  $scope.simulationParams = null;
 
-  $scope.$on('launchModal', function(event){
+  $scope.$on('launchModal', function(event, params){
 
+    $scope.simulationParams = params;
     $scope.modelList = deepCopyArray(myModels);
     for(var i=0; i < myDBModels.length; i++){
       $scope.modelList.push(myDBModels[i]);
@@ -112,12 +116,29 @@ ncbApp.controller("LaunchSimulationController", ['$rootScope', '$scope', 'ColorS
   };
 
   this.launch = function(){
+    var model = null;
     if(this.selectedDropDown == "current"){
-      alert(currentModelService.getCurrentModel().name);
+      // use current model being built
+      model = currentModelService.getCurrentModel();
     }
     else{
-      alert($scope.selected.name);
+      // use selected model from list
+      model = $scope.selected;
     }
+
+    // sends model and simulation parameters to server for transfer
+    var json = JSON.stringify({model: model, simulation: $scope.simulationParams}, null, "\t");
+    $http.post('/transfer', json).
+      success(function(data, status, headers, config) {
+        // this callback will be called asynchronously
+        //console.log(data);
+      }).
+      error(function(data, status, headers, config) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        console.log(status);
+      });
+
   };
 
 }]);
