@@ -507,7 +507,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                               <a data-toggle="collapse" data-parent="#accordion" href="#channel{{$index+1}}" style="display:block">
-                                  {{ "Channel" + ($index+1) }}
+                                  {{channel.name}}
                               </a>                                
                             </h4>
                         </div>
@@ -518,11 +518,15 @@
                               <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="channel.className == 'voltageGatedIonChannel'">
                                 <tr>
                                   <td colspan="2"><span>Name:</span></td>
-                                  <td colspan="4"><span>{{channel.name}}</span></td>
+                                  <td colspan="4" data-editable-text="channel.name" buttons="no"><span>{{channel.name}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Type:</span></td>
+                                  <td colspan="4"><span>{{mParamsCtrl.getChannelTypeString(channel)}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Description:</span></td>
-                                  <td colspan="4" data-editable-text="displayed.description" buttons="no"><span>{{channel.description}}</span></td>
+                                  <td colspan="4" data-editable-text="channel.description" buttons="no"><span>{{channel.description}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Parameter Name:</span></td>

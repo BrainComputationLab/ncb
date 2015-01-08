@@ -33,17 +33,62 @@ ncbApp.factory('SidePanelService', function($rootScope) {
     this.component = this.data;
   };
 
+/*currentModelService.goToBreadCrumb = function(index){
+
+  // go home if bread crumb index is 0
+  if(index === 0)
+    this.goHome();
+
+  // if not home loop through breadcumbs to reach selected index
+  else if(index < this.breadCrumbs.length){
+
+    // go down the first layer (starts at 1 : home has a useless index)
+    this.selected = this.currentModel.cellGroups.cellGroups[this.breadCrumbs[1].index];
+
+    // go down each following layer index you hit the bread crumb index
+    var setIndex;
+
+    for(var i=2; i<=index; i++){
+
+      // go down to the next level (components is always an array of cell groups / components[i] is a cellGroup class)
+      setIndex = this.breadCrumbs[i].index;
+      this.selected = this.selected.cellGroups[setIndex];
+    }
+
+    // shorten breadcrumbs to selected index
+    this.breadCrumbs.splice(index+1);
+  }
+};*/
+
   sidePanelService.goToBreadCrumb = function(index){
+    var setIndex;
+    var i;
+
     // go home if bread crumb index is 0
     if(index === 0)
       this.goHome();
+
     else if(index < this.breadCrumbs.length){
       // if not home loop through breadcumbs to reach selected index
-      this.component = this.data;
-      var setIndex;
-      for(var i=1; i<=index; i++){
-        setIndex = this.breadCrumbs[i].index;
-        this.component = this.component.cellGroups[setIndex];
+      // method to navigate if root was cell group
+      if(this.data.classification == "cellGroup"){
+        this.component = this.data;
+
+        for(i=1; i<=index; i++){
+          setIndex = this.breadCrumbs[i].index;
+          this.component = this.component.cellGroups[setIndex];
+        }
+      }
+      // method to navigate if root was model
+      else{
+        // go down the first layer (starts at 1 : home has a useless index)
+        this.component = this.data.cellGroups.cellGroups[this.breadCrumbs[1].index];
+        // go down each following layer index you hit the bread crumb index
+        for(i=2; i<=index; i++){
+          // go down to the next level
+          setIndex = this.breadCrumbs[i].index;
+          this.component = this.component.cellGroups[setIndex];
+        }
       }
 
       // shorten breadcrumbs to selected index
@@ -239,6 +284,15 @@ ncbApp.factory('CurrentModelService', function($rootScope){
 
   currentModelService.getCurrentModel = function(){
     return this.currentModel;
+  };
+
+  currentModelService.clearCurrentModel = function(){
+    // reset the current model so that it is empty
+    this.currentModel = new model();
+
+    this.breadCrumbs = [{name: "Home", index: 0}];
+    this.selected = this.currentModel.cellGroups;
+    this.displayedComponent = null;
   };
 
   // bread crumb functions //////////////////////////////////////////////

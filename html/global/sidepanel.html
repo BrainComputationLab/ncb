@@ -24,7 +24,7 @@
 
     	<!-- show subcomponenets of model if not a cell -->
       <div class="col-lg-12" data-ng-show="(data.classification == 'cellGroup' && data.cellGroups.length > 0) || (data.classification == 'model' && data.cellGroups.cellGroups.length > 0)">
-          <span class="label label-default" style="display:block;" data-ng-click="sideCtrl.showComponents = !sideCtrl.showComponents">{{sideCtrl.showComponents ? "Components -" : "Components +"}}</span>
+          <span class="label label-default ncb-clickable" style="display:block;" data-ng-click="sideCtrl.showComponents = !sideCtrl.showComponents">{{sideCtrl.showComponents ? "Components -" : "Components +"}}</span>
       </div>
       <div class="col-lg-12" data-ng-show="sideCtrl.showComponents && data.classification == 'cellGroup' && data.cellGroups.length > 0">
 				<a class="list-group-item ncb-cell-list-item" data-ng-style="sideCtrl.styleElement(group)" data-ng-show="data.classification != 'cells'" data-ng-repeat="group in data.cellGroups" data-ng-dblclick="sideCtrl.selectComponent(group, $index)">
@@ -44,7 +44,7 @@
 
         	<!-- show different params based on cell type -->
         <div class="col-lg-12">
-	        <span class="label label-default" style="display:block;" data-ng-click="sideCtrl.showParams = !sideCtrl.showParams">{{SideCtrl.showParams ? "Parameters -" : "Parameters +"}}</span>
+	        <span class="label label-default ncb-clickable" style="display:block;" data-ng-click="sideCtrl.showParams = !sideCtrl.showParams">{{SideCtrl.showParams ? "Parameters -" : "Parameters +"}}</span>
         </div>
         <div class="col-lg-12" id="paramsPreview">
 				  <div data-ng-show="data.classification == 'cells'">

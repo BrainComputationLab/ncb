@@ -14,7 +14,7 @@
 	<div class="panel-body ncb-scrollview">
 
     	<div class="list-group" data-ng-show="simCtrl.tab == 0">
-	      <li data-ng-repeat="param in simCtrl.simInput" class="row list-group-item ncb-io-list-item ncb-item-center" data-ng-click="simCtrl.selectParam(param)">
+	      <li data-ng-repeat="param in simCtrl.simInput" class="row list-group-item ncb-io-list-item ncb-item-center" data-ng-click="simCtrl.selectParam(param)" data-ng-style="simCtrl.styleElement(param)">
 	          <div class="col-lg-10">
 	              <a class="ncb-no-underline" data-editable-text="param.name" buttons="no">{{param.name}}</a>
 	          </div>
@@ -25,7 +25,7 @@
     	</div>
 
     	<div class="list-group" data-ng-show="simCtrl.tab == 1">
-	      <li data-ng-repeat="param in simCtrl.simOutput" class="row list-group-item ncb-io-list-item ncb-item-center" data-ng-click="simCtrl.selectParam(param)">
+	      <li data-ng-repeat="param in simCtrl.simOutput" class="row list-group-item ncb-io-list-item ncb-item-center" data-ng-click="simCtrl.selectParam(param)" data-ng-style="simCtrl.styleElement(param)">
 	          <div class="col-lg-10">
 	              <a class="ncb-no-underline" data-editable-text="param.name" buttons="no">{{param.name}}</a>
 	          </div>

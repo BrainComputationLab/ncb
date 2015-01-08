@@ -535,6 +535,18 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
     return ($scope.displayed.a.type && selected.length) ? selected[0].text : 'Not set';
   };
 
+  this.getChannelTypeString = function(channel){
+    if(channel.className == "voltageGatedIonChannel"){
+      return "Voltage Gated Ion Channel";
+    }
+    else if(channel.className == "calciumDependantChannel"){
+      return "Calcium Dependant Channel";
+    }
+    else{
+      return "Voltage Gated Channel";
+    }
+  };
+
   // update component show if changed
   $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
 
@@ -688,6 +700,15 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
     });
 
     
+  };
+
+}]);
+
+// controller for the model Import 
+ncbApp.controller("ClearModelController", ['CurrentModelService', function(currentModelService){
+
+  this.clearModel = function(){
+    currentModelService.clearCurrentModel();
   };
 
 }]);
