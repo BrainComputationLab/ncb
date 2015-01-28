@@ -85,6 +85,21 @@ ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
     $rootScope.$broadcast('launchModal', simParams);
   };
 
+  this.styleElement = function(model){
+    if(model === this.selected){
+      return {
+                'background-image': 'linear-gradient(left, #EEEEEE, #EEEEEE 100%, transparent 100%, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, #EEEEEE, #EEEEEE 100%, transparent 100%, transparent 100%)',
+            };
+    }
+    else{
+      return {
+                'background-image': 'linear-gradient(left, #FFFFFF, #FFFFFF 100%, transparent 100%, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, #FFFFFF, #FFFFFF 100%, transparent 100%, transparent 100%)',
+            };
+    }
+  };
+
 }]);
 
 ncbApp.controller("LaunchSimulationController", ['$rootScope', '$scope', '$http', 'ColorService', 'CurrentModelService',
