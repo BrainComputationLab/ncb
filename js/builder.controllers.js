@@ -178,7 +178,7 @@ ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', functio
 ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', function(currentModelService){
 
   this.cellGroupName = "";
-  this.amount = 0;
+  this.amount = 1;
   this.cellGroupType = "cellGroup";
   this.cellType = "Izhikevich";
   this.channelType = "Voltage Gated Ion Channel";
@@ -196,6 +196,18 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
         params = new ncsParam();
       else
         params = new hodgkinHuxleyParam();
+
+      // add channel based on selection
+      if(this.cellType != "Izhikevich"){
+        if(this.channelType == "Voltage Gated Ion Channel")
+          params.channel.push(new voltageGatedIonChannel());
+        else if(this.channelType == "Calcium Dependant Channel")
+          params.channel.push(new calciumDependantChannel());
+        else if(this.channelType == "Voltage Gated Channel"){
+          particles = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
+          params.channel.push(new voltageGatedChannel(particles));
+        }
+      }
 
       currentModelService.addToModel(new cells(this.cellGroupName, this.amount, params, "Box"));
     }
@@ -533,6 +545,30 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
   $scope.showType = function() {
     var selected = $filter('filter')($scope.statuses, {value: $scope.displayed.a.type});
     return ($scope.displayed.a.type && selected.length) ? selected[0].text : 'Not set';
+  };
+
+  this.checkNumber = function(value){
+      if(isNaN(value) || value.length === 0){
+        return "Value must be a number";
+      }
+  };
+
+  this.checkInteger = function(value){
+      if(value % 1 !== 0 || value.length === 0){
+        return "Value must be an integer";
+      }
+  };
+
+  this.checkProbability = function(value){
+      if(isNaN(value) || value.length === 0 || value < 0 || value > 1){
+        return "Value must be a decimal between 0 and 1";
+      }
+  };
+
+  this.checkNotEmpty = function(value){
+      if(value.length === 0){
+        return "Field cannot be empty";
+      }
   };
 
   this.getChannelTypeString = function(channel){
