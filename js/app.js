@@ -47,7 +47,7 @@ myDBModels[3].cellGroups.cellGroups = deepCopyArray(myModels[2].cellGroups);
 /////////////////////////////////////////////////////////////////////////////////////////
 
 // disable right drawer
-ncbApp.config(function(snapRemoteProvider) {
+ncbApp.config(['snapRemoteProvider', function(snapRemoteProvider) {
     snapRemoteProvider.globalOptions.disable = 'right';
     // or
     snapRemoteProvider.globalOptions = {
@@ -57,9 +57,9 @@ ncbApp.config(function(snapRemoteProvider) {
       tapToClose: false
       // ... others options
     };
-});
+}]);
 
 // set editable theme
-ncbApp.run(function(editableOptions){
+ncbApp.run(['editableOptions', function(editableOptions){
   editableOptions.theme = 'bs3'; // bootstrap 3 theme
-});
+}]);
