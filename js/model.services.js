@@ -1,5 +1,5 @@
 // create side panel service
-ncbApp.factory('SidePanelService', function($rootScope) {
+ncbApp.factory('SidePanelService', ['$rootScope', function($rootScope) {
   var sidePanelService = {};
 
   sidePanelService.breadCrumbs = [{name: "Home", index: 0}];
@@ -106,10 +106,10 @@ ncbApp.factory('SidePanelService', function($rootScope) {
   };
 
   return sidePanelService;
-});
+}]);
 
 // service that provides set website colors
-ncbApp.factory('ColorService', function($rootScope){
+ncbApp.factory('ColorService', ['$rootScope', function($rootScope){
   var colorService = {};
 
   colorService.colors = {cell: '#8781BD' , cellGroup: '#00568C', model:'#5D6B74', synapse:'#333333'};
@@ -203,11 +203,11 @@ ncbApp.factory('ColorService', function($rootScope){
   };
 
   return colorService;
-});
+}]);
 
 
 // service that allows the current model to be modified and accessed
-ncbApp.factory('CurrentModelService', function($rootScope){
+ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
   var currentModelService = {};
 
   // store current model in service so it can be accessed anywhere
@@ -388,4 +388,4 @@ ncbApp.factory('CurrentModelService', function($rootScope){
   };
 
   return currentModelService;
-});
+}]);
