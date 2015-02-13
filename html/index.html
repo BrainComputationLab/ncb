@@ -21,43 +21,43 @@
         <link href="assets/css/ncb/simulationbuilder.css" rel="stylesheet">
         <link href="assets/css/ncb/leftdrawer.css" rel="stylesheet">
 -->
-    <!--(bake global/styles.html)-->
+    @@include('global/styles.html')
 
     </head>
     <!-- End Loading CSS and Initialization -->
 
     <body>
     <!-- Include Modals -->
-    <!--(bake pages/builder/components/new-cell-group-modal.html)-->
-    <!--(bake pages/builder/components/new-connection-modal.html)-->
-    <!--(bake pages/builder/components/new-channel-modal.html)-->
-    <!--(bake pages/builder/components/clear-model-modal.html)-->
-    <!--(bake pages/builder/components/export-modal.html)-->
-    <!--(bake pages/builder/components/import-modal.html)-->
-    <!--(bake pages/simulation/components/launch-simulation-modal.html)-->
+    @@include('pages/builder/components/new-cell-group-modal.html')
+    @@include('pages/builder/components/new-connection-modal.html')
+    @@include('pages/builder/components/new-channel-modal.html')
+    @@include('pages/builder/components/clear-model-modal.html')
+    @@include('pages/builder/components/export-modal.html')
+    @@include('pages/builder/components/import-modal.html')
+    @@include('pages/simulation/components/launch-simulation-modal.html')
 
     <!-- Modularization of each tab -->
     <div data-snap-drawers>
         <div data-snap-drawer class="ncb-left-drawer" data-ng-controller="DrawerController as drawerCtrl">
-            <!--(bake global/leftdrawer.html)-->
+            @@include('global/leftdrawer.html')
         </div>
     </div>
     <div data-snap-content  style="width : 100%; background-color : white">
-        <!--(bake global/header.html)-->
+        @@include('global/header.html')
         <div class = "row">
             <div class="col-lg-2" style="background-color : #f8f8f8; height: 100%" data-ng-controller="SidePanelController as sideCtrl">
-                <!--(bake global/sidepanel.html)-->
+                @@include('global/sidepanel.html')
             </div>
             <div class="col-lg-8">
                 <div id="pages">
-                    <!--(bake pages/builder/brainbuilder.html)-->
-                    <!--(bake pages/simulation/simbuilder.html)-->
-                    <!--(bake pages/reports/reports.html)-->
-                    <!--(bake pages/database/database.html)-->
+                    @@include('pages/builder/brainbuilder.html')
+                    @@include('pages/simulation/simbuilder.html')
+                    @@include('pages/reports/reports.html')
+                    @@include('pages/database/database.html')
 
                     <!-- Footer -->
                      <div style="width : 100%; background-color : white" >
-                        <!--(bake global/footer.html)-->
+                        @@include('global/footer.html')
                     </div>
                     <!-- End Footer -->
                 </div>
@@ -69,11 +69,11 @@
     <!-- End Modularization of each tab -->
 
     <div id="import-export-modals">
-        <!--(bake pages/import-export/import.html)-->
-        <!--(bake pages/import-export/export.html)-->
+        @@include('pages/import-export/import.html')
+        @@include('pages/import-export/export.html')
     </div>
 
-    <!--(bake global/scripts.html)-->
+    @@include('global/scripts.html')
 
 
     <!-- Load the scripts via Require.js -->

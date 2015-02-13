@@ -21,10 +21,10 @@
 	<!-- Modularization of Each Element of the page broken up into pieces -->
     <div class="row">
         <div class="col-lg-4" data-ng-controller="ModelBuilderController as modelCtrl">
-            <!--(bake components/leftmenu.html)-->
+            @@include('components/leftmenu.html')
         </div>
         <div class="col-lg-8" data-ng-controller="ModelParametersController as mParamsCtrl">
-            <!--(bake components/rightmenu.html)-->
+            @@include('components/rightmenu.html')
         </div>
     </div>
     <!-- End Modularization -->
