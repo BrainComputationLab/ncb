@@ -1,3 +1,14 @@
+var parameters = require('./parameters');
+var utilityFcns = require('./utilityFcns');
+var app = require('./app');
+var cellGroup = parameters.cellGroup;
+var deepCopyArray = utilityFcns.deepCopyArray;
+var deepCopy = utilityFcns.deepCopy;
+var getCellIndex = utilityFcns.getCellIndex;
+var getSynapseIndex = utilityFcns.getSynapseIndex;
+var model = parameters.model;
+var ncbApp = app.ncbApp;
+
 // create side panel service
 ncbApp.factory('SidePanelService', ['$rootScope', function($rootScope) {
   var sidePanelService = {};

@@ -1,3 +1,6 @@
+window.$ = window.jQuery = require('jquery');
+require('bootstrap');
+require('jquery-ui');
 
 // initialize model page view
 $().ready( function() {
@@ -32,3 +35,10 @@ function hidePages() {
     $('#reports').hide();
     $('#database').hide();
 }
+
+// Load the rest of the JS
+require('./json');
+require('./app.js');
+require('./model.services.js');
+require('./builder.controllers.js');
+require('./sim.controllers.js');

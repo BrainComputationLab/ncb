@@ -1,3 +1,9 @@
+var $ = require('jquery');
+var parameters = require('./parameters');
+var izhikevichParam = parameters.izhikevichParam;
+var ncsParam = parameters.ncsParam;
+var hodgkinHuxleyParam = parameters.hodgkinHuxleyParam;
+
 function getIndex(source, attr, value) {
     alert(source);
 	// return index if found
@@ -80,3 +86,11 @@ function cloneParam(source) {
         return ret;
     }
 }
+
+module.exports = {
+    deepCopy: deepCopy,
+    deepCopyArray: deepCopyArray,
+    getCellIndex: getCellIndex,
+    getParamIndex: getParamIndex,
+    getSynapseIndex: getSynapseIndex,
+};

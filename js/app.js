@@ -1,3 +1,32 @@
+// Get the Angular dependencies
+require('angular');
+require('restangular');
+// Bower plugins require the whole path
+require('angular-strap/dist/angular-strap');
+require('angular-strap/dist/angular-strap.tpl');
+// angular-snap doesn't work without this.
+window.Snap = require('snapjs/snap');
+require('angular-snap/angular-snap');
+require('angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module');
+require('angular-xeditable/dist/js/xeditable');
+
+var utilityFcns = require('./utilityFcns');
+var parameters = require('./parameters');
+var calciumDependantChannel = parameters.calciumDependantChannel;
+var cellGroup = parameters.cellGroup;
+var cells = parameters.cells;
+var deepCopyArray = utilityFcns.deepCopyArray;
+var flatSynapse = parameters.flatSynapse;
+var hodgkinHuxleyParam = parameters.hodgkinHuxleyParam;
+var izhikevichParam = parameters.izhikevichParam;
+var model = parameters.model;
+var ncsParam = parameters.ncsParam;
+var ncsSynapse = parameters.ncsSynapse;
+var particleVariableConstants = parameters.particleVariableConstants;
+var voltageGatedChannel = parameters.voltageGatedChannel;
+var voltageGatedIonChannel = parameters.voltageGatedIonChannel;
+var voltageGatedParticle = parameters.voltageGatedParticle;
+
 var ncbApp = angular.module('ncbApp', ['snap', 'colorpicker.module', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'xeditable']);
 
 //////// A COMPONENT IS A GENERAL TERM FOR A MODEL, CELL, OR CELL GROUP /////////////////////////////////
@@ -63,3 +92,9 @@ ncbApp.config(['snapRemoteProvider', function(snapRemoteProvider) {
 ncbApp.run(['editableOptions', function(editableOptions){
   editableOptions.theme = 'bs3'; // bootstrap 3 theme
 }]);
+
+module.exports = {
+    myDBModels: myDBModels,
+    myModels: myModels,
+    ncbApp: ncbApp,
+};

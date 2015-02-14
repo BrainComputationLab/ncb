@@ -1,3 +1,4 @@
+var $ = require('jquery');
 
 $().ready(function() {
     $("#export_modal").on("show.bs.modal", function() {

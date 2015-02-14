@@ -202,3 +202,22 @@ function inputGroup() {
 function report() {
 
 }
+
+module.exports = {
+    calciumDependantChannel: calciumDependantChannel,
+    cellGroup: cellGroup,
+    cells: cells,
+    flatSynapse: flatSynapse,
+    hodgkinHuxleyParam: hodgkinHuxleyParam,
+    izhikevichParam: izhikevichParam,
+    model: model,
+    ncsParam: ncsParam,
+    ncsSynapse: ncsSynapse,
+    particleVariableConstants: particleVariableConstants,
+    simulationInput: simulationInput,
+    simulationOutput: simulationOutput,
+    synapseGroup: synapseGroup,
+    voltageGatedChannel: voltageGatedChannel,
+    voltageGatedIonChannel: voltageGatedIonChannel,
+    voltageGatedParticle: voltageGatedParticle,
+};

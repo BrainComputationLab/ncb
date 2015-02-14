@@ -12,6 +12,10 @@ var minifyHTML = require('gulp-minify-html');
 var streamqueue = require('streamqueue');
 var shell = require('gulp-shell');
 var sourcemaps = require('gulp-sourcemaps');
+var webpack = require('webpack');
+var gulpWebpack = require('gulp-webpack');
+var path = require('path');
+var plumber = require('gulp-plumber');
 
 var buildPath = 'build/';
 var assetPath = buildPath + 'static/assets/';
@@ -29,32 +33,7 @@ var paths = {
         'bower_components/angular-bootstrap-colorpicker/css/colorpicker.css',
         'bower_components/angular-xeditable/dist/css/xeditable.css'
     ],
-    vendorJs: [
-        './node_modules/jquery/dist/jquery.js',
-        './node_modules/bootstrap/dist/js/bootstrap.js',
-        './node_modules/underscore/underscore.js',
-        './node_modules/angular/angular.js',
-        './node_modules/angular-strap/dist/angular-strap.js',
-        './node_modules/angular-strap/dist/angular-strap.tpl.js',
-        './node_modules/restangular/dist/restangular.js',
-        './node_modules/gulp-jshint/node_modules/jshint/node_modules/underscore/underscore.js',
-        './bower_components/snapjs/snap.js',
-        './bower_components/angular-snap/angular-snap.js',
-        './bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
-        './bower_components/angular-xeditable/dist/js/xeditable.js',
-        './bower_components/jquery-ui/jquery-ui.js'
-    ],
-    ncbjsSrc: [
-        'js/init.js',
-        'js/json.js',
-        'js/utilityFcns.js',
-        'js/parameters.js',
-        'js/app.js',
-        'js/model.services.js',
-        'js/builder.controllers.js',
-        'js/sim.controllers.js'
-    ],
-    ncbjsDest: assetPath + 'js/ncb.js',
+    jsDest: assetPath + 'js/ncb.js',
     buildMotion: 'js/vbot/build_motion.py',
     motionDest: 'js/vbot/motion.js',
     vbotEntry: 'js/vbot/main.js',
@@ -65,12 +44,58 @@ var paths = {
     fonts: 'node_modules/bootstrap/dist/fonts/*',
     tests: 'js/test/*.js',
     serverPy: ['ncb/server.py', 'ncb/db.py', 'ncb/__init__.py'],
-    otherAssets: ['images/**', 'icons/**']
+    otherAssets: ['images/**', 'icons/**'],
 };
+
+// This lets us modify the config easily
+function webpackConf(options) {
+    var defaultConf = {
+        devtool: '#source-map',
+        resolve: {
+            root: [path.join(__dirname, "bower_components")]
+        },
+        plugins: [
+            new webpack.ResolverPlugin(
+                new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
+            )
+        ],
+        output: {
+            filename: 'ncb.js'
+        }
+    };
+    if (options !== undefined) {
+        for (option in options) {
+            if (options.hasOwnProperty(option)) {
+                defaultConf[option] = options[option];
+            }
+        }
+    }
+
+    return defaultConf;
+}
+
+// Makes a task to build the JS with certain arguments to Webpack.
+function buildJsTask(options) {
+    return function () {
+        return gulp.src('js/init.js')
+            .pipe(gulpWebpack(webpackConf(options), webpack))
+            .pipe(gulp.dest(assetPath + 'js/'));
+    };
+}
+
+// Makes a watcher
+function makeWatch(path, task) {
+    watch(path, batch(function (events, cb) {
+        events.on('data', function () {
+            gulp.start(task);
+        }).on('end', cb)
+    }));
+}
 
 gulp.task('css', function () {
     var vendor = gulp.src(paths.cssDeps);
     var ncStyles = gulp.src(paths.less)
+                       .pipe(plumber())
                        .pipe(less());
 
     return streamqueue({ objectMode: true }, vendor, ncStyles)
@@ -79,23 +104,9 @@ gulp.task('css', function () {
         .pipe(gulp.dest('.'));
 });
 
-gulp.task('vendorJs', function () {
-    return gulp.src(paths.vendorJs)
-        .pipe(sourcemaps.init())
-        .pipe(concat(assetPath + 'js/vendor.js'))
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('.'));
-});
+gulp.task('js', ['lint'], buildJsTask());
 
-gulp.task('ncbjs', ['lint'], function () {
-    return gulp.src(paths.ncbjsSrc)
-        .pipe(sourcemaps.init())
-        .pipe(concat(paths.ncbjsDest))
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('.'));
-});
+gulp.task('jsWatch', ['lint'], buildJsTask({watch:true}));
 
 gulp.task('html', function () {
     return gulp.src(paths.indexHtml)
@@ -141,29 +152,19 @@ gulp.task('lint', function () {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('build', ['ncbjs', 'html', 'css', 'copy', 'vendorJs']);
+gulp.task('build', ['js', 'html', 'css', 'copy']);
 
-gulp.task('watch', function () {
-    watch(paths.ncbjsSrc, batch(function () {
-        gulp.start('ncbjs');
-    }));
-    watch(paths.allHtml, batch(function () {
-        gulp.start('html');
-    }));
-    watch(paths.allLess, batch(function () {
-        gulp.start('css');
-    }));
-    watch(paths.serverPy, batch(function () {
-        gulp.start('copyPython')
-    }));
-    watch(paths.otherAssets, batch(function () {
-        gulp.start('copyAssets');
-    }));
-    watch(paths.colorPickerHtml, batch(function () {
-        gulp.start('copyPopover');
-    }));
+gulp.task('watch', ['build'], function () {
+    buildJsTask({watch: true})();
+    makeWatch(paths.allJs, 'lint');
+    makeWatch(paths.allHtml, 'html');
+    makeWatch(paths.allLess, 'css');
+    makeWatch(paths.serverPy, 'copyPython');
+    makeWatch(paths.otherAssets, 'copyAssets');
+    makeWatch(paths.colorPickerHtml, 'copyPopover');
 });
 
-gulp.task('default', ['build'],
+gulp.task('run', ['build'],
     shell.task(['cd build && python server.py']));
 
+gulp.task('default', ['watch', 'run']);

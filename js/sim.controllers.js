@@ -1,3 +1,13 @@
+var utilityFcns = require('./utilityFcns');
+var app = require('./app');
+var parameters = require('./parameters');
+var deepCopyArray = utilityFcns.deepCopyArray;
+var getParamIndex = utilityFcns.getParamIndex;
+var myDBModels = app.myDBModels;
+var myModels = app.myModels;
+var ncbApp = app.ncbApp;
+var simulationInput = parameters.simulationInput;
+var simulationOutput = parameters.simulationOutput;
 
 ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
   this.tab = 0;

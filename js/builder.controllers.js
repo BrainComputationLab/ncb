@@ -1,3 +1,26 @@
+var $ = require('jquery');
+var parameters = require('./parameters');
+var utilityFcns = require('./utilityFcns');
+var app = require('./app');
+var calciumDependantChannel = parameters.calciumDependantChannel;
+var cellGroup = parameters.cellGroup;
+var cells = parameters.cells;
+var deepCopyArray = utilityFcns.deepCopyArray;
+var deepCopy = utilityFcns.deepCopy;
+var flatSynapse = parameters.flatSynapse;
+var hodgkinHuxleyParam = parameters.hodgkinHuxleyParam;
+var izhikevichParam = parameters.izhikevichParam;
+var myDBModels = app.myDBModels;
+var myModels = app.myModels;
+var ncbApp = app.ncbApp;
+var ncsParam = parameters.ncsParam;
+var ncsSynapse = parameters.ncsSynapse;
+var particleVariableConstants = parameters.particleVariableConstants;
+var synapseGroup = parameters.synapseGroup;
+var voltageGatedChannel = parameters.voltageGatedChannel;
+var voltageGatedIonChannel = parameters.voltageGatedIonChannel;
+var voltageGatedParticle = parameters.voltageGatedParticle;
+
 // controller for the model import/export drawer
 ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorService', 'CurrentModelService',
   function($scope, sidePanelService, colorService, currentModelService){
