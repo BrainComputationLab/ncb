@@ -21,9 +21,9 @@ var buildPath = 'build/';
 var assetPath = buildPath + 'static/assets/';
 
 var paths = {
-    allJs: 'js/**.js',
+    allJs: 'js/**/*.js',
     less: 'less/main.less',
-    allLess: 'less/*.less',
+    allLess: 'less/**/*.less',
     cssDest: assetPath + '/css/styles.css',
     cssDeps: [
         'node_modules/angular-motion/dist/angular-motion.css',
@@ -38,13 +38,13 @@ var paths = {
     motionDest: 'js/vbot/motion.js',
     vbotEntry: 'js/vbot/main.js',
     indexHtml: 'html/index.html',
-    allHtml: 'html/**.html',
+    allHtml: 'html/**/*.html',
     indexDest: buildPath,
     colorPickerHtml: 'html/global/colorpicker-popover.html',
     fonts: 'node_modules/bootstrap/dist/fonts/*',
     tests: 'js/test/*.js',
     serverPy: ['ncb/server.py', 'ncb/db.py', 'ncb/__init__.py'],
-    otherAssets: ['images/**', 'icons/**'],
+    otherAssets: ['images/**/*', 'icons/**/*'],
 };
 
 // This lets us modify the config easily
