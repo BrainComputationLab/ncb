@@ -16,6 +16,7 @@ var webpack = require('webpack');
 var gulpWebpack = require('gulp-webpack');
 var path = require('path');
 var plumber = require('gulp-plumber');
+var named = require('vinyl-named');
 
 var buildPath = 'build/';
 var assetPath = buildPath + 'static/assets/';
@@ -45,6 +46,9 @@ var paths = {
     tests: 'js/test/*.js',
     serverPy: ['ncb/server.py', 'ncb/db.py', 'ncb/__init__.py'],
     otherAssets: ['images/**/*', 'icons/**/*'],
+    targets: {
+        'ncb': './js/init.js',
+    }
 };
 
 // This lets us modify the config easily
@@ -59,8 +63,9 @@ function webpackConf(options) {
                 new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
             )
         ],
+        entry: paths.targets,
         output: {
-            filename: 'ncb.js'
+            filename: '[name].js'
         }
     };
     if (options !== undefined) {
@@ -77,7 +82,7 @@ function webpackConf(options) {
 // Makes a task to build the JS with certain arguments to Webpack.
 function buildJsTask(options) {
     return function () {
-        return gulp.src('js/init.js')
+        return gulp.src('.')
             .pipe(gulpWebpack(webpackConf(options), webpack))
             .pipe(gulp.dest(assetPath + 'js/'));
     };
