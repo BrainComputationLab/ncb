@@ -9,7 +9,9 @@ var ncbApp = app.ncbApp;
 var simulationInput = parameters.simulationInput;
 var simulationOutput = parameters.simulationOutput;
 
-ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
+ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentModelService",
+    function($scope, $rootScope, $sce, currentModelService){
+
   this.tab = 0;
   this.paramsMinimized = true;
   this.buttonText = "- Minimize";
@@ -21,6 +23,8 @@ ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
   this.inputNum = 1;
   this.outputNum = 1;
   this.selectedModel = null;
+  this.possibleTargets = [];
+  this.possibleOutputTargets = [];
 
   // simulation parameters
   this.simName = null;
@@ -29,7 +33,6 @@ ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
   this.duration = null;
   this.interactive = "No";
   this.includeDistance = "No";
-
 
   this.selectTab = function(setTab){
     this.tab = setTab;
@@ -49,9 +52,38 @@ ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
     return this.paramsMinimized;
   };
 
+  // create possible targets
+  this.getTargets = function() {
+    var appendTargets = function(cellGroup, targets, currentLevel) {
+      for(var i = 0; i < cellGroup.length; i++) {
+        var space = '';
+        for(var j = 0; j < currentLevel * 2; j++) {
+          space += '&nbsp;';
+        }
+
+        var name = space + '&bull; ' + cellGroup[i].name;
+        targets.push({val: cellGroup[i].name, name: $sce.trustAsHtml(name)});
+
+        if(cellGroup[i].cellGroups != undefined)
+          appendTargets(cellGroup[i].cellGroups, targets, currentLevel + 1);
+      }
+    };
+
+    var targets = [];
+    var rootGroup = currentModelService.getData();
+    appendTargets(rootGroup, targets, 0);
+    return targets;
+  };
+
+  var cont = this;
+  $scope.$on('page-changed', function(event) {
+    cont.possibleTargets = cont.getTargets();
+    cont.setParams();
+  });
+
   // add a new input or output parameter
   this.addNewParam = function(){
-
+    this.possibleTargets = this.getTargets();
     // if input tab selected add input param
     if(this.tab === 0){
       this.simInput.push(new simulationInput("Input" + this.inputNum));
@@ -87,6 +119,12 @@ ncbApp.controller("SimulationCtrl", ["$rootScope", function($rootScope){
 
   this.selectParam = function(param){
     this.selected = param;
+  };
+
+  this.setParams = function() {
+    var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: this.simOutput, inputs: this.simInput};
+
+    currentModelService.setSimParams(simParams);
   };
 
   this.launchSimulation = function(){

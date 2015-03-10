@@ -74,7 +74,7 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
       // add model to database list
       $scope.dbModels.push(deepCopy(model));
     }
-    
+
   });
 
 
@@ -263,7 +263,7 @@ ncbApp.controller("AddChannelModalController", ['CurrentModelService', function(
 }]);
 
 // controller for add connection modal
-ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService', 
+ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService',
   function($scope, currentModelService, colorService){
 
   this.synapseCount = 0;
@@ -430,7 +430,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 }]);
 
 // left panel controller (model navigation)
-ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
+ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentModelService', 'SidePanelService', 'ColorService',
   function($rootScope, $scope, currentModelService, sidePanelService, colorService){
   $scope.colors = colorService.getColors();
   this.showComponents = true;
@@ -503,7 +503,7 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
 
     // if connection is not within current path return false
     for(i=0; i<crumbs.length; i++){
-      if((connection.prePath.length > i && connection.prePath[i].name !== crumbs[i].name) || 
+      if((connection.prePath.length > i && connection.prePath[i].name !== crumbs[i].name) ||
         (connection.postPath.length > i && connection.postPath[i].name !== crumbs[i].name)){
         return false;
       }
@@ -622,7 +622,7 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
 
         // if component was a cell group track its path level
         if(newComponent.classification == "cellGroup"){
-          $scope.levelInCrumbs = currentModelService.getBreadCrumbs().length;     
+          $scope.levelInCrumbs = currentModelService.getBreadCrumbs().length;
 
           /*    // update component show if changed
           $scope.nameWatch = $scope.$watch(function () { return currentModelService.getDisplayedComponent().name; }, function (newName) {
@@ -673,10 +673,10 @@ ncbApp.controller("ModelHeaderController", ['SidePanelService', function(sidePan
   this.hideSidePanel = function(){
     sidePanelService.setVisible(false);
   };
-  
+
 }]);
 
-// controller for the model Export 
+// controller for the model Export
 ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
   function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
@@ -686,7 +686,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
   this.exportModel = function(){
 
     var savedModel = currentModelService.getCurrentModel();
-
+    var simParams = currentModelService.getSimParams();
     // set saved model description and name
     savedModel.name = this.modelName;
 
@@ -701,7 +701,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     }
     else if (this.saveType == "file"){
       // save to file
-      var json = JSON.stringify(savedModel, null, "\t"); // pretify with a tab at each level
+      var json = JSON.stringify({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
       $http.post('/export', json).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
@@ -718,12 +718,12 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     }
 
 
-    
+
   };
 
 }]);
 
-// controller for the model Import 
+// controller for the model Import
 ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
   function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
@@ -750,7 +750,7 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
       // send a broadcast with the import data to add to model list
       $rootScope.$broadcast('AddModelToList', data, type);
 
-      
+
     }).
     error(function(data, status, headers, config) {
       // called asynchronously if an error occurs
@@ -758,12 +758,12 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
       console.log(status);
     });
 
-    
+
   };
 
 }]);
 
-// controller for the model Import 
+// controller for the model Import
 ncbApp.controller("ClearModelController", ['CurrentModelService', function(currentModelService){
 
   this.clearModel = function(){

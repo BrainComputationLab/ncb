@@ -228,6 +228,16 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
   currentModelService.selected = currentModelService.currentModel.cellGroups;
   currentModelService.displayedComponent = null;
 
+  currentModelService.simParams = {};
+
+  currentModelService.setSimParams = function(params) {
+    this.simParams = params;
+  };
+
+  currentModelService.getSimParams = function() {
+    return this.simParams;
+  }
+
   currentModelService.setName = function(name){
     this.currentModel.name = name;
   };
@@ -286,7 +296,7 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
             }
 
             // remove the connection
-            this.currentModel.synapses.splice(i, 1);  
+            this.currentModel.synapses.splice(i, 1);
           }
         }
       }
@@ -389,7 +399,7 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
     if (this.displayedComponent.classification === 'synapseGroup' && synapse.pre === this.displayedComponent.pre &&
       synapse.post === this.displayedComponent.post) {
         this.displayedComponent = null;
-    }    
+    }
 
     // remove model if found
     var myIndex = getSynapseIndex(this.currentModel.synapses, synapse.pre, synapse.post);

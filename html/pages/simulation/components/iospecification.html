@@ -34,6 +34,82 @@
 		</div>
 
 		<div class="row">
+			<div class="col-lg-6">
+				    <!-- Name of Simulation input -->
+					<div class="form-group">
+						<label for="simNameInput">Starting Amplitude</label>
+						<input data-ng-model="simCtrl.selected.start_amplitude" type="text" placeholder="ex. 2" class="form-control">
+					</div>
+					<!-- End Name of Simulation input -->
+				</div>
+			<div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Ending Amplitude</label>
+					<input data-ng-model="simCtrl.selected.end_amplitude" type="text" placeholder="ex. 2" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-6">
+				    <!-- Name of Simulation input -->
+					<div class="form-group">
+						<label for="simNameInput">Amplitude Scale</label>
+						<input data-ng-model="simCtrl.selected.amplitude_scale" type="text" placeholder="ex. 2" class="form-control">
+					</div>
+					<!-- End Name of Simulation input -->
+				</div>
+			<div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Amplitude Shift</label>
+					<input data-ng-model="simCtrl.selected.amplitude_shift" type="text" placeholder="ex. 2" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-6">
+				    <!-- Name of Simulation input -->
+					<div class="form-group">
+						<label for="simNameInput">Delay (Seconds)</label>
+						<input data-ng-model="simCtrl.selected.delay" type="text" placeholder="ex. 2" class="form-control">
+					</div>
+					<!-- End Name of Simulation input -->
+				</div>
+			<div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Time Scale</label>
+					<input data-ng-model="simCtrl.selected.time_scale" type="text" placeholder="ex. 2" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-6">
+				    <!-- Name of Simulation input -->
+					<div class="form-group">
+						<label for="simNameInput">Current (Amps)</label>
+						<input data-ng-model="simCtrl.selected.current" type="text" placeholder="ex. 2" class="form-control">
+					</div>
+					<!-- End Name of Simulation input -->
+				</div>
+			<div class="col-lg-6">
+			    <!-- Name of Simulation input -->
+				<div class="form-group">
+					<label for="simNameInput">Phase</label>
+					<input data-ng-model="simCtrl.selected.phase" type="text" placeholder="ex. 2" class="form-control">
+				</div>
+				<!-- End Name of Simulation input -->
+			</div>
+		</div>
+
+		<div class="row">
 		    <div class="col-lg-6">
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
@@ -67,9 +143,12 @@
 			    <!-- Name of Simulation input -->
 			    <div class="form-group">
 				    <label for="simNameInput">Input Target</label>
-	                <select class="form-control" data-ng-model="simCtrl.selected.inputTarget">
-	                    <option value='No Cell Groups Available'>No Cell Groups Available</option>
+	                <select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0">
+	                    <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name"></option>
 	                </select>
+
+	                <p data-ng-show="simCtrl.possibleTargets.length == 0">No Cell Groups Available</p>
+
                 </div>
 				<!-- End Name of Simulation input -->
 			</div>
@@ -120,6 +199,10 @@
 				    <label for="simNameInput">Report Type</label>
 	                <select class="form-control" data-ng-model="simCtrl.selected.reportType">
 	                    <option value='Channel Conductance'>Channel Conductance</option>
+	                    <option value='Synaptic Current'>Synaptic Current</option>
+	                    <option value='Neuron Voltage'>Neuron Voltage</option>
+	                    <option value='Neuron Fire'>Neuron Fire</option>
+	                    <option value='Input Current'>Input Current</option>
 	                </select>
                 </div>
 
@@ -137,8 +220,12 @@
 		    <div class="col-lg-6">
 			    <!-- Name of Simulation input -->
 				<div class="form-group">
-					<label for="simNameInput">Report target</label>
-					<input data-ng-model="simCtrl.selected.reportTarget" type="text" placeholder="ex. 3" class="form-control">
+					<label for="simNameInput">Report Target</label>
+					<select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0">
+	                    <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name"></option>
+	                </select>
+
+	                <p data-ng-show="simCtrl.possibleTargets.length == 0">No Cell Groups Available</p>
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>

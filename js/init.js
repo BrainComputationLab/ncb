@@ -1,7 +1,7 @@
 window.$ = window.jQuery = require('jquery');
 require('jquery-ui');
 require('bootstrap');
-
+require("angular");
 // initialize model page view
 $().ready( function() {
     hidePages();
@@ -25,6 +25,10 @@ $().ready( function() {
         target = $(this).attr('href');
         $(target).show();
         e.preventDefault();
+
+        var $rootScope = angular.element(document.body).injector().get('$rootScope');
+        $rootScope.$broadcast('page-changed');
+        $rootScope.$apply();
     });
 });
 

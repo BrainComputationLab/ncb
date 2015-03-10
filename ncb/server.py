@@ -18,6 +18,13 @@ allowedFileExtensions = set(['json','py'])
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['EXPORT_FOLDER'] = 'exports'
 
+if not os.path.exists(app.config['EXPORT_FOLDER']):
+    os.makedirs(app.config['EXPORT_FOLDER'])
+
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+
 importFile = 'import.json'
 importFilePath = os.path.join(app.config['UPLOAD_FOLDER'], importFile)
 # changes old key names to new key names
@@ -86,7 +93,7 @@ def exportFile():
     global exportFile
     if request.method == 'POST':
         jsonObj = request.get_json(False, False, False)
-        fileName = jsonObj['name'] + '.json'
+        fileName = jsonObj['model']['name'] + '.json'
         filePath = os.path.join(app.config['EXPORT_FOLDER'], fileName)
         saveJSONFile(filePath, jsonObj)
 
@@ -158,11 +165,11 @@ def transfer_report(slug):
             # Read from file
             firstline = line.split()
 
-            # Wait 1 second between sends
-            difference = 0
-            while difference < 1:
-                difference = time.time() - oldTime
-            oldTime = time.time()
+            #Wait 1 second between sends
+            # difference = 0
+            # while difference < 1:
+            #     difference = time.time() - oldTime
+            # oldTime = time.time()
 
             # Do for each report
             for report in reports:

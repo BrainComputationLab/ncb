@@ -1,7 +1,6 @@
 var utilityFcns = require('./utilityFcns');
 var app = require('./app');
 var ncbApp = app.ncbApp;
-//require('angular');
 
 function Socket(id) {
     this.id = id;
@@ -32,7 +31,7 @@ Socket.prototype = {
 
         socket.onmessage = function(message) {
             var data = JSON.parse(message.data);
-            console.log("Report: " + data);
+            //console.log("Report: " + data);
             //console.log($scope);
             $scope.reportData.push(data);
             $scope.$apply();
@@ -55,6 +54,5 @@ ncbApp.controller('ReportsController', ['$scope', function($scope) {
             $scope.started = true;
         }
     };
-
 
 }]);
