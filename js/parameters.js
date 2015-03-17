@@ -192,7 +192,7 @@ function simulationInput(name){
 function simulationOutput(name){
 	this.className = "simulationOutput";
 	this.name = name;
-	this.outputType = "View Report";
+	this.saveAsFile = false;
 	this.reportType = "Channel Conductance";
 	this.reportTarget = "No Cell Groups Available";
 	this.frequency = 10;
