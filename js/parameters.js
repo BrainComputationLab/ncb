@@ -172,21 +172,21 @@ function simulationInput(name){
 	this.className = "simulationInput";
 	this.name = name;
 	this.stimulusType = "Rectangular Current";
-	this.amplitude = 2;
-	this.start_amplitude = 2;
-	this.end_amplitude = 2;
-	this.amplitude_scale = 1;
-	this.amplitude_shift = 0;
-	this.delay = 0;
-	this.time_scale = 1;
-	this.current = 1;
-	this.phase = 0;
-	this.width = 3;
-	this.frequency = 10;
+	//this.amplitude = 2;
+	this.start_amplitude = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.end_amplitude = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.amplitude_scale = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.amplitude_shift = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.delay = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.time_scale = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.current = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.phase = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.width = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.frequency = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.probability = 0.5;
-	this.inputTarget = "No Cell Groups Available";
-	this.startTime = 500000;
-	this.endTime = 1000000;
+	this.inputTarget = "No Target";
+	this.startTime = 0;
+	this.endTime = 10;
 }
 
 function simulationOutput(name){

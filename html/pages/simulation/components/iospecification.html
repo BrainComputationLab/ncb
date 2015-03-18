@@ -6,128 +6,127 @@
 	</div>
 
 	<div class="panel-body" data-ng-show="simCtrl.selected.className == 'simulationInput'">
-		<div class="row">
-		    <div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-			    <div class="form-group">
-				    <label for="simNameInput">Stimulus Type</label>
-	                <select class="form-control" data-ng-model="simCtrl.selected.stimulusType">
-	                    <option value='Rectangular Current'>Rectangular Current</option>
-	                    <option value='Rectangular Voltage'>Rectangular Voltage</option>
-	                    <option value='Linear Current'>Linear Current</option>
-	                    <option value='Linear Voltage'>Linear Voltage</option>
-	                    <option value='Sine Current'>Sine Current</option>
-	                    <option value='Sine Voltage'>Sine Voltage</option>
-	                </select>
+        <div class="row">
+            <div class="col-lg-6">
+                <!-- Name of Simulation input -->
+                <div class="form-group">
+                    <label for="simNameInput">Stimulus Type</label>
+                    <select class="form-control" data-ng-model="simCtrl.selected.stimulusType">
+                        <option value='Rectangular Current'>Rectangular Current</option>
+                        <option value='Rectangular Voltage'>Rectangular Voltage</option>
+                        <option value='Linear Current'>Linear Current</option>
+                        <option value='Linear Voltage'>Linear Voltage</option>
+                        <option value='Sine Current'>Sine Current</option>
+                        <option value='Sine Voltage'>Sine Voltage</option>
+                    </select>
                 </div>
-				<!-- End Name of Simulation input -->
-			</div>
+                <!-- End Name of Simulation input -->
+            </div>
+        </div>
 
-		    <div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Amplitude</label>
-					<input data-ng-model="simCtrl.selected.amplitude" type="text" placeholder="ex. 2" class="form-control">
-				</div>
-				<!-- End Name of Simulation input -->
-			</div>
-		</div>
+        <table class="table table-bordered table-hover table-condensed ncb-table">
+            <tr>
+                <td colspan="2"><span><strong>Parameter Name:</strong></span></td>
+                <td colspan="1"><span><strong>Type:</strong></span></td>
+                <td colspan="1"><span><strong>Value:</strong></span></td>
+                <td colspan="1"><span><strong>Min:</strong></span></td>
+                <td colspan="1"><span><strong>Max:</strong></span></td>
+                <td colspan="1"><span><strong>Mean:</strong></span></td>
+                <td colspan="1"><span><strong>StdDev:</strong></span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Start Amplitude</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.start_amplitude.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.start_amplitude.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.start_amplitude.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.start_amplitude.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.start_amplitude.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.start_amplitude.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.start_amplitude.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.start_amplitude.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.start_amplitude.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.start_amplitude.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.start_amplitude.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.start_amplitude.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>End Amplitude</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.end_amplitude.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.end_amplitude.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.end_amplitude.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.end_amplitude.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.end_amplitude.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.end_amplitude.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.end_amplitude.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.end_amplitude.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.end_amplitude.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.end_amplitude.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.end_amplitude.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.end_amplitude.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Amplitude Scale</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.amplitude_scale.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.amplitude_scale.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_scale.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_scale.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_scale.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_scale.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_scale.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_scale.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_scale.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_scale.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_scale.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_scale.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Amplitude Shift</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.amplitude_shift.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.amplitude_shift.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_shift.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_shift.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_shift.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_shift.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_shift.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_shift.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_shift.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_shift.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.amplitude_shift.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.amplitude_shift.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Delay (Seconds)</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.delay.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.delay.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.delay.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.delay.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.delay.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.delay.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.delay.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.delay.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.delay.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.delay.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.delay.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.delay.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Time Scale</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.time_scale.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.time_scale.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.time_scale.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.time_scale.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.time_scale.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.time_scale.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.time_scale.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.time_scale.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.time_scale.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.time_scale.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.time_scale.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.time_scale.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Current (Amps)</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.current.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.current.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.current.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.current.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.current.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.current.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.current.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.current.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.current.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.current.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.current.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.current.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Phase</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.phase.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.phase.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.phase.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.phase.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.phase.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.phase.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.phase.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.phase.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.phase.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.phase.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.phase.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.phase.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Width</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.width.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.width.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.width.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.width.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.width.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.width.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.width.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.width.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.width.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.width.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.width.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.width.stddev}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span>Frequency</span></td>
+                <td colspan="1" blur="submit" data-editable-select="simCtrl.selected.frequency.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{simCtrl.selected.frequency.type}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.frequency.value" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.frequency.value}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.frequency.minValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.frequency.minValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.frequency.maxValue" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.frequency.maxValue}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.frequency.mean" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.frequency.mean}}</span></td>
+                <td colspan="1" blur="submit" data-editable-text="simCtrl.selected.frequency.stddev" buttons="no" data-onbeforesave="simCtrl.checkNumber($data)"><span>{{simCtrl.selected.frequency.stddev}}</span></td>
+            </tr>
+        </table>
 
-		<div class="row">
-			<div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Starting Amplitude</label>
-						<input data-ng-model="simCtrl.selected.start_amplitude" type="text" placeholder="ex. 2" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
-				</div>
-			<div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Ending Amplitude</label>
-					<input data-ng-model="simCtrl.selected.end_amplitude" type="text" placeholder="ex. 2" class="form-control">
-				</div>
-				<!-- End Name of Simulation input -->
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Amplitude Scale</label>
-						<input data-ng-model="simCtrl.selected.amplitude_scale" type="text" placeholder="ex. 2" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
-				</div>
-			<div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Amplitude Shift</label>
-					<input data-ng-model="simCtrl.selected.amplitude_shift" type="text" placeholder="ex. 2" class="form-control">
-				</div>
-				<!-- End Name of Simulation input -->
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Delay (Seconds)</label>
-						<input data-ng-model="simCtrl.selected.delay" type="text" placeholder="ex. 2" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
-				</div>
-			<div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Time Scale</label>
-					<input data-ng-model="simCtrl.selected.time_scale" type="text" placeholder="ex. 2" class="form-control">
-				</div>
-				<!-- End Name of Simulation input -->
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-lg-6">
-				    <!-- Name of Simulation input -->
-					<div class="form-group">
-						<label for="simNameInput">Current (Amps)</label>
-						<input data-ng-model="simCtrl.selected.current" type="text" placeholder="ex. 2" class="form-control">
-					</div>
-					<!-- End Name of Simulation input -->
-				</div>
-			<div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Phase</label>
-					<input data-ng-model="simCtrl.selected.phase" type="text" placeholder="ex. 2" class="form-control">
-				</div>
-				<!-- End Name of Simulation input -->
-			</div>
-		</div>
-
-		<div class="row">
-		    <div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Width</label>
-					<input data-ng-model="simCtrl.selected.width" type="text" placeholder="ex. 3" class="form-control">
-				</div>
-				<!-- End Name of Simulation input -->
-			</div>
-
-		    <div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Frequency</label>
-					<input data-ng-model="simCtrl.selected.frequency" type="text" placeholder="ex. 10" class="form-control">
-				</div>
-				<!-- End Name of Simulation input -->
-			</div>
-		</div>
+        &nbsp;
 
 		<div class="row">
 		    <div class="col-lg-6">
@@ -145,11 +144,11 @@
 		    <div class="col-lg-6">
 			    <div class="form-group">
 				    <label for="simNameInput">Input Target</label>
-	                <select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0">
-	                    <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name"></option>
+	                <select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0" ng-model="simCtrl.selected.inputTarget">
+	                    <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name" ng-selected="simCtrl.selected.inputTarget === '{{target.val}}'"></option>
 	                </select>
 
-	                <p data-ng-show="simCtrl.possibleTargets.length == 0">No Cell Groups Available</p>
+	                <p data-ng-show="simCtrl.possibleTargets.length === 0">No Targets Available</p>
 
                 </div>
 			</div>
