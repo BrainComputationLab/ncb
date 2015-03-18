@@ -116,7 +116,7 @@ gulp.task('jsWatch', ['lint'], buildJsTask({watch:true}));
 gulp.task('html', function () {
     return gulp.src(paths.indexHtml)
         .pipe(fileinclude())
-        .pipe(minifyHTML())
+        //.pipe(minifyHTML())
         .pipe(gulp.dest(paths.indexDest));
 });
 
