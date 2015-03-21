@@ -140,35 +140,64 @@
 				</div>
 				<!-- End Name of Simulation input -->
 			</div>
-
-		    <div class="col-lg-6">
-			    <div class="form-group">
-				    <label for="simNameInput">Input Target</label>
-	                <select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0" ng-model="simCtrl.selected.inputTarget">
-	                    <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name" ng-selected="simCtrl.selected.inputTarget === '{{target.val}}'"></option>
-	                </select>
-
-	                <p data-ng-show="simCtrl.possibleTargets.length === 0">No Targets Available</p>
-
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="simNameInput">Start Time (Seconds)</label>
+                    <input data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
                 </div>
-			</div>
+            </div>
 		</div>
 
 		<div class="row">
-		    <div class="col-lg-6">
-				<div class="form-group">
-					<label for="simNameInput">Start Time (Seconds)</label>
-					<input data-ng-model="simCtrl.selected.startTime" type="text" placeholder="ex. 612789" class="form-control">
-				</div>
-			</div>
-
 		    <div class="col-lg-6">
 				<div class="form-group">
 					<label for="simNameInput">End Time (Seconds)</label>
 					<input data-ng-model="simCtrl.selected.endTime" type="text" placeholder="ex. 1378454" class="form-control">
 				</div>
 			</div>
-		</div>
+        </div>
+
+<!--         <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="simNameInput">Input Target</label>
+                    <select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0" ng-model="simCtrl.selected.inputTarget">
+                        <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name" ng-selected="simCtrl.selected.inputTarget === '{{target.val}}'"></option>
+                    </select>
+
+                    <p data-ng-show="simCtrl.possibleTargets.length === 0">No Targets Available</p>
+
+                </div>
+            </div>
+		</div> -->
+
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <button type="button" data-ng-click="simCtrl.addInputTarget()" class="btn btn-xs btn-success">
+                    + Add Input Target
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-group col-lg-8">
+          <li data-ng-repeat="target in simCtrl.getInputTargets() track by $index" class="row list-group-item">
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <label for="simNameInput">Input Target {{$index+1}}</label>
+                    <select class="form-control" data-ng-show="simCtrl.possibleInputTargets.length > 0" ng-model="simCtrl.selected.inputTargets[$index]">
+                        <option class="form-control" data-ng-repeat="target in simCtrl.possibleInputTargets" value="{{target.val}}" ng-bind-html="target.name" ng-selected="simCtrl.selected.inputTargets[$index] === '{{target.val}}'"></option>
+                    </select>
+
+                    <p data-ng-show="simCtrl.possibleInputTargets.length === 0">No Targets Available</p>
+                </div>
+                  <div class="ncb-remove-component-btn">
+                      <div class="row"><button type="button" data-ng-click="simCtrl.removeInputTarget($index)" class="btn btn-xs btn-danger pull-right">x</button></div>
+                  </div>
+              </div>
+          </li>
+        </div>
 	</div>
 
 	<div class="panel-body" data-ng-show="simCtrl.selected.className == 'simulationOutput'">

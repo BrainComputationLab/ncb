@@ -184,7 +184,7 @@ function simulationInput(name){
 	this.width = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.frequency = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.probability = 0.5;
-	this.inputTarget = "No Target";
+	this.inputTargets = [];
 	this.startTime = 0;
 	this.endTime = 10;
 }

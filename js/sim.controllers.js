@@ -9,6 +9,12 @@ var ncbApp = app.ncbApp;
 var simulationInput = parameters.simulationInput;
 var simulationOutput = parameters.simulationOutput;
 
+function htmlDecode(input){
+  var e = document.createElement('div');
+  e.innerHTML = input;
+  return e.childNodes[0].nodeValue;
+}
+
 ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentModelService",
     function($scope, $rootScope, $sce, currentModelService){
 
@@ -32,6 +38,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
   this.outputNum = 1;
   this.selectedModel = null;
   this.possibleTargets = [];
+  this.possibleInputTargets = [];
   this.possibleOutputTargets = [];
 
   // simulation parameters
@@ -84,10 +91,10 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
       for(var i = 0; i < cellGroup.length; i++) {
         var space = '';
         for(var j = 0; j < currentLevel * 2; j++) {
-          space += '&nbsp;';
+          space += htmlDecode('&nbsp;');
         }
 
-        var name = space + '&bull; ' + cellGroup[i].name;
+        var name = space + htmlDecode('&bull;') + ' ' + cellGroup[i].name;
         targets.push({val: cellGroup[i].name, name: $sce.trustAsHtml(name)});
 
         if(cellGroup[i].cellGroups != undefined)
@@ -99,18 +106,21 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     var model = currentModelService.getCurrentModel();
     appendTargets(currentModelService.getData(), targets, 0);
 
+    this.possibleInputTargets = targets.slice(0);
+
     for(var i = 0; i < model.synapses.length; i++) {
       var str = '&bull; ' + model.synapses[i].pre + ' &rarr; ' + model.synapses[i].post;
       targets.push({val: model.synapses[i].description, name: $sce.trustAsHtml(str)});
     }
-    return targets;
+
+    this.possibleTargets = targets;
   };
 
   var cont = this;
   $scope.$on('page-changed', function(event) {
-    cont.possibleTargets = cont.getTargets();
+    cont.getTargets();
 
-    if(cont.possibleTargets.length === 0)
+    if(cont.possibleInputTargets.length === 0)
       cont.clearInputTargets();
 
     cont.setParams();
@@ -118,12 +128,13 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
 
   this.clearInputTargets = function() {
     for(var i = 0; i < this.simInput.length; i++)
-      this.simInput[i].inputTarget = 'No Target';
+      for(var j = 0; j < this.simInput[i].inputTargets.length; j++)
+        this.simInput[i].inputTargets[j] = 'None';
   }
 
   // add a new input or output parameter
   this.addNewParam = function(){
-    this.possibleTargets = this.getTargets();
+    this.getTargets();
     if(this.possibleTargets.length === 0)
       this.clearInputTargets();
     // if input tab selected add input param
@@ -169,9 +180,23 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     currentModelService.setSimParams(simParams);
   };
 
-  this.setInputTarget = function(target) {
+  this.setInputTarget = function(index, target) {
+    if(this.selected != null && index < this.selected.inputTargets.length)
+      this.selected.inputTargets[index] = target;
+  }
+
+  this.addInputTarget = function() {
+    this.selected.inputTargets.push('None');
+  }
+
+  this.removeInputTarget = function(index) {
+    if(index < this.selected.inputTargets.length)
+        this.selected.inputTargets.splice(index, 1);
+  }
+
+  this.getInputTargets = function() {
     if(this.selected != null)
-      this.selected.inputTarget = target;
+        return this.selected.inputTargets;
   }
 
   this.launchSimulation = function(){
