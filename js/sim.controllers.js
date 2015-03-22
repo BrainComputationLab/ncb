@@ -9,12 +9,6 @@ var ncbApp = app.ncbApp;
 var simulationInput = parameters.simulationInput;
 var simulationOutput = parameters.simulationOutput;
 
-function htmlDecode(input){
-  var e = document.createElement('div');
-  e.innerHTML = input;
-  return e.childNodes[0].nodeValue;
-}
-
 ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentModelService",
     function($scope, $rootScope, $sce, currentModelService){
 

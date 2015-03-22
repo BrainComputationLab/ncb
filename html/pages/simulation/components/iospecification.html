@@ -207,7 +207,6 @@
 			    <div class="form-group">
 				    <label for="simNameInput">Report Type</label>
 	                <select class="form-control" data-ng-model="simCtrl.selected.reportType">
-	                    <option value='Channel Conductance'>Channel Conductance</option>
 	                    <option value='Synaptic Current'>Synaptic Current</option>
 	                    <option value='Neuron Voltage'>Neuron Voltage</option>
 	                    <option value='Neuron Fire'>Neuron Fire</option>
@@ -216,18 +215,6 @@
                 </div>
 
 
-				<!-- End Name of Simulation input -->
-			</div>
-		    <div class="col-lg-6">
-			    <!-- Name of Simulation input -->
-				<div class="form-group">
-					<label for="simNameInput">Report Target</label>
-					<select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0">
-	                    <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name"></option>
-	                </select>
-
-	                <p data-ng-show="simCtrl.possibleTargets.length == 0">No Cell Groups Available</p>
-				</div>
 				<!-- End Name of Simulation input -->
 			</div>
 		</div>
@@ -263,6 +250,19 @@
                 </div>
             </div>
 		</div>
+
+        <div class="col-lg-6">
+                <!-- Name of Simulation input -->
+                <div class="form-group">
+                    <label for="simNameInput">Report Target</label>
+                    <select class="form-control" data-ng-show="simCtrl.possibleTargets.length > 0">
+                        <option class="form-control" data-ng-repeat="target in simCtrl.possibleTargets" value="{{target.val}}" ng-bind-html="target.name"></option>
+                    </select>
+
+                    <p data-ng-show="simCtrl.possibleTargets.length == 0">No Cell Groups Available</p>
+                </div>
+                <!-- End Name of Simulation input -->
+            </div>
 	</div>
 
 </div>
