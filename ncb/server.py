@@ -3,8 +3,9 @@ from flask import Flask, request, jsonify, send_from_directory
 
 from geventwebsocket.handler import WebSocketHandler
 from gevent.pywsgi import WSGIServer
+from socket import *
 
-import json, os, time, threading
+import json, os, time, threading, struct
 
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
@@ -80,7 +81,23 @@ def transferData():
         # jsonObj now has simulation parameters and model
         jsonObj = request.get_json(False, False, False)
 
-        # send jsonObj to NCS here
+        # send jsonObj to NCS
+        daemonSocket = socket(AF_INET, SOCK_STREAM)
+
+        # for now all socket communication will use the local host
+        host = gethostbyname(gethostname())
+        print("Attempting to connect on " + host + ": 8004")
+
+        try:
+            daemonSocket.connect((host,8004))
+            print("Successful connection with NCS daemon")
+        except Exception, e:
+            print("Error with daemon socket. Exception type is %s" % (str(e),))
+
+        # serialize json object so it can be sent
+        data_string = json.dumps(jsonObj)
+        daemonSocket.send(data_string)
+
         #print ("jsonObj: %r" %(jsonObj))
         return jsonify({'success': True})
 
@@ -160,16 +177,42 @@ def transfer_report(slug):
         logfile.write(str(dir(ws)) + '\n')
         message = ws.receive()
         oldTime = time.time()
-        for line in fileIn.readlines():
 
-            # Read from file
-            firstline = line.split()
+        # receive the output data from the daemon
+        dataSocket = socket(AF_INET, SOCK_STREAM)
+        host = gethostbyname(gethostname())
+        try:
+            dataSocket.connect((host,10000))
+            print ('Established connection with the daemon')
+        except Exception, e:
+            print ("Error with daemon socket. Exception type is", str(e))
 
-            #Wait 1 second between sends
-            # difference = 0
-            # while difference < 1:
-            #     difference = time.time() - oldTime
-            # oldTime = time.time()
+        count = 0;
+
+        while True:
+
+            # receive the message length
+            sizeStr = (dataSocket.recvfrom(1))[0]
+            if not sizeStr:
+                break
+            size = int(sizeStr) 
+            count += 1
+            #print ('Msg Number: ', str(count), ' size: ', str(size))
+            # receive the data
+            buffer = (dataSocket.recvfrom(size))[0]
+            if not buffer:
+                break
+
+            # unpack the bytes into floats
+            temp = buffer.split()
+            if len(temp) == 1:
+                bytes = temp[0]
+            else:
+                bytes = temp[1] 
+            if len(bytes) < 4:
+                bytes = bytes.zfill(4)
+            value = struct.unpack('f', bytes)[0]
+            print(value)
 
             # Do for each report
             for report in reports:
@@ -177,14 +220,41 @@ def transfer_report(slug):
                 number = report["number"]
 
                 try:
-                    value = float(firstline[number])
-                    #print(value)
+                    data = float(value)
+                    print(data)
 
                     # Send in JSON format
-                    report["socket"].send(json.dumps(value))
+                    report["socket"].send(json.dumps(data))
                 except IndexError:
                     pass
 
+            '''for line in fileIn.readlines():
+
+                # Read from file
+                firstline = line.split()
+
+                #Wait 1 second between sends
+                # difference = 0
+                # while difference < 1:
+                #     difference = time.time() - oldTime
+                # oldTime = time.time()
+
+                # Do for each report
+                for report in reports:
+                    #print(report)
+                    number = report["number"]
+
+                    try:
+                        value = float(firstline[number])
+                        #print(value)
+
+                        # Send in JSON format
+                        report["socket"].send(json.dumps(value))
+                    except IndexError:
+                        pass
+            break'''
+
+        dataSocket.close()
         fileIn.seek(0)
         logfile.flush()
         ws.close()
