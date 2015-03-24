@@ -242,23 +242,47 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 }]);
 
 // controller for add channel modal
-ncbApp.controller("AddChannelModalController", ['CurrentModelService', function(currentModelService){
+ncbApp.controller("AddChannelModalController", ['$scope', 'CurrentModelService', function($scope, currentModelService){
 
   this.channelType = "Voltage Gated Ion Channel";
+  this.possibleChannels = [];
+
+  this.getAvailableChannelTypes = function(component) {
+    if(component == null)
+      return [];
+
+    var cellType = component.parameters.type;
+
+    if(cellType === 'NCS')
+      return ['Voltage Gated Ion Channel', 'Calcium Dependant Channel'];
+
+    else if(cellType === 'HodgkinHuxley')
+      return ['Voltage Gated Channel'];
+
+    else
+      return ['Voltage Gated Ion Channel', 'Calcium Dependant Channel', 'Voltage Gated Channel'];
+
+  };
 
   this.addChannel = function(){
-
     // add channel based on selection
     if(this.channelType == "Voltage Gated Ion Channel")
       currentModelService.getDisplayedComponent().parameters.channel.push(new voltageGatedIonChannel());
     else if(this.channelType == "Calcium Dependant Channel")
       currentModelService.getDisplayedComponent().parameters.channel.push(new calciumDependantChannel());
     else if(this.channelType == "Voltage Gated Channel"){
-      particles = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
+      var particles = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
       currentModelService.getDisplayedComponent().parameters
       .channel.push(new voltageGatedChannel(particles));
     }
   };
+
+  var controller = this;
+  $scope.$watch(function() { return currentModelService.getDisplayedComponent();}, function(component) {
+    controller.possibleChannels = controller.getAvailableChannelTypes(component);
+    if(controller.possibleChannels.length > 0)
+      controller.channelType = controller.possibleChannels[0];
+  });
 
 }]);
 
@@ -603,6 +627,22 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
     }
     else{
       return "Voltage Gated Channel";
+    }
+  };
+
+  this.removeChannel = function(index) {
+    if($scope.displayed.parameters.channel.length > 0 && index < $scope.displayed.parameters.channel.length) {
+      $scope.displayed.parameters.channel.splice(index, 1);
+    }
+  };
+
+  this.addSpikeShape = function() {
+    $scope.displayed.parameters.spikeShape.push(0.0);
+  };
+
+  this.removeSpikeShape = function(index) {
+    if($scope.displayed.parameters.spikeShape.length > 0 && index < $scope.displayed.parameters.spikeShape.length) {
+      $scope.displayed.parameters.spikeShape.splice(index, 1);
     }
   };
 

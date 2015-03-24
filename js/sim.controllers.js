@@ -1,3 +1,4 @@
+require("angular");
 var utilityFcns = require('./utilityFcns');
 var app = require('./app');
 var parameters = require('./parameters');
@@ -31,9 +32,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
   this.inputNum = 1;
   this.outputNum = 1;
   this.selectedModel = null;
-  this.possibleTargets = [];
   this.possibleInputTargets = [];
-  this.possibleOutputTargets = [];
 
   // simulation parameters
   this.simName = null;
@@ -42,6 +41,14 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
   this.duration = null;
   this.interactive = "No";
   this.includeDistance = "No";
+
+  this.possibleReportTypes = [
+    {name: "Cell Groups", val: 1},
+    {name: "Cell Aliases", val: 2},
+    {name: "Synapse Connections", val: 3}
+  ];
+
+  this.selectedReportType = this.possibleReportTypes[0].val;
 
   this.checkNumber = function(value){
       if(isNaN(value) || value.length === 0){
@@ -81,33 +88,61 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
 
   // create possible targets
   this.getTargets = function() {
-    var appendTargets = function(cellGroup, targets, currentLevel) {
+    var appendTargets = function(cellGroup, targets, cellGroups, aliases, currentLevel) {
       for(var i = 0; i < cellGroup.length; i++) {
         var space = '';
         for(var j = 0; j < currentLevel * 2; j++) {
-          space += htmlDecode('&nbsp;');
+          space += '&nbsp;';
         }
 
-        var name = space + htmlDecode('&bull;') + ' ' + cellGroup[i].name;
+        var name = space + '&bull; ' + cellGroup[i].name;
+        var nonSpacedName = '&bull; ' + cellGroup[i].name;
         targets.push({val: cellGroup[i].name, name: $sce.trustAsHtml(name)});
 
+        if(cellGroup[i].classification === 'cells')
+          cellGroups.push({val: cellGroup[i].name, name: $sce.trustAsHtml(nonSpacedName)});
+
+        else
+          aliases.push({val: cellGroup[i].name, name: $sce.trustAsHtml(nonSpacedName)});
+
         if(cellGroup[i].cellGroups != undefined)
-          appendTargets(cellGroup[i].cellGroups, targets, currentLevel + 1);
+          appendTargets(cellGroup[i].cellGroups, targets, cellGroups, aliases, currentLevel + 1);
       }
     };
 
     var targets = [];
+    var cellGroups = [];
+    var aliases = [];
+    var synapses = [];
+
     var model = currentModelService.getCurrentModel();
-    appendTargets(currentModelService.getData(), targets, 0);
+    appendTargets(currentModelService.getData(), targets, cellGroups, aliases, synapses, 0);
 
     this.possibleInputTargets = targets.slice(0);
 
     for(var i = 0; i < model.synapses.length; i++) {
       var str = '&bull; ' + model.synapses[i].pre + ' &rarr; ' + model.synapses[i].post;
       targets.push({val: model.synapses[i].description, name: $sce.trustAsHtml(str)});
+      synapses.push({val: model.synapses[i].description, name: $sce.trustAsHtml(str)});
     }
 
     this.possibleTargets = targets;
+
+    if(this.selected != null) {
+      switch(this.selected.possibleReportType) {
+        case 1:
+          this.selected.possibleOutputTargets = cellGroups;
+          break;
+
+        case 2:
+          this.selected.possibleOutputTargets = aliases;
+          break;
+
+        case 3:
+          this.selected.possibleOutputTargets = synapses;
+          break;
+      }
+    }
   };
 
   var cont = this;
@@ -117,6 +152,14 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     if(cont.possibleInputTargets.length === 0)
       cont.clearInputTargets();
 
+    var previousSelection = cont.selected;
+    for(var i = 0; i < cont.simOutput.length; i++) {
+      cont.selected = cont.simOutput[i];
+      cont.updateReportTargets();
+    }
+
+    cont.selected = previousSelection;
+
     cont.setParams();
   });
 
@@ -124,22 +167,35 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     for(var i = 0; i < this.simInput.length; i++)
       for(var j = 0; j < this.simInput[i].inputTargets.length; j++)
         this.simInput[i].inputTargets[j] = 'None';
-  }
+  };
+
+  this.clearOutputTargets = function() {
+    for(var i = 0; i < this.simOutput.length; i++)
+      for(var j = 0; j < this.simOutput[i].reportTargets.length; j++)
+        this.simOutput[i].reportTargets[j] = 'None';
+  };
 
   // add a new input or output parameter
   this.addNewParam = function(){
     this.getTargets();
-    if(this.possibleTargets.length === 0)
+    if(this.possibleTargets.length === 0) {
       this.clearInputTargets();
+      this.clearOutputTargets();
+    }
     // if input tab selected add input param
     if(this.tab === 0){
       this.simInput.push(new simulationInput("Input" + this.inputNum));
       this.inputNum++;
+
+      this.selected = this.simInput[this.simInput.length-1];
     }
     // if output tab selected add output param
     else{
       this.simOutput.push(new simulationOutput("Output" + this.outputNum));
       this.outputNum++;
+
+      this.selected = this.simOutput[this.simOutput.length-1];
+      this.updateReportTargets();
     }
   };
 
@@ -169,31 +225,71 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
   };
 
   this.setParams = function() {
-    var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: this.simOutput, inputs: this.simInput};
+    var output = angular.copy(this.simOutput);
+    delete output.possibleOutputTargets;
+    delete output.possibleReportType;
+
+    var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: output, inputs: this.simInput};
 
     currentModelService.setSimParams(simParams);
+
+    return simParams;
   };
 
   this.setInputTarget = function(index, target) {
     if(this.selected != null && index < this.selected.inputTargets.length)
       this.selected.inputTargets[index] = target;
-  }
+  };
 
   this.addInputTarget = function() {
-    this.selected.inputTargets.push('None');
-  }
+    if(this.possibleInputTargets.length > 0)
+      this.selected.inputTargets.push(this.possibleInputTargets[0].val);
+
+    else
+      this.selected.inputTargets.push('None');
+  };
 
   this.removeInputTarget = function(index) {
-    if(index < this.selected.inputTargets.length)
+    if(this.selected.inputTargets.length > 0 && index < this.selected.inputTargets.length)
         this.selected.inputTargets.splice(index, 1);
-  }
+  };
 
   this.getInputTargets = function() {
     if(this.selected != null)
         return this.selected.inputTargets;
-  }
+  };
 
-  this.launchSimulation = function(){
+  this.getOutputTargets = function() {
+    if(this.selected != null) {
+      return this.selected.reportTargets;
+    }
+  };
+
+  this.addOutputTarget = function() {
+    if(this.selected.possibleOutputTargets.length > 0)
+      this.selected.reportTargets.push(this.selected.possibleOutputTargets[0].val);
+
+    else
+      this.selected.reportTargets.push('None');
+  };
+
+  this.removeOutputTarget = function(index) {
+    if(this.selected.reportTargets.length > 0 && index < this.selected.reportTargets.length)
+        this.selected.reportTargets.splice(index, 1);
+  };
+
+  this.updateReportTargets = function() {
+    this.getTargets();
+    for(var i = 0; i < this.selected.reportTargets.length; i++) {
+      if(this.selected.possibleOutputTargets.length > 0)
+        this.selected.reportTargets[i] = this.selected.possibleOutputTargets[0].val;
+
+      else
+        this.selected.reportTargets[i] = 'None';
+    }
+  };
+
+  this.launchSimulation = function() {
     var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: this.simOutput, inputs: this.simInput};
 
     $rootScope.$broadcast('launchModal', simParams);

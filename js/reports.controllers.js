@@ -9,7 +9,7 @@ function Socket(id) {
 Socket.prototype = {
     connect: function($scope) {
         $scope.reportData = [];
-        var address = 'ws://localhost:8000/report-' + this.id;
+        var address = 'ws://localhost:8000/transfer';
         var socket = new WebSocket(address);
         console.log(socket);
 

@@ -54,23 +54,23 @@
                   <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.type == 'Izhikevich'">
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{displayed.name}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Description:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
-                      <td colspan="4"><span>{{displayed.parameters.type}}</span></td>
+                      <td colspan="6"><span>{{displayed.parameters.type}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Quantity:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.num" buttons="no" data-onbeforesave="mParamsCtrl.checkInteger($data)"><span>{{displayed.num}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.num" buttons="no" data-onbeforesave="mParamsCtrl.checkInteger($data)"><span>{{displayed.num}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Geometry:</span></td>
-                      <td colspan="4"><span>{{displayed.geometry}}</span></td>
+                      <td colspan="6"><span>{{displayed.geometry}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
@@ -151,23 +151,23 @@
                   <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.type == 'NCS'">
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{displayed.name}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Description:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
-                      <td colspan="4" ><span>{{displayed.parameters.type}}</span></td>
+                      <td colspan="6" ><span>{{displayed.parameters.type}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Quantity:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.num" buttons="no" data-onbeforesave="mParamsCtrl.checkInteger($data)"><span>{{displayed.num}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.num" buttons="no" data-onbeforesave="mParamsCtrl.checkInteger($data)"><span>{{displayed.num}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Geometry:</span></td>
-                      <td colspan="4"><span>{{displayed.geometry}}</span></td>
+                      <td colspan="6"><span>{{displayed.geometry}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
@@ -267,15 +267,31 @@
                       buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.rMembrane.stddev}}</span></td>
                     </tr>
                     <tr>
-                      <td colspan="2"><span>Spike Shape:</span></td>
-                      <td colspan="1" blur="submit" data-editable-select="displayed.parameters.spikeShape.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.spikeShape.type}}</span></td>
-                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.spikeShape.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.spikeShape.value}}</span></td>
-                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.spikeShape.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.spikeShape.minValue}}</span></td>
-                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.spikeShape.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.spikeShape.maxValue}}</span></td>
-                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.spikeShape.mean"
-                      buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.spikeShape.mean}}</span></td>
-                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.spikeShape.stddev"
-                      buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.spikeShape.stddev}}</span></td>
+                      <td colspan="2"><span>Leak Conductance:</span></td>
+                      <td colspan="1" blur="submit" data-editable-select="displayed.parameters.leakConductance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.leakConductance.type}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.leakConductance.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.leakConductance.value}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.leakConductance.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.leakConductance.minValue}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.leakConductance.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.leakConductance.maxValue}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.leakConductance.mean"
+                      buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.leakConductance.mean}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.leakConductance.stddev"
+                      buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.leakConductance.stddev}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Capacitance:</span></td>
+                      <td colspan="1" blur="submit" data-editable-select="displayed.parameters.capacitance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{displayed.parameters.capacitance.type}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.capacitance.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.capacitance.value}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.capacitance.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.capacitance.minValue}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.capacitance.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.capacitance.maxValue}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.capacitance.mean"
+                      buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.capacitance.mean}}</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.capacitance.stddev"
+                      buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.capacitance.stddev}}</span></td>
+                    </tr>
+                    <tr data-ng-repeat="spikeValue in displayed.parameters.spikeShape track by $index">
+                      <td colspan="2"><span>Spike Shape {{$index+1}}:</span></td>
+                      <td colspan="1" blur="submit" data-editable-text="displayed.parameters.spikeShape[$index]" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.parameters.spikeShape[$index]}}</span></td>
+                      <td colspan="5"><span><button type="button" data-ng-click="mParamsCtrl.addSpikeShape()" class="btn btn-xs btn-success" data-ng-show="$index === displayed.parameters.spikeShape.length-1">+</button><button type="button" data-ng-click="mParamsCtrl.removeSpikeShape($index)" class="btn btn-xs btn-danger">-</button></span></td>
                     </tr>
                   </table>
                   <!-- End NCS Cell Parameters -->
@@ -284,23 +300,23 @@
                   <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.type == 'HodgkinHuxley'">
                     <tr>
                       <td colspan="2"><span>Name:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Description:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.description" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{displayed.description}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.description" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Type:</span></td>
-                      <td colspan="4"><span>{{displayed.parameters.type}}</span></td>
+                      <td colspan="6"><span>{{displayed.parameters.type}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Quantity:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.num" buttons="no" data-onbeforesave="mParamsCtrl.checkInteger($data)"><span>{{displayed.num}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.num" buttons="no" data-onbeforesave="mParamsCtrl.checkInteger($data)"><span>{{displayed.num}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Geometry:</span></td>
-                      <td colspan="4"><span>{{displayed.geometry}}</span></td>
+                      <td colspan="6"><span>{{displayed.geometry}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
@@ -360,23 +376,23 @@
                   <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name == 'flatSynapse'">
                     <tr>
                       <td colspan="2"><span>Presynaptic Name:</span></td>
-                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>
+                      <td colspan="6"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Postsynapic Name:</span></td>
-                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
+                      <td colspan="6"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Description:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Synapse Type:</span></td>
-                      <td colspan="4" blur="submit" data-editable-select="synapseType" data-e-ng-options="s.value as s.text for s in synapseTypes" buttons="no"><span>{{synapseType}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-select="synapseType" data-e-ng-options="s.value as s.text for s in synapseTypes" buttons="no"><span>{{synapseType}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Probability:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.prob" buttons="no" data-onbeforesave="mParamsCtrl.checkProbability($data)"><span>{{displayed.prob}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.prob" buttons="no" data-onbeforesave="mParamsCtrl.checkProbability($data)"><span>{{displayed.prob}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
@@ -412,23 +428,23 @@
                   <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name == 'ncsSynapse'">
                     <tr>
                       <td colspan="2"><span>Presynaptic Name:</span></td>
-                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>
+                      <td colspan="6"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Postsynapic Name:</span></td>
-                      <td colspan="4"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
+                      <td colspan="6"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.post}}</a></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Description:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.description" buttons="no"><span>{{displayed.description}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Synapse Type:</span></td>
-                      <td colspan="4" blur="submit" data-editable-select="synapseType" data-e-ng-options="s.value as s.text for s in synapseTypes" buttons="no"><span>{{synapseType}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-select="synapseType" data-e-ng-options="s.value as s.text for s in synapseTypes" buttons="no"><span>{{synapseType}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Probability:</span></td>
-                      <td colspan="4" blur="submit" data-editable-text="displayed.prob" buttons="no" data-onbeforesave="mParamsCtrl.checkProbability($data)"><span>{{displayed.prob}}</span></td>
+                      <td colspan="6" blur="submit" data-editable-text="displayed.prob" buttons="no" data-onbeforesave="mParamsCtrl.checkProbability($data)"><span>{{displayed.prob}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
@@ -602,14 +618,21 @@
 
                 </div>
                 <div id="collapseChannels" class="panel-collapse collapse in">
-                  <div data-ng-repeat="channel in displayed.parameters.channel">
+                  <div data-ng-repeat="channel in displayed.parameters.channel track by $index">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h4 class="panel-title">
-                              <a data-toggle="collapse" data-parent="#accordion" href="#channel{{$index+1}}" style="display:block">
-                                  {{channel.name}}
-                              </a>
-                            </h4>
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <h4 class="panel-title">
+                                      <a data-toggle="collapse" data-parent="#accordion" href="#channel{{$index+1}}" style="display:block">
+                                          {{channel.name}}
+                                      </a>
+                                    </h4>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button type="button" data-ng-click="mParamsCtrl.removeChannel($index)" class="btn btn-xs btn-danger pull-right">x</button>
+                                </div>
+                            </div>
                         </div>
                         <div id="channel{{$index+1}}" class="panel-collapse collapse">
                             <div class="panel-body">
@@ -618,15 +641,15 @@
                               <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="channel.className == 'voltageGatedIonChannel'">
                                 <tr>
                                   <td colspan="2"><span>Name:</span></td>
-                                  <td colspan="4" blur="submit" data-editable-text="channel.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{channel.name}}</span></td>
+                                  <td colspan="6" blur="submit" data-editable-text="channel.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{channel.name}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Type:</span></td>
-                                  <td colspan="4"><span>{{mParamsCtrl.getChannelTypeString(channel)}}</span></td>
+                                  <td colspan="6"><span>{{mParamsCtrl.getChannelTypeString(channel)}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Description:</span></td>
-                                  <td colspan="4" blur="submit" data-editable-text="channel.description" buttons="no"><span>{{channel.description}}</span></td>
+                                  <td colspan="6" blur="submit" data-editable-text="channel.description" buttons="no"><span>{{channel.description}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Parameter Name:</span></td>
@@ -796,15 +819,15 @@
                               <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="channel.className == 'voltageGatedChannel'">
                                 <tr>
                                   <td colspan="2"><span>Name:</span></td>
-                                  <td colspan="4" blur="submit" data-editable-text="channel.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{channel.name}}</span></td>
+                                  <td colspan="6" blur="submit" data-editable-text="channel.name" buttons="no" data-onbeforesave="mParamsCtrl.checkNotEmpty($data)"><span>{{channel.name}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Type:</span></td>
-                                  <td colspan="4"><span>{{mParamsCtrl.getChannelTypeString(channel)}}</span></td>
+                                  <td colspan="6"><span>{{mParamsCtrl.getChannelTypeString(channel)}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Description:</span></td>
-                                  <td colspan="4" blur="submit" data-editable-text="channel.description" buttons="no"><span>{{channel.description}}</span></td>
+                                  <td colspan="6" blur="submit" data-editable-text="channel.description" buttons="no"><span>{{channel.description}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Parameter Name:</span></td>
