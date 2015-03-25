@@ -45,8 +45,10 @@
     <div data-snap-content style="width : 100%; background-color : white; overflow-x: hidden;">
         @@include('global/header.html')
         <div class = "container">
-            <div class="col-lg-2" style="height: 100%" data-ng-controller="SidePanelController as sideCtrl">
-                @@include('global/sidepanel.html')
+            <div class="row">
+                <div class="col-md-9 col-sm-8 col-xs-6" style="height: 100%" data-ng-controller="SidePanelController as sideCtrl">
+                    @@include('global/sidepanel.html')
+                </div>
             </div>
             <div class="col-lg-12">
                 <div id="pages">
