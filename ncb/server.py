@@ -165,7 +165,7 @@ def serve_static_resource(resource):
     return send_from_directory('static/assets/', resource)
 
 reports = []
-fileIn = open('reg_voltage_report.txt')
+#fileIn = open('reg_voltage_report.txt')
 logfile = open('log.txt', 'w')
 
 @app.route('/report-<slug>')
@@ -195,7 +195,7 @@ def transfer_report(slug):
             sizeStr = (dataSocket.recvfrom(1))[0]
             if not sizeStr:
                 break
-            size = int(sizeStr) 
+            size = int(sizeStr)
             count += 1
             #print ('Msg Number: ', str(count), ' size: ', str(size))
             # receive the data
@@ -208,7 +208,7 @@ def transfer_report(slug):
             if len(temp) == 1:
                 bytes = temp[0]
             else:
-                bytes = temp[1] 
+                bytes = temp[1]
             if len(bytes) < 4:
                 bytes = bytes.zfill(4)
             value = struct.unpack('f', bytes)[0]
@@ -262,8 +262,41 @@ def transfer_report(slug):
 
     return jsonify({'success': True})
 
+from Queue import Queue
+import sys
+
+reports = {0 : Queue()}
+@app.route('/teststream-<slug>', methods=['GET'])
+def teststream(slug):
+    slug = int(slug)
+    if request.method == 'GET':
+        if slug in reports:
+            data = []
+            q = reports[slug]
+            while not q.empty():
+                data.append(q.get())
+
+            return jsonify({'data' : data})
+
+    return jsonify({'data' : None})
+
+
+def worker(num):
+    if not num in reports:
+        reports[num] = Queue()
+
+    q = reports[num]
+
+    while True:
+        q.put(int(time.time()) % 10)
+        time.sleep(0.01)
+
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":
+    t = threading.Thread(target=worker, args=(0,))
+    t.daemon = True
+    t.start()
+
     server = WSGIServer(('localhost', 8000), app, handler_class=WebSocketHandler)
     server.serve_forever()

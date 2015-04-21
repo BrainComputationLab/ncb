@@ -9,6 +9,7 @@ window.Snap = require('snapjs/snap');
 require('angular-snap/angular-snap');
 require('angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module');
 require('angular-xeditable/dist/js/xeditable');
+require('angular-oboe');
 
 var utilityFcns = require('./utilityFcns');
 var parameters = require('./parameters');
@@ -27,7 +28,8 @@ var voltageGatedChannel = parameters.voltageGatedChannel;
 var voltageGatedIonChannel = parameters.voltageGatedIonChannel;
 var voltageGatedParticle = parameters.voltageGatedParticle;
 
-var ncbApp = angular.module('ncbApp', ['snap', 'colorpicker.module', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'xeditable']);
+var ncbApp = angular.module('ncbApp', ['snap', 'colorpicker.module', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'xeditable',
+                                        'ngOboe']);
 
 //////// A COMPONENT IS A GENERAL TERM FOR A MODEL, CELL, OR CELL GROUP /////////////////////////////////
 //////// YOU DETERMINE THE COMPONENT TIME THROUGH ITS CLASSIFICATION MEMBER /////////////////////////////
