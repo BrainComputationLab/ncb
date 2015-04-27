@@ -7,15 +7,16 @@
     <!-- End Title of Tab -->
 
     <!-- Reports Body -->
-    <div class="row">
+    <div class="row ncb-page-item">
         <button type="button" class="btn btn-success btn-md" ng-click="start()">Start</button>
     </div>
 
     <div class="row">
         <div class="col-lg-12">
-            <ul>
+        @@include('components/panel.html')
+            <!-- <ul>
                 <li ng-repeat="data in reportData track by $index">{{ data }}</li>
-            </ul>
+            </ul> -->
         </div>
     </div>
 </div>

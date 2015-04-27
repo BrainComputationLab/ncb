@@ -5,7 +5,7 @@ from geventwebsocket.handler import WebSocketHandler
 from gevent.pywsgi import WSGIServer
 from socket import *
 
-import json, os, time, threading, struct
+import json, os, time, threading, struct, random
 
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
@@ -288,15 +288,16 @@ def worker(num):
     q = reports[num]
 
     while True:
-        q.put(int(time.time()) % 10)
-        time.sleep(0.01)
+        q.put(random.randint(0,10))
+        time.sleep(3)
 
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":
-    t = threading.Thread(target=worker, args=(0,))
-    t.daemon = True
-    t.start()
+    threads = [threading.Thread(target=worker, args=(i,)) for i in range(3)]
+    for t in threads:
+        t.daemon = True
+        t.start()
 
     server = WSGIServer(('localhost', 8000), app, handler_class=WebSocketHandler)
     server.serve_forever()

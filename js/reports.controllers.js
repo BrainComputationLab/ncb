@@ -75,28 +75,69 @@ Socket.prototype = {
 //   };
 // });
 
-ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
+ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
+                    function($scope, $http, $interval) {
 
     $scope.reportData = [];
     $scope.started = false;
     $scope.intervals = [];
+    $scope.reports = [
+        {
+            'name' : 'Sim 1',
+            'outputs' : [
+                {
+                    'name' : 'Rep1',
+                    'data' : []
+                },
 
-    var callback = function(report) {
-        var request = $http.get('/teststream-0');
+                {
+                    'name' : 'Rep2',
+                    'data' : []
+                }
+            ]
+        },
+
+        {
+            'name' : 'Sim 2',
+            'outputs' : [
+                {
+                    'name' : 'Rep3',
+                    'data' : []
+                }
+            ]
+        }
+    ];
+
+    $scope.activeSim = 0;
+    $scope.activeReport = 0;
+
+    $scope.selectedSim = $scope.reports[$scope.activeSim];
+    $scope.selectedReport = $scope.reports[$scope.activeSim].outputs[$scope.activeReport];
+
+    var callback = function(sim, report) {
+
+        $scope.intervals.push($interval(function() {
+            var simid = sim * $scope.reports.length + report;
+            var request = $http.get('/teststream-' + simid);
+
             request.success(function(data, status, headers, config) {
-                $scope.reportData.push.apply($scope.reportData, data.data);
+                var arr = $scope.reports[sim].outputs[report].data;
+                arr.push.apply(arr, data.data);
             });
 
             request.error(function(data, status, headers, config) {
                 console.log("Error!!!!");
-                $interval.cancel($scope.intervals[report]);
+                $interval.cancel($scope.intervals[simid]);
             });
+        }, 1000, 0, false));
     };
 
     $scope.start = function() {
         console.log("Reports Started");
 
-        $scope.intervals.push($interval(callback, 250, 0, false, 0));
+        callback(0,0);
+        callback(0,1);
+        callback(1,0);
 
         //if(!$scope.started) {
             // var websocket = new Socket(0);
@@ -120,6 +161,29 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', function
 
             //$scope.started = true;
         //}
+    };
+
+    $scope.isActiveSim = function(index) {
+        return index === $scope.activeSim;
+    };
+
+    $scope.setActiveSim = function(index) {
+        if(index !== $scope.activeSim) {
+            $scope.activeSim = index;
+            $scope.activeReport = 0;
+
+            $scope.selectedSim = $scope.reports[$scope.activeSim];
+            $scope.selectedReport = $scope.reports[$scope.activeSim].outputs[$scope.activeReport];
+        }
+    };
+
+    $scope.isActiveReport = function(index) {
+        return index === $scope.activeReport;
+    };
+
+    $scope.setActiveReport = function(index) {
+        $scope.activeReport = index;
+        $scope.selectedReport = $scope.reports[$scope.activeSim].outputs[$scope.activeReport];
     };
 
 }]);

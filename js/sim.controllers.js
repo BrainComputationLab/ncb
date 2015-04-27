@@ -41,6 +41,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
   this.duration = null;
   this.interactive = "No";
   this.includeDistance = "No";
+  this.selectedParamIndex = 0;
 
   this.possibleReportTypes = [
     {name: "Cell Groups", val: 1},
@@ -69,7 +70,13 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
   };
 
   this.selectTab = function(setTab){
-    this.tab = setTab;
+    if(setTab !== this.tab) {
+      this.tab = setTab;
+      this.selectedParamIndex = 0;
+    }
+
+    this.selected = (this.tab === 0) ? this.simInput[0] : this.simOutput[0];
+
   };
 
   this.isSelected = function(checkTab){
@@ -184,6 +191,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     }
     // if input tab selected add input param
     if(this.tab === 0){
+      this.selectedParamIndex = this.inputNum - 1;
       this.simInput.push(new simulationInput("Input" + this.inputNum));
       this.inputNum++;
 
@@ -191,6 +199,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     }
     // if output tab selected add output param
     else{
+      this.selectedParamIndex = this.outputNum - 1;
       this.simOutput.push(new simulationOutput("Output" + this.outputNum));
       this.outputNum++;
 
@@ -220,8 +229,13 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     }
   };
 
-  this.selectParam = function(param){
+  this.selectParam = function(param, index){
     this.selected = param;
+    this.selectedParamIndex = index;
+  };
+
+  this.isSelectedParam = function(index) {
+    return this.selectedParamIndex === index;
   };
 
   this.setParams = function() {
