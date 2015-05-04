@@ -1,16 +1,41 @@
 from __future__ import unicode_literals, print_function
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, session
 
 from geventwebsocket.handler import WebSocketHandler
 from gevent.pywsgi import WSGIServer
+#from flask_sslify import SSLify
 from socket import *
+
+from db import MongoSessionInterface, MongoAuthenticator
+
+# from werkzeug.contrib import authdigest
+# from functools import wraps
 
 import json, os, time, threading, struct, random
 
+# class AuthenticationDB(authdigest.RealmDigestDB):
+#     def requires_auth(self, f):
+#         @wraps(f)
+#         def decorated(*args, **kwargs):
+#             if not self.isAuthenticated(request):
+#                 return self.challenge()
+
+#             return f(*args, **kwargs)
+
+#         return decorated
+
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
+app.session_interface = MongoSessionInterface(db='testdb')
+#sslify = SSLify(app)
 # Debugging is okay for now
 app.debug = True
+
+auth = MongoAuthenticator(db='testdb', collection='users')
+auth.add_user('admin', 'test')
+
+# authDB = AuthenticationDB('TestDB')
+# authDB.add_user('admin', 'test')
 
 # set upload folder and allowed extensions
 allowedFileExtensions = set(['json','py'])
@@ -154,6 +179,7 @@ def login_route():
 
 
 @app.route('/')
+# @authDB.requires_auth
 def index_route():
     return app.send_static_file('index.html')
 
@@ -281,6 +307,22 @@ def teststream(slug):
     return jsonify({'data' : None})
 
 
+@app.route('/update-session', methods=['POST', 'GET'])
+def update_session():
+    if request.method == 'GET':
+        if 'model' in session:
+            return jsonify(json.loads(session['model']))
+
+    elif request.method == 'POST':
+        jsonObj = request.get_json(False, False, False)
+        session['model'] = json.dumps(jsonObj)
+        session.modified = True
+
+        return jsonify({'success' : True})
+
+    return jsonify({'success' : False})
+
+
 def worker(num):
     if not num in reports:
         reports[num] = Queue()
@@ -291,6 +333,23 @@ def worker(num):
         q.put(random.randint(0,10))
         time.sleep(3)
 
+@app.route('/test-auth')
+def test_auth():
+    if auth.authenticate_user('admin', 'test'):
+        print('True!', file=sys.stderr)
+
+    else:
+        print('False!', file=sys.stderr)
+
+
+    if auth.authenticate_user('b', 'c'):
+        print('True!', file=sys.stderr)
+
+    else:
+        print('False!', file=sys.stderr)
+
+    return jsonify({'s' : True})
+
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":
@@ -299,5 +358,6 @@ if __name__ == "__main__":
         t.daemon = True
         t.start()
 
-    server = WSGIServer(('localhost', 8000), app, handler_class=WebSocketHandler)
-    server.serve_forever()
+    app.run(port=8000)
+    #server = WSGIServer(('localhost', 8000), app, handler_class=WebSocketHandler)
+    #server.serve_forever()

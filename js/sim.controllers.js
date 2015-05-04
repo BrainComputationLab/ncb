@@ -174,12 +174,16 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     for(var i = 0; i < this.simInput.length; i++)
       for(var j = 0; j < this.simInput[i].inputTargets.length; j++)
         this.simInput[i].inputTargets[j] = 'None';
+
+      this.setParams();
   };
 
   this.clearOutputTargets = function() {
     for(var i = 0; i < this.simOutput.length; i++)
       for(var j = 0; j < this.simOutput[i].reportTargets.length; j++)
         this.simOutput[i].reportTargets[j] = 'None';
+
+      this.setParams();
   };
 
   // add a new input or output parameter
@@ -206,6 +210,8 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
       this.selected = this.simOutput[this.simOutput.length-1];
       this.updateReportTargets();
     }
+
+    this.setParams();
   };
 
   // remove an input or output from the simulation
@@ -227,6 +233,8 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
         this.simOutput.splice(myIndex, 1);
       }
     }
+
+    this.setParams();
   };
 
   this.selectParam = function(param, index){
@@ -246,6 +254,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: output, inputs: this.simInput};
 
     currentModelService.setSimParams(simParams);
+    currentModelService.updateModelSession();
 
     return simParams;
   };

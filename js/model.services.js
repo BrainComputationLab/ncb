@@ -218,7 +218,7 @@ ncbApp.factory('ColorService', ['$rootScope', function($rootScope){
 
 
 // service that allows the current model to be modified and accessed
-ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
+ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', function($rootScope, $http, $interval) {
   var currentModelService = {};
 
   // store current model in service so it can be accessed anywhere
@@ -230,8 +230,44 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
 
   currentModelService.simParams = {};
 
+  currentModelService.updateModelSession = function() {
+    var json = JSON.stringify({model: this.currentModel, simulation: this.simParams}, null, "\t");
+    $http.post('/update-session', json).
+      success(function(data, status, headers, config) {
+        var d = new Date();
+        console.log("Session Updated " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+      }).
+      error(function(data, status, headers, config) {
+        var d = new Date();
+        console.error("Session Update Failed " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+      });
+  };
+
+  $interval(function() {
+    currentModelService.updateModelSession();
+  }, 30000, 0, false);
+
+  currentModelService.loadModelFromSession = function() {
+    $http.get('/update-session').
+      success(function(data, status, headers, config) {
+        var d = new Date();
+        console.log("Session Loaded " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+        console.log(data);
+
+        currentModelService.currentModel = data.model;
+        currentModelService.simParams = data.simulation;
+
+        currentModelService.goHome();
+      }).
+      error(function(data, status, headers, config) {
+        var d = new Date();
+        console.error("Session Load Failed " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+      });
+  };
+
   currentModelService.setSimParams = function(params) {
     this.simParams = params;
+    this.updateModelSession();
   };
 
   currentModelService.getSimParams = function() {
@@ -267,6 +303,8 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
       // place the synapses of the model into your model
       this.currentModel.synapses.push.apply(this.currentModel.synapses, model.synapses);
     }
+
+    this.updateModelSession();
   };
 
   currentModelService.removeModel = function(model){
@@ -301,6 +339,8 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
         }
       }
     }
+
+    this.updateModelSession();
   };
 
   currentModelService.getCurrentModel = function(){
@@ -314,6 +354,8 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
     this.breadCrumbs = [{name: "Home", index: 0}];
     this.selected = this.currentModel.cellGroups;
     this.displayedComponent = null;
+
+    this.updateModelSession();
   };
 
   // bread crumb functions //////////////////////////////////////////////
@@ -384,6 +426,7 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
 
   currentModelService.addSynapse = function(synapse){
     this.currentModel.synapses.push(synapse);
+    this.updateModelSession();
   };
 
   currentModelService.getSynapses = function(){
@@ -406,7 +449,11 @@ ncbApp.factory('CurrentModelService', ['$rootScope', function($rootScope){
     if(myIndex != -1){
       this.currentModel.synapses.splice(myIndex, 1);
     }
+
+    this.updateModelSession();
   };
+
+  currentModelService.loadModelFromSession();
 
   return currentModelService;
 }]);
