@@ -218,7 +218,7 @@ ncbApp.factory('ColorService', ['$rootScope', function($rootScope){
 
 
 // service that allows the current model to be modified and accessed
-ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', function($rootScope, $http, $interval) {
+ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', '$timeout', function($rootScope, $http, $interval, $timeout) {
   var currentModelService = {};
 
   // store current model in service so it can be accessed anywhere
@@ -252,12 +252,20 @@ ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', funct
       success(function(data, status, headers, config) {
         var d = new Date();
         console.log("Session Loaded " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
-        console.log(data);
 
-        currentModelService.currentModel = data.model;
-        currentModelService.simParams = data.simulation;
+        currentModelService.currentModel = data.model || new model();
+        currentModelService.selected = currentModelService.currentModel.cellGroups;
+        currentModelService.displayedComponent = null;
+        currentModelService.simParams = data.simulation || {};
+
+
+        console.log(currentModelService);
 
         currentModelService.goHome();
+
+        $timeout(function() {
+          $rootScope.$broadcast('session-loaded');
+        }, 100);
       }).
       error(function(data, status, headers, config) {
         var d = new Date();

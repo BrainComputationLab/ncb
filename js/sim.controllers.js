@@ -167,7 +167,32 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
 
     cont.selected = previousSelection;
 
-    cont.setParams();
+    //cont.setParams();
+  });
+
+  $scope.$on('session-loaded', function(event) {
+    cont.getTargets();
+
+    var previousSelection = cont.selected;
+    for(var i = 0; i < cont.simOutput.length; i++) {
+      cont.selected = cont.simOutput[i];
+      cont.updateReportTargets();
+    }
+
+    cont.simInput = currentModelService.simParams.inputs || [];
+    cont.simOutput = currentModelService.simParams.outputs || [];
+    cont.simName = currentModelService.simParams.name || null;
+    cont.FSV = currentModelService.simParams.fsv || null;
+    cont.seed = currentModelService.simParams.seed || null;
+    cont.duration = currentModelService.simParams.duration || null;
+    cont.includeDistance = currentModelService.simParams.includeDistance || "No";
+    cont.interactive = currentModelService.simParams.interactive || "No";
+
+    if(cont.simInput.length > 0)
+      cont.selected = cont.simInput[0];
+
+    else
+      cont.selected = null;
   });
 
   this.clearInputTargets = function() {
@@ -254,7 +279,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: output, inputs: this.simInput};
 
     currentModelService.setSimParams(simParams);
-    currentModelService.updateModelSession();
+    //currentModelService.updateModelSession();
 
     return simParams;
   };

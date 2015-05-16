@@ -11,14 +11,14 @@
 				    <!-- Name of Simulation input -->
 					<div class="form-group">
 						<label for="simNameInput">Simulation Name</label>
-						<input id="simNameInput" data-ng-model="simCtrl.simName" type="text" placeholder="Name" class="form-control" data-ng-change="simCtrl.setParams()">
+						<input id="simNameInput" data-ng-model="simCtrl.simName" type="text" placeholder="Name" class="form-control" data-ng-blur="simCtrl.setParams()">
 					</div>
 					<!-- End Name of Simulation input -->
 
 					<!-- Duration Input -->
 					<div class="form-group">
 						<label for="simDurationInput">Duration (Seconds)</label>
-						<input id="simDurationInput" data-ng-model="simCtrl.duration" type="number" placeholder="Duration" class="form-control" data-ng-change="simCtrl.setParams()">
+						<input id="simDurationInput" data-ng-model="simCtrl.duration" type="number" placeholder="Duration" class="form-control" data-ng-blur="simCtrl.setParams()">
 					</div>
 					<!-- End Duration Input -->
 				</div>
@@ -27,14 +27,14 @@
 					<!-- FSV Input -->
 					<div class="form-group">
 						<label for="simFSVInput">FSV</label>
-						<input id="simFSVInput" data-ng-model="simCtrl.FSV" type="number" placeholder="FSV" class="form-control" data-ng-change="simCtrl.setParams()">
+						<input id="simFSVInput" data-ng-model="simCtrl.FSV" type="number" placeholder="FSV" class="form-control" data-ng-blur="simCtrl.setParams()">
 					</div>
 					<!-- End FSV Input -->
 
 					<!-- Interactive Input -->
 					<div class="form-group">
 						<label for="simInteractiveInput">Interactive</label>
-						<select class="form-control" data-ng-model="simCtrl.interactive" id="simInteractiveInput" data-ng-change="simCtrl.setParams()">
+						<select class="form-control" data-ng-model="simCtrl.interactive" id="simInteractiveInput" data-ng-blur="simCtrl.setParams()">
 							<option value="No">No</option>
 							<option value="Yes">Yes</option>
 						</select>
@@ -45,14 +45,14 @@
 					<!-- Seed Input -->
 					<div class="form-group">
 						<label for="simSeedInput">Seed</label>
-						<input id="simSeedInput" type="number" data-ng-model="simCtrl.seed" placeholder="Seed" class="form-control" data-ng-change="simCtrl.setParams()">
+						<input id="simSeedInput" type="number" data-ng-model="simCtrl.seed" placeholder="Seed" class="form-control" data-ng-blur="simCtrl.setParams()">
 					</div>
 					<!-- End Seed Input -->
 
 					<!-- Distance Input -->
 					<div class="form-group">
 						<label for="simDistanceInput">Include Distance</label>
-						<select class="form-control" data-ng-model="simCtrl.includeDistance" id="simDistanceInput" data-ng-change="simCtrl.setParams()">
+						<select class="form-control" data-ng-model="simCtrl.includeDistance" id="simDistanceInput" data-ng-blur="simCtrl.setParams()">
 							<option value="No">No</option>
 							<option value="Yes">Yes</option>
 						</select>

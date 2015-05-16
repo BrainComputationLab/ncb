@@ -1,28 +1,11 @@
 from __future__ import unicode_literals, print_function
 from flask import Flask, request, jsonify, send_from_directory, session
 
-from geventwebsocket.handler import WebSocketHandler
-from gevent.pywsgi import WSGIServer
-#from flask_sslify import SSLify
 from socket import *
 
 from db import MongoSessionInterface, MongoAuthenticator
 
-# from werkzeug.contrib import authdigest
-# from functools import wraps
-
 import json, os, time, threading, struct, random
-
-# class AuthenticationDB(authdigest.RealmDigestDB):
-#     def requires_auth(self, f):
-#         @wraps(f)
-#         def decorated(*args, **kwargs):
-#             if not self.isAuthenticated(request):
-#                 return self.challenge()
-
-#             return f(*args, **kwargs)
-
-#         return decorated
 
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
