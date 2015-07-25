@@ -9,7 +9,6 @@ window.Snap = require('snapjs/snap');
 require('angular-snap/angular-snap');
 require('angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module');
 require('angular-xeditable/dist/js/xeditable');
-require('angular-oboe');
 
 var utilityFcns = require('./utilityFcns');
 var parameters = require('./parameters');
