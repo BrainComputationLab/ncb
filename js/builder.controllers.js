@@ -74,7 +74,7 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
       // add model to database list
       $scope.dbModels.push(deepCopy(model));
     }
-    
+
   });
 
 
@@ -242,28 +242,52 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 }]);
 
 // controller for add channel modal
-ncbApp.controller("AddChannelModalController", ['CurrentModelService', function(currentModelService){
+ncbApp.controller("AddChannelModalController", ['$scope', 'CurrentModelService', function($scope, currentModelService){
 
   this.channelType = "Voltage Gated Ion Channel";
+  this.possibleChannels = [];
+
+  this.getAvailableChannelTypes = function(component) {
+    if(component == null)
+      return [];
+
+    var cellType = component.parameters.type;
+
+    if(cellType === 'NCS')
+      return ['Voltage Gated Ion Channel', 'Calcium Dependant Channel'];
+
+    else if(cellType === 'HodgkinHuxley')
+      return ['Voltage Gated Channel'];
+
+    else
+      return ['Voltage Gated Ion Channel', 'Calcium Dependant Channel', 'Voltage Gated Channel'];
+
+  };
 
   this.addChannel = function(){
-
     // add channel based on selection
     if(this.channelType == "Voltage Gated Ion Channel")
       currentModelService.getDisplayedComponent().parameters.channel.push(new voltageGatedIonChannel());
     else if(this.channelType == "Calcium Dependant Channel")
       currentModelService.getDisplayedComponent().parameters.channel.push(new calciumDependantChannel());
     else if(this.channelType == "Voltage Gated Channel"){
-      particles = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
+      var particles = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
       currentModelService.getDisplayedComponent().parameters
       .channel.push(new voltageGatedChannel(particles));
     }
   };
 
+  var controller = this;
+  $scope.$watch(function() { return currentModelService.getDisplayedComponent();}, function(component) {
+    controller.possibleChannels = controller.getAvailableChannelTypes(component);
+    if(controller.possibleChannels.length > 0)
+      controller.channelType = controller.possibleChannels[0];
+  });
+
 }]);
 
 // controller for add connection modal
-ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService', 
+ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelService', 'ColorService',
   function($scope, currentModelService, colorService){
 
   this.synapseCount = 0;
@@ -430,7 +454,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 }]);
 
 // left panel controller (model navigation)
-ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentModelService', 'SidePanelService', 'ColorService', 
+ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentModelService', 'SidePanelService', 'ColorService',
   function($rootScope, $scope, currentModelService, sidePanelService, colorService){
   $scope.colors = colorService.getColors();
   this.showComponents = true;
@@ -503,7 +527,7 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
 
     // if connection is not within current path return false
     for(i=0; i<crumbs.length; i++){
-      if((connection.prePath.length > i && connection.prePath[i].name !== crumbs[i].name) || 
+      if((connection.prePath.length > i && connection.prePath[i].name !== crumbs[i].name) ||
         (connection.postPath.length > i && connection.postPath[i].name !== crumbs[i].name)){
         return false;
       }
@@ -606,6 +630,22 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
     }
   };
 
+  this.removeChannel = function(index) {
+    if($scope.displayed.parameters.channel.length > 0 && index < $scope.displayed.parameters.channel.length) {
+      $scope.displayed.parameters.channel.splice(index, 1);
+    }
+  };
+
+  this.addSpikeShape = function() {
+    $scope.displayed.parameters.spikeShape.push(0.0);
+  };
+
+  this.removeSpikeShape = function(index) {
+    if($scope.displayed.parameters.spikeShape.length > 0 && index < $scope.displayed.parameters.spikeShape.length) {
+      $scope.displayed.parameters.spikeShape.splice(index, 1);
+    }
+  };
+
   // update component show if changed
   $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
 
@@ -622,7 +662,7 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
 
         // if component was a cell group track its path level
         if(newComponent.classification == "cellGroup"){
-          $scope.levelInCrumbs = currentModelService.getBreadCrumbs().length;     
+          $scope.levelInCrumbs = currentModelService.getBreadCrumbs().length;
 
           /*    // update component show if changed
           $scope.nameWatch = $scope.$watch(function () { return currentModelService.getDisplayedComponent().name; }, function (newName) {
@@ -673,10 +713,10 @@ ncbApp.controller("ModelHeaderController", ['SidePanelService', function(sidePan
   this.hideSidePanel = function(){
     sidePanelService.setVisible(false);
   };
-  
+
 }]);
 
-// controller for the model Export 
+// controller for the model Export
 ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
   function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
@@ -686,7 +726,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
   this.exportModel = function(){
 
     var savedModel = currentModelService.getCurrentModel();
-
+    var simParams = currentModelService.getSimParams();
     // set saved model description and name
     savedModel.name = this.modelName;
 
@@ -701,7 +741,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     }
     else if (this.saveType == "file"){
       // save to file
-      var json = JSON.stringify(savedModel, null, "\t"); // pretify with a tab at each level
+      var json = JSON.stringify({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
       $http.post('/export', json).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
@@ -718,12 +758,12 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     }
 
 
-    
+
   };
 
 }]);
 
-// controller for the model Import 
+// controller for the model Import
 ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
   function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
@@ -750,7 +790,7 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
       // send a broadcast with the import data to add to model list
       $rootScope.$broadcast('AddModelToList', data, type);
 
-      
+
     }).
     error(function(data, status, headers, config) {
       // called asynchronously if an error occurs
@@ -758,12 +798,12 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
       console.log(status);
     });
 
-    
+
   };
 
 }]);
 
-// controller for the model Import 
+// controller for the model Import
 ncbApp.controller("ClearModelController", ['CurrentModelService', function(currentModelService){
 
   this.clearModel = function(){

@@ -82,7 +82,7 @@ npm install
 Install Bower, the frontend library manager:
 
 ~~~~
-sudo npm install -g bower
+npm install -g bower
 ~~~~
 
 Update the Bower dependencies:
@@ -94,7 +94,7 @@ bower update
 Install the gulp task manager:
 
 ~~~~
-sudo npm install -g gulp-cli
+npm install -g gulp-cli
 ~~~~
 
 When debugging, this we can use automatic rebuilding. For that run:

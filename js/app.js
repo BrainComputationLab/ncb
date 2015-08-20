@@ -27,7 +27,8 @@ var voltageGatedChannel = parameters.voltageGatedChannel;
 var voltageGatedIonChannel = parameters.voltageGatedIonChannel;
 var voltageGatedParticle = parameters.voltageGatedParticle;
 
-var ncbApp = angular.module('ncbApp', ['snap', 'colorpicker.module', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'xeditable']);
+var ncbApp = angular.module('ncbApp', ['snap', 'colorpicker.module', 'mgcrea.ngStrap', 'mgcrea.ngStrap.tooltip', 'xeditable',
+                                        'ngOboe']);
 
 //////// A COMPONENT IS A GENERAL TERM FOR A MODEL, CELL, OR CELL GROUP /////////////////////////////////
 //////// YOU DETERMINE THE COMPONENT TIME THROUGH ITS CLASSIFICATION MEMBER /////////////////////////////
