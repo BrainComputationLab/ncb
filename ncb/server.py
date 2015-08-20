@@ -336,10 +336,10 @@ def test_auth():
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":
-    threads = [threading.Thread(target=worker, args=(i,)) for i in range(3)]
-    for t in threads:
-        t.daemon = True
-        t.start()
+    # threads = [threading.Thread(target=worker, args=(i,)) for i in range(3)]
+    # for t in threads:
+    #     t.daemon = True
+    #     t.start()
 
     app.run(port=8000)
     #server = WSGIServer(('localhost', 8000), app, handler_class=WebSocketHandler)

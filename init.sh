@@ -4,7 +4,8 @@ nvm use 0.10
 
 if [ ! -d "py-ncb" ]; then
     virtualenv py-ncb 
+    . py-ncb/bin/activate
     pip install -r requirements.txt
+else
+    . py-ncb/bin/activate
 fi
-
-. py-ncb/bin/activate
