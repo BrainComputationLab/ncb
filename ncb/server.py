@@ -156,10 +156,6 @@ def importFile():
     else:
         return jsonify({'success': False})
 
-@app.route('/login')
-def login_route():
-    return 'not implemented', 500
-
 
 @app.route('/')
 # @authDB.requires_auth
@@ -305,6 +301,22 @@ def update_session():
 
     return jsonify({'success' : False})
 
+@app.route('/add-user', methods=['POST'])
+def add_user():
+    pass
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        json_request = request.get_json(False, False, False)
+        print(json.dumps(json_request, indent=3), file=sys.stderr)
+
+        # put logic here to login with daemon
+        is_user = True
+
+        return jsonify({'success' : is_user})
+
+    return jsonify({'success' : False})
 
 def worker(num):
     if not num in reports:
@@ -316,22 +328,23 @@ def worker(num):
         q.put(random.randint(0,10))
         time.sleep(3)
 
-@app.route('/test-auth')
-def test_auth():
-    if auth.authenticate_user('admin', 'test'):
-        print('True!', file=sys.stderr)
 
-    else:
-        print('False!', file=sys.stderr)
+def send_request_to_daemon(json_request):
+    host = 'daemonhost'
+    port = 10000
 
+    return_value = None
 
-    if auth.authenticate_user('b', 'c'):
-        print('True!', file=sys.stderr)
+    daemon_socket = socket(AF_INET, SOCK_STREAM)
 
-    else:
-        print('False!', file=sys.stderr)
+    try:
+        daemon_socket.connect((host, port))
+        daemon_socket.send(json.dumps(json_request))
 
-    return jsonify({'s' : True})
+        # TODO: logic for receiving result from daemon
+    except Exception, e:
+        print('Error with daemon socket,', e, file=sys.stderr)
+        return False
 
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections

@@ -19,7 +19,7 @@ else
     if [ ! -d "py-ncb" ]; then
         virtualenv py-ncb 
         . py-ncb/bin/activate
-        pip install -r requirements.txt
+        pip install --no-cache-dir -r requirements.txt
     else
         . py-ncb/bin/activate
     fi
