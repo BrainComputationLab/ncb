@@ -22,11 +22,12 @@
         <link href="assets/css/ncb/leftdrawer.css" rel="stylesheet">
 -->
     @@include('global/styles.html')
+    @@include('global/scripts.html')
 
     </head>
     <!-- End Loading CSS and Initialization -->
 
-    <body>
+    <body ng-cloak>
     <!-- Include Modals -->
     @@include('pages/builder/components/new-cell-group-modal.html')
     @@include('pages/builder/components/new-connection-modal.html')
@@ -74,8 +75,6 @@
         @@include('pages/import-export/import.html')
         @@include('pages/import-export/export.html')
     </div>
-
-    @@include('global/scripts.html')
 
 
     <!-- Load the scripts via Require.js -->

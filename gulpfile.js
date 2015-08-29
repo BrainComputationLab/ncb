@@ -39,6 +39,7 @@ var paths = {
     motionDest: 'js/vbot/motion.js',
     vbotEntry: 'js/vbot/main.js',
     indexHtml: 'html/index.html',
+    loginHtml: 'html/login.html',
     allHtml: 'html/**/*.html',
     indexDest: buildPath,
     colorPickerHtml: 'html/global/colorpicker-popover.html',
@@ -114,6 +115,10 @@ gulp.task('js', ['lint'], buildJsTask());
 gulp.task('jsWatch', ['lint'], buildJsTask({watch:true}));
 
 gulp.task('html', function () {
+    gulp.src(paths.loginHtml)
+        .pipe(fileinclude())
+        .pipe(gulp.dest(paths.indexDest));
+
     return gulp.src(paths.indexHtml)
         .pipe(fileinclude())
         //.pipe(minifyHTML())

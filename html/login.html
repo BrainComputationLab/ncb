@@ -1,0 +1,87 @@
+<!-- Main HTML Page -->
+<!DOCTYPE html>
+<html lang="en" data-ng-app="ncbApp">
+    <!-- Loading CSS and Initializing Global MetaTags -->
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="University of Nevada Brain Computation Lab">
+
+        <title>NeoCortical Builder</title>
+
+    @@include('global/styles.html')
+    @@include('global/scripts.html')
+
+    </head>
+
+    <body>
+        <div data-snap-content style="width : 100%; background-color : white; overflow-x: hidden;">
+            <div class="navbar navbar-default navbar-static-top" data-ng-controller="NavigationController as navCtrl">
+                <div class="container">
+                    <div class="navbar-header">
+                        <span class="navbar-brand">NCS</span>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainNavCollapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+
+                    <!-- Menu bar items -->
+                    <div class="navbar-collapse collapse" id="mainNavCollapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="http://cse.unr.edu/brain" target="_blank">Documentation</a></li>
+                            <li><a href="https://github.com/BrainComputationLab" target="_blank">GitHub</a></li>
+                        </ul>
+                        <!-- End Links -->
+
+                    </div>
+                    <!-- End menu bar items -->
+
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="pages">
+                    <div class="container" data-ng-controller="LoginCtrl">
+                      <form class="form-signin" data-ng-show="formVisible">
+                        <img class="img-responsive center-block" src="assets/images/ncs_logo.png" alt="NeoCortical Builder">
+                        <h2 class="form-signin-heading">Login</h2>
+                        <div class="alert alert-danger" data-ng-show="showError">{{errorText}}</div>
+                        <label for="inputEmail" class="sr-only">Email address</label>
+                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus data-ng-model="user.email">
+                        <label for="inputPassword" class="sr-only">Password</label>
+                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required data-ng-model="user.password">
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" value="remember-me" data-ng-model="user.rememberMe"> Remember me
+                          </label>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" data-ng-click="login()">Sign In</button>
+                        <a href="#" style="margin-top=10px" data-ng-click="formVisible = !formVisible">Register an Account</a>
+                      </form>
+
+                      <form class="form-signin" data-ng-show="!formVisible">
+                        <img class="img-responsive center-block" src="assets/images/ncs_logo.png" alt="NeoCortical Builder">
+                        <h2 class="form-signin-heading">Create an account</h2>
+                        <label for="inputFirstName" class="sr-only">First Name</label>
+                        <input type="text" id="inputFirstName" class="form-control" placeholder="First name" required autofocus data-ng-model="user.firstName">
+                        <label for="inputLastName" class="sr-only">Last Name</label>
+                        <input type="text" id="inputLastName" class="form-control" placeholder="Last name" required data-ng-model="user.lastName">
+                        <label for="inputInstitution" class="sr-only">Institution</label>
+                        <input type="text" id="inputInstitution" class="form-control" placeholder="ex. University of Nevada, Reno" required data-ng-model="user.institution">
+                        <label for="inputEmail" class="sr-only">Email address</label>
+                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required data-ng-model="user.email">
+                        <label for="inputPassword" class="sr-only">Password</label>
+                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required data-ng-model="user.password">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" data-ng-click="register()">Register Account</button>
+                        <a href="#" style="margin-top=10px" data-ng-click="formVisible = !formVisible">Already have an account? Click here to sign in.</a>
+                      </form>
+                    </div> <!-- /container -->
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<!-- End Main HTML Page -->

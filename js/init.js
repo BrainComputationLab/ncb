@@ -47,3 +47,4 @@ require('./model.services.js');
 require('./builder.controllers.js');
 require('./sim.controllers.js');
 require('./reports.controllers.js');
+require('./login.controllers.js');

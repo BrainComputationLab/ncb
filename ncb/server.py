@@ -1,11 +1,11 @@
 from __future__ import unicode_literals, print_function
-from flask import Flask, request, jsonify, send_from_directory, session
+from flask import Flask, request, jsonify, send_from_directory, session, make_response
 
 from socket import *
 
 from db import MongoSessionInterface, MongoAuthenticator
 
-import json, os, time, threading, struct, random
+import json, os, time, threading, struct, random, datetime
 
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
@@ -160,7 +160,13 @@ def importFile():
 @app.route('/')
 # @authDB.requires_auth
 def index_route():
-    return app.send_static_file('index.html')
+    username = request.cookies.get('username')
+
+    if username:
+        return app.send_static_file('index.html')
+
+    else:
+        return app.send_static_file('login.html')
 
 
 # Serves static resources like index.html, css, js, images, etc.
@@ -314,7 +320,31 @@ def login():
         # put logic here to login with daemon
         is_user = True
 
-        return jsonify({'success' : is_user})
+        if is_user:
+            dt = datetime.datetime
+            response = make_response(jsonify({'success' : True}))
+
+            if json_request['rememberMe']:
+                delta = datetime.timedelta(weeks=+1)
+                expiration = dt.combine(datetime.date.today() + delta, dt.min.time())
+                response.set_cookie('username', json_request['email'], max_age=delta.total_seconds(), expires=expiration)
+
+            else:
+                response.set_cookie('username', json_request['email'])
+
+            return response
+
+        else:
+            return jsonify({'success' : False})
+
+    return jsonify({'success' : False})
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    if request.method == 'POST':
+        response = make_response(jsonify({'success' : True}))
+        response.set_cookie('username', '', expires=0)
+        return response
 
     return jsonify({'success' : False})
 

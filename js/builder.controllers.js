@@ -185,8 +185,12 @@ ncbApp.controller("SidePanelController", ['$scope', "CurrentModelService", 'Side
 }]);
 
 // controller for the nav bar
-ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', function($scope, sidePanelService){
+ncbApp.controller("NavigationController", ['$scope', '$http', 'SidePanelService', function($scope, $http, sidePanelService){
   // get visibility from side panel service
+
+  if(document.cookie.split('=').length > 1)
+    $scope.username = document.cookie.split('=')[1].replace(/^"(.*)"$/, '$1');
+
   this.isSidePanelVisible = function(){
     return sidePanelService.visible;
   };
@@ -194,6 +198,13 @@ ncbApp.controller("NavigationController", ['$scope', 'SidePanelService', functio
   // call this to close side panel
   this.hideSidePanel = function(){
     sidePanelService.setVisible(false);
+  };
+
+  this.logout = function() {
+    $http.post('/logout')
+      .success(function(data, status, header, config) {
+        location.reload();
+      });
   };
 }]);
 
