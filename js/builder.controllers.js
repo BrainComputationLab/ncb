@@ -22,15 +22,16 @@ var voltageGatedIonChannel = parameters.voltageGatedIonChannel;
 var voltageGatedParticle = parameters.voltageGatedParticle;
 
 // controller for the model import/export drawer
-ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorService', 'CurrentModelService',
-  function($scope, sidePanelService, colorService, currentModelService){
+ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
+  function($scope, $http, sidePanelService, colorService, currentModelService){
 
   $scope.viewed = sidePanelService.getData();
   $scope.colors = colorService.getColors();
   this.tab = 0;
 
-  $scope.localModels = myModels;
-  $scope.dbModels = myDBModels;
+  $scope.personal = [];
+  $scope.lab = [];
+  $scope.global = [];
 
   this.colorPickerPopover = {
       "title": "Title",
@@ -60,6 +61,24 @@ ncbApp.controller("DrawerController", ['$scope', 'SidePanelService', 'ColorServi
 
     // pass in the data to be viewed
     $scope.viewed = element;
+  };
+
+  this.initialize = function() {
+    $http.get('/get-models')
+      .success(function(data, status, headers, config) {
+        if(data.success) {
+          $scope.personal = data.models.personal;
+          $scope.lab = data.models.lab;
+          $scope.global = data.models.global;
+        }
+
+        else {
+          console.error('get-models unsuccessful: ' + data.reason);
+        }
+      })
+      .error(function(data, status, headers, config) {
+        console.error('get-models failure');
+      });
   };
 
     // function to sync database with newly added model
@@ -732,7 +751,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
   function($rootScope, $scope, $http, sidePanelService, colorService, currentModelService){
 
   this.modelName = null;
-  this.saveType = "file";
+  this.saveType = undefined;
 
   this.exportModel = function(){
 
@@ -742,34 +761,37 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     savedModel.name = this.modelName;
 
     // export model based on type of export
-    if (this.saveType == "local") {
-      // add to local database
-      $rootScope.$broadcast('AddModelToList', savedModel, "local");
-    }
-    else if (this.saveType == "database"){
-      // add to database
-      $rootScope.$broadcast('AddModelToList', savedModel, "database");
-    }
-    else if (this.saveType == "file"){
+    if (this.saveType === 'json') {
       // save to file
       var json = JSON.stringify({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
       $http.post('/export', json).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
         // when the response is available
-        window.location.href = 'export';
+        window.location.href = 'export-script';
         //console.log(data);
       }).
       error(function(data, status, headers, config) {
         // called asynchronously if an error occurs
         // or server returns response with an error status.
-        console.log(status);
+        console.error(status);
       });
-
     }
-
-
-
+    else if (this.saveType === 'python') {
+      // save to file
+      var json = JSON.stringify({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
+      $http.post('/export-script', json).
+      success(function(data, status, headers, config) {
+        // this callback will be called asynchronously
+        // when the response is available
+        window.location.href = 'export-script'
+      }).
+      error(function(data, status, headers, config) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        console.error(status);
+      });
+    }
   };
 
 }]);
@@ -819,6 +841,55 @@ ncbApp.controller("ClearModelController", ['CurrentModelService', function(curre
 
   this.clearModel = function(){
     currentModelService.clearCurrentModel();
+  };
+
+}]);
+
+ncbApp.controller("SaveModalController", ['$scope', '$http', 'CurrentModelService',
+  function($scope, $http, CurrentModelService) {
+
+    $scope.saveType = undefined;
+
+    $scope.saveSimulation = function() {
+      var model = CurrentModelService.getCurrentModel();
+
+      var json = JSON.stringify({location: $scope.saveType, model: model});
+
+      $http.post('/save-model', json)
+        .success(function(data, status, headers, config) {
+          if(data.success)
+            console.log("Model Saved");
+
+          else
+            console.error("Unable to save model " + data.reason);
+        })
+        .error(function(data, status, headers, config) {
+          console.error('Save model error: ' + status);
+        });
+    };
+}]);
+
+// controller for the model Import
+ncbApp.controller('UndoModelController', ['CurrentModelService', '$http', function(currentModelService, $http){
+
+  this.undoModel = function(){
+    console.log("Undo");
+
+    var json = JSON.stringify({location : 'lab', model : currentModelService.getCurrentModel()});
+    $http.post('/undo-model', json)
+      .success(function(data, status, headers, config) {
+        if(data.success) {
+          CurrentModelService.currentModel = data.model;
+        }
+
+        else {
+          console.error('Unable to undo model: ' + data.reason);
+        }
+      })
+      .error(function(data, status, headers, config) {
+        console.error('Undo model error');
+      });
+
   };
 
 }]);

@@ -20,12 +20,11 @@
                     </div>
 
                   <div class="form-group">
-                    <label for="modalType" class="col-sm-4 control-label"> Save To</label>
+                    <label for="modalType" class="col-sm-4 control-label"> Save As</label>
                     <div class="col-sm-8">
-                        <select class="form-control" data-ng-model="exportCtrl.saveType">
-                            <option value='file'>File</option>
-                            <option value='local'>Local</option>
-                            <option value='database'>Database</option>
+                        <select class="form-control" data-ng-model="exportCtrl.saveType" data-ng-init="exportCtrl.saveType = 'json'">
+                            <option value='json'>JSON File (.json)</option>
+                            <option value='python'>Python File (.py)</option>
                         </select>
                         <br>
                     </div>

@@ -50,7 +50,7 @@
                         <h2 class="form-signin-heading">Login</h2>
                         <div class="alert alert-danger" data-ng-show="showError">{{errorText}}</div>
                         <label for="inputEmail" class="sr-only">Email address</label>
-                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus data-ng-model="user.email">
+                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus data-ng-model="user.username">
                         <label for="inputPassword" class="sr-only">Password</label>
                         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required data-ng-model="user.password">
                         <div class="checkbox">
@@ -66,13 +66,13 @@
                         <img class="img-responsive center-block" src="assets/images/ncs_logo.png" alt="NeoCortical Builder">
                         <h2 class="form-signin-heading">Create an account</h2>
                         <label for="inputFirstName" class="sr-only">First Name</label>
-                        <input type="text" id="inputFirstName" class="form-control" placeholder="First name" required autofocus data-ng-model="user.firstName">
+                        <input type="text" id="inputFirstName" class="form-control" placeholder="First name" required autofocus data-ng-model="user.first_name">
                         <label for="inputLastName" class="sr-only">Last Name</label>
-                        <input type="text" id="inputLastName" class="form-control" placeholder="Last name" required data-ng-model="user.lastName">
+                        <input type="text" id="inputLastName" class="form-control" placeholder="Last name" required data-ng-model="user.last_name">
                         <label for="inputInstitution" class="sr-only">Institution</label>
                         <input type="text" id="inputInstitution" class="form-control" placeholder="ex. University of Nevada, Reno" required data-ng-model="user.institution">
                         <label for="inputEmail" class="sr-only">Email address</label>
-                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required data-ng-model="user.email">
+                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required data-ng-model="user.username">
                         <label for="inputPassword" class="sr-only">Password</label>
                         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required data-ng-model="user.password">
                         <button class="btn btn-lg btn-primary btn-block" type="submit" data-ng-click="register()">Register Account</button>

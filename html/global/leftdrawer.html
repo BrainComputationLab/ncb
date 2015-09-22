@@ -31,8 +31,8 @@
             <label id="noResults" data-ng-show="(drawerCtrl.isSelected(0) && localFiltered.length == 0 && dbFiltered.length == 0) || (drawerCtrl.isSelected(1) && localFiltered.length == 0) || (drawerCtrl.isSelected(2) && dbFiltered.length == 0)">No Search Results</label>
 
             <span class="label label-default" style="display:block;" data-ng-show="(drawerCtrl.isSelected(0) || drawerCtrl.isSelected(1)) && localFiltered.length > 0">Local</span>
-            <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(1)" data-ng-repeat="model in localFiltered = (localModels | filter : searchText)">
-            
+            <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(1)" data-ng-repeat="model in localFiltered = (drawerCtrl.personal | filter : searchText)">
+
                 <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item" data-ng-dblclick="drawerCtrl.addToModel(model)">
                     <div class="row">
                         <div class="col-lg-12">
@@ -47,11 +47,11 @@
                         </div>
                     </div>
                 </div>
-                        
+
             </div>
 
             <span class="label label-default" style="display:block;" data-ng-show="(drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)) && dbFiltered.length > 0">Database</span>
-            <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)" data-ng-repeat="model in dbFiltered = (dbModels | filter : searchText)">
+            <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)" data-ng-repeat="model in dbFiltered = (drawerCtrl.lab | filter : searchText)">
 
                 <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item" data-ng-dblclick="drawerCtrl.addToModel(model)">
                     <div class="row">
@@ -68,8 +68,8 @@
                     </div>
                 </div>
 
-            </div>             
+            </div>
         </div>
 
-    </div>  
+    </div>
 <!-- End Main Div -->

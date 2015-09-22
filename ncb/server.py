@@ -6,6 +6,7 @@ from socket import *
 from db import MongoSessionInterface, MongoAuthenticator
 
 import json, os, time, threading, struct, random, datetime
+import pika
 
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
@@ -14,9 +15,7 @@ app.session_interface = MongoSessionInterface(db='testdb')
 # Debugging is okay for now
 app.debug = True
 
-auth = MongoAuthenticator(db='testdb', collection='users')
-auth.add_user('admin', 'test')
-
+daemon_connections = {}
 # authDB = AuthenticationDB('TestDB')
 # authDB.add_user('admin', 'test')
 
@@ -34,7 +33,7 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
 
-importFile = 'import.json'
+importFile = 'import'
 importFilePath = os.path.join(app.config['UPLOAD_FOLDER'], importFile)
 # changes old key names to new key names
 def changeAllKeys(obj, oldKey, newKey):
@@ -83,31 +82,21 @@ def saveJSONFile(fileName, JSON):
 
 
 #initiates transfer to ncs
-@app.route('/transfer', methods=['POST', 'GET'])
+@app.route('/transfer', methods=['POST'])
 def transferData():
     if request.method == 'POST':
         # jsonObj now has simulation parameters and model
         jsonObj = request.get_json(False, False, False)
 
-        # send jsonObj to NCS
-        daemonSocket = socket(AF_INET, SOCK_STREAM)
+        jsonObj['request'] = 'launchSim'
 
-        # for now all socket communication will use the local host
-        host = gethostbyname(gethostname())
-        print("Attempting to connect on " + host + ": 8004")
+        daemon_response = send_request_to_daemon(jsonObj)
 
-        try:
-            daemonSocket.connect((host,8004))
-            print("Successful connection with NCS daemon")
-        except Exception, e:
-            print("Error with daemon socket. Exception type is %s" % (str(e),))
+        if is_response_successful(daemon_response):
+            return jsonify({'success': True})
 
-        # serialize json object so it can be sent
-        data_string = json.dumps(jsonObj)
-        daemonSocket.send(data_string)
-
-        #print ("jsonObj: %r" %(jsonObj))
-        return jsonify({'success': True})
+        elif 'reason' in daemon_response:
+            return jsonify({'success' : False, 'reason' : daemon_response['reason']})
 
     return jsonify({'success': False})
 
@@ -136,25 +125,36 @@ def importFile():
         #print ("files: %r" %(request.files))
         webFile = request.files['import-file'];
         # if file exists and is allowed extension
-        if webFile: #and allowed_file(webFile.filename):
-            # save file to server filesystem
-            #name = secure_filename(importFile)
-            #print(name)
-            #print ("webfile: %r" %(webFile))
-            webFile.save(importFilePath)
-            #print("Here2")
-            jsonObj = loadJSONFile(importFilePath)
-            # return JSON object to determine success
-            #print("GOT: ", end="")
-            #print(jsonObj)
-            return jsonify(jsonObj)
+        if webFile:
+            if '.py' in webFile.filename:
+                print('Python Import!', file=sys.stderr)
+                webFile.save(importFilePath + '.py')
+
+                with open(importFilePath + '.py') as fin:
+                    scriptContents = fin.read()
+
+                daemon_request = {'request' : 'scriptToJSON', 'script' : scriptContents}
+
+                daemon_response = send_request_to_daemon(daemon_request)
+
+                if is_response_successful(daemon_response):
+                    daemon_response['success'] = True
+                    return jsonify(daemon_response)
+
+                else:
+                    return jsonify({'success' : False, 'reason' : daemon_response['reason']})
+
+            else:
+                print('JSON Import!', file=sys.stderr)
+                jsonObj = loadJSONFile(importFilePath)
+
+                return jsonify(jsonObj)
 
     elif request.method == 'GET':
         jsonObj = loadJSONFile(importFile)
         return jsonify(jsonObj)
 
-    else:
-        return jsonify({'success': False})
+    return jsonify({'success': False, 'reason' : 'Non GET or POST'})
 
 
 @app.route('/')
@@ -166,6 +166,7 @@ def index_route():
         return app.send_static_file('index.html')
 
     else:
+        delete_session()
         return app.send_static_file('login.html')
 
 
@@ -307,9 +308,37 @@ def update_session():
 
     return jsonify({'success' : False})
 
-@app.route('/add-user', methods=['POST'])
-def add_user():
-    pass
+@app.route('/register', methods=['POST'])
+def register():
+    if request.method == 'POST':
+        json_request = request.get_json(False, False, False)
+
+        print(json.dumps(json_request, indent=3), file=sys.stderr)
+
+        json_request['models'] = None
+        json_request['lab_id'] = 0
+        json_request['salt'] = None
+
+        daemon_request = {
+            'request' : 'addUser',
+            'user' : json_request
+        }
+
+        daemon_response = send_request_to_daemon(daemon_request)
+
+        if is_response_successful(daemon_response):
+            daemon_response['success'] = True
+
+        else:
+            daemon_response['success'] = False
+
+        print(daemon_response, file=sys.stderr)
+
+        return jsonify(daemon_response)
+
+    return jsonify({'success' : False})
+
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -317,36 +346,137 @@ def login():
         json_request = request.get_json(False, False, False)
         print(json.dumps(json_request, indent=3), file=sys.stderr)
 
-        # put logic here to login with daemon
-        is_user = True
+        if json_request['username'] in daemon_connections:
+            return jsonify({'success' : False, 'reason' : 'User already logged in'})
 
-        if is_user:
+        #create_daemon_connection(json_request['username'])
+
+        # put logic here to login with daemon
+        json_request['request'] = 'login'
+        daemon_response = send_request_to_daemon(json_request)
+
+        if is_response_successful(daemon_response):
             dt = datetime.datetime
             response = make_response(jsonify({'success' : True}))
 
             if json_request['rememberMe']:
-                delta = datetime.timedelta(weeks=+1)
+                delta = datetime.timedelta(weeks=+4)
                 expiration = dt.combine(datetime.date.today() + delta, dt.min.time())
-                response.set_cookie('username', json_request['email'], max_age=delta.total_seconds(), expires=expiration)
+                response.set_cookie('username', json_request['username'], max_age=delta.total_seconds(), expires=expiration)
 
             else:
-                response.set_cookie('username', json_request['email'])
+                response.set_cookie('username', json_request['username'])
 
             return response
 
         else:
-            return jsonify({'success' : False})
+            return jsonify(daemon_response)
 
     return jsonify({'success' : False})
 
 @app.route('/logout', methods=['POST'])
 def logout():
     if request.method == 'POST':
+
+        username = request.cookies.get('username')
+        daemon_connections[username].close()
+        del daemon_connections[username]
+
         response = make_response(jsonify({'success' : True}))
         response.set_cookie('username', '', expires=0)
         return response
 
     return jsonify({'success' : False})
+
+@app.route('/save-model', methods=['POST'])
+def save_model():
+    if request.method == 'POST':
+        json_request = request.get_json(False, False, False)
+        print(json.dumps(json_request, indent=3), file=sys.stderr)
+
+        json_request['request'] = 'saveModel'
+
+        daemon_response = send_request_to_daemon(json_request)
+
+        if is_response_successful(daemon_response):
+            return jsonify({'success' : True})
+
+        else:
+            return jsonify({'success' : False, 'reason' : daemon_response['reason']})
+
+    return jsonify({'success' : False, 'reason' : 'Non Post'})
+
+
+@app.route('/get-models', methods=['GET'])
+def get_models():
+    if request.method == 'GET':
+        json_request = {'request' : 'getModels'}
+
+        #daemon_response = send_request_to_daemon(json_request)
+        daemon_response = {
+            'response' : 'success',
+            'models' : {
+                'personal' : [],
+                'lab' : [],
+                'global' : []
+            }
+        }
+
+        if is_response_successful(daemon_response):
+            daemon_response['success'] = True
+            return jsonify(daemon_response)
+
+        else:
+            return jsonify({'success' : False, 'reason' : daemon_response['reason']})
+
+    return jsonify({'success' : False, 'reason' : 'Non GET'})
+
+@app.route('/undo-model', methods=['POST'])
+def undo_model():
+    if request.method == 'POST':
+        json_request = request.get_json(False, False, False)
+
+        json_request['request'] = 'UndoModelChange'
+
+        daemon_response = send_request_to_daemon(json_request)
+
+        if is_response_successful(daemon_response):
+            daemon_response['success'] = True
+            return jsonify(daemon_response)
+
+        else:
+            daemon_response['success'] = False
+            return jsonify(daemon_response)
+
+    return jsonify({'success' : False, 'reason' : 'Non POST'})
+
+@app.route('/export-script', methods=['GET', 'POST'])
+def export_script():
+    global exportFile
+    if request.method == 'POST':
+        json_request = request.get_json(False, False, False)
+
+        json_request['request'] = 'exportScript'
+
+        daemon_response = send_request_to_daemon(json_request)
+
+        if is_response_successful(daemon_response):
+            fileName = jsonObj['model']['name'] + '.py'
+            filePath = os.path.join(app.config['EXPORT_FOLDER'], fileName)
+
+            with open(filePath, 'w') as fout:
+                fout.write(daemon_response['script'])
+
+            exportFile = fileName
+            return send_from_directory(app.config['EXPORT_FOLDER'], fileName, as_attachment = True)
+
+        else:
+            return jsonify({'success' : False, 'reason' : daemon_response['reason']})
+
+    elif request.method == 'GET':
+        return send_from_directory(app.config['EXPORT_FOLDER'], exportFile, as_attachment = True)
+
+    return jsonify({'success' : False, 'reason' : 'Non GET or POST'})
 
 def worker(num):
     if not num in reports:
@@ -363,19 +493,40 @@ def send_request_to_daemon(json_request):
     host = 'daemonhost'
     port = 10000
 
-    return_value = None
+    return {
+        'response' : 'success',
+        'reason' : 'good'
+    }
 
+    # try:
+    #     daemon_socket = daemon_connections[request.cookies.get('username')]
+    #     daemon_socket.send(json.dumps(json_request))
+
+    #     # TODO: logic for receiving result from daemon
+    #     result = daemon_socket.recv(4096)
+    #     result_json = json.loads(result)
+
+    #     return result_json
+    # except Exception, e:
+    #     print('Error with daemon socket,', e, file=sys.stderr)
+    #     return {'response' : 'failure', 'reason' : 'Socket Error'}
+
+def create_daemon_connection(username):
     daemon_socket = socket(AF_INET, SOCK_STREAM)
 
     try:
         daemon_socket.connect((host, port))
-        daemon_socket.send(json.dumps(json_request))
+        daemon_connections[username] = daemon_socket
 
-        # TODO: logic for receiving result from daemon
     except Exception, e:
-        print('Error with daemon socket,', e, file=sys.stderr)
-        return False
+        print('Error creating daemon socket,', e, file=sys.stderr)
 
+def is_response_successful(daemon_response):
+    return daemon_response['response'] == 'success'
+
+def delete_session():
+    if 'model' in session:
+        del session['model']
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":

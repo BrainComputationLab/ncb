@@ -1,0 +1,20 @@
+<!-- NEW CELL GROUP MODAL BEGIN -->
+<!-- Modal -->
+<div class="modal fade" id="undoModelModal" tabindex="-1" role="dialog" data-ng-controller="UndoModelController as undoCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Undo Current Model Changes</h4>
+            </div>
+            <div class="modal-body">
+                Undo will revert the current model back to its most recent saved state. All unsaved changes will be lost.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" data-ng-click="undoCtrl.undoModel()">Undo</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- NEW CELL GROUP MODAL END -->

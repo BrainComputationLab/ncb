@@ -6,3 +6,4 @@ ensure
 coverage
 coveralls
 gunicorn
+pika

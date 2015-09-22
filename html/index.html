@@ -33,13 +33,16 @@
     @@include('pages/builder/components/new-connection-modal.html')
     @@include('pages/builder/components/new-channel-modal.html')
     @@include('pages/builder/components/clear-model-modal.html')
+    @@include('pages/builder/components/undo-model-modal.html')
+    @@include('pages/builder/components/save-model-modal.html')
     @@include('pages/builder/components/export-modal.html')
     @@include('pages/builder/components/import-modal.html')
     @@include('pages/simulation/components/launch-simulation-modal.html')
 
     <!-- Modularization of each tab -->
     <div data-snap-drawers>
-        <div data-snap-drawer class="ncb-left-drawer" data-ng-controller="DrawerController as drawerCtrl">
+        <div data-snap-drawer class="ncb-left-drawer" data-ng-controller="DrawerController as drawerCtrl"
+            data-ng-init="drawerCtrl.initialize()">
             @@include('global/leftdrawer.html')
         </div>
     </div>
