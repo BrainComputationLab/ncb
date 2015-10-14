@@ -1,17 +1,14 @@
 {
-  "name": "ncb",
-  "version": "0.5.0",
-  "dependencies": {
-    "bootstrap-additions": "*",
-    "angular-snap": "~1.6.0",
-    "angular-bootstrap-colorpicker": "~3.0.8",
-    "snapjs": "~1.9.3",
-    "angular-xeditable": "*",
-    "jquery-ui": "~1.11.2",
-
-  },
-  "devDependencies": {
-    "mocha": "*"
-  },
-  "private": true
+    "name" : "ncb",
+    "version" : "0.5.0",
+    "dependencies" : {
+        "bootstrap-additions" : "*",
+        "angular-snap" : "*",
+        "angular-bootstrap-colorpicker" : "*",
+        "snapjs" : "*",
+        "angular-xeditable" : "*",
+        "jquery-ui" : "*"
+    },
+    "private" : true
 }
+

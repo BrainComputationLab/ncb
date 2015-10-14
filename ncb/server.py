@@ -80,7 +80,7 @@ def saveJSONFile(fileName, JSON):
     with open(fileName, 'w') as fout:
         json.dump(JSON, fout, indent=4)
 
-
+message_queues = {}
 #initiates transfer to ncs
 @app.route('/transfer', methods=['POST'])
 def transferData():
@@ -89,7 +89,20 @@ def transferData():
         jsonObj = request.get_json(False, False, False)
 
         jsonObj['request'] = 'launchSim'
-
+        
+        # create message queue
+        username = request.cookies.get('username')
+        
+        if not username:
+            raise Exception('User not logged in!')
+            
+        reports = jsonObj['simulation']['outputs']
+        
+        for report in reports:
+            t = threading.Thread(target=createRabbitMQConnection, args=(jsonObj, username, report))
+            t.daemon = True
+            t.start()
+            
         daemon_response = send_request_to_daemon(jsonObj)
 
         if is_response_successful(daemon_response):
@@ -100,6 +113,34 @@ def transferData():
 
     return jsonify({'success': False})
 
+def createRabbitMQConnection(jsonObj, username, report):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.27.147.245', 
+                                                                   port=5672,
+                                                                   credentials=pika.PlainCredentials('guest', 'guest')))        
+    channel = connection.channel()
+    
+    channel.queue_declare(queue='data', durable=True, exclusive=False, auto_delete=False)
+    channel.exchange_declare(exchange='datastream', type='direct', durable=True, auto_delete=False)
+    
+    routing_key = '%s..%s' % (username, report['name'])
+    
+    print('routing key: ' + routing_key, file=sys.stderr)
+    channel.queue_bind(queue='data', exchange='datastream', routing_key=routing_key)
+    
+    def rabbit_callback(ch, method, properties, body):
+        #while True:
+            #msg = queue.get()
+        print('Received: ' + body, file=sys.stderr)
+        if body == 'STOP':
+            ch.close()
+    
+    channel.basic_consume(rabbit_callback, queue='data', no_ack=True, consumer_tag='testtag')
+    
+    #queue = connection.queue('testtag')
+    
+    print('Created RabbitMQ Shit!', file=sys.stderr)
+    
+    channel.start_consuming()
 
 # initiates export
 @app.route('/export', methods=['POST', 'GET'])
@@ -379,8 +420,9 @@ def logout():
     if request.method == 'POST':
 
         username = request.cookies.get('username')
-        daemon_connections[username].close()
-        del daemon_connections[username]
+        if username and username in daemon_connections:
+            daemon_connections[username].close()
+            del daemon_connections[username]
 
         response = make_response(jsonify({'success' : True}))
         response.set_cookie('username', '', expires=0)
