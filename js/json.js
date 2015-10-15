@@ -1,4 +1,5 @@
 var $ = require('jquery');
+require('angular');
 
 $().ready(function() {
     $("#export_modal").on("show.bs.modal", function() {
@@ -133,7 +134,7 @@ function exportSim() {
         url: '/export',
         type: 'POST',
 
-        data: JSON.stringify(currentModel),
+        data: angular.toJson(currentModel),
         dataType: 'JSON',
         contentType: 'application/json; charset=utf-8',
 

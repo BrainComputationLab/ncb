@@ -2,6 +2,7 @@ var $ = require('jquery');
 var parameters = require('./parameters');
 var utilityFcns = require('./utilityFcns');
 var app = require('./app');
+require('angular');
 var calciumDependantChannel = parameters.calciumDependantChannel;
 var cellGroup = parameters.cellGroup;
 var cells = parameters.cells;
@@ -29,6 +30,7 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
   $scope.colors = colorService.getColors();
   this.tab = 0;
 
+  $scope.localModels = myModels;
   $scope.personal = [];
   $scope.lab = [];
   $scope.global = [];
@@ -70,6 +72,9 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
           $scope.personal = data.models.personal;
           $scope.lab = data.models.lab;
           $scope.global = data.models.global;
+          
+          console.log("Get Models Successful");
+          console.log(data);
         }
 
         else {
@@ -763,7 +768,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     // export model based on type of export
     if (this.saveType === 'json') {
       // save to file
-      var json = JSON.stringify({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
+      var json = angular.toJson({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
       $http.post('/export', json).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
@@ -779,7 +784,7 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     }
     else if (this.saveType === 'python') {
       // save to file
-      var json = JSON.stringify({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
+      var json = angular.toJson({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
       $http.post('/export-script', json).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
@@ -847,14 +852,20 @@ ncbApp.controller("ClearModelController", ['CurrentModelService', function(curre
 
 ncbApp.controller("SaveModalController", ['$scope', '$http', 'CurrentModelService',
   function($scope, $http, CurrentModelService) {
-
     $scope.saveType = undefined;
+    $scope.modelName = '';
 
     $scope.saveSimulation = function() {
       var model = CurrentModelService.getCurrentModel();
+      
+      var username = '';
+      if(document.cookie.split('=').length > 1)
+        username = document.cookie.split('=')[1].replace(/^"(.*)"$/, '$1');
+        
+      model.name = $scope.modelName;
+      model.author = username;
 
-      var json = JSON.stringify({location: $scope.saveType, model: model});
-
+      var json = angular.toJson({location: $scope.saveType, model: model});
       $http.post('/save-model', json)
         .success(function(data, status, headers, config) {
           if(data.success)
@@ -875,7 +886,7 @@ ncbApp.controller('UndoModelController', ['CurrentModelService', '$http', functi
   this.undoModel = function(){
     console.log("Undo");
 
-    var json = JSON.stringify({location : 'lab', model : currentModelService.getCurrentModel()});
+    var json = angular.toJson({location : 'lab', model : currentModelService.getCurrentModel()});
     $http.post('/undo-model', json)
       .success(function(data, status, headers, config) {
         if(data.success) {

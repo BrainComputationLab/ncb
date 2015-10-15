@@ -35,6 +35,14 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 
 importFile = 'import'
 importFilePath = os.path.join(app.config['UPLOAD_FOLDER'], importFile)
+
+def update_JSON(jsonObj):
+    changeAllKeys(jsonObj, u'baseCellGroups', u'groups')
+    changeAllKeys(jsonObj, u'cellGroups', u'groups')
+    changeAllKeys(jsonObj, u'cellAliases', u'neuron_aliases')
+    changeAllKeys(jsonObj, u'name', u'entity_name')
+    changeAllKeys(jsonObj, u'type', u'entity_type')
+    
 # changes old key names to new key names
 def changeAllKeys(obj, oldKey, newKey):
     if not isinstance(obj, dict):
@@ -71,11 +79,7 @@ def loadJSONFile(fileName):
 
 # saves json to file
 def saveJSONFile(fileName, JSON):
-    changeAllKeys(JSON, u'baseCellGroups', u'groups')
-    changeAllKeys(JSON, u'cellGroups', u'groups')
-    changeAllKeys(JSON, u'cellAliases', u'neuron_aliases')
-    changeAllKeys(JSON, u'name', u'entity_name')
-    changeAllKeys(JSON, u'type', u'entity_type')
+    update_JSON(JSON)
 
     with open(fileName, 'w') as fout:
         json.dump(JSON, fout, indent=4)
@@ -113,15 +117,17 @@ def transferData():
 
     return jsonify({'success': False})
 
-def createRabbitMQConnection(jsonObj, username, report):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.27.147.245', 
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='134.197.67.160', 
                                                                    port=5672,
-                                                                   credentials=pika.PlainCredentials('guest', 'guest')))        
+                                                                   credentials=pika.PlainCredentials('test', 'test'))) 
+                                                                   
+def createRabbitMQConnection(jsonObj, username, report):      
     channel = connection.channel()
     
     channel.queue_declare(queue='data', durable=True, exclusive=False, auto_delete=False)
     channel.exchange_declare(exchange='datastream', type='direct', durable=True, auto_delete=False)
     
+    print(report, file=sys.stderr)
     routing_key = '%s..%s' % (username, report['name'])
     
     print('routing key: ' + routing_key, file=sys.stderr)
@@ -138,7 +144,7 @@ def createRabbitMQConnection(jsonObj, username, report):
     
     #queue = connection.queue('testtag')
     
-    print('Created RabbitMQ Shit!', file=sys.stderr)
+    print('Created RabbitMQ Channel', file=sys.stderr)
     
     channel.start_consuming()
 
@@ -365,13 +371,30 @@ def register():
             'user' : json_request
         }
 
-        daemon_response = send_request_to_daemon(daemon_request)
+        username = json_request['username']
+        create_daemon_connection(username, True) 
+        daemon_response = send_request_to_daemon(daemon_request, username)
 
         if is_response_successful(daemon_response):
             daemon_response['success'] = True
+            
+            try:
+                socket = daemon_connections[username]
+                socket.close()
+                #create_daemon_connection(username)
+                del daemon_connections[username]
+            except:
+                pass
 
         else:
             daemon_response['success'] = False
+            
+            try:
+                socket = daemon_connections[username]
+                socket.close()
+                del daemon_connections[username]
+            except:
+                pass
 
         print(daemon_response, file=sys.stderr)
 
@@ -385,16 +408,19 @@ def register():
 def login():
     if request.method == 'POST':
         json_request = request.get_json(False, False, False)
-        print(json.dumps(json_request, indent=3), file=sys.stderr)
+        #print(json.dumps(json_request, indent=3), file=sys.stderr)
+        username = json_request['username']
 
-        if json_request['username'] in daemon_connections:
+        if username in daemon_connections:
             return jsonify({'success' : False, 'reason' : 'User already logged in'})
 
-        #create_daemon_connection(json_request['username'])
+        create_daemon_connection(username)
 
         # put logic here to login with daemon
         json_request['request'] = 'login'
-        daemon_response = send_request_to_daemon(json_request)
+        
+        print(json_request, file=sys.stderr)
+        daemon_response = send_request_to_daemon(json_request, username)
 
         if is_response_successful(daemon_response):
             dt = datetime.datetime
@@ -403,14 +429,19 @@ def login():
             if json_request['rememberMe']:
                 delta = datetime.timedelta(weeks=+4)
                 expiration = dt.combine(datetime.date.today() + delta, dt.min.time())
-                response.set_cookie('username', json_request['username'], max_age=delta.total_seconds(), expires=expiration)
+                response.set_cookie('username', username, max_age=delta.total_seconds(), expires=expiration)
 
             else:
-                response.set_cookie('username', json_request['username'])
+                response.set_cookie('username', username)
 
             return response
 
         else:
+            try:
+                del daemon_connections[username]
+            except:
+                pass
+                
             return jsonify(daemon_response)
 
     return jsonify({'success' : False})
@@ -478,7 +509,7 @@ def undo_model():
     if request.method == 'POST':
         json_request = request.get_json(False, False, False)
 
-        json_request['request'] = 'UndoModelChange'
+        json_request['request'] = 'undoModelChange'
 
         daemon_response = send_request_to_daemon(json_request)
 
@@ -503,7 +534,7 @@ def export_script():
         daemon_response = send_request_to_daemon(json_request)
 
         if is_response_successful(daemon_response):
-            fileName = jsonObj['model']['name'] + '.py'
+            fileName = json_request['model']['name'] + '.py'
             filePath = os.path.join(app.config['EXPORT_FOLDER'], fileName)
 
             with open(filePath, 'w') as fout:
@@ -530,31 +561,38 @@ def worker(num):
         q.put(random.randint(0,10))
         time.sleep(3)
 
+def get_username():
+    username = request.cookies.get('username')
+    return username
+    
+def send_request_to_daemon(json_request, username = None):
+    # return {
+    #     'response' : 'success',
+    #     'reason' : 'good'
+    # }
+    
+    if username is None:
+        username = get_username()
 
-def send_request_to_daemon(json_request):
-    host = 'daemonhost'
-    port = 10000
+    try:
+        daemon_socket = daemon_connections[username]
+        daemon_socket.send(json.dumps(json_request))
 
-    return {
-        'response' : 'success',
-        'reason' : 'good'
-    }
+        # TODO: logic for receiving result from daemon
+        result = daemon_socket.recv(4096)
+        result_json = json.loads(result)
+        
+        print(result_json, file=sys.stderr)
 
-    # try:
-    #     daemon_socket = daemon_connections[request.cookies.get('username')]
-    #     daemon_socket.send(json.dumps(json_request))
+        return result_json
+    except Exception, e:
+        print('Error with daemon socket,', e, file=sys.stderr)
+        return {'response' : 'failure', 'reason' : 'Socket Error'}
 
-    #     # TODO: logic for receiving result from daemon
-    #     result = daemon_socket.recv(4096)
-    #     result_json = json.loads(result)
-
-    #     return result_json
-    # except Exception, e:
-    #     print('Error with daemon socket,', e, file=sys.stderr)
-    #     return {'response' : 'failure', 'reason' : 'Socket Error'}
-
-def create_daemon_connection(username):
+def create_daemon_connection(username, adding_user = False):
     daemon_socket = socket(AF_INET, SOCK_STREAM)
+    host = '134.197.67.160'
+    port = 8009 if adding_user else 8004
 
     try:
         daemon_socket.connect((host, port))
@@ -569,6 +607,7 @@ def is_response_successful(daemon_response):
 def delete_session():
     if 'model' in session:
         del session['model']
+        
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":

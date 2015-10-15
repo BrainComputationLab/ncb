@@ -1,6 +1,7 @@
 var parameters = require('./parameters');
 var utilityFcns = require('./utilityFcns');
 var app = require('./app');
+require('angular');
 var cellGroup = parameters.cellGroup;
 var deepCopyArray = utilityFcns.deepCopyArray;
 var deepCopy = utilityFcns.deepCopy;
@@ -231,7 +232,7 @@ ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', '$tim
   currentModelService.simParams = {};
 
   currentModelService.updateModelSession = function() {
-    var json = JSON.stringify({model: this.currentModel, simulation: this.simParams}, null, "\t");
+    var json = angular.toJson({model: this.currentModel, simulation: this.simParams}, null, "\t");
     $http.post('/update-session', json).
       success(function(data, status, headers, config) {
         var d = new Date();

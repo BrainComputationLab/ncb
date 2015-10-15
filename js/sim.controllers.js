@@ -400,7 +400,7 @@ ncbApp.controller("LaunchSimulationController", ['$rootScope', '$scope', '$http'
     }
 
     // sends model and simulation parameters to server for transfer
-    var json = JSON.stringify({model: model, simulation: $scope.simulationParams}, null, "\t");
+    var json = angular.toJson({model: model, simulation: $scope.simulationParams}, null, "\t");
     $http.post('/transfer', json).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously

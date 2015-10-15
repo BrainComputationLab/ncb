@@ -1,4 +1,5 @@
 var app = require('./app');
+require('angular');
 var ncbApp = app.ncbApp;
 
 ncbApp.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
@@ -20,7 +21,7 @@ ncbApp.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
             console.log("Login");
             console.log($scope.user);
 
-            var json = JSON.stringify($scope.user, null, '\t');
+            var json = angular.toJson($scope.user, null, '\t');
             $http.post('/login', json)
                 .success(function(data, status, headers, config) {
                     if(data.success) {
@@ -30,6 +31,8 @@ ncbApp.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
                     else {
                         $scope.errorText = 'Incorrect username or password.';
                         $scope.showError = true;
+                        
+                        console.log(data);
                     }
 
                 })
@@ -40,7 +43,6 @@ ncbApp.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
     };
 
     $scope.register = function() {
-        console.log("Here!!!");
         var fieldsDefined = true;
         for(var key in $scope.user) {
             if($scope.user[key] === undefined) {
@@ -53,7 +55,7 @@ ncbApp.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
             console.log("Register");
             console.log($scope.user);
 
-            var json = JSON.stringify($scope.user, null, '\t');
+            var json = angular.toJson($scope.user, null, '\t');
             $http.post('/register', json)
                 .success(function(data, status, headers, config) {
                     if(data.success) {

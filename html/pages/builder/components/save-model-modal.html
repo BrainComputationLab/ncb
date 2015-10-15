@@ -1,4 +1,4 @@
-<div class="modal fade" id="saveModelModal" tabindex="-1" role="dialog" data-ng-controller="SaveModalController as saveCtrl">
+<div class="modal fade" id="saveModelModal" tabindex="-1" role="dialog" data-ng-controller="SaveModalController">
     <!-- Import Model Modal window -->
     <div class="modal-dialog">
       <div class="modal-content">
@@ -10,9 +10,18 @@
         <div class="modal-body">
             <form id="saveForm" class="form-horizontal" role="form">
                 <div class="form-group">
+                    
+                    <label for="saveType" class="col-sm-4 control-label"> Model Name</label>
+                    <div class="col-sm-8">
+                        <input id="saveModelName" type="text" placeholder="Model Name" class="form-control" data-ng-model="modelName">
+                        <br>
+                    </div>
+                    
+                    <br>
+                    
                     <label for="saveType" class="col-sm-4 control-label"> Database Selection</label>
                     <div class="col-sm-8">
-                      <select id="saveType" class="form-control" data-ng-model="saveCtrl.saveType" data-ng-init="saveCtrl.saveType = 'personal'">
+                      <select id="saveType" class="form-control" data-ng-model="saveType" data-ng-init="saveType = 'personal'">
                           <option value="personal">Personal</option>
                           <option value="lab">Lab</option>
                           <option value="global">Global</option>
@@ -27,7 +36,7 @@
         <!-- modal window Cancel and Ok buttons -->
         <div class="modal-footer">
           <button type="button" class="btn btn-default import_export_buttons" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-success import_export_buttons" data-ng-click="saveCtrl.saveSimulation()">Ok</button>
+          <button type="button" class="btn btn-success import_export_buttons" data-dismiss="modal" data-ng-click="saveSimulation()">Save</button>
         </div>
         <!-- end modal window Cancel and Ok buttons -->
 
