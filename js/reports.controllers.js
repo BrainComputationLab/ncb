@@ -81,38 +81,40 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
     $scope.reportData = [];
     $scope.started = false;
     $scope.intervals = [];
-    $scope.reports = [
-        {
-            'name' : 'Sim 1',
-            'outputs' : [
-                {
-                    'name' : 'Rep1',
-                    'data' : []
-                },
+    // $scope.reports = [
+    //     {
+    //         'name' : 'Sim 1',
+    //         'outputs' : [
+    //             {
+    //                 'name' : 'Rep1',
+    //                 'data' : []
+    //             },
 
-                {
-                    'name' : 'Rep2',
-                    'data' : []
-                }
-            ]
-        },
+    //             {
+    //                 'name' : 'Rep2',
+    //                 'data' : []
+    //             }
+    //         ]
+    //     },
 
-        {
-            'name' : 'Sim 2',
-            'outputs' : [
-                {
-                    'name' : 'Rep3',
-                    'data' : []
-                }
-            ]
-        }
-    ];
+    //     {
+    //         'name' : 'Sim 2',
+    //         'outputs' : [
+    //             {
+    //                 'name' : 'Rep3',
+    //                 'data' : []
+    //             }
+    //         ]
+    //     }
+    // ];
+
+    $scope.reports = [];
 
     $scope.activeSim = 0;
     $scope.activeReport = 0;
 
-    $scope.selectedSim = $scope.reports[$scope.activeSim];
-    $scope.selectedReport = $scope.reports[$scope.activeSim].outputs[$scope.activeReport];
+    $scope.selectedSim = null;//$scope.reports[$scope.activeSim];
+    $scope.selectedReport = null;//$scope.reports[$scope.activeSim].outputs[$scope.activeReport];
 
     var callback = function(sim, report) {
 
@@ -134,6 +136,19 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
 
     $scope.start = function() {
         console.log("Reports Started");
+
+        $http.get('/get-report-specs')
+            .success(function(data, status, headers, config) {
+                console.log('get-report-specs');
+
+                if(data.success)
+                    $scope.reports = data.reports;
+          }).
+          error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            console.error(status);
+          });
 
         callback(0,0);
         callback(0,1);

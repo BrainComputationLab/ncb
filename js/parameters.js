@@ -72,11 +72,11 @@ function calciumDependantChannel() {
     this.conductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 }
 
-function voltageGatedChannel(particles) {
+function voltageGatedChannel(particle) {
 	this.className = "voltageGatedChannel";
 	this.name="Voltage Gated Channel";
 	this.description = "Description";
-	this.particles = particles;															//list of parameters for particles
+	this.particles = [particle];															//list of parameters for particles
 	this.conductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 }
@@ -99,14 +99,19 @@ function particleVariableConstants() {
 	this.h = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 }
 
+var flatSynapseCount = 0;
 function flatSynapse() {
-	this.name = "flatSynapse";
+	this.name = "flatSynapse-" + flatSynapseCount;
+	flatSynapseCount += 1;
 	this.delay = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.current = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.type = 'Flat'
 }
 
+var ncsSynapseCount = 0
 function ncsSynapse() {
-	this.name = "ncsSynapse";
+	this.name = "ncsSynapse-" + ncsSynapseCount;
+	ncsSynapseCount += 1;
 	this.utilization = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.redistribution = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.lastPrefireTime = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
@@ -122,6 +127,7 @@ function ncsSynapse() {
 	this.tauPostSynapticConductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.psgWaveformDuration = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.delay = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.type = 'NCS'
 }
 
 function inputModelParameters() {
@@ -147,7 +153,7 @@ function cellGroup(name) {
 	this.classification = "cellGroup";
 	this.name = name;
 	this.cellGroups = [];
-	this.description = "Description";
+	this.description = "Cell Group";
 }
 
 function cellAlias(name, cellGroup, cAlias) {
@@ -165,7 +171,7 @@ function synapseGroup(pre, post, prePath, postPath, prob, parameters) {
 	this.postPath = postPath;
 	this.prob = prob;
 	this.parameters = parameters;
-	this.description = "Description";
+	this.description = parameters.name;
 }
 
 function synapseAlias(synapseGroup, synAlias) {
@@ -173,10 +179,7 @@ function synapseAlias(synapseGroup, synAlias) {
 	this.synapseAlias = synAlias;
 }
 
-function simulationInput(name){
-	this.className = "simulationInput";
-	this.name = name;
-	this.stimulusType = "Rectangular Current";
+function inputParameters() {
 	this.amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.start_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.end_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
@@ -189,15 +192,21 @@ function simulationInput(name){
 	this.width = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.frequency = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.probability = 0.5;
-	this.inputTargets = [];
 	this.startTime = 0;
-	this.endTime = 10;
+	this.endTime = 0;
+}
+
+function simulationInput(name, parameters) {
+	this.name = name;
+	this.parameters = parameters;
+	this.className = "simulationInput";
+	this.inputTargets = [];
+	this.stimulusType = "Rectangular Current";
 }
 
 function simulationOutput(name){
 	this.className = "simulationOutput";
 	this.name = name;
-	this.saveAsFile = false;
 	this.reportType = "Synaptic Current";
 	this.reportTargets = [];
 	this.probability = 0.5;
@@ -227,6 +236,7 @@ module.exports = {
     ncsParam: ncsParam,
     ncsSynapse: ncsSynapse,
     particleVariableConstants: particleVariableConstants,
+    inputParameters: inputParameters,
     simulationInput: simulationInput,
     simulationOutput: simulationOutput,
     synapseGroup: synapseGroup,

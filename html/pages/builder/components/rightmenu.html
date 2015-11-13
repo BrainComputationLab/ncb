@@ -856,131 +856,149 @@
                                   <td colspan="1" blur="submit" data-editable-text="channel.reversalPotential.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.reversalPotential.mean}}</span></td>
                                   <td colspan="1" blur="submit" data-editable-text="channel.reversalPotential.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.reversalPotential.stddev}}</span></td>
                                 </tr>
+                            </table>
+                            <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="channel.className == 'voltageGatedChannel'" data-ng-repeat="particle in channel.particles track by $index">
+                                <tr>
+                                  <td colspan="8"><span><strong>Particle {{$index+1}}</strong></span><button class="btn btn-xs btn-danger pull-right" data-ng-click="mParamsCtrl.removeParticle(channel, $index)" data-ng-show="channel.particles.length > 1">x</button></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Parameter Name:</span></td>
+                                  <td colspan="1"><span>Type:</span></td>
+                                  <td colspan="1"><span>Value:</span></td>
+                                  <td colspan="1"><span>Min:</span></td>
+                                  <td colspan="1"><span>Max:</span></td>
+                                  <td colspan="1"><span>Mean:</span></td>
+                                  <td colspan="1"><span>StdDev:</span></td>
+                                </tr>
+
                                 <tr>
                                   <td colspan="2"><span>Particle Power:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.power.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.power.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.power.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.power.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.power.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.power.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.power.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.power.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.power.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.power.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.power.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.power.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.power.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.power.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.power.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.power.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.power.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.power.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.power.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.power.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.power.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.power.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.power.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.power.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle X Initial:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.xInitial.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.xInitial.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.xInitial.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.xInitial.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.xInitial.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.xInitial.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.xInitial.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.xInitial.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.xInitial.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.xInitial.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.xInitial.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.xInitial.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.xInitial.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.xInitial.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.xInitial.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.xInitial.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.xInitial.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.xInitial.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.xInitial.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.xInitial.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.xInitial.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.xInitial.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.xInitial.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.xInitial.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Alpha A:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.alpha.a.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.a.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.a.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.a.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.a.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.a.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.a.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.a.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.a.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.a.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.a.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.a.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.alpha.a.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.alpha.a.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.a.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.a.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.a.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.a.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.a.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.a.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.a.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.a.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.a.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.a.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Alpha B:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.alpha.b.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.b.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.b.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.b.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.b.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.b.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.b.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.b.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.b.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.b.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.b.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.b.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.alpha.b.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.alpha.b.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.b.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.b.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.b.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.b.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.b.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.b.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.b.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.b.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.b.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.b.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Alpha C:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.alpha.c.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.c.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.c.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.c.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.c.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.c.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.c.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.c.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.c.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.c.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.c.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.c.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.alpha.c.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.alpha.c.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.c.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.c.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.c.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.c.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.c.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.c.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.c.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.c.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.c.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.c.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Alpha D:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.alpha.d.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.d.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.d.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.d.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.d.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.d.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.d.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.d.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.d.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.d.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.d.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.d.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.alpha.d.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.alpha.d.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.d.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.d.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.d.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.d.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.d.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.d.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.d.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.d.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.d.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.d.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Alpha F:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.alpha.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.h.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.alpha.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.alpha.h.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Alpha H:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.alpha.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.alpha.h.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.alpha.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.alpha.h.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.alpha.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.alpha.h.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.alpha.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.alpha.h.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Beta A:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.beta.a.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.a.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.a.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.a.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.a.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.a.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.a.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.a.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.a.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.a.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.a.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.a.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.beta.a.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.beta.a.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.a.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.a.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.a.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.a.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.a.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.a.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.a.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.a.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.a.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.a.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Beta B:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.beta.b.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.b.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.b.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.b.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.b.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.b.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.b.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.b.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.b.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.b.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.b.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.b.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.beta.b.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.beta.b.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.b.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.b.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.b.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.b.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.b.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.b.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.b.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.b.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.b.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.b.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Beta C:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.beta.c.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.c.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.c.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.c.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.c.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.c.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.c.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.c.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.c.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.c.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.c.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.c.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.beta.c.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.beta.c.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.c.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.c.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.c.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.c.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.c.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.c.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.c.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.c.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.c.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.c.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Beta D:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.beta.d.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.d.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.d.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.d.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.d.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.d.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.d.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.d.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.d.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.d.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.d.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.d.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.beta.d.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.beta.d.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.d.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.d.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.d.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.d.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.d.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.d.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.d.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.d.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.d.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.d.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Beta F:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.beta.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.h.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.beta.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.beta.h.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.stddev}}</span></td>
                                 </tr>
                                 <tr>
                                   <td colspan="2"><span>Particle Beta H:</span></td>
-                                  <td colspan="1" blur="submit" data-editable-select="channel.particles.beta.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.particles.beta.h.type}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.value}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.minValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.maxValue}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.mean}}</span></td>
-                                  <td colspan="1" blur="submit" data-editable-text="channel.particles.beta.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.particles.beta.h.stddev}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="particle.beta.h.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{particle.beta.h.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="particle.beta.h.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{particle.beta.h.stddev}}</span></td>
+                                </tr>
+                                <tr data-ng-show="$index === (channel.particles.length-1)">
+                                    <td colspan="8"><span><button type="button" class="btn btn-xs btn-success" data-ng-click="mParamsCtrl.addParticle(channel)">Add New Particle</button></span></td>
                                 </tr>
                               </table>
                               <!-- End Voltage Gated Channel Parameters -->

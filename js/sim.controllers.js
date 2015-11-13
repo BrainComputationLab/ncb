@@ -9,6 +9,7 @@ var myModels = app.myModels;
 var ncbApp = app.ncbApp;
 var simulationInput = parameters.simulationInput;
 var simulationOutput = parameters.simulationOutput;
+var inputParameters = parameters.inputParameters;
 
 ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentModelService",
     function($scope, $rootScope, $sce, currentModelService){
@@ -130,7 +131,13 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     for(var i = 0; i < model.synapses.length; i++) {
       var str = '&bull; ' + model.synapses[i].pre + ' &rarr; ' + model.synapses[i].post;
       targets.push({val: model.synapses[i].description, name: $sce.trustAsHtml(str)});
-      synapses.push({val: model.synapses[i].description, name: $sce.trustAsHtml(str)});
+
+      // TODO FIX!!!!! //
+      var obj = {val: model.synapses[i].description, name: $sce.trustAsHtml(str)};
+      synapses.push(obj);
+
+      console.log("OBJ:");
+      console.log(obj);
     }
 
     this.possibleTargets = targets;
@@ -167,7 +174,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
 
     cont.selected = previousSelection;
 
-    //cont.setParams();
+    cont.setParams();
   });
 
   $scope.$on('session-loaded', function(event) {
@@ -221,7 +228,7 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     // if input tab selected add input param
     if(this.tab === 0){
       this.selectedParamIndex = this.inputNum - 1;
-      this.simInput.push(new simulationInput("Input" + this.inputNum));
+      this.simInput.push(new simulationInput("Input" + this.inputNum, new inputParameters()));
       this.inputNum++;
 
       this.selected = this.simInput[this.simInput.length-1];
@@ -276,7 +283,10 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     delete output.possibleOutputTargets;
     delete output.possibleReportType;
 
-    var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: output, inputs: this.simInput};
+    var input = angular.copy(this.simInput);
+    delete input.possibleInputTargets;
+
+    var simParams = {name: this.simName, fsv: this.FSV, seed: this.seed, duration: this.duration, interactive: this.interactive, includeDistance: this.includeDistance, outputs: output, inputs: input};
 
     currentModelService.setSimParams(simParams);
     //currentModelService.updateModelSession();
@@ -357,7 +367,6 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
             };
     }
   };
-
 }]);
 
 ncbApp.controller("LaunchSimulationController", ['$rootScope', '$scope', '$http', 'ColorService', 'CurrentModelService',

@@ -292,7 +292,7 @@ ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', '$tim
     // handle case of cell or cell group
     if(model.classification == "cells" || model.classification == "cellGroup"){
       // create a copy of the model to be added
-      var newComponent = deepCopy(model);
+      var newComponent = angular.copy(model);
 
       // add component if not already in the current model
       var index = getCellIndex(this.selected.cellGroups, model.name);

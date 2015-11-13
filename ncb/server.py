@@ -8,6 +8,9 @@ from db import MongoSessionInterface, MongoAuthenticator
 import json, os, time, threading, struct, random, datetime
 import pika
 
+DAEMON_CONNECTED = True
+DAEMON_HOST = '10.0.1.40'
+
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
 app.session_interface = MongoSessionInterface(db='testdb')
@@ -18,6 +21,7 @@ app.debug = True
 daemon_connections = {}
 # authDB = AuthenticationDB('TestDB')
 # authDB.add_user('admin', 'test')
+report_data = {}
 
 # set upload folder and allowed extensions
 allowedFileExtensions = set(['json','py'])
@@ -42,7 +46,7 @@ def update_JSON(jsonObj):
     changeAllKeys(jsonObj, u'cellAliases', u'neuron_aliases')
     changeAllKeys(jsonObj, u'name', u'entity_name')
     changeAllKeys(jsonObj, u'type', u'entity_type')
-    
+
 # changes old key names to new key names
 def changeAllKeys(obj, oldKey, newKey):
     if not isinstance(obj, dict):
@@ -79,7 +83,7 @@ def loadJSONFile(fileName):
 
 # saves json to file
 def saveJSONFile(fileName, JSON):
-    update_JSON(JSON)
+    #update_JSON(JSON)
 
     with open(fileName, 'w') as fout:
         json.dump(JSON, fout, indent=4)
@@ -90,23 +94,42 @@ message_queues = {}
 def transferData():
     if request.method == 'POST':
         # jsonObj now has simulation parameters and model
+
+        # with open('/Users/cam/Desktop/ncb/ncb/test.json') as fin:
+        #     content = fin.read()
+
         jsonObj = request.get_json(False, False, False)
 
         jsonObj['request'] = 'launchSim'
-        
+
+        print('Model:', file=sys.stderr)
+        print(json.dumps(jsonObj, indent=3), file=sys.stderr)
+
         # create message queue
         username = request.cookies.get('username')
-        
+
         if not username:
             raise Exception('User not logged in!')
-            
+
         reports = jsonObj['simulation']['outputs']
-        
+
+        report_objects = []
+        sim_name = jsonObj['simulation']['name']
+        report_data[sim_name] = report_objects
+
         for report in reports:
+            report_objects.append({
+                'name' : report['name'],
+                'data' : []
+            })
+
             t = threading.Thread(target=createRabbitMQConnection, args=(jsonObj, username, report))
             t.daemon = True
             t.start()
-            
+
+        print('Report Data', file=sys.stderr)
+        print(report_data, file=sys.stderr)
+
         daemon_response = send_request_to_daemon(jsonObj)
 
         if is_response_successful(daemon_response):
@@ -117,40 +140,41 @@ def transferData():
 
     return jsonify({'success': False})
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='134.197.67.160', 
+if DAEMON_CONNECTED:
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=DAEMON_HOST,
                                                                    port=5672,
-                                                                   credentials=pika.PlainCredentials('test', 'test'))) 
-                                                                   
-def createRabbitMQConnection(jsonObj, username, report):      
+                                                                   credentials=pika.PlainCredentials('test', 'test')))
+
+def createRabbitMQConnection(jsonObj, username, report):
     channel = connection.channel()
-    
+
     channel.queue_declare(queue='data', durable=True, exclusive=False, auto_delete=False)
     channel.exchange_declare(exchange='datastream', type='direct', durable=True, auto_delete=False)
-    
+
     print(report, file=sys.stderr)
     routing_key = '%s..%s' % (username, report['name'])
-    
+
     print('routing key: ' + routing_key, file=sys.stderr)
     channel.queue_bind(queue='data', exchange='datastream', routing_key=routing_key)
-    
+
     def rabbit_callback(ch, method, properties, body):
         #while True:
             #msg = queue.get()
         print('Received: ' + body, file=sys.stderr)
         if body == 'STOP':
             ch.close()
-    
+
     channel.basic_consume(rabbit_callback, queue='data', no_ack=True, consumer_tag='testtag')
-    
+
     #queue = connection.queue('testtag')
-    
+
     print('Created RabbitMQ Channel', file=sys.stderr)
-    
+
     channel.start_consuming()
 
 # initiates export
-@app.route('/export', methods=['POST', 'GET'])
-def exportFile():
+@app.route('/export-json', methods=['POST', 'GET'])
+def export_json():
     global exportFile
     if request.method == 'POST':
         jsonObj = request.get_json(False, False, False)
@@ -372,12 +396,12 @@ def register():
         }
 
         username = json_request['username']
-        create_daemon_connection(username, True) 
+        create_daemon_connection(username, True)
         daemon_response = send_request_to_daemon(daemon_request, username)
 
         if is_response_successful(daemon_response):
             daemon_response['success'] = True
-            
+
             try:
                 socket = daemon_connections[username]
                 socket.close()
@@ -388,7 +412,7 @@ def register():
 
         else:
             daemon_response['success'] = False
-            
+
             try:
                 socket = daemon_connections[username]
                 socket.close()
@@ -412,13 +436,15 @@ def login():
         username = json_request['username']
 
         if username in daemon_connections:
+            print('Username Found!', file=sys.stderr)
             return jsonify({'success' : False, 'reason' : 'User already logged in'})
 
-        create_daemon_connection(username)
+        if DAEMON_CONNECTED:
+            create_daemon_connection(username)
 
         # put logic here to login with daemon
         json_request['request'] = 'login'
-        
+
         print(json_request, file=sys.stderr)
         daemon_response = send_request_to_daemon(json_request, username)
 
@@ -441,7 +467,7 @@ def login():
                 del daemon_connections[username]
             except:
                 pass
-                
+
             return jsonify(daemon_response)
 
     return jsonify({'success' : False})
@@ -564,13 +590,14 @@ def worker(num):
 def get_username():
     username = request.cookies.get('username')
     return username
-    
+
 def send_request_to_daemon(json_request, username = None):
-    # return {
-    #     'response' : 'success',
-    #     'reason' : 'good'
-    # }
-    
+    if not DAEMON_CONNECTED:
+        return {
+            'response' : 'success',
+            'reason' : 'good'
+        }
+
     if username is None:
         username = get_username()
 
@@ -578,10 +605,17 @@ def send_request_to_daemon(json_request, username = None):
         daemon_socket = daemon_connections[username]
         daemon_socket.send(json.dumps(json_request))
 
-        # TODO: logic for receiving result from daemon
+        complete_message = False
         result = daemon_socket.recv(4096)
-        result_json = json.loads(result)
-        
+
+        while not complete_message:
+            try:
+                result_json = json.loads(result)
+                complete_message = True
+
+            except:
+                result += daemon_socket.recv(4096)
+
         print(result_json, file=sys.stderr)
 
         return result_json
@@ -591,7 +625,7 @@ def send_request_to_daemon(json_request, username = None):
 
 def create_daemon_connection(username, adding_user = False):
     daemon_socket = socket(AF_INET, SOCK_STREAM)
-    host = '134.197.67.160'
+    host = DAEMON_HOST
     port = 8009 if adding_user else 8004
 
     try:
@@ -607,7 +641,7 @@ def is_response_successful(daemon_response):
 def delete_session():
     if 'model' in session:
         del session['model']
-        
+
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections
 if __name__ == "__main__":

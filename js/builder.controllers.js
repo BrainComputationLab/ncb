@@ -54,7 +54,14 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
   };
 
   this.addToModel = function(model){
-    currentModelService.addToModel(model);
+    if('classification' in model && model.classification === 'model') {
+      for(var i = 0; i < model.cellGroups.cellGroups.length; i++) {
+        currentModelService.addToModel(model.cellGroups.cellGroups[i]);
+      }
+    }
+    else {
+      currentModelService.addToModel(model);
+    }
   };
 
   this.quickView = function(element){
@@ -72,7 +79,7 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
           $scope.personal = data.models.personal;
           $scope.lab = data.models.lab;
           $scope.global = data.models.global;
-          
+
           console.log("Get Models Successful");
           console.log(data);
         }
@@ -89,14 +96,18 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
     // function to sync database with newly added model
   $scope.$on('AddModelToList', function(event, model, listType){
 
+    console.log("IMPORT");
+    console.log(model);
+    var m = model.model;
+    console.log(m);
     if (listType == "local"){
 
       // adds model to local list
-      $scope.localModels.push(deepCopy(model));
+      $scope.localModels.push(angular.copy(m));
     }
     else if (listType == "database"){
       // add model to database list
-      $scope.dbModels.push(deepCopy(model));
+      $scope.dbModels.push(angular.copy(m));
     }
 
   });
@@ -237,7 +248,7 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
 
   this.cellGroupName = "";
   this.amount = 1;
-  this.cellGroupType = "cellGroup";
+  this.cellGroupType = "cells";
   this.cellType = "Izhikevich";
   this.channelType = "Voltage Gated Ion Channel";
 
@@ -262,8 +273,8 @@ ncbApp.controller("AddCellGroupModalController", ['CurrentModelService', functio
         else if(this.channelType == "Calcium Dependant Channel")
           params.channel.push(new calciumDependantChannel());
         else if(this.channelType == "Voltage Gated Channel"){
-          particles = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
-          params.channel.push(new voltageGatedChannel(particles));
+          var particle = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
+          params.channel.push(new voltageGatedChannel(particle));
         }
       }
 
@@ -466,7 +477,7 @@ ncbApp.controller("AddConnectionModalController", ['$scope', 'CurrentModelServic
 
     // add connection to model if not in edit mode
     if(!$scope.editModal){
-      synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, $scope.breadCrumbs1, $scope.breadCrumbs2,
+      var synapse = new synapseGroup($scope.selected1.name, $scope.selected2.name, $scope.breadCrumbs1, $scope.breadCrumbs2,
        0.5, new ncsSynapse());
 
       currentModelService.addSynapse(synapse);
@@ -681,6 +692,16 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
     }
   };
 
+  this.addParticle = function(channel) {
+    var particle = new voltageGatedParticle(new particleVariableConstants(), new particleVariableConstants());
+    channel.particles.push(particle);
+  };
+
+  this.removeParticle = function(channel, index) {
+    if(channel.particles.length > 0 && index < channel.particles.length)
+      channel.particles.splice(index, 1);
+  };
+
   // update component show if changed
   $scope.$watch(function () { return currentModelService.getDisplayedComponent(); }, function (newComponent) {
 
@@ -769,11 +790,11 @@ ncbApp.controller("ExportModelController", ['$rootScope', '$scope', '$http', 'Si
     if (this.saveType === 'json') {
       // save to file
       var json = angular.toJson({model: savedModel, simulation: simParams}, null, "\t"); // pretify with a tab at each level
-      $http.post('/export', json).
+      $http.post('/export-json', json).
       success(function(data, status, headers, config) {
         // this callback will be called asynchronously
         // when the response is available
-        window.location.href = 'export-script';
+        window.location.href = 'export-json';
         //console.log(data);
       }).
       error(function(data, status, headers, config) {
@@ -857,11 +878,11 @@ ncbApp.controller("SaveModalController", ['$scope', '$http', 'CurrentModelServic
 
     $scope.saveSimulation = function() {
       var model = CurrentModelService.getCurrentModel();
-      
+
       var username = '';
       if(document.cookie.split('=').length > 1)
         username = document.cookie.split('=')[1].replace(/^"(.*)"$/, '$1');
-        
+
       model.name = $scope.modelName;
       model.author = username;
 
