@@ -90,6 +90,26 @@ def saveJSONFile(fileName, JSON):
 
 message_queues = {}
 #initiates transfer to ncs
+
+@app.route('/get-report-specs', methods=['GET'])
+def get_report_specs():
+    if request.method == 'GET':
+        username = get_username()
+
+        if username in report_data:
+            obj = {
+                'success' : True,
+                'simulations' : report_data[username]
+            }
+
+            print('specs', file=sys.stderr)
+            print(obj, file=sys.stderr)
+            return jsonify(obj)
+
+        jsonify({'success' : False, 'reason' : 'user not found in report_data'})
+
+    return jsonify({'success' : False, 'reason' : 'wrong method'})
+
 @app.route('/transfer', methods=['POST'])
 def transferData():
     if request.method == 'POST':
@@ -115,13 +135,26 @@ def transferData():
 
         report_objects = []
         sim_name = jsonObj['simulation']['name']
-        report_data[sim_name] = report_objects
+
+        if username not in report_data:
+            report_data[username] = []
+
+        obj = {'name' : sim_name, 'reports' : report_objects}
+        found = False
+        for sim in report_data[username]:
+            if sim['name'] == sim_name:
+                found = True
+                break
+
+        if not found:
+            report_data[username].append(obj)
 
         for report in reports:
-            report_objects.append({
-                'name' : report['name'],
-                'data' : []
-            })
+            if not found:
+                report_objects.append({
+                    'name' : report['name'],
+                    'data' : []
+                })
 
             t = threading.Thread(target=createRabbitMQConnection, args=(jsonObj, username, report))
             t.daemon = True
@@ -442,6 +475,8 @@ def login():
         if DAEMON_CONNECTED:
             create_daemon_connection(username)
 
+        if username not in report_data:
+            report_data[username] = []
         # put logic here to login with daemon
         json_request['request'] = 'login'
 

@@ -367,6 +367,15 @@ ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', '$tim
     this.updateModelSession();
   };
 
+  currentModelService.setCurrentModel = function(model) {
+    this.currentModel = model;
+    this.breadCrumbs = [{name: "Home", index: 0}];
+    this.selected = this.currentModel.cellGroups;
+    this.displayedComponent = null;
+
+    this.updateModelSession();
+  }
+
   // bread crumb functions //////////////////////////////////////////////
   currentModelService.setComponent = function(component, index){
 

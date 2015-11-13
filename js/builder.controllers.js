@@ -902,16 +902,18 @@ ncbApp.controller("SaveModalController", ['$scope', '$http', 'CurrentModelServic
 }]);
 
 // controller for the model Import
-ncbApp.controller('UndoModelController', ['CurrentModelService', '$http', function(currentModelService, $http){
+ncbApp.controller('UndoModelController', ['$scope', 'CurrentModelService', '$http', function($scope, currentModelService, $http){
 
-  this.undoModel = function(){
-    console.log("Undo");
+  $scope.modelLocation = null;
 
-    var json = angular.toJson({location : 'lab', model : currentModelService.getCurrentModel()});
+  $scope.undoModel = function(){
+    console.log("Undo... Location: " + $scope.modelLocation);
+
+    var json = angular.toJson({location : $scope.modelLocation, model : currentModelService.getCurrentModel()});
     $http.post('/undo-model', json)
       .success(function(data, status, headers, config) {
         if(data.success) {
-          CurrentModelService.currentModel = data.model;
+          currentModelService.setCurrentModel(data.model);
         }
 
         else {

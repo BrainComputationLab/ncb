@@ -108,10 +108,11 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
     //     }
     // ];
 
+    $scope.simulations = [];
     $scope.reports = [];
 
-    $scope.activeSim = 0;
-    $scope.activeReport = 0;
+    $scope.activeSim = -1;
+    $scope.activeReport = -1;
 
     $scope.selectedSim = null;//$scope.reports[$scope.activeSim];
     $scope.selectedReport = null;//$scope.reports[$scope.activeSim].outputs[$scope.activeReport];
@@ -141,8 +142,16 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
             .success(function(data, status, headers, config) {
                 console.log('get-report-specs');
 
-                if(data.success)
-                    $scope.reports = data.reports;
+                if(data.success) {
+                    $scope.simulations = data.simulations;
+                }
+
+                console.log("reports");
+                console.log($scope.simulations);
+
+                if($scope.simulations.length > 0) {
+                    $scope.setActiveSim(0);
+                }
           }).
           error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
@@ -150,9 +159,9 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
             console.error(status);
           });
 
-        callback(0,0);
-        callback(0,1);
-        callback(1,0);
+        //callback(0,0);
+        //callback(0,1);
+        //callback(1,0);
 
         //if(!$scope.started) {
             // var websocket = new Socket(0);
@@ -187,8 +196,12 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
             $scope.activeSim = index;
             $scope.activeReport = 0;
 
-            $scope.selectedSim = $scope.reports[$scope.activeSim];
-            $scope.selectedReport = $scope.reports[$scope.activeSim].outputs[$scope.activeReport];
+            $scope.selectedSim = $scope.simulations[$scope.activeSim];
+            $scope.reports = $scope.selectedSim.reports;
+
+            if($scope.reports.length > 0) {
+                $scope.selectedReport = $scope.reports[$scope.activeReport];
+            }
         }
     };
 
@@ -198,7 +211,14 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
 
     $scope.setActiveReport = function(index) {
         $scope.activeReport = index;
-        $scope.selectedReport = $scope.reports[$scope.activeSim].outputs[$scope.activeReport];
+        $scope.selectedReport = $scope.reports[index];
+    };
+
+    $scope.getReportsForSelectedSim = function() {
+        if($scope.selectedSim != null)
+            return $scope.selectedSim.reports;
+
+        return [];
     };
 
 }]);

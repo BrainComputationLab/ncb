@@ -1,18 +1,36 @@
 <!-- NEW CELL GROUP MODAL BEGIN -->
 <!-- Modal -->
-<div class="modal fade" id="undoModelModal" tabindex="-1" role="dialog" data-ng-controller="UndoModelController as undoCtrl">
+<div class="modal fade" id="undoModelModal" tabindex="-1" role="dialog" data-ng-controller="UndoModelController">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Undo Current Model Changes</h4>
+                <h4 class="modal-title">Undo Last Model Save</h4>
             </div>
             <div class="modal-body">
-                Undo will revert the current model back to its most recent saved state. All unsaved changes will be lost.
+                This will undo the last save made to this model, and revert all changes to a previous version. This will permanently erase model data and all unsaved changes will be lost.
+
+                <br>
+                <br>
+
+                <form id="undoForm" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="undoLocation" class="col-sm-4 control-label"> Saved Location</label>
+                    <div class="col-sm-8">
+                      <select id="undoLocation" class="form-control" data-ng-model="modelLocation" data-ng-init="modelLocation = 'personal'">
+                          <option value="personal">Personal</option>
+                          <option value="lab">Lab</option>
+                          <option value="global">Global</option>
+                      </select>
+
+                  </div>
+                </div>
+
+          </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" data-ng-click="undoCtrl.undoModel()">Undo</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" data-ng-click="undoModel()">Undo</button>
             </div>
         </div>
     </div>
