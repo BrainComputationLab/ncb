@@ -5,7 +5,7 @@ from socket import *
 
 from db import MongoSessionInterface, MongoAuthenticator
 
-import json, os, time, threading, struct, random, datetime
+import json, os, time, threading, struct, random, datetime, copy
 import pika
 
 DAEMON_CONNECTED = True
@@ -150,13 +150,10 @@ def transferData():
             report_data[username].append(obj)
 
         for report in reports:
-            if not found:
-                report_objects.append({
-                    'name' : report['name'],
-                    'data' : []
-                })
+            report_obj = {'name' : report['name'], 'data' : []}
+            report_objects.append(report_obj)
 
-            t = threading.Thread(target=createRabbitMQConnection, args=(jsonObj, username, report))
+            t = threading.Thread(target=createRabbitMQConnection, args=(jsonObj, username, report, report_obj))
             t.daemon = True
             t.start()
 
@@ -178,7 +175,7 @@ if DAEMON_CONNECTED:
                                                                    port=5672,
                                                                    credentials=pika.PlainCredentials('test', 'test')))
 
-def createRabbitMQConnection(jsonObj, username, report):
+def createRabbitMQConnection(jsonObj, username, report, report_data):
     channel = connection.channel()
 
     channel.queue_declare(queue='data', durable=True, exclusive=False, auto_delete=False)
@@ -193,9 +190,12 @@ def createRabbitMQConnection(jsonObj, username, report):
     def rabbit_callback(ch, method, properties, body):
         #while True:
             #msg = queue.get()
-        print('Received: ' + body, file=sys.stderr)
+        #print('Received: ' + body, file=sys.stderr)
         if body == 'STOP':
             ch.close()
+
+        else:
+            report_data['data'].append(body)
 
     channel.basic_consume(rabbit_callback, queue='data', no_ack=True, consumer_tag='testtag')
 
@@ -382,17 +382,28 @@ from Queue import Queue
 import sys
 
 reports = {0 : Queue()}
-@app.route('/teststream-<slug>', methods=['GET'])
-def teststream(slug):
-    slug = int(slug)
+@app.route('/stream-<sim_name>-<report_name>', methods=['GET'])
+def teststream(sim_name, report_name):
     if request.method == 'GET':
-        if slug in reports:
-            data = []
-            q = reports[slug]
-            while not q.empty():
-                data.append(q.get())
+        username = get_username()
+        if username in report_data:
+            current_sim = None
+            for sim in report_data[username]:
+                if sim_name == sim['name']:
+                    current_sim = sim
+                    break
 
-            return jsonify({'data' : data})
+            if current_sim is not None:
+                current_report = None
+                for report in current_sim['reports']:
+                    if report_name == report['name']:
+                        current_report = report
+                        break
+
+                if current_report is not None:
+                    data = copy.deepcopy(current_report['data'])
+                    del current_report['data'][:]
+                    return jsonify({'data' : data})
 
     return jsonify({'data' : None})
 

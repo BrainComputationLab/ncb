@@ -117,14 +117,13 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
     $scope.selectedSim = null;//$scope.reports[$scope.activeSim];
     $scope.selectedReport = null;//$scope.reports[$scope.activeSim].outputs[$scope.activeReport];
 
-    var callback = function(sim, report) {
+    var callback = function() {
 
         $scope.intervals.push($interval(function() {
-            var simid = sim * $scope.reports.length + report;
-            var request = $http.get('/teststream-' + simid);
+            var request = $http.get('/stream-' + $scope.selectedSim.name + '-' + $scope.selectedReport.name);
 
             request.success(function(data, status, headers, config) {
-                var arr = $scope.reports[sim].outputs[report].data;
+                var arr = $scope.selectedReport.data;
                 arr.push.apply(arr, data.data);
             });
 
@@ -159,7 +158,7 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
             console.error(status);
           });
 
-        //callback(0,0);
+        callback();
         //callback(0,1);
         //callback(1,0);
 
