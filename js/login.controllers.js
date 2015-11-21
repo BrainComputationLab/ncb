@@ -9,7 +9,8 @@ ncbApp.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
         rememberMe: false,
         first_name: undefined,
         last_name: undefined,
-        institution: undefined
+        institution: undefined,
+        lab_id: undefined
     };
 
     $scope.formVisible = true;
@@ -31,7 +32,7 @@ ncbApp.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
                     else {
                         $scope.errorText = 'Incorrect username or password.';
                         $scope.showError = true;
-                        
+
                         console.log(data);
                     }
 
