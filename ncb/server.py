@@ -8,7 +8,7 @@ from db import MongoSessionInterface, MongoAuthenticator
 import json, os, time, threading, struct, random, datetime, copy
 import pika
 
-DAEMON_CONNECTED = True
+DAEMON_CONNECTED = False
 DAEMON_HOST = '10.0.1.40'
 
 # Create new application

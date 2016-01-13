@@ -38,6 +38,7 @@ function hidePages() {
     $('#simulation').hide();
     $('#reports').hide();
     $('#database').hide();
+    $('#vis').hide();
 }
 
 // Load the rest of the JS
@@ -48,3 +49,4 @@ require('./builder.controllers.js');
 require('./sim.controllers.js');
 require('./reports.controllers.js');
 require('./login.controllers.js');
+require('./vis.controllers.js');
