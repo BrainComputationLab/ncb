@@ -110,9 +110,9 @@ gulp.task('css', function () {
         .pipe(gulp.dest('.'));
 });
 
-gulp.task('js', ['lint'], buildJsTask());
+gulp.task('js', [], buildJsTask());
 
-gulp.task('jsWatch', ['lint'], buildJsTask({watch:true}));
+gulp.task('jsWatch', [], buildJsTask({watch:true}));
 
 gulp.task('html', function () {
     gulp.src(paths.loginHtml)
@@ -156,17 +156,17 @@ gulp.task('copy',
     'copyPopover',
     'copyFonts']);
 
-gulp.task('lint', function () {
-    return gulp.src(paths.allJs)
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'));
-});
+// gulp.task('lint', function () {
+//     return gulp.src(paths.allJs)
+//         .pipe(jshint())
+//         .pipe(jshint.reporter('default'));
+// });
 
 gulp.task('build', ['js', 'html', 'css', 'copy']);
 
 gulp.task('watch', ['build'], function () {
     buildJsTask({watch: true})();
-    makeWatch(paths.allJs, 'lint');
+    //makeWatch(paths.allJs, 'lint');
     makeWatch(paths.allHtml, 'html');
     makeWatch(paths.allLess, 'css');
     makeWatch(paths.serverPy, 'copyPython');
