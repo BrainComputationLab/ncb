@@ -70,15 +70,9 @@ var exampleModel = {
     }
 }
 
-var positions = [
-    new THREE.Vector3(0, 0, 0),
-    new THREE.Vector3(5, 0, 0),
-    new THREE.Vector3(10, 0, 0),
-    new THREE.Vector3(-5, 0, 0),
-    new THREE.Vector3(-10, 0, 0)
-];
-
 ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope, $http) {
+
+    var DARK_FACTOR = 2;
 
     function SelectionBox(startPos) {
         this.startPos = startPos;
@@ -126,13 +120,16 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         var selectionMaxY = this.startPos.y > this.endPos.y ? this.startPos.y : this.endPos.y;
 
         var selectedObjects = [];
-        for(var i = 0; i < $scope.objects.length; i++) {
-            var obj = $scope.objects[i];
-            var screenCoords = worldToScreenCoordinates(obj);
 
-            if (screenCoords.x >= selectionMinX && screenCoords.x <= selectionMaxX &&
-                        screenCoords.y >= selectionMinY && screenCoords.y <= selectionMaxY) {
-                selectedObjects.push(obj);
+        if($scope.renderNeurons) {
+            for(var i = 0; i < $scope.objects.length; i++) {
+                var obj = $scope.objects[i];
+                var screenCoords = worldToScreenCoordinates(obj);
+
+                if (screenCoords.x >= selectionMinX && screenCoords.x <= selectionMaxX &&
+                            screenCoords.y >= selectionMinY && screenCoords.y <= selectionMaxY && !obj.selected) {
+                    selectedObjects.push(obj);
+                }
             }
         }
         return selectedObjects;
@@ -141,6 +138,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
     $scope.selecting = false;
     $scope.selectionBox = null;
     $scope.selectedObjects = [];
+    $scope.initialObject = null;
 
     function handleMouseDown(event) { // begin
         event.preventDefault();
@@ -153,6 +151,8 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
             }
 
             $scope.selectionBox = new SelectionBox(new THREE.Vector2(event.offsetX, event.offsetY));
+
+            $scope.initialObject = raycastSingleObject(event, true).obj;
         }
     }
 
@@ -169,24 +169,16 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         }
 
         else {
-            $scope.mousePos.setX((event.offsetX / $scope.canvasWidth) * 2 - 1);
-            $scope.mousePos.setY(-(event.offsetY / $scope.canvasHeight) * 2 + 1);
+            var result = raycastSingleObject(event);
+            var obj = result.obj;
+            var is_connection = result.is_connection;
 
-            $scope.raycaster.setFromCamera($scope.mousePos, $scope.camera);
-
-            var intersects = $scope.raycaster.intersectObjects($scope.objects);
-            var is_connection = intersects.length == 0;
-            if(is_connection) {
-                intersects = $scope.raycaster.intersectObjects($scope.connections, true);
-            }
-
-            if(intersects.length > 0 && $scope.infoText == null) {
-                var obj = intersects[0].object;
-                var infoStr = is_connection ? connectionToString(obj.parent.conn) : object3DToString(obj);
+            if(obj != null && $scope.infoText == null) {
+                var infoStr = is_connection ? connectionToString(obj.conn) : object3DToString(obj);
                 $scope.infoText = createDivAtPositionWithText(new THREE.Vector2(event.offsetX, event.offsetY), infoStr, is_connection);
             }
 
-            else if(intersects.length == 0 && $scope.infoText != null) {
+            else if(obj == null && $scope.infoText != null) {
                 $scope.infoText.remove();
                 $scope.infoText = null;
             }
@@ -199,12 +191,36 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         if(event.button == THREE.MOUSE.LEFT) {
             $scope.selecting = false;
 
-            for (var i = 0; i < $scope.selectedObjects.length; i++) {
-                var obj = $scope.selectedObjects[i];
-                obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);
+            if(!event.shiftKey) {
+                for (var i = 0; i < $scope.selectedObjects.length; i++) {
+                    var obj = $scope.selectedObjects[i];
+
+                    if(obj.selected) {
+                        obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);
+                        obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);
+                        obj.selected = false;
+                    }
+
+                    for(var j = 0; j < obj.connections.length; j++) {
+                        var conn = obj.connections[j];
+                        if(conn.selected) {
+                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) >> 1);
+                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) >> 1);
+                            conn.selected = false;
+                        }
+                    }
+                }
+
+                $scope.selectedObjects = $scope.selectionBox.end();
             }
 
-            $scope.selectedObjects = $scope.selectionBox.end();
+            else {
+                Array.prototype.push.apply($scope.selectedObjects, $scope.selectionBox.end());
+            }
+
+            if($scope.initialObject != null && !$scope.initialObject.selected) {
+                $scope.selectedObjects.push($scope.initialObject);
+            }
 
             console.log("Found Items: " + $scope.selectedObjects.length);
 
@@ -213,22 +229,59 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
             //     obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);//setHex(0x00ff00);
             // }
 
-            var center = new THREE.Vector3();
+            //var center = new THREE.Vector3();
             for (var i = 0; i < $scope.selectedObjects.length; i++) {
                 var obj = $scope.selectedObjects[i];
                 //obj.material.color.setHex(0xff0000);
-                obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) << 1);
+                if(!obj.selected) {
+                    obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) << 1);
+                    obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) << 1);
+                    obj.selected = true;
+                    //center.add(obj.position);
+                }
 
-                center.add(obj.position);
+                if($scope.renderConnections) {
+                    for(var j = 0; j < obj.connections.length; j++) {
+                        var conn = obj.connections[j];
+                        if(!conn.selected) {
+                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) << 1);
+                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) << 1);
+                            conn.selected = true;
+                        }
+                    }
+                }
             }
 
-            center.divideScalar($scope.selectedObjects.length);
+            //center.divideScalar($scope.selectedObjects.length);
 
-            $scope.cameraControls.target.copy(center);
-            $scope.cameraControls.update();
+            //$scope.cameraControls.target.copy(center);
+            //$scope.cameraControls.update();
 
             $scope.selectionBox = null;
         }
+    }
+
+    function raycastSingleObject(event, ignoreConnections) {
+        if(ignoreConnections === undefined) {
+            ignoreConnections = false;
+        }
+
+        $scope.mousePos.setX((event.offsetX / $scope.canvasWidth) * 2 - 1);
+        $scope.mousePos.setY(-(event.offsetY / $scope.canvasHeight) * 2 + 1);
+
+        $scope.raycaster.setFromCamera($scope.mousePos, $scope.camera);
+
+        var intersects = $scope.renderNeurons ? $scope.raycaster.intersectObjects($scope.objects) : [];
+        var is_connection = intersects.length == 0;
+        if(is_connection && $scope.renderConnections && !ignoreConnections) {
+            intersects = $scope.raycaster.intersectObjects($scope.connections);
+        }
+
+        if(intersects.length > 0) {
+            return {obj: intersects[0].object, is_connection: is_connection};
+        }
+
+        return {obj: null, is_connection: false};
     }
 
     function worldToScreenCoordinates(object) {
@@ -273,6 +326,37 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         return str;
     }
 
+    $scope.renderNeurons = true;
+    $scope.renderConnections = true;
+
+    $scope.updateRenderTargets = function(type) {
+        if(type === 'neuron') {
+            if($scope.renderNeurons) {
+                for(var i = 0; i < $scope.objects.length; i++) {
+                    $scope.scene.add($scope.objects[i]);
+                }
+            }
+            else {
+                for(var i = 0; i < $scope.objects.length; i++) {
+                    $scope.scene.remove($scope.objects[i]);
+                }
+            }
+        }
+
+        else if(type === 'conn') {
+            if($scope.renderConnections) {
+                for(var i = 0; i < $scope.connections.length; i++) {
+                    $scope.scene.add($scope.connections[i]);
+                }
+            }
+            else {
+                for(var i = 0; i < $scope.connections.length; i++) {
+                    $scope.scene.remove($scope.connections[i]);
+                }
+            }
+        }
+    }
+
     $scope.render = function() {
         requestAnimationFrame($scope.render);
 
@@ -303,7 +387,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
 
         $scope.renderer = new THREE.WebGLRenderer( { antialias : true } );
         $scope.renderer.setSize($scope.canvasWidth, $scope.canvasHeight);
-        $scope.renderer.setClearColor(0x310e5a, 1);
+        $scope.renderer.setClearColor(0x2e2e2e, 1);
         $scope.renderer.autoClear = false;
         $scope.renderer.setPixelRatio(window.devicePixelRatio);
         canvas.appendChild($scope.renderer.domElement);
@@ -335,7 +419,10 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         console.log(cells);
         for(var i = 0; i < cells.length; i++) {
             var darker_color = (0x00ff00 & 0xfefefe) >> 1;
+            darker_color = (darker_color & 0xfefefe) >> 1;
             var cube = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshBasicMaterial( { color : darker_color } ));
+            cube.selected = false;
+            cube.connections = [];
 
             var cell = cells[i];
             cube.ncs_name = cell.name;
@@ -345,8 +432,10 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
 
             conn_map[cell.name] = cube;
 
-            var bbox = new THREE.BoundingBoxHelper(cube, 0x000000);
-            bbox.update();
+            //var bbox = new THREE.BoundingBoxHelper(cube, 0x000000);
+            //bbox.update();
+            //var bbox = new THREE.WireframeHelper(cube, 0x000000);
+            var bbox = new THREE.BoxHelper(cube);
             $scope.scene.add(bbox);
 
             $scope.objects.push(cube);
@@ -358,18 +447,54 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
             var pre = conn_map[conn.pre];
             var post = conn_map[conn.post];
 
-            var direction = new THREE.Vector3();
-            direction.subVectors(post.position, pre.position).normalize();
+            var darker_color = (0xff0000 & 0xfefefe) >> 1;
+            darker_color = (darker_color & 0xfefefe) >> 1;
+            var cylinder = createCylinderFromPoints(pre.position, post.position, darker_color);
+            cylinder.conn = conn;
+            cylinder.selected = false;
 
-            var distance = pre.position.distanceTo(post.position);
-            var arrow = new THREE.ArrowHelper(direction, pre.position, distance, 0xff0000);
-            arrow.conn = conn;
+            //var wireframe = new THREE.WireframeHelper(cylinder, 0x000000);
 
-            $scope.scene.add(arrow);
+            $scope.scene.add(cylinder);
+            //$scope.scene.add(wireframe);
 
-            $scope.connections.push(arrow);
+            $scope.connections.push(cylinder);
+            pre.connections.push(cylinder);
+            post.connections.push(cylinder);
         }
     };
+
+    function createCylinderFromPoints(p1, p2, color) {
+        if(color === undefined) {
+            color = 0xff0000;
+        }
+
+        var direction = new THREE.Vector3().subVectors(p2, p1).normalize();
+        var length = p1.distanceTo(p2);
+
+        var mat = new THREE.MeshBasicMaterial({color : color});
+        var geo = new THREE.CylinderGeometry(0.1, 0.1, length, 8);
+        var cylinder = new THREE.Mesh(geo, mat);
+
+        var pos = new THREE.Vector3().addVectors(p1,p2).divideScalar(2);
+        cylinder.position.copy(pos);
+
+        var q = new THREE.Quaternion();
+        if(direction.y > 0.99999) {
+            q.set(0,0,0,1);
+        }
+        else if(direction.y < -0.99999) {
+            q.set(1,0,0,0);
+        }
+        else {
+            var axis = new THREE.Vector3(direction.z, 0, -direction.x).normalize();
+            var angle = Math.acos(direction.y);
+            q.setFromAxisAngle(axis, angle);
+        }
+
+        cylinder.quaternion.copy(q);
+        return cylinder;
+    }
 }]);
 
 

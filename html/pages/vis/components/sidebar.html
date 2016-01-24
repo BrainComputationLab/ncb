@@ -1,7 +1,13 @@
 <div class="row">
-    <p><strong>First Row</strong></p>
-</div>
+    <form id="visForm">
+        <div class="form-group">
+            <label for="visRenderNeuron">Render Neurons</label>
+            <input class="form-control" type="checkbox" data-ng-model="renderNeurons" data-ng-change="updateRenderTargets('neuron')">
+        </div>
 
-<div class="row">
-    <p>Second Row</p>
+        <div class="form-group">
+            <label for="visRenderConnection">Render Connections</label>
+            <input class="form-control" type="checkbox" data-ng-model="renderConnections" data-ng-change="updateRenderTargets('conn')">
+        </div>
+    </form>
 </div>
