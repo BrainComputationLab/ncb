@@ -373,7 +373,7 @@
                 <div id="collapse2" class="panel-collapse collapse in">
 
                   <!-- Start Flat Synapse -->
-                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name == 'flatSynapse'">
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name.includes('flatSynapse')">
                     <tr>
                       <td colspan="2"><span>Presynaptic Name:</span></td>
                       <td colspan="6"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>
@@ -425,7 +425,7 @@
                   <!-- End Flat Synapse -->
 
                   <!-- Start NCS Synapse -->
-                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name == 'ncsSynapse'">
+                  <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="displayed.parameters.name.includes('ncsSynapse')">
                     <tr>
                       <td colspan="2"><span>Presynaptic Name:</span></td>
                       <td colspan="6"><a href="#" data-ng-click="editConnectionGroups()">{{displayed.pre}}</a></td>

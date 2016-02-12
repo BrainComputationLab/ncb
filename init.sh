@@ -12,6 +12,7 @@ else
     if [ ! -d "node_modules" ]; then
         npm install
         npm install -g bower --config.interactive=false
+        npm install mersenne-twister
         bower update
         npm install -g gulp-cli
     fi
@@ -19,7 +20,7 @@ else
     if [ ! -d "py-ncb" ]; then
         virtualenv py-ncb 
         . py-ncb/bin/activate
-        pip install --no-cache-dir -r requirements.txt
+        pip install -r requirements.txt
     else
         . py-ncb/bin/activate
     fi
