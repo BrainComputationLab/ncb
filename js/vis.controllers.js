@@ -129,6 +129,16 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
                 if (screenCoords.x >= selectionMinX && screenCoords.x <= selectionMaxX &&
                             screenCoords.y >= selectionMinY && screenCoords.y <= selectionMaxY && !obj.selected) {
                     selectedObjects.push(obj);
+
+                    if($scope.renderConnections) {
+                        for(var j = 0; j < obj.connections.length; j++) {
+                            var conn = obj.connections[j];
+                            if(!conn.selected) {
+                                conn.selected = true;
+                                selectedObjects.push(conn);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -201,14 +211,14 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
                         obj.selected = false;
                     }
 
-                    for(var j = 0; j < obj.connections.length; j++) {
-                        var conn = obj.connections[j];
-                        if(conn.selected) {
-                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) >> 1);
-                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) >> 1);
-                            conn.selected = false;
-                        }
-                    }
+                    // for(var j = 0; j < obj.connections.length; j++) {
+                    //     var conn = obj.connections[j];
+                    //     if(conn.selected) {
+                    //         conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) >> 1);
+                    //         conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) >> 1);
+                    //         conn.selected = false;
+                    //     }
+                    // }
                 }
 
                 $scope.selectedObjects = $scope.selectionBox.end();
@@ -219,7 +229,17 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
             }
 
             if($scope.initialObject != null && !$scope.initialObject.selected) {
+                $scope.initialObject.selected = true;
                 $scope.selectedObjects.push($scope.initialObject);
+
+                for(var i = 0; i < $scope.initialObject.connections.length; i++) {
+                    var conn = $scope.initialObject.connections[i];
+
+                    if(!conn.selected) {
+                        conn.selected = true;
+                        $scope.selectedObjects.push(conn);
+                    }
+                }
             }
 
             console.log("Found Items: " + $scope.selectedObjects.length);
@@ -240,16 +260,16 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
                     //center.add(obj.position);
                 }
 
-                if($scope.renderConnections) {
-                    for(var j = 0; j < obj.connections.length; j++) {
-                        var conn = obj.connections[j];
-                        if(!conn.selected) {
-                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) << 1);
-                            conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) << 1);
-                            conn.selected = true;
-                        }
-                    }
-                }
+                // if($scope.renderConnections) {
+                //     for(var j = 0; j < obj.connections.length; j++) {
+                //         var conn = obj.connections[j];
+                //         if(!conn.selected) {
+                //             conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) << 1);
+                //             conn.material.color.setHex((conn.material.color.getHex() & 0xfefefe) << 1);
+                //             conn.selected = true;
+                //         }
+                //     }
+                // }
             }
 
             //center.divideScalar($scope.selectedObjects.length);
