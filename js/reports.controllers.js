@@ -1,5 +1,8 @@
 var utilityFcns = require('./utilityFcns');
 var app = require('./app');
+//var Rickshaw = require("rickshaw");
+var $ = require('jquery');
+var Highcharts = require('highcharts/highstock');
 var ncbApp = app.ncbApp;
 
 function Socket(id) {
@@ -75,12 +78,150 @@ Socket.prototype = {
 //   };
 // });
 
+function findMinMax(series) {
+    var result = { min : 100000.0, max : -100000.0 }
+
+    for(var i = 0; i < series.length; i++) {
+        var obj = series[i];
+        if(result.min > obj.y) {
+            result.min = obj.y;
+        }
+
+        if(result.max < obj.y) {
+            result.max = obj.y;
+        }
+    }
+
+    return result;
+}
+
+console.log(Highcharts);
+
 ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
                     function($scope, $http, $interval) {
 
     $scope.reportData = [];
     $scope.started = false;
     $scope.intervals = [];
+
+    $scope.testData = [ { x: 0.0, y: 40 }, { x: 0.5, y: 30}, { x: 1.0, y: 49 }, { x: 2.0, y: 17 }, { x: 3.0, y: 42 } ];
+
+    $scope.chart = new Highcharts.StockChart({
+        chart : {
+            renderTo : 'testchart'
+            //type : 'line'
+        },
+
+        title: {
+            text : 'Report Example'
+        },
+
+        xAxis : {
+            title : {
+                text : 'Time (seconds)'
+            },
+
+            min : 6,
+            max : 10
+
+        },
+
+        yAxis : {
+            title : {
+                text : 'Example Data'
+            }
+        },
+
+        rangeSelector : {
+            enabled : false
+        },
+
+        scrollbar : {
+            enabled : true
+            // barBackgroundColor: 'gray',
+            // barBorderRadius: 7,
+            // barBorderWidth: 0,
+            // buttonBackgroundColor: 'gray',
+            // buttonBorderWidth: 0,
+            // buttonBorderRadius: 7,
+            // trackBackgroundColor: 'none',
+            // trackBorderWidth: 1,
+            // trackBorderRadius: 8,
+            // trackBorderColor: '#CCC'
+        },
+
+        series : [
+            {
+                name : 'Test1',
+                data : []//[30, 40, 50, 40, 30]
+                //pointStart : new Date(),
+                //pointInterval : 1
+            }
+        ]
+    });
+
+    $interval(function() {
+        var series = $scope.chart.series[0];
+        series.addPoint(Math.floor(Math.random() * 11), true);
+
+    }, 1000, 0, false);
+//     var minmax = findMinMax($scope.testData);
+//     console.log(minmax);
+
+//     $scope.graph = new Rickshaw.Graph({
+//         element : document.querySelector("#charttest"),
+//         width : 580,
+//         height : 500,
+//         renderer : 'line',
+//         stroke : true,
+//         preserve : true,
+//         min : minmax.min - 10,
+//         max : minmax.max + 10,
+//         series : [
+//             { name : 'Test Data', color : 'steelblue', data : $scope.testData}
+//         ]
+//     });
+
+//     var x_axis = new Rickshaw.Graph.Axis.Time( { graph : $scope.graph, timeFixture : new Rickshaw.Fixtures.Time.Local() });
+//     var y_axis = new Rickshaw.Graph.Axis.Y({
+//         graph : $scope.graph,
+//         orientation : 'left',
+//         tickFormat : Rickshaw.Fixtures.Number.formatKMBT,
+//         element : document.getElementById('charttest_y_axis')
+//     });
+
+//     var legend = new Rickshaw.Graph.Legend({ graph : $scope.graph, element : document.getElementById('charttest_legend')});
+
+// //     var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({ graph : $scope.graph, legend : legend });
+
+// //     var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+// //     graph: $scope.graph,
+// //     legend: legend
+// //     } );
+
+// //     var order = new Rickshaw.Graph.Behavior.Series.Order( {
+// //     graph: $scope.graph,
+// //     legend: legend
+// // } );
+
+//     var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+//     graph: $scope.graph,
+//     xFormatter: function(x) {
+//         return 'Time: ' + x;
+//         }
+//     } );
+
+//     var index = 4.0
+
+//     $interval(function() {
+//         $scope.testData.shift();
+//         $scope.testData.push({ x : index, y : (Math.random() * (45 - 15) + 15)});
+//         index += 5.0;
+//         $scope.graph.render();
+//     }, 5000, 0, false);
+//     $scope.graph.render();
+//     x_axis.render();
+//     y_axis.render();
     // $scope.reports = [
     //     {
     //         'name' : 'Sim 1',

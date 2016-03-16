@@ -32,7 +32,8 @@ var paths = {
         'bower_components/bootstrap-additions/dist/bootstrap-additions.css',
         'bower_components/angular-snap/angular-snap.css',
         'bower_components/angular-bootstrap-colorpicker/css/colorpicker.css',
-        'bower_components/angular-xeditable/dist/css/xeditable.css'
+        'bower_components/angular-xeditable/dist/css/xeditable.css',
+        'bower_components/rickshaw/rickshaw.css'
     ],
     jsDest: assetPath + 'js/ncb.js',
     buildMotion: 'js/vbot/build_motion.py',
@@ -62,7 +63,9 @@ function webpackConf(options) {
         plugins: [
             new webpack.ResolverPlugin(
                 new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
-            )
+            ),
+
+            new webpack.ProvidePlugin({ d3 : 'd3' })
         ],
         entry: paths.targets,
         output: {

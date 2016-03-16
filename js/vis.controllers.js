@@ -121,7 +121,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         var selectionMinY = this.startPos.y < this.endPos.y ? this.startPos.y : this.endPos.y;
         var selectionMaxY = this.startPos.y > this.endPos.y ? this.startPos.y : this.endPos.y;
 
-        var selectedObjects = [];
+        var selectedObjects = new Set();
 
         if($scope.renderNeurons) {
             for(var i = 0; i < $scope.objects.length; i++) {
@@ -130,14 +130,14 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
 
                 if (screenCoords.x >= selectionMinX && screenCoords.x <= selectionMaxX &&
                             screenCoords.y >= selectionMinY && screenCoords.y <= selectionMaxY && !obj.selected) {
-                    selectedObjects.push(obj);
+                    selectedObjects.add(obj);
 
                     if($scope.renderConnections) {
                         for(var j = 0; j < obj.connections.length; j++) {
                             var conn = obj.connections[j];
                             if(!conn.selected) {
-                                conn.selected = true;
-                                selectedObjects.push(conn);
+                                //conn.selected = true;
+                                selectedObjects.add(conn);
                             }
                         }
                     }
@@ -223,11 +223,11 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
                     // }
                 }
 
-                $scope.selectedObjects = $scope.selectionBox.end();
+                $scope.selectedObjects = Array.from($scope.selectionBox.end());
             }
 
             else {
-                Array.prototype.push.apply($scope.selectedObjects, $scope.selectionBox.end());
+                Array.prototype.push.apply($scope.selectedObjects, Array.from($scope.selectionBox.end()));
             }
 
             if($scope.initialObject != null && !$scope.initialObject.selected) {
