@@ -1,3 +1,4 @@
+require('angular');
 var utilityFcns = require('./utilityFcns');
 var app = require('./app');
 //var Rickshaw = require("rickshaw");
@@ -97,8 +98,8 @@ function findMinMax(series) {
 
 console.log(Highcharts);
 
-ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
-                    function($scope, $http, $interval) {
+ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeout',
+                    function($scope, $http, $interval, $timeout) {
 
     $scope.reportData = [];
     $scope.started = false;
@@ -106,148 +107,37 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
 
     $scope.testData = [ { x: 0.0, y: 40 }, { x: 0.5, y: 30}, { x: 1.0, y: 49 }, { x: 2.0, y: 17 }, { x: 3.0, y: 42 } ];
 
-    $scope.chart = new Highcharts.StockChart({
-        chart : {
-            renderTo : 'testchart'
-            //type : 'line'
-        },
+    $scope.updateGradients = function() {
+        if($scope.selectedReport != null && $scope.selectedReport.chart != null) {
+            var series = $scope.selectedReport.chart.series[0];
 
-        title: {
-            text : 'Report Example'
-        },
+            var options = series.options;
+            options.color = {
+                linearGradient: {x1: 0, y1: 1, x2: 0, y2: 0},
+                stops: [
+                    [0, $scope.selectedReport.minGradient],
+                    [1, $scope.selectedReport.maxGradient]
+                ]
+            };
 
-        xAxis : {
-            title : {
-                text : 'Time (seconds)'
-            },
+            series.update(options, true);
+        }
+    };
 
-            min : 6,
-            max : 10
-
-        },
-
-        yAxis : {
-            title : {
-                text : 'Example Data'
-            }
-        },
-
-        rangeSelector : {
-            enabled : false
-        },
-
-        scrollbar : {
-            enabled : true
-            // barBackgroundColor: 'gray',
-            // barBorderRadius: 7,
-            // barBorderWidth: 0,
-            // buttonBackgroundColor: 'gray',
-            // buttonBorderWidth: 0,
-            // buttonBorderRadius: 7,
-            // trackBackgroundColor: 'none',
-            // trackBorderWidth: 1,
-            // trackBorderRadius: 8,
-            // trackBorderColor: '#CCC'
-        },
-
-        series : [
-            {
-                name : 'Test1',
-                data : []//[30, 40, 50, 40, 30]
-                //pointStart : new Date(),
-                //pointInterval : 1
-            }
-        ]
-    });
+    $scope.$watch('selectedReport.minGradient', $scope.updateGradients);
+    $scope.$watch('selectedReport.maxGradient', $scope.updateGradients);
 
     $interval(function() {
-        var series = $scope.chart.series[0];
-        series.addPoint(Math.floor(Math.random() * 11), true);
-
+        //if($scope.selectedReport != null) {
+        for(var i = 0; i < $scope.reports.length; i++) {
+            var series = $scope.reports[i].chart.series[0];
+            series.addPoint(Math.random() * 11, true);
+        }
+        //}
     }, 1000, 0, false);
-//     var minmax = findMinMax($scope.testData);
-//     console.log(minmax);
 
-//     $scope.graph = new Rickshaw.Graph({
-//         element : document.querySelector("#charttest"),
-//         width : 580,
-//         height : 500,
-//         renderer : 'line',
-//         stroke : true,
-//         preserve : true,
-//         min : minmax.min - 10,
-//         max : minmax.max + 10,
-//         series : [
-//             { name : 'Test Data', color : 'steelblue', data : $scope.testData}
-//         ]
-//     });
 
-//     var x_axis = new Rickshaw.Graph.Axis.Time( { graph : $scope.graph, timeFixture : new Rickshaw.Fixtures.Time.Local() });
-//     var y_axis = new Rickshaw.Graph.Axis.Y({
-//         graph : $scope.graph,
-//         orientation : 'left',
-//         tickFormat : Rickshaw.Fixtures.Number.formatKMBT,
-//         element : document.getElementById('charttest_y_axis')
-//     });
 
-//     var legend = new Rickshaw.Graph.Legend({ graph : $scope.graph, element : document.getElementById('charttest_legend')});
-
-// //     var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({ graph : $scope.graph, legend : legend });
-
-// //     var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
-// //     graph: $scope.graph,
-// //     legend: legend
-// //     } );
-
-// //     var order = new Rickshaw.Graph.Behavior.Series.Order( {
-// //     graph: $scope.graph,
-// //     legend: legend
-// // } );
-
-//     var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-//     graph: $scope.graph,
-//     xFormatter: function(x) {
-//         return 'Time: ' + x;
-//         }
-//     } );
-
-//     var index = 4.0
-
-//     $interval(function() {
-//         $scope.testData.shift();
-//         $scope.testData.push({ x : index, y : (Math.random() * (45 - 15) + 15)});
-//         index += 5.0;
-//         $scope.graph.render();
-//     }, 5000, 0, false);
-//     $scope.graph.render();
-//     x_axis.render();
-//     y_axis.render();
-    // $scope.reports = [
-    //     {
-    //         'name' : 'Sim 1',
-    //         'outputs' : [
-    //             {
-    //                 'name' : 'Rep1',
-    //                 'data' : []
-    //             },
-
-    //             {
-    //                 'name' : 'Rep2',
-    //                 'data' : []
-    //             }
-    //         ]
-    //     },
-
-    //     {
-    //         'name' : 'Sim 2',
-    //         'outputs' : [
-    //             {
-    //                 'name' : 'Rep3',
-    //                 'data' : []
-    //             }
-    //         ]
-    //     }
-    // ];
 
     $scope.simulations = [];
     $scope.reports = [];
@@ -278,53 +168,49 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
     $scope.start = function() {
         console.log("Reports Started");
 
-        $http.get('/get-report-specs')
-            .success(function(data, status, headers, config) {
-                console.log('get-report-specs');
-
-                if(data.success) {
-                    $scope.simulations = data.simulations;
+        $scope.simulations = [{
+            name : 'Sim 1',
+            reports : [
+                {
+                    data : [],
+                    chart : null,
+                    name : 'Synapse Report',
+                    minGradient : 'rgb(255,0,0)',
+                    maxGradient : 'rgb(0,0,255)'
+                },
+                {
+                    data : [],
+                    chart : null,
+                    name : 'Current Report',
+                    minGradient : 'rgb(0,0,255)',
+                    maxGradient : 'rgb(0,255,0)'
                 }
+            ]
+        }];
 
-                console.log("reports");
-                console.log($scope.simulations);
+        // $http.get('/get-report-specs')
+        //     .success(function(data, status, headers, config) {
+        //         console.log('get-report-specs');
 
-                if($scope.simulations.length > 0) {
-                    $scope.setActiveSim(0);
-                }
-          }).
-          error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            console.error(status);
-          });
+        //         if(data.success) {
+        //             $scope.simulations = data.simulations;
+        //         }
 
-        callback();
-        //callback(0,1);
-        //callback(1,0);
+        //         console.log("reports");
+        //         console.log($scope.simulations);
 
-        //if(!$scope.started) {
-            // var websocket = new Socket(0);
-            // websocket.connect($scope);
+        //         if($scope.simulations.length > 0) {
+        //             $scope.setActiveSim(0);
+        //         }
+        //   }).
+        //   error(function(data, status, headers, config) {
+        //     // called asynchronously if an error occurs
+        //     // or server returns response with an error status.
+        //     console.error(status);
+        //   });
 
+        // callback();
 
-            // Oboe({
-            //     url: '/teststream-0'
-            // }).then(function() {
-            //     //finished
-            //     console.log('Done!');
-            // },
-            // function(error) {
-            //     //error
-            //     console.error(error);
-            // },
-            // function(node) {
-            //     //data received
-            //     console.log(node);
-            // });
-
-            //$scope.started = true;
-        //}
     };
 
     $scope.isActiveSim = function(index) {
@@ -342,6 +228,77 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
             if($scope.reports.length > 0) {
                 $scope.selectedReport = $scope.reports[$scope.activeReport];
             }
+
+            $timeout(function() {
+                for(var i = 0; i < $scope.reports.length; i++) {
+                    var report = $scope.reports[i];
+
+                    report.chart = new Highcharts.StockChart({
+                        chart : {
+                            renderTo : 'reportchart-' + report.name
+                            //type : 'line'
+                        },
+
+                        // title: {
+                        //     text : report.name
+                        // },
+
+                        xAxis : {
+                            title : {
+                                text : 'Time (seconds)'
+                            },
+
+                            min : 6,
+                            max : 10
+
+                        },
+
+                        yAxis : {
+                            title : {
+                                text : 'Example Data'
+                            }
+                        },
+
+                        rangeSelector : {
+                            enabled : false
+                        },
+
+                        visible : false,
+
+                        scrollbar : {
+                            enabled : true
+                            // barBackgroundColor: 'gray',
+                            // barBorderRadius: 7,
+                            // barBorderWidth: 0,
+                            // buttonBackgroundColor: 'gray',
+                            // buttonBorderWidth: 0,
+                            // buttonBorderRadius: 7,
+                            // trackBackgroundColor: 'none',
+                            // trackBorderWidth: 1,
+                            // trackBorderRadius: 8,
+                            // trackBorderColor: '#CCC'
+                        },
+
+                        series : [
+                            {
+                                color : {
+                                    linearGradient: {x1: 0, y1: 1, x2: 0, y2: 0},
+                                    stops: [
+                                        [0, report.minGradient],
+                                        [1, report.maxGradient]
+                                    ]
+                                },
+                                name : 'Voltage',
+                                data : report.data//[30, 40, 50, 40, 30]
+                                //pointStart : new Date(),
+                                //pointInterval : 1
+                            }
+                        ]
+                    });
+                }
+            });
+
+
         }
     };
 
@@ -352,6 +309,9 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval',
     $scope.setActiveReport = function(index) {
         $scope.activeReport = index;
         $scope.selectedReport = $scope.reports[index];
+
+        // var chart = $scope.selectedReport.chart;
+        // chart.setSize(document.getElementById('reportchart-' + $scope.selectedReport.name).clientWidth, 400);
     };
 
     $scope.getReportsForSelectedSim = function() {
