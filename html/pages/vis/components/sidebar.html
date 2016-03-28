@@ -1,8 +1,23 @@
 <div class="row">
     <form id="visForm">
         <div class="form-group">
-            <label for="visRenderNeuron">Render Neurons</label>
-            <input class="form-control" type="checkbox" data-ng-model="renderNeurons" data-ng-change="updateRenderTargets('neuron')">
+            <label>Render Neurons</label>
+            <input id="visRenderNeuron" class="form-control" type="checkbox" data-ng-model="renderNeurons" data-ng-change="updateRenderTargets('neuron')">
+        </div>
+
+        <div class="form-group">
+            <label>Neuron Minumum Threshold</label>
+            <input id="visNeuronMin" class="form-control" type="text" colorpicker="hex" colorpicker-position="bottom" data-ng-model="neuronMinThreshold" data-ng-change="console.log(neuronMinThreshold)">
+        </div>
+
+        <div class="form-group">
+            <label>Neuron Maximum Threshold</label>
+            <input id="visNeuronMax" class="form-control" type="color" colorpicker="hex" colorpicker-position="bottom" data-ng-model="neuronMaxThreshold" data-ng-change="console.log(neuronMaxThreshold)">
+        </div>
+
+        <div class="form-group">
+            <label>Neuron Threshold</label>
+            <input id="visNeuronThresh" class="form-control" type="range" min="0" max="100" data-ng-model="neuronThreshold" data-ng-change="console.log(neuronThreshold)">
         </div>
 
         <div class="form-group">

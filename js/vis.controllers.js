@@ -72,6 +72,77 @@ var exampleModel = {
     }
 }
 
+// var gradientVertexShader = "\
+// varying vec3 vColor;\
+// void main() {\
+//     vColor = aColor;\
+//     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\
+// }\
+// ";
+
+// var gradientFragmentShader = "\
+// varying vec3 vColor;\
+// void main() {\
+//     gl_FragColor = vColor;\
+// }\
+// ";
+
+// function generateGradientMaterial(startColor, endColor) {
+//     var mat = new THREE.ShaderMaterial({
+//         attributes : {
+//             aColor : { type: 'c', value : startColor}
+//         },
+
+//         vertexShader : gradientVertexShader,
+//         fragmentShader : gradientFragmentShader
+//     });
+// }
+
+function generateRandomModel(numCells, connProbability, spread) {
+    var obj = {
+        model : {
+            cellGroups : {
+                cellGroups : []
+            },
+
+            synapses : []
+        }
+    };
+
+    var groups = obj.model.cellGroups.cellGroups;
+    var synapses = obj.model.synapses;
+    var spread = spread || 50;
+
+    var adjustedRand = function() {
+        return ((Math.random() * 2.0) - 1.0) * spread;
+    };
+
+    for(var i = 0; i < numCells; i++) {
+        var xPos = adjustedRand();
+        var yPos = adjustedRand();
+        var zPos = adjustedRand();
+
+        groups.push({
+            name : 'Cell ' + i,
+            position : { x : xPos, y : yPos, z : zPos}
+        });
+    }
+
+    for(var i = 0; i < numCells; i++) {
+        for(var j = 0; j < numCells; j++) {
+            var probability = Math.random();
+            if(probability < connProbability) {
+                synapses.push({
+                    pre : 'Cell ' + i,
+                    post : 'Cell ' + j
+                });
+            }
+        }
+    }
+
+    return obj;
+}
+
 ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope, $http) {
 
     var DARK_FACTOR = 2;
@@ -208,8 +279,15 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
                     var obj = $scope.selectedObjects[i];
 
                     if(obj.selected) {
-                        obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);
-                        obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);
+                        // obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);
+                        // obj.material.color.setHex((obj.material.color.getHex() & 0xfefefe) >> 1);
+                        // if neuron
+                        if(obj.conn === undefined) {
+                            obj.material = $scope.darkerNeuronColor;
+                        }
+                        else {
+                            obj.material = $scope.darkerConnectionColor
+                        }
                         obj.selected = false;
                     }
 
@@ -350,6 +428,9 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
 
     $scope.renderNeurons = true;
     $scope.renderConnections = true;
+    $scope.neuronMinThreshold = '#0000ff'; // blue
+    $scope.neuronMaxThreshold = '#ff0000'; // red
+    $scope.neuronThreshold = 0;
 
     $scope.updateRenderTargets = function(type) {
         if(type === 'neuron') {
@@ -407,7 +488,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
 
         $scope.guiScene = new THREE.Scene();
 
-        $scope.renderer = new THREE.WebGLRenderer( { antialias : true } );
+        $scope.renderer = new THREE.WebGLRenderer( /*{ antialias : true }*/ );
         $scope.renderer.setSize($scope.canvasWidth, $scope.canvasHeight);
         $scope.renderer.setClearColor(0x2e2e2e, 1);
         $scope.renderer.autoClear = false;
@@ -419,7 +500,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
 
         $scope.cameraControls = new THREE.OrbitControls($scope.camera, $scope.renderer.domElement);
         $scope.cameraControls.minDistance = 5;
-        $scope.cameraControls.maxDistance = 75;
+        //$scope.cameraControls.maxDistance = 75;
 
         // setup input
         canvas.addEventListener('mousedown', handleMouseDown);
@@ -436,13 +517,16 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         $scope.objects = [];
         $scope.connections = [];
 
+        // set model
+        $scope.model = generateRandomModel(100, 0.4, 75); // exampleModel;
+
+        $scope.updateGradientMaterials('neuron');
+
         var conn_map = {};
-        var cells = exampleModel.model.cellGroups.cellGroups;
-        console.log(cells);
+        var cells = $scope.model.model.cellGroups.cellGroups;//exampleModel.model.cellGroups.cellGroups;
+        //console.log(cells);
         for(var i = 0; i < cells.length; i++) {
-            var darker_color = (0x00ff00 & 0xfefefe) >> 1;
-            darker_color = (darker_color & 0xfefefe) >> 1;
-            var cube = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshBasicMaterial( { color : darker_color } ));
+            var cube = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), $scope.darkerNeuronMaterial);
             cube.selected = false;
             cube.connections = [];
 
@@ -463,15 +547,14 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
             $scope.objects.push(cube);
         }
 
-        var connections = exampleModel.model.synapses;
+        var connections = $scope.model.model.synapses;
         for(var i = 0; i < connections.length; i++) {
             var conn = connections[i];
             var pre = conn_map[conn.pre];
             var post = conn_map[conn.post];
 
-            var darker_color = (0xff0000 & 0xfefefe) >> 1;
-            darker_color = (darker_color & 0xfefefe) >> 1;
-            var cylinder = createCylinderFromPoints(pre.position, post.position, darker_color);
+
+            var cylinder = $scope.createCylinderFromPoints(pre.position, post.position, $scope.darkerNeuronColor);
             cylinder.conn = conn;
             cylinder.selected = false;
 
@@ -486,16 +569,11 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         }
     };
 
-    function createCylinderFromPoints(p1, p2, color) {
-        if(color === undefined) {
-            color = 0xff0000;
-        }
-
+    $scope.createCylinderFromPoints = function(p1, p2, mat) {
         var direction = new THREE.Vector3().subVectors(p2, p1).normalize();
         var length = p1.distanceTo(p2);
 
-        var mat = new THREE.MeshBasicMaterial({color : color});
-        var geo = new THREE.CylinderGeometry(0.1, 0.1, length, 8);
+        var geo = new THREE.CylinderGeometry(0.05, 0.05, length, 4);
         var cylinder = new THREE.Mesh(geo, mat);
 
         var pos = new THREE.Vector3().addVectors(p1,p2).divideScalar(2);
@@ -516,7 +594,78 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
 
         cylinder.quaternion.copy(q);
         return cylinder;
-    }
+    };
+
+    $scope.generateGradientMaterial = function(minGradient, maxGradient) {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+
+        var size = 100;
+
+        canvas.height = size;
+        canvas.width = size;
+
+        var gradient = ctx.createLinearGradient(0, 0, size, 0);
+        gradient.addColorStop(0, minGradient);
+        gradient.addColorStop(1, maxGradient);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        var texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
+
+        return new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    };
+
+    $scope.updateGradientMaterials = function(type) {
+        if(type === 'neuron') {
+            var darker_min_color = $scope.colorStringToInt($scope.neuronMinThreshold);
+            darker_min_color = (darker_min_color & 0xfefefe) >> 1;
+            darker_min_color = (darker_min_color & 0xfefefe) >> 1;
+
+            var darker_max_color = $scope.colorStringToInt($scope.neuronMaxThreshold);
+            darker_max_color = (darker_max_color & 0xfefefe) >> 1;
+            darker_max_color = (darker_max_color & 0xfefefe) >> 1;
+
+            $scope.NeuronMaterial = $scope.generateGradientMaterial($scope.neuronMinThreshold, $scope.neuronMaxThreshold);
+            $scope.darkerNeuronMaterial = $scope.generateGradientMaterial($scope.intToColorString(darker_min_color), $scope.intToColorString(darker_max_color));
+        }
+    };
+
+    $scope.colorStringToInt = function(colorStr) {
+        return parseInt(colorStr.replace('#', '0x'));
+    };
+
+    $scope.intToColorString = function(intColor) {
+        var colorStr = intColor.toString(16);
+        var len = 6 - colorStr.length;
+        for(var i = 0; i < len; i++) {
+            colorStr = '0' + colorStr;
+        }
+
+        return '#' + colorStr;
+    };
+
+    $scope.configVisible = true;
+    $scope.configButtonText = '- Minimize';
+
+    $scope.toggleConfigVisibility = function() {
+        $scope.configVisible = !$scope.configVisible;
+
+        $scope.configButtonText = $scope.configVisible ? '- Minimize' : '+ Maximize';
+    };
+
+    $scope.neuronThresholdColor = $scope.neuronMinThreshold;
+    $scope.updateNeuronThresholdColor = function() {
+        var min = new THREE.Color($scope.neuronMinThreshold);
+        var max = new THREE.Color($scope.neuronMaxThreshold);
+
+        min.lerp(max, $scope.neuronThreshold / 100.0);
+
+        $scope.neuronThresholdColor = '#' + min.getHexString();
+
+        console.log($scope.neuronThresholdColor);
+    };
 }]);
 
 
