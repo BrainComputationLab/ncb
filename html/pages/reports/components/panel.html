@@ -45,8 +45,40 @@
                             <div id="reportchart-{{report.name}}" style="height:400px;"></div>
                         </div>
                         <div class="row">
-                            <button colorpicker type="button" colorpicker-position="top" data-ng-model="selectedReport.minGradient">Minumum Threshold</button>
+<!--                             <button colorpicker type="button" colorpicker-position="top" data-ng-model="selectedReport.minGradient">Minumum Threshold</button>
                             <button colorpicker type="button" colorpicker-position="top" data-ng-model="selectedReport.maxGradient">Maximum Threshold</button>
+                            <button colorpicker type="button" colorpicker-position="top" data-ng-model="selectedReport.threshold.gradient">Threshold</button> -->
+                            <table class="table table-bordered table-hover table-condensed ncb-table">
+                                <tr>
+                                    <td colspan="2"><span><strong>Name:</strong></span></td>
+                                    <td colspan="2"><span><strong>Color:</strong></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2"><span>Minumum Threshold</span></td>
+                                    <td colspan="2"><span><div class="form-control" style="border: 1px solid #000; background-color: {{selectedReport.minGradient}}" colorpicker colorpicker-position="right" data-ng-model="selectedReport.minGradient"></div></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2"><span>Maximum Threshold</span></td>
+                                    <td colspan="2"><span><div class="form-control" style="border: 1px solid #000; background-color: {{selectedReport.maxGradient}}" colorpicker colorpicker-position="right" data-ng-model="selectedReport.maxGradient"></div></span>
+                                </tr>
+
+                                <tr data-ng-show="selectedReport.thresholds.length > 0">
+                                    <td colspan="2"><span><strong>Name:</strong></span></td>
+                                    <td colspan="1"><span><strong>Starting Value:</strong></span></td>
+                                    <td colspan="1"><span><strong>Color:</strong></span></td>
+                                </tr>
+
+                                <tr data-ng-repeat="threshold in selectedReport.thresholds track by $index">
+                                    <td colspan="2"><span>Threshold {{$index + 1}} <button type="button" data-ng-click="addThreshold()" class="btn btn-xs btn-success">+</button><button type="button" data-ng-click="removeThreshold($index)" class="btn btn-xs btn-danger">-</button></span></td>
+
+                                    <td colspan="1" blur="submit" data-editable-text="threshold.pos" buttons="no"><span>{{threshold.pos}}</span></td>
+
+                                    <td colspan="1"><span><div class="form-control" style="border: 1px solid #000; background-color: {{threshold.gradient}}" colorpicker colorpicker-position="right" data-ng-model="threshold.gradient"></div></span></td>
+                                </tr>
+                            </table>
+
                         </div>
                         <!-- <ul>
                             <li data-ng-repeat="data in selectedReport.data track by $index">{{data}}</li>
@@ -56,5 +88,4 @@
             </div>
         </div>
     </div>
-
 </div>

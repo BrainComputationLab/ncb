@@ -518,7 +518,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', function($scope
         $scope.connections = [];
 
         // set model
-        $scope.model = generateRandomModel(100, 0.4, 75); // exampleModel;
+        $scope.model = exampleModel;//generateRandomModel(100, 0.4, 75); // exampleModel;
 
         $scope.updateGradientMaterials('neuron');
 

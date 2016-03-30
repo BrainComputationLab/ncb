@@ -107,17 +107,35 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
 
     $scope.testData = [ { x: 0.0, y: 40 }, { x: 0.5, y: 30}, { x: 1.0, y: 49 }, { x: 2.0, y: 17 }, { x: 3.0, y: 42 } ];
 
+    var thresholdSort = function(first, second) {
+        if(first.pos < second.pos) {
+            return -1;
+        }
+
+        if(first.pos > second.pos) {
+            return 1;
+        }
+
+        return 0;
+    };
+
     $scope.updateGradients = function() {
         if($scope.selectedReport != null && $scope.selectedReport.chart != null) {
             var series = $scope.selectedReport.chart.series[0];
 
+            var gradients = [[0, $scope.selectedReport.minGradient]];
+            for(var j = 0; j < $scope.selectedReport.thresholds.length; j++) {
+                var thresh = $scope.selectedReport.thresholds[j];
+                gradients.push([thresh.pos, thresh.gradient]);
+            }
+            gradients.push([1, $scope.selectedReport.maxGradient]);
+
+            gradients.sort(thresholdSort);
+
             var options = series.options;
             options.color = {
                 linearGradient: {x1: 0, y1: 1, x2: 0, y2: 0},
-                stops: [
-                    [0, $scope.selectedReport.minGradient],
-                    [1, $scope.selectedReport.maxGradient]
-                ]
+                stops: gradients
             };
 
             series.update(options, true);
@@ -126,6 +144,7 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
 
     $scope.$watch('selectedReport.minGradient', $scope.updateGradients);
     $scope.$watch('selectedReport.maxGradient', $scope.updateGradients);
+    $scope.$watch('selectedReport.thresholds', $scope.updateGradients, true);
 
     $interval(function() {
         //if($scope.selectedReport != null) {
@@ -176,14 +195,19 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                     chart : null,
                     name : 'Synapse Report',
                     minGradient : 'rgb(255,0,0)',
-                    maxGradient : 'rgb(0,0,255)'
+                    maxGradient : 'rgb(0,0,255)',
+                    thresholds : [{
+                        pos : 0.5,
+                        gradient : 'rgb(0,255,0)'
+                    }]
                 },
                 {
                     data : [],
                     chart : null,
                     name : 'Current Report',
                     minGradient : 'rgb(0,0,255)',
-                    maxGradient : 'rgb(0,255,0)'
+                    maxGradient : 'rgb(0,255,0)',
+                    thresholds : []
                 }
             ]
         }];
@@ -233,10 +257,21 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                 for(var i = 0; i < $scope.reports.length; i++) {
                     var report = $scope.reports[i];
 
+                    var gradients = [[0, report.minGradient]];
+
+                    for(var j = 0; j < report.thresholds.length; j++) {
+                        var thresh = report.thresholds[j];
+                        gradients.push([thresh.pos, thresh.gradient]);
+                    }
+
+                    gradients.push([1, report.maxGradient]);
+
+                    gradients.sort(thresholdSort);
+
                     report.chart = new Highcharts.StockChart({
                         chart : {
-                            renderTo : 'reportchart-' + report.name
-                            //type : 'line'
+                            renderTo : 'reportchart-' + report.name,
+                            type : 'spline'
                         },
 
                         // title: {
@@ -283,10 +318,7 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                             {
                                 color : {
                                     linearGradient: {x1: 0, y1: 1, x2: 0, y2: 0},
-                                    stops: [
-                                        [0, report.minGradient],
-                                        [1, report.maxGradient]
-                                    ]
+                                    stops: gradients
                                 },
                                 name : 'Voltage',
                                 data : report.data//[30, 40, 50, 40, 30]
@@ -319,6 +351,23 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
             return $scope.selectedSim.reports;
 
         return [];
+    };
+
+    $scope.addThreshold = function() {
+        if($scope.selectedReport != null) {
+            $scope.selectedReport.thresholds.push({
+                pos : 0.0,
+                gradient : 'rgb(0,0,0)'
+            });
+        }
+    };
+
+    $scope.removeThreshold = function(index) {
+        if($scope.selectedReport != null) {
+            if(index >= 0 && index < $scope.selectedReport.thresholds.length) {
+                $scope.selectedReport.thresholds.splice(index, 1);
+            }
+        }
     };
 
 }]);
