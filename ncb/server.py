@@ -267,6 +267,7 @@ def index_route():
     username = request.cookies.get('username')
 
     if username:
+        print('Found cookie!', file=sys.stderr)
         return app.send_static_file('index.html')
 
     else:

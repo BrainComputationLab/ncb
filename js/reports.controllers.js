@@ -105,8 +105,6 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
     $scope.started = false;
     $scope.intervals = [];
 
-    $scope.testData = [ { x: 0.0, y: 40 }, { x: 0.5, y: 30}, { x: 1.0, y: 49 }, { x: 2.0, y: 17 }, { x: 3.0, y: 42 } ];
-
     var thresholdSort = function(first, second) {
         if(first.pos < second.pos) {
             return -1;
@@ -126,7 +124,8 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
             var gradients = [[0, $scope.selectedReport.minGradient]];
             for(var j = 0; j < $scope.selectedReport.thresholds.length; j++) {
                 var thresh = $scope.selectedReport.thresholds[j];
-                gradients.push([thresh.pos, thresh.gradient]);
+                var pos = (thresh.pos - $scope.minDataValue) / ($scope.maxDataValue - $scope.minDataValue);
+                gradients.push([pos, thresh.gradient]);
             }
             gradients.push([1, $scope.selectedReport.maxGradient]);
 
@@ -146,11 +145,27 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
     $scope.$watch('selectedReport.maxGradient', $scope.updateGradients);
     $scope.$watch('selectedReport.thresholds', $scope.updateGradients, true);
 
+    $scope.maxDataValue = 1;
+    $scope.minDataValue = 0;
+
+    $scope.$watch(function() {
+            if($scope.selectedReport != null && $scope.selectedReport.chart != null) {
+                return $scope.selectedReport.chart.yAxis[0].getExtremes();
+            }
+
+            return null;
+        }, function(newVal, oldVal) {
+            if(newVal != undefined && newVal != null) {
+                $scope.maxDataValue = Math.floor(newVal.dataMax);
+                $scope.minDataValue = Math.floor(newVal.dataMin);
+            }
+    }, true);
+
     $interval(function() {
         //if($scope.selectedReport != null) {
         for(var i = 0; i < $scope.reports.length; i++) {
             var series = $scope.reports[i].chart.series[0];
-            series.addPoint(Math.random() * 11, true);
+            series.addPoint((Math.random() * 141) - 60, true);
         }
         //}
     }, 1000, 0, false);
@@ -199,7 +214,8 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                     thresholds : [{
                         pos : 0.5,
                         gradient : 'rgb(0,255,0)'
-                    }]
+                    }],
+                    plotlines : []
                 },
                 {
                     data : [],
@@ -207,7 +223,8 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                     name : 'Current Report',
                     minGradient : 'rgb(0,0,255)',
                     maxGradient : 'rgb(0,255,0)',
-                    thresholds : []
+                    thresholds : [],
+                    plotlines : []
                 }
             ]
         }];
@@ -261,6 +278,7 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
 
                     for(var j = 0; j < report.thresholds.length; j++) {
                         var thresh = report.thresholds[j];
+                        var pos = (thresh.pos - $scope.minDataValue) / ($scope.maxDataValue - $scope.minDataValue);
                         gradients.push([thresh.pos, thresh.gradient]);
                     }
 
@@ -290,7 +308,7 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
 
                         yAxis : {
                             title : {
-                                text : 'Example Data'
+                                text : 'Synapse Voltage'
                             }
                         },
 
@@ -321,6 +339,12 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                                     stops: gradients
                                 },
                                 name : 'Voltage',
+
+                                marker : {
+                                    enabled : true,
+                                    radius : 3
+                                },
+
                                 data : report.data//[30, 40, 50, 40, 30]
                                 //pointStart : new Date(),
                                 //pointInterval : 1
@@ -342,8 +366,10 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
         $scope.activeReport = index;
         $scope.selectedReport = $scope.reports[index];
 
-        // var chart = $scope.selectedReport.chart;
-        // chart.setSize(document.getElementById('reportchart-' + $scope.selectedReport.name).clientWidth, 400);
+        $timeout(function() {
+            var chart = $scope.selectedReport.chart;
+            chart.setSize(document.getElementById('reportchart-' + $scope.selectedReport.name).clientWidth, 400, false);
+        });
     };
 
     $scope.getReportsForSelectedSim = function() {
@@ -370,4 +396,56 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
         }
     };
 
+    $scope.addPlotline = function() {
+        if($scope.selectedReport != null) {
+            var plotline = {
+                id : guid(),
+                value : $scope.minDataValue,
+                color : 'rgb(255,0,0)',
+                dashStyle : 'shortdash',
+                width : 2,
+                label : {
+                    text : 'Plotline ' + ($scope.selectedReport.plotlines.length + 1)
+                }
+            };
+
+            $scope.selectedReport.plotlines.push(plotline);
+
+            var yAxis = $scope.selectedReport.chart.yAxis[0];
+            yAxis.addPlotLine(plotline);
+        }
+    };
+
+    $scope.removePlotline = function(index) {
+        if($scope.selectedReport != null) {
+            if(index >= 0 && index < $scope.selectedReport.plotlines.length) {
+                var plotline = $scope.selectedReport.plotlines[index];
+                $scope.selectedReport.plotlines.splice(index, 1);
+
+                var yAxis = $scope.selectedReport.chart.yAxis[0];
+                yAxis.removePlotLine(plotline.id);
+            }
+        }
+    };
+
+    // $scope.currentPlotline = -1;
+    // $scope.setCurrentPlotline = function(index) {
+    //     if($scope.selectedReport != null) {
+    //         if(index >= 0 && index < $scope.selectedReport.plotlines.length) {
+    //             $scope.currentPlotline = index;
+    //         }
+    //     }
+    // };
+
 }]);
+
+// found on stackoverflow.com http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
