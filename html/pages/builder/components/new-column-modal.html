@@ -1,0 +1,57 @@
+<!-- NEW CELL GROUP MODAL BEGIN -->
+<!-- Modal -->
+<div class="modal fade" id="addColumnModal" tabindex="-1" role="dialog" data-ng-controller="AddColumnModalController as addColumnCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">New Column</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group cellGroupTypes">
+
+                        <label for="modalColumnName" class="col-sm-4 control-label"> Name</label>
+                        <div class="col-sm-8">
+                            <input id="modalColumnName" type="text" placeholder="Name" class="form-control" data-ng-model="addColumnCtrl.name">
+                            <br>
+                        </div>
+
+                        <label for="modalColumnLocationX" class="col-sm-4 control-label"> Location</label>
+                        <div class="col-sm-2">
+                            <input id="modalColumnLocationX" type="number" placeholder="X" class="form-control" data-ng-model="addColumnCtrl.x">
+
+                        </div>
+
+                        <div class="col-sm-2">
+                            <input  type="number" placeholder="Y" class="form-control" data-ng-model="addColumnCtrl.y">
+
+                        </div>
+
+                        <div class="col-sm-2">
+                            <input type="number" placeholder="Z" class="form-control" data-ng-model="addColumnCtrl.z">
+                            <br>
+                        </div>
+
+                        <label for="modalColumnWidth" class="col-sm-4 control-label"> Width</label>
+                        <div class="col-sm-8">
+                            <input id="modalColumnWidth" type="number" placeholder="Width" class="form-control" data-ng-model="addColumnCtrl.width">
+                            <br>
+                        </div>
+
+                        <label for="modalColumnHeight" class="col-sm-4 control-label"> Height</label>
+                        <div class="col-sm-8">
+                            <input id="modalColumnHeight" type="number" placeholder="Height" class="form-control" data-ng-model="addColumnCtrl.height">
+                            <br>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" data-ng-click="addColumnCtrl.addColumn()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- NEW CELL GROUP MODAL END -->

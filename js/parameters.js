@@ -6,7 +6,7 @@ function model() {
 	this.cellGroups = new cellGroup("Home");
 	this.cellAliases = [];
 	this.synapses = [];
-
+    this.columns = [];
 }
 
 function izhikevichParam() {
@@ -223,6 +223,14 @@ function inputGroup() {
 
 function report() {
 
+}
+
+var columnCount = 1;
+function column(name, loc) {
+    this.name = name || 'Column ' + columnCount;
+    this.location = loc || { x : 0, y : 0, z : 0};
+    this.height = 10;
+    this.width = 10;
 }
 
 module.exports = {

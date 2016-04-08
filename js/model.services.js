@@ -471,6 +471,37 @@ ncbApp.factory('CurrentModelService', ['$rootScope', '$http', '$interval', '$tim
     this.updateModelSession();
   };
 
+  currentModelService.getColumns = function() {
+    return this.currentModel.columns;
+  }
+
+  currentModelService.removeColumn = function(column){
+    // gaurantees model is not null
+    if(this.displayedComponent === null)
+      this.setDisplayedComponent(column);
+
+    var index = -1;
+    for(var i = 0; i < this.currentModel.columns.length; i++) {
+      var col = this.currentModel.columns[i];
+      if(angular.equals(col, column)) {
+        index = i;
+        break;
+      }
+    }
+
+    if(i >= 0) {
+      this.currentModel.columns.splice(index, 1);
+    }
+
+    this.updateModelSession();
+  };
+
+  currentModelService.addColumn = function(column) {
+    this.currentModel.columns.push(column);
+    this.setDisplayedComponent(column);
+    this.updateModelSession();
+  };
+
   currentModelService.loadModelFromSession();
 
   return currentModelService;

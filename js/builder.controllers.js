@@ -505,6 +505,7 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
   $scope.colors = colorService.getColors();
   this.showComponents = true;
   this.showSynapses = true;
+  this.showColumns = true;
 
   // get visibility from side panel service
   this.isSidePanelVisible = function(){
@@ -521,6 +522,10 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
 
   this.removeSynapse = function(synapse){
     currentModelService.removeSynapse(synapse);
+  };
+
+  this.removeColumn = function(column) {
+    currentModelService.removeColumn(column);
   };
 
   this.styleElement = function(model){
@@ -924,6 +929,23 @@ ncbApp.controller('UndoModelController', ['$scope', 'CurrentModelService', '$htt
         console.error('Undo model error');
       });
 
+  };
+
+}]);
+
+ncbApp.controller('AddColumnModalController', ['$scope', 'CurrentModelService', function($scope, currentModelService) {
+  $scope.name = '';
+  $scope.x = 0;
+  $scope.y = 0;
+  $scope.z = 0;
+
+  $scope.addColumn = function() {
+    console.log("Here");
+    var col = new column($scope.name, { x : $scope.x, y : $scope.y, z : $scope.z});
+    currentModelService.addColumn(col);
+
+    console.log("Added column");
+    console.log(col);
   };
 
 }]);
