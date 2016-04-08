@@ -5,6 +5,7 @@ var app = require('./app');
 var $ = require('jquery');
 var Highcharts = require('highcharts/highstock');
 var ncbApp = app.ncbApp;
+require('highcharts/modules/exporting')(Highcharts);
 
 function Socket(id) {
     this.id = id;
@@ -161,11 +162,28 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
             }
     }, true);
 
+    $scope.updatePlotlines = function() {
+        if($scope.selectedReport != null && $scope.selectedReport.chart != null && $scope.selectedReport.plotlines != null) {
+            var yAxis = $scope.selectedReport.chart.yAxis[0];
+            $scope.selectedReport.plotlines.forEach(function(plotline) {
+                yAxis.removePlotLine(plotline.id);
+                yAxis.addPlotLine(plotline);
+            });
+
+        }
+    };
+
+    $scope.$watch('selectedReport.plotlines', $scope.updatePlotlines, true);
+
     $interval(function() {
         //if($scope.selectedReport != null) {
         for(var i = 0; i < $scope.reports.length; i++) {
             var series = $scope.reports[i].chart.series[0];
-            series.addPoint((Math.random() * 141) - 60, true);
+            for(var j = 0; j < 1; j++) {
+                series.addPoint((Math.random() * 141) - 60, false);
+            }
+
+            $scope.reports[i].chart.redraw();
         }
         //}
     }, 1000, 0, false);
@@ -216,16 +234,16 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                         gradient : 'rgb(0,255,0)'
                     }],
                     plotlines : []
-                },
-                {
-                    data : [],
-                    chart : null,
-                    name : 'Current Report',
-                    minGradient : 'rgb(0,0,255)',
-                    maxGradient : 'rgb(0,255,0)',
-                    thresholds : [],
-                    plotlines : []
                 }
+                // {
+                //     data : [],
+                //     chart : null,
+                //     name : 'Current Report',
+                //     minGradient : 'rgb(0,0,255)',
+                //     maxGradient : 'rgb(0,255,0)',
+                //     thresholds : [],
+                //     plotlines : []
+                // }
             ]
         }];
 
@@ -309,7 +327,12 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                         yAxis : {
                             title : {
                                 text : 'Synapse Voltage'
-                            }
+                            },
+
+                            offset : 50,
+
+                            min: -80,
+                            max: 65
                         },
 
                         rangeSelector : {
@@ -406,7 +429,8 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                 width : 2,
                 label : {
                     text : 'Plotline ' + ($scope.selectedReport.plotlines.length + 1)
-                }
+                },
+                zIndex : 1000
             };
 
             $scope.selectedReport.plotlines.push(plotline);
