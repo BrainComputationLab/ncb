@@ -146,6 +146,7 @@ function cells(name, num, parameters, geometry) {
 	this.geometry = geometry || "Box";
 	this.parameters = parameters;
 	this.description = "Description";
+    this.column = 'None';//new column('None');
 }
 
 // a cell group containing other cell groups and cells used for organization
@@ -226,17 +227,22 @@ function report() {
 }
 
 var columnCount = 1;
-function column(name, loc) {
+function column(name, loc, w, h) {
     this.name = name || 'Column ' + columnCount;
     this.location = loc || { x : 0, y : 0, z : 0};
-    this.height = 10;
-    this.width = 10;
+    this.width = w || 10;
+    this.height = h || 10;
+
+    this.classification = 'column';
+
+    columnCount += 1;
 }
 
 module.exports = {
     calciumDependantChannel: calciumDependantChannel,
     cellGroup: cellGroup,
     cells: cells,
+    column: column,
     flatSynapse: flatSynapse,
     hodgkinHuxleyParam: hodgkinHuxleyParam,
     izhikevichParam: izhikevichParam,

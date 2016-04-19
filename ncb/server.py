@@ -697,6 +697,6 @@ if __name__ == "__main__":
     #     t.daemon = True
     #     t.start()
 
-    app.run(port=8000)
+    app.run(port=8000) #app.run(host='0.0.0.0', port=8000)
     #server = WSGIServer(('localhost', 8000), app, handler_class=WebSocketHandler)
     #server.serve_forever()

@@ -61,12 +61,13 @@
 
     <div class="list-group ncb-current-components">
       <li data-ng-repeat="column in modelCtrl.getColumns()" class="row list-group-item ncb-cell-list-item ncb-item-center" data-ng-click="modelCtrl.displayParameters(column)" data-ng-show="modelCtrl.showColumns" data-ng-style="modelCtrl.styleElement(column)">
-          <div class="col-lg-11">
+          <div class="col-lg-10">
             <div class="row">
-              <span class="ncb-cell-type-txt">{{column.name}}</span>
+              {{column.name}}
             </div>
+            <div class="row ncb-cell-type-txt">{{column.location}}</div>
           </div>
-          <div class="col-lg-1 ncb-remove-component-btn">
+          <div class="col-lg-2 ncb-remove-component-btn">
               <div class="row"><button type="button" data-ng-click="modelCtrl.removeColumn(column)" class="btn btn-xs btn-danger pull-right">x</button></div>
           </div>
       </li>

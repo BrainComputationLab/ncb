@@ -21,6 +21,7 @@ var synapseGroup = parameters.synapseGroup;
 var voltageGatedChannel = parameters.voltageGatedChannel;
 var voltageGatedIonChannel = parameters.voltageGatedIonChannel;
 var voltageGatedParticle = parameters.voltageGatedParticle;
+var column = parameters.column;
 
 // controller for the model import/export drawer
 ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
@@ -294,7 +295,7 @@ ncbApp.controller("AddChannelModalController", ['$scope', 'CurrentModelService',
   this.possibleChannels = [];
 
   this.getAvailableChannelTypes = function(component) {
-    if(component == null)
+    if(component == null || component.parameters == undefined)
       return [];
 
     var cellType = component.parameters.type;
@@ -606,6 +607,10 @@ ncbApp.controller("ModelBuilderController", ['$rootScope', '$scope', 'CurrentMod
     return string;
   };
 
+  this.getColumns = function() {
+    return currentModelService.getColumns();
+  };
+
     /*$scope.$watch(function () { return currentModelService.getData(); }, function (newValue) {
         if (newValue){
           // update the data
@@ -634,6 +639,20 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
     {value: "Flat", text: "Flat"},
     {value: "NCS", text: "NCS"}
   ];
+
+  $scope.possibleColumns = [new column('None')];
+
+  $scope.$watch(function() { return currentModelService.getColumns(); }, function(columns) {
+    $scope.possibleColumns = [new column('None')];
+    Array.prototype.push.apply($scope.possibleColumns, columns);
+  }, true);
+
+  // $scope.getColumnOptions = function() {
+  //   var cols = [new column('None')];
+  //   console.log(currentModelService.getColumns());
+  //   Array.prototype.push.apply(cols, currentModelService.getColumns());
+  //   return [new column('None')];
+  // };
 
   $scope.updateBreadCrumbs = function(){
     // change name of breadcrumb corresponding to the displayed cell group
@@ -744,6 +763,11 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
         $scope.displayed = null;
       }
   });
+
+  // update title if changed
+  $scope.$watch(function() { return $scope.displayed ? $scope.displayed.name : ""; }, function(newTitle) {
+    $scope.title = newTitle;
+  }, true);
 
   // edit groups in connection
   $scope.editConnectionGroups = function(){
@@ -938,10 +962,11 @@ ncbApp.controller('AddColumnModalController', ['$scope', 'CurrentModelService', 
   $scope.x = 0;
   $scope.y = 0;
   $scope.z = 0;
+  $scope.width = 0;
+  $scope.height = 0;
 
   $scope.addColumn = function() {
-    console.log("Here");
-    var col = new column($scope.name, { x : $scope.x, y : $scope.y, z : $scope.z});
+    var col = new column($scope.name, { x : $scope.x, y : $scope.y, z : $scope.z}, $scope.width, $scope.height);
     currentModelService.addColumn(col);
 
     console.log("Added column");

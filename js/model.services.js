@@ -124,7 +124,7 @@ ncbApp.factory('SidePanelService', ['$rootScope', function($rootScope) {
 ncbApp.factory('ColorService', ['$rootScope', function($rootScope){
   var colorService = {};
 
-  colorService.colors = {cell: '#8781BD' , cellGroup: '#00568C', model:'#5D6B74', synapse:'#333333'};
+  colorService.colors = {cell: '#8781BD' , cellGroup: '#00568C', model:'#5D6B74', synapse:'#333333', column:'#2F4F4F'};
 
   colorService.getColors = function(){
     return this.colors;
@@ -159,6 +159,12 @@ ncbApp.factory('ColorService', ['$rootScope', function($rootScope){
       return {
                 'background-image': 'linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 10px, transparent 10px, transparent 100%)',
                 'background-image': '-webkit-linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 10px, transparent 10px, transparent 100%)',
+            };
+    }
+    else if (model.classification === 'column'){
+      return {
+                'background-image': 'linear-gradient(left, '+this.colors.column+', '+this.colors.column+' 10px, transparent 10px, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, '+this.colors.column+', '+this.colors.column+' 10px, transparent 10px, transparent 100%)',
             };
     }
   };
@@ -209,6 +215,21 @@ ncbApp.factory('ColorService', ['$rootScope', function($rootScope){
       return {
                 'background-image': 'linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 100%, transparent 100%, transparent 100%)',
                 'background-image': '-webkit-linear-gradient(left, '+this.colors.synapse+', '+this.colors.synapse+' 100%, transparent 100%, transparent 100%)',
+                'color' : ""+textColor,
+            };
+    }
+    else if (model.classification === 'column'){
+      // checks background color to make sure text is always white or black depending on the background color
+      deciVal = parseInt(this.colors.column.replace("#", ""), 16);
+      if (deciVal < 8388607.5){
+        textColor = '#FFFFFF';
+      }
+      else{
+        textColor = '#000000';
+      }
+      return {
+                'background-image': 'linear-gradient(left, '+this.colors.column+', '+this.colors.column+' 100%, transparent 100%, transparent 100%)',
+                'background-image': '-webkit-linear-gradient(left, '+this.colors.column+', '+this.colors.column+' 100%, transparent 100%, transparent 100%)',
                 'color' : ""+textColor,
             };
     }

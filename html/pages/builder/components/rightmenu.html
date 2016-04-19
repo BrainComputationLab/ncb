@@ -73,6 +73,10 @@
                       <td colspan="6"><span>{{displayed.geometry}}</span></td>
                     </tr>
                     <tr>
+                      <td colspan="2"><span>Column:</span></td>
+                      <td colspan="6" blur="submit" data-editable-select="displayed.column" data-e-ng-options="c.name as c.name for c in possibleColumns" buttons="no"><span>{{displayed.column}}</span></td>
+                    </tr>
+                    <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
                       <td colspan="1"><span>Type:</span></td>
                       <td colspan="1"><span>Value:</span></td>
@@ -168,6 +172,10 @@
                     <tr>
                       <td colspan="2"><span>Geometry:</span></td>
                       <td colspan="6"><span>{{displayed.geometry}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Column:</span></td>
+                      <td colspan="6" blur="submit" data-editable-select="displayed.column" data-e-ng-options="c.name as c.name for c in possibleColumns" buttons="no"><span>{{displayed.column}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
@@ -317,6 +325,10 @@
                     <tr>
                       <td colspan="2"><span>Geometry:</span></td>
                       <td colspan="6"><span>{{displayed.geometry}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><span>Column:</span></td>
+                      <td colspan="6" blur="submit" data-editable-select="displayed.column" data-e-ng-options="c.name as c.name for c in possibleColumns" buttons="no"><span>{{displayed.column}}</span></td>
                     </tr>
                     <tr>
                       <td colspan="2"><span>Parameter Name:</span></td>
@@ -592,6 +604,49 @@
                     </tr>
                   </table>
                   <!-- End NCS Synapse -->
+
+                </div>
+            </div>
+
+            <div class="panel panel-default" data-ng-show="displayed.classification == 'column'">
+                <div class="panel-heading">
+                    <h4 class="panel-title" >
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseColumn" style="display:block">
+                            Column Parameters
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseColumn" class="panel-collapse collapse in">
+
+                  <!-- Start Column -->
+                  <table class="table table-bordered table-hover table-condensed ncb-table">
+                    <tr>
+                      <td colspan="1"><span>Name:</span></td>
+                      <td colspan="1" width="70%" blur="submit" data-editable-text="displayed.name" buttons="no"><span>{{displayed.name}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Position X:</span></td>
+                      <td colspan="1" width="70%" blur="submit" data-editable-text="displayed.location.x" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.location.x}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Position Y:</span></td>
+                      <td colspan="1" width="70%" blur="submit" data-editable-text="displayed.location.y" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.location.y}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Position Z:</span></td>
+                      <td colspan="1" width="70%" blur="submit" data-editable-text="displayed.location.z" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.location.z}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Width</span></td>
+                      <td colspan="1" width="70%" blur="submit" data-editable-text="displayed.width" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.width}}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="1"><span>Height</span></td>
+                      <td colspan="1" width="70%" blur="submit" data-editable-text="displayed.height" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{displayed.height}}</span></td>
+                    </tr>
+
+                  </table>
+                  <!-- End Column -->
 
                 </div>
             </div>
