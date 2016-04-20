@@ -12,24 +12,29 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="visRenderConnection">Render Connections</label>
-                    <input class="form-control" type="checkbox" data-ng-model="renderConnections" data-ng-change="updateRenderTargets('conn');">
+                    <label>Render Connections</label>
+                    <input id="visRenderConnections" class="form-control" type="checkbox" data-ng-model="renderConnections" data-ng-change="updateRenderTargets('conn');">
                 </div>
             </div>
 
             <div class="col-lg-4">
+                <div class="form-group">
+                    <label>Render Columns</label>
+                    <input id="visRenderColumns" class="form-control" type="checkbox" data-ng-model="renderColumns" data-ng-change="updateRenderTargets('column')">
+                </div>
+
                 <div class="form-group">
                     <label>Neuron Minumum Threshold</label>
-                    <div id="visNeuronMin" class="form-control" style="border: 1px solid #000; background-color: {{neuronMinThreshold}}" colorpicker="hex" colorpicker-position="bottom" data-ng-model="neuronMinThreshold" data-ng-change="updateNeuronThresholdColor()"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Neuron Maximum Threshold</label>
-                    <div id="visNeuronMax" class="form-control" style="border: 1px solid #000; background-color: {{neuronMaxThreshold}}" colorpicker="hex" colorpicker-position="bottom" data-ng-model="neuronMaxThreshold" data-ng-change="updateNeuronThresholdColor()"></div>
+                    <div id="visNeuronMin" class="form-control" style="border: 1px solid #000; background-color: {{neuronMinThreshold}}" colorpicker="hex" colorpicker-position="bottom" data-ng-model="neuronMinThreshold"></div>
                 </div>
             </div>
 
             <div class="col-lg-4">
+                <div class="form-group">
+                    <label>Neuron Maximum Threshold</label>
+                    <div id="visNeuronMax" class="form-control" style="border: 1px solid #000; background-color: {{neuronMaxThreshold}}" colorpicker="hex" colorpicker-position="bottom" data-ng-model="neuronMaxThreshold"></div>
+                </div>
+
                 <div class="form-group">
                     <label>Neuron Threshold</label>
                     <input id="visNeuronThresh" class="form-control" type="range" min="0" max="100" style="border: 1px solid #000; background-color: {{neuronThresholdColor}}" data-ng-model="neuronThreshold" data-ng-change="updateNeuronThresholdColor()">

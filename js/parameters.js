@@ -227,11 +227,12 @@ function report() {
 }
 
 var columnCount = 1;
-function column(name, loc, w, h) {
+function column(name, pos, w, h, d) {
     this.name = name || 'Column ' + columnCount;
-    this.location = loc || { x : 0, y : 0, z : 0};
+    this.position = pos || { x : 0, y : 0, z : 0};
     this.width = w || 10;
     this.height = h || 10;
+    this.depth = d || 10;
 
     this.classification = 'column';
 

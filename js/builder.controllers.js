@@ -645,6 +645,16 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
   $scope.$watch(function() { return currentModelService.getColumns(); }, function(columns) {
     $scope.possibleColumns = [new column('None')];
     Array.prototype.push.apply($scope.possibleColumns, columns);
+
+    if($scope.displayed && $scope.displayed.column) {
+      var found = columns.some(function(col) {
+        return col.name === $scope.displayed.column;
+      });
+
+      if(!found) {
+        $scope.displayed.column = 'None';
+      }
+    }
   }, true);
 
   // $scope.getColumnOptions = function() {
@@ -959,14 +969,15 @@ ncbApp.controller('UndoModelController', ['$scope', 'CurrentModelService', '$htt
 
 ncbApp.controller('AddColumnModalController', ['$scope', 'CurrentModelService', function($scope, currentModelService) {
   $scope.name = '';
-  $scope.x = 0;
-  $scope.y = 0;
-  $scope.z = 0;
-  $scope.width = 0;
-  $scope.height = 0;
+  $scope.x = undefined;
+  $scope.y = undefined;
+  $scope.z = undefined;
+  $scope.width = undefined;
+  $scope.height = undefined;
+  $scope.depth = undefined;
 
   $scope.addColumn = function() {
-    var col = new column($scope.name, { x : $scope.x, y : $scope.y, z : $scope.z}, $scope.width, $scope.height);
+    var col = new column($scope.name, { x : $scope.x, y : $scope.y, z : $scope.z}, $scope.width, $scope.height, $scope.depth);
     currentModelService.addColumn(col);
 
     console.log("Added column");
