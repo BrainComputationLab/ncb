@@ -7,13 +7,13 @@
     <!-- End Title of Tab -->
 
     <!-- Reports Body -->
-    <div class="row ncb-page-item">
-        <button type="button" class="btn btn-success btn-md" ng-click="start()">Update Targets</button>
+    <div class="row ncb-page-item" data-ng-show="!initialized">
+        <button type="button" class="btn btn-success btn-md" ng-click="start()">Connect To Simulation</button>
     </div>
 
     <div class="row">
         <div class="col-lg-12">
-        @@include('components/panel.html')
+        @@include('components/panel2.html')
             <!-- <ul>
                 <li ng-repeat="data in reportData track by $index">{{ data }}</li>
             </ul> -->

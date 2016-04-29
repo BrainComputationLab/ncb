@@ -119,32 +119,48 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
     };
 
     $scope.updateGradients = function() {
-        if($scope.selectedReport != null && $scope.selectedReport.chart != null) {
-            var series = $scope.selectedReport.chart.series[0];
+        for(var i = 0; i < $scope.reports.length; i++) {
+            var report = $scope.reports[i];
+            if(report != null && report.chart != null) {
+                var series = report.chart.series[0];
 
-            var gradients = [[0, $scope.selectedReport.minGradient]];
-            for(var j = 0; j < $scope.selectedReport.thresholds.length; j++) {
-                var thresh = $scope.selectedReport.thresholds[j];
-                var pos = (thresh.pos - $scope.minDataValue) / ($scope.maxDataValue - $scope.minDataValue);
-                gradients.push([pos, thresh.gradient]);
+                var gradients = [[0, report.minGradient]];
+                for(var j = 0; j < report.thresholds.length; j++) {
+                    var thresh = report.thresholds[j];
+                    var pos = (thresh.pos - $scope.minDataValue) / ($scope.maxDataValue - $scope.minDataValue);
+                    gradients.push([pos, thresh.gradient]);
+                }
+                gradients.push([1, report.maxGradient]);
+
+                gradients.sort(thresholdSort);
+
+                var options = series.options;
+                options.color = {
+                    linearGradient: {x1: 0, y1: 1, x2: 0, y2: 0},
+                    stops: gradients
+                };
+
+                series.update(options, true);
             }
-            gradients.push([1, $scope.selectedReport.maxGradient]);
-
-            gradients.sort(thresholdSort);
-
-            var options = series.options;
-            options.color = {
-                linearGradient: {x1: 0, y1: 1, x2: 0, y2: 0},
-                stops: gradients
-            };
-
-            series.update(options, true);
         }
+
     };
 
-    $scope.$watch('selectedReport.minGradient', $scope.updateGradients);
-    $scope.$watch('selectedReport.maxGradient', $scope.updateGradients);
-    $scope.$watch('selectedReport.thresholds', $scope.updateGradients, true);
+    $scope.$watch(function() {
+        return $scope.reports.map(function(report) {
+            return report.minGradient;
+        });
+    }, $scope.updateGradients, true);
+    $scope.$watch(function() {
+        return $scope.reports.map(function(report) {
+            return report.maxGradient;
+        });
+    }, $scope.updateGradients, true);
+    $scope.$watch(function() {
+        return $scope.reports.map(function(report) {
+            return report.thresholds;
+        });
+    }, $scope.updateGradients, true);
 
     $scope.maxDataValue = 1;
     $scope.minDataValue = 0;
@@ -217,6 +233,8 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
         }, 1000, 0, false));
     };
 
+    $scope.initialized = false;
+
     $scope.start = function() {
         console.log("Reports Started");
 
@@ -233,17 +251,19 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                         pos : 0.5,
                         gradient : 'rgb(0,255,0)'
                     }],
-                    plotlines : []
+                    plotlines : [],
+                    displayed : true
+                },
+                {
+                    data : [],
+                    chart : null,
+                    name : 'Current Report',
+                    minGradient : 'rgb(0,0,255)',
+                    maxGradient : 'rgb(0,255,0)',
+                    thresholds : [],
+                    plotlines : [],
+                    displayed : true
                 }
-                // {
-                //     data : [],
-                //     chart : null,
-                //     name : 'Current Report',
-                //     minGradient : 'rgb(0,0,255)',
-                //     maxGradient : 'rgb(0,255,0)',
-                //     thresholds : [],
-                //     plotlines : []
-                // }
             ]
         }];
 
@@ -269,7 +289,8 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
         //   });
 
         // callback();
-
+        $scope.setActiveSim(0);
+        $scope.initialized = true;
     };
 
     $scope.isActiveSim = function(index) {
@@ -307,7 +328,7 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                     report.chart = new Highcharts.StockChart({
                         chart : {
                             renderTo : 'reportchart-' + report.name,
-                            type : 'spline'
+                            type : 'line'
                         },
 
                         // title: {
@@ -319,8 +340,12 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                                 text : 'Time (seconds)'
                             },
 
-                            min : 6,
-                            max : 10
+                            dateTimeLabelFormats : {
+                                millisecond: '%S.%L',
+                                second : '%H:%S.%L'
+                            }
+                            // min : 6,
+                            // max : 10
 
                         },
 
@@ -402,25 +427,25 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
         return [];
     };
 
-    $scope.addThreshold = function() {
-        if($scope.selectedReport != null) {
-            $scope.selectedReport.thresholds.push({
+    $scope.addThreshold = function(report) {
+        if(report != null) {
+            report.thresholds.push({
                 pos : 0.0,
                 gradient : 'rgb(0,0,0)'
             });
         }
     };
 
-    $scope.removeThreshold = function(index) {
-        if($scope.selectedReport != null) {
-            if(index >= 0 && index < $scope.selectedReport.thresholds.length) {
-                $scope.selectedReport.thresholds.splice(index, 1);
+    $scope.removeThreshold = function(report, index) {
+        if(report != null) {
+            if(index >= 0 && index < report.thresholds.length) {
+                report.thresholds.splice(index, 1);
             }
         }
     };
 
-    $scope.addPlotline = function() {
-        if($scope.selectedReport != null) {
+    $scope.addPlotline = function(report) {
+        if(report != null) {
             var plotline = {
                 id : guid(),
                 value : $scope.minDataValue,
@@ -428,25 +453,25 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                 dashStyle : 'shortdash',
                 width : 2,
                 label : {
-                    text : 'Plotline ' + ($scope.selectedReport.plotlines.length + 1)
+                    text : 'Plotline ' + (report.plotlines.length + 1)
                 },
                 zIndex : 1000
             };
 
-            $scope.selectedReport.plotlines.push(plotline);
+            report.plotlines.push(plotline);
 
-            var yAxis = $scope.selectedReport.chart.yAxis[0];
+            var yAxis = report.chart.yAxis[0];
             yAxis.addPlotLine(plotline);
         }
     };
 
-    $scope.removePlotline = function(index) {
-        if($scope.selectedReport != null) {
-            if(index >= 0 && index < $scope.selectedReport.plotlines.length) {
-                var plotline = $scope.selectedReport.plotlines[index];
-                $scope.selectedReport.plotlines.splice(index, 1);
+    $scope.removePlotline = function(report, index) {
+        if(report != null) {
+            if(index >= 0 && index < report.plotlines.length) {
+                var plotline = report.plotlines[index];
+                report.plotlines.splice(index, 1);
 
-                var yAxis = $scope.selectedReport.chart.yAxis[0];
+                var yAxis = report.chart.yAxis[0];
                 yAxis.removePlotLine(plotline.id);
             }
         }

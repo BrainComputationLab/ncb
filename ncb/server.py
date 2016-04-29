@@ -9,7 +9,7 @@ import json, os, time, threading, struct, random, datetime, copy
 import pika
 
 DAEMON_CONNECTED = False
-DAEMON_HOST = '10.0.1.40'
+DAEMON_HOST = '10.0.1.28'
 
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
