@@ -20,158 +20,152 @@
             <li data-ng-repeat="data in reports[activeReport].data track by $index">{{data}}</li>
         </ul> -->
 
-        <div class="col-lg-2">
+<!--         <div class="col-lg-2">
             <div class="panel panel-default">
                 <div class="panel-body ncb-scrollview">
                     <div class="list-group">
-                        <li data-ng-repeat="report in getReportsForSelectedSim() track by $index" class="row list-group-item ncb-item-center ncb-io-list-item" data-ng-class="{'ncb-selected-item': isActiveReport($index)}" data-ng-click="setActiveReport($index)"><a class="ncb-no-underline">{{report.name}}</a></li>
+                        <li data-ng-repeat="report in getReportsForSelectedSim() track by $index" class="row list-group-item ncb-item-center ncb-io-list-item" data-ng-class="{'ncb-selected-item': isActiveReport($index)}" data-ng-click="setActiveReport($index)"><a class="ncb-no-underline">Reports</a></li>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="col-lg-10">
-            <div class="panel panel-default">
-
+        <div class="col-lg-12">
+            <div class="panel panel-default" data-ng-repeat="report in getReportsForSelectedSim() track by $index">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{selectedReport.name}}</h3>
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <h3 class="panel-title">{{report.name}}</h3>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="button" class="btn btn-xs btn-info pull-right" data-ng-click="report.displayed = !report.displayed">{{report.displayed ? "- Minimize" : "+ Maximize"}}</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="panel-body">
+                <div class="panel-body" data-ng-show="report.displayed">
                     <div id="reportPanelAccordion" class="panel-group">
-                        <div id="chart-container" class="row" data-ng-repeat="report in getReportsForSelectedSim() track by $index" data-ng-show="report.name === selectedReport.name">
-                            <div id="reportchart-{{report.name}}" style="height:400px;"></div>
+                        <div id="chart-container" class="row">
+                            <div id="reportchart-{{report.name}}" class="ncs-report-chart"></div>
                         </div>
-                        <div class="row">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#reportPanelAccordion" href="#threshold-panel-{{$index}}" style="diskplay: block;">Threshold Limits</a>
-                                    </h3>
-                                </div>
-    <!--                             <button colorpicker type="button" colorpicker-position="top" data-ng-model="selectedReport.minGradient">Minumum Threshold</button>
-                                <button colorpicker type="button" colorpicker-position="top" data-ng-model="selectedReport.maxGradient">Maximum Threshold</button>
-                                <button colorpicker type="button" colorpicker-position="top" data-ng-model="selectedReport.threshold.gradient">Threshold</button> -->
-                                <div id="threshold-panel-{{$index}}" class="panel-collapse collapse in">
-                                    <div class="col-lg-12">
-                                        <table class="table table-bordered table-hover table-condensed ncb-table">
-                                            <tr>
-                                                <td colspan="2"><span><strong>Name:</strong></span></td>
-                                                <td colspan="2"><span><strong>Color:</strong></span></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td colspan="2"><span>Minumum Threshold</span></td>
-                                                <td colspan="2"><span><div class="form-control" style="border: 1px solid #000; background-color: {{selectedReport.minGradient}}" colorpicker colorpicker-position="right" data-ng-model="selectedReport.minGradient"></div></span></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td colspan="2"><span>Maximum Threshold</span></td>
-                                                <td colspan="2"><span><div class="form-control" style="border: 1px solid #000; background-color: {{selectedReport.maxGradient}}" colorpicker colorpicker-position="right" data-ng-model="selectedReport.maxGradient"></div></span></td>
-                                            </tr>
-
-                                        </table>
-                                    </div>
-                                </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#reportPanelAccordion" href="#report-configuration-{{$index}}" style="display: block;">Configuration</a>
+                                </h3>
                             </div>
-                        </div>
 
-
-                        <div class="row">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-lg-10">
-                                            <h3 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#reportPanelAccordion" href="#threshold-extra-panel-{{$index}}" style="diskplay: block;">Additional Thresholds</a>
-                                            </h3>
+                            <div id="report-configuration-{{$index}}" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="panel panel-default" data-ng-show="(!report.reportType.includes('Fire') && report.chart.series.length == 2)">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Minumum and Maximum Thresholds</h3>
                                         </div>
-                                        <div class="col-lg-2">
-                                            <button type="button" class="btn btn-xs btn-info pull-right" data-ng-click="addThreshold()">+ Threshold</button>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div id="threshold-extra-panel-{{$index}}" class="panel-collapse collapse in">
-                                    <div class="col-lg-12">
+                                        <div class="panel-body">
+                                            <table class="table table-bordered table-hover table-condensed ncb-table">
+                                                <tr>
+                                                    <td colspan="2"><span><strong>Name:</strong></span></td>
+                                                    <td colspan="2"><span><strong>Color:</strong></span></td>
+                                                </tr>
 
-                                        <table class="table table-bordered table-hover table-condensed ncb-table">
-                                            <tr data-ng-show="selectedReport.thresholds.length > 0">
-                                                <td colspan="2"><span><strong>Name:</strong></span></td>
-                                                <td colspan="1"><span><strong>Starting Value:</strong></span></td>
-                                                <td colspan="1"><span><strong>Color:</strong></span></td>
-                                            </tr>
+                                                <tr>
+                                                    <td colspan="2"><span>Minumum Threshold</span></td>
+                                                    <td colspan="2"><span><div class="form-control" style="border: 1px solid #000; background-color: {{report.minGradient}}" colorpicker colorpicker-position="right" data-ng-model="report.minGradient"></div></span></td>
+                                                </tr>
 
-                                            <tr data-ng-repeat="threshold in selectedReport.thresholds track by $index">
-                                                <td colspan="2">
-                                                    <div class="col-lg-10">
-                                                        <span>Threshold {{$index + 1}}</span>
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <button type="button" data-ng-click="removeThreshold($index)" class="btn btn-xs btn-danger pull-right">x</button>
-                                                    </div>
-                                                </td>
-                                                <td colspan="1">
-                                                    <div class="col-lg-10">
-                                                        <input type="range" min="{{minDataValue}}" max="{{maxDataValue}}" data-ng-model="threshold.pos">
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <span>{{threshold.pos}}</span>
-                                                    </div>
-                                                </td>
-                                                <!-- <td colspan="1" blur="submit" data-editable-text="threshold.pos" buttons="no"><span>{{threshold.pos}}</span></td> -->
-
-                                                <td colspan="1"><span><div class="form-control" style="border: 1px solid #000; background-color: {{threshold.gradient}}" colorpicker colorpicker-position="right" data-ng-model="threshold.gradient"></div></span></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-lg-10">
-                                            <h3 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#reportPanelAccordion" href="#plotlines-panel-{{$index}}" style="diskplay: block;">Plotlines</a>
-                                            </h3>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <button type="button" class="btn btn-xs btn-info pull-right" data-ng-click="addPlotline()">+ Plotline</button>
+                                                <tr>
+                                                    <td colspan="2"><span>Maximum Threshold</span></td>
+                                                    <td colspan="2"><span><div class="form-control" style="border: 1px solid #000; background-color: {{report.maxGradient}}" colorpicker colorpicker-position="right" data-ng-model="report.maxGradient"></div></span></td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div id="plotlines-panel-{{$index}}" class="panel-collapse collapse">
-                                    <div class="col-lg-12">
+                                    <div class="panel panel-default" data-ng-show="(!report.reportType.includes('Fire') && report.chart.series.length == 2)">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-lg-10">
+                                                    <h3 class="panel-title">Additional Thresholds</h3>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button type="button" class="btn btn-xs btn-info pull-right" data-ng-click="addThreshold(report)">+ Threshold</button>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="selectedReport.plotlines.length > 0">
-                                            <tr>
-                                                <td colspan="1"><span><strong>Name:</strong></span></td>
-                                                <td colspan="1"><span><strong>Value:</strong></span></td>
-                                                <td colspan="1"><span><strong>Color:</strong></span></td>
-                                                <!-- <td colspan="1"><span><strong>Remove:</strong></span></td> -->
-                                            </tr>
+                                        <div class="panel-body">
+                                            <table class="table table-bordered table-hover table-condensed ncb-table">
+                                                <tr data-ng-show="report.thresholds.length > 0">
+                                                    <td colspan="2"><span><strong>Name:</strong></span></td>
+                                                    <td colspan="1"><span><strong>Starting Value:</strong></span></td>
+                                                    <td colspan="1"><span><strong>Color:</strong></span></td>
+                                                </tr>
 
-                                            <tr data-ng-repeat="plotline in selectedReport.plotlines track by $index">
-                                                <td colspan="1" blur="submit" data-editable-text="plotline.label.text" buttons="no"><span>{{plotline.label.text}}</span></td>
+                                                <tr data-ng-repeat="threshold in report.thresholds track by $index">
+                                                    <td colspan="2">
+                                                        <div class="col-lg-10">
+                                                            <span>Threshold {{$index + 1}}</span>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <button type="button" data-ng-click="removeThreshold(report, $index)" class="btn btn-xs btn-danger pull-right">x</button>
+                                                        </div>
+                                                    </td>
+                                                    <td colspan="1">
+                                                        <div class="col-lg-10">
+                                                            <input type="range" min="{{minDataValue}}" max="{{maxDataValue}}" data-ng-model="threshold.pos">
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <span>{{threshold.pos}}</span>
+                                                        </div>
+                                                    </td>
+                                                    <!-- <td colspan="1" blur="submit" data-editable-text="threshold.pos" buttons="no"><span>{{threshold.pos}}</span></td> -->
 
-                                                <td colspan="1" blur="submit" data-editable-text="plotline.value" buttons="no"><span>{{plotline.value}}</span></td>
+                                                    <td colspan="1"><span><div class="form-control" style="border: 1px solid #000; background-color: {{threshold.gradient}}" colorpicker colorpicker-position="right" data-ng-model="threshold.gradient"></div></span></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
 
-                                                <td colspan="1"><span><div class="form-control" style="border: 1px solid #000; background-color: {{plotline.color}}" colorpicker colorpicker-position="right" data-ng-model="plotline.color"></div></span></td>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-lg-10">
+                                                    <h3 class="panel-title">Plotlines</h3>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button type="button" class="btn btn-xs btn-info pull-right" data-ng-click="addPlotline(report)">+ Plotline</button>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                                <td colspan="1"><button type="button" data-ng-click="removePlotline($index)" class="btn btn-xs btn-danger pull-left">x</button></td>
-                                            </tr>
-                                        </table>
+                                        <div class="panel-body">
+                                            <table class="table table-bordered table-hover table-condensed ncb-table" data-ng-show="report.plotlines.length > 0">
+                                                <tr>
+                                                    <td colspan="1"><span><strong>Name:</strong></span></td>
+                                                    <td colspan="1"><span><strong>Value:</strong></span></td>
+                                                    <td colspan="1"><span><strong>Color:</strong></span></td>
+                                                    <!-- <td colspan="1"><span><strong>Remove:</strong></span></td> -->
+                                                </tr>
+
+                                                <tr data-ng-repeat="plotline in report.plotlines track by $index">
+                                                    <td colspan="1" blur="submit" data-editable-text="plotline.label.text" buttons="no"><span>{{plotline.label.text}}</span></td>
+
+                                                    <td colspan="1" blur="submit" data-editable-text="plotline.value" buttons="no"><span>{{plotline.value}}</span></td>
+
+                                                    <td colspan="1"><span><div class="form-control" style="border: 1px solid #000; background-color: {{plotline.color}}" colorpicker colorpicker-position="right" data-ng-model="plotline.color"></div></span></td>
+
+                                                    <td colspan="1"><button type="button" data-ng-click="removePlotline(report, $index)" class="btn btn-xs btn-danger pull-left">x</button></td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                         <!-- <ul>
-                            <li data-ng-repeat="data in selectedReport.data track by $index">{{data}}</li>
+                            <li data-ng-repeat="data in report.data track by $index">{{data}}</li>
                         </ul> -->
                 </div>
             </div>

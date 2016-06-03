@@ -11,7 +11,7 @@ var simulationInput = parameters.simulationInput;
 var simulationOutput = parameters.simulationOutput;
 var inputParameters = parameters.inputParameters;
 
-ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentModelService",
+ncbApp.controller("SimulationController", ["$scope", "$rootScope", "$sce", "CurrentModelService",
     function($scope, $rootScope, $sce, currentModelService){
 
   // param types
@@ -159,47 +159,80 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
     }
   };
 
-  var cont = this;
+  var controller = this;
   $scope.$on('page-changed', function(event) {
-    cont.getTargets();
+    controller.getTargets();
 
-    if(cont.possibleInputTargets.length === 0)
-      cont.clearInputTargets();
+    if(controller.possibleInputTargets.length === 0)
+      controller.clearInputTargets();
 
-    var previousSelection = cont.selected;
-    for(var i = 0; i < cont.simOutput.length; i++) {
-      cont.selected = cont.simOutput[i];
-      cont.updateReportTargets();
+    var previousSelection = controller.selected;
+    for(var i = 0; i < controller.simOutput.length; i++) {
+      controller.selected = controller.simOutput[i];
+      controller.updateReportTargets();
     }
 
-    cont.selected = previousSelection;
+    controller.selected = previousSelection;
 
-    cont.setParams();
+    controller.setParams();
   });
 
-  $scope.$on('session-loaded', function(event) {
-    cont.getTargets();
+  this.updateParametersFromModelService = function() {
+    controller.getTargets();
 
-    var previousSelection = cont.selected;
-    for(var i = 0; i < cont.simOutput.length; i++) {
-      cont.selected = cont.simOutput[i];
-      cont.updateReportTargets();
+    var previousSelection = controller.selected;
+    for(var i = 0; i < controller.simOutput.length; i++) {
+      controller.selected = controller.simOutput[i];
+      controller.updateReportTargets();
     }
 
-    cont.simInput = currentModelService.simParams.inputs || [];
-    cont.simOutput = currentModelService.simParams.outputs || [];
-    cont.simName = currentModelService.simParams.name || null;
-    cont.FSV = currentModelService.simParams.fsv || null;
-    cont.seed = currentModelService.simParams.seed || null;
-    cont.duration = currentModelService.simParams.duration || null;
-    cont.includeDistance = currentModelService.simParams.includeDistance || "No";
-    cont.interactive = currentModelService.simParams.interactive || "No";
+    controller.simInput = currentModelService.simParams.inputs || [];
+    controller.simOutput = currentModelService.simParams.outputs || [];
+    controller.simName = currentModelService.simParams.name || null;
+    controller.FSV = currentModelService.simParams.fsv || null;
+    controller.seed = currentModelService.simParams.seed || null;
+    controller.duration = currentModelService.simParams.duration || null;
+    controller.includeDistance = currentModelService.simParams.includeDistance || "No";
+    controller.interactive = currentModelService.simParams.interactive || "No";
 
-    if(cont.simInput.length > 0)
-      cont.selected = cont.simInput[0];
+    if(controller.simInput.length > 0)
+      controller.selected = controller.simInput[0];
 
     else
-      cont.selected = null;
+      controller.selected = null;
+  };
+
+  this.updateParametersFromObject = function(obj) {
+    controller.getTargets();
+
+    var previousSelection = controller.selected;
+    for(var i = 0; i < controller.simOutput.length; i++) {
+      controller.selected = controller.simOutput[i];
+      controller.updateReportTargets();
+    }
+
+    controller.simInput = obj.simulation.inputs || [];
+    controller.simOutput = obj.simulation.outputs || [];
+    controller.simName = obj.simulation.name || null;
+    controller.FSV = obj.simulation.fsv || null;
+    controller.seed = obj.simulation.seed || null;
+    controller.duration = obj.simulation.duration || null;
+    controller.includeDistance = obj.simulation.includeDistance || "No";
+    controller.interactive = obj.simulation.interactive || "No";
+
+    if(controller.simInput.length > 0)
+      controller.selected = controller.simInput[0];
+
+    else
+      controller.selected = null;
+  };
+
+  $scope.$on('session-loaded', function(event) {
+    controller.updateParametersFromModelService();
+  });
+
+  $scope.$on('model-imported', function(event, data) {
+    controller.updateParametersFromObject(data);
   });
 
   this.clearInputTargets = function() {
@@ -265,6 +298,8 @@ ncbApp.controller("SimulationCtrl", ["$scope", "$rootScope", "$sce", "CurrentMod
         this.simOutput.splice(myIndex, 1);
       }
     }
+
+    this.selected = null;
 
     this.setParams();
   };

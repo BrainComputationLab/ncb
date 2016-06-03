@@ -871,6 +871,24 @@
                                   <td colspan="1" blur="submit" data-editable-text="channel.mInitial.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.mInitial.mean}}</span></td>
                                   <td colspan="1" blur="submit" data-editable-text="channel.mInitial.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.mInitial.stddev}}</span></td>
                                 </tr>
+                                <tr>
+                                  <td colspan="2"><span>mPower:</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="channel.mPower.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.mPower.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.mPower.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.mPower.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.mPower.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.mPower.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.mPower.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.mPower.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.mPower.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.mPower.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.mPower.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.mPower.stddev}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2"><span>Conductance:</span></td>
+                                  <td colspan="1" blur="submit" data-editable-select="channel.conductance.type" data-e-ng-options="s.value as s.text for s in types" buttons="no"><span>{{channel.conductance.type}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.conductance.value" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.conductance.value}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.conductance.minValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.conductance.minValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.conductance.maxValue" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.conductance.maxValue}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.conductance.mean" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.conductance.mean}}</span></td>
+                                  <td colspan="1" blur="submit" data-editable-text="channel.conductance.stddev" buttons="no" data-onbeforesave="mParamsCtrl.checkNumber($data)"><span>{{channel.conductance.stddev}}</span></td>
+                                </tr>
                               </table>
                               <!-- End Calcium Dependant Channel Parameters -->
 

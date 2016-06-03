@@ -182,8 +182,8 @@ function synapseAlias(synapseGroup, synAlias) {
 
 function inputParameters() {
 	this.amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.start_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.end_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.starting_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.ending_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.amplitude_scale = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.amplitude_shift = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
 	this.delay = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};

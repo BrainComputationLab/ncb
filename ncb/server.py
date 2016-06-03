@@ -5,11 +5,11 @@ from socket import *
 
 from db import MongoSessionInterface, MongoAuthenticator
 
-import json, os, time, threading, struct, random, datetime, copy
+import json, os, time, threading, struct, random, datetime, copy, re
 import pika
 
-DAEMON_CONNECTED = False
-DAEMON_HOST = '10.0.1.28'
+DAEMON_CONNECTED = True
+DAEMON_HOST = '10.0.1.32'
 
 # Create new application
 app = Flask(__name__, static_url_path='', static_folder='')
@@ -99,8 +99,12 @@ def get_report_specs():
         if username in report_data:
             obj = {
                 'success' : True,
-                'simulations' : report_data[username]
+                'simulations' : copy.deepcopy(report_data[username])
             }
+
+            for sim in report_data[username]:
+                for report in sim['reports']:
+                    del report['data'][:]
 
             print('specs', file=sys.stderr)
             print(obj, file=sys.stderr)
@@ -150,7 +154,7 @@ def transferData():
             report_data[username].append(obj)
 
         for report in reports:
-            report_obj = {'name' : report['name'], 'data' : []}
+            report_obj = {'name' : report['name'], 'data' : [], 'reportType' : report['reportType']}
             report_objects.append(report_obj)
 
             t = threading.Thread(target=createRabbitMQConnection, args=(jsonObj, username, report, report_obj))
@@ -173,7 +177,7 @@ def transferData():
 if DAEMON_CONNECTED:
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=DAEMON_HOST,
                                                                    port=5672,
-                                                                   credentials=pika.PlainCredentials('test', 'test')))
+                                                                   credentials=pika.PlainCredentials('guest', 'guest')))
 
 def createRabbitMQConnection(jsonObj, username, report, report_data):
     channel = connection.channel()
@@ -187,6 +191,8 @@ def createRabbitMQConnection(jsonObj, username, report, report_data):
     print('routing key: ' + routing_key, file=sys.stderr)
     channel.queue_bind(queue='data', exchange='datastream', routing_key=routing_key)
 
+    neuron_fire = 'Fire' in report_data['reportType']
+
     def rabbit_callback(ch, method, properties, body):
         #while True:
             #msg = queue.get()
@@ -195,7 +201,17 @@ def createRabbitMQConnection(jsonObj, username, report, report_data):
             ch.close()
 
         else:
-            report_data['data'].append(body)
+            print('Data: ' + body, file=sys.stderr)
+            if neuron_fire:
+                count = 0
+                for val in body:
+                    if val == '1':
+                        count += 1
+
+                report_data['data'].append(count)
+
+            else:
+                report_data['data'].append(float(body))
 
     channel.basic_consume(rabbit_callback, queue='data', no_ack=True, consumer_tag='testtag')
 
@@ -250,6 +266,7 @@ def importFile():
 
             else:
                 print('JSON Import!', file=sys.stderr)
+                webFile.save(importFilePath)
                 jsonObj = loadJSONFile(importFilePath)
 
                 return jsonify(jsonObj)
@@ -558,15 +575,18 @@ def get_models():
     if request.method == 'GET':
         json_request = {'request' : 'getModels'}
 
-        #daemon_response = send_request_to_daemon(json_request)
-        daemon_response = {
-            'response' : 'success',
-            'models' : {
-                'personal' : [],
-                'lab' : [],
-                'global' : []
+        if DAEMON_CONNECTED:
+            daemon_response = send_request_to_daemon(json_request)
+
+        else:
+            daemon_response = {
+                'response' : 'success',
+                'models' : {
+                    'personal' : [],
+                    'lab' : [],
+                    'global' : []
+                }
             }
-        }
 
         if is_response_successful(daemon_response):
             daemon_response['success'] = True
@@ -623,6 +643,53 @@ def export_script():
         return send_from_directory(app.config['EXPORT_FOLDER'], exportFile, as_attachment = True)
 
     return jsonify({'success' : False, 'reason' : 'Non GET or POST'})
+
+@app.route('/upload-report', methods=['POST'])
+def upload_report():
+    if request.method == 'POST':
+        webFile = request.files['report-upload-file'];
+        # if file exists and is allowed extension
+        if webFile:
+            webFile.save(importFilePath)
+
+            with open(importFilePath) as fin:
+                reportData = fin.read().splitlines()
+
+                #get report type
+                firstLine = reportData[0]
+
+                neuron_fire = is_neuron_fire(firstLine)
+
+                reportType = None
+                sendData = None
+
+                if neuron_fire:
+                    reportType = 'Fire'
+                    sendData = []
+
+                    for line in reportData:
+                        count = 0
+                        for val in line:
+                            if val == '1':
+                                count += 1
+
+                        sendData.append(count)
+
+                else:
+                    reportType = 'Unknown'
+                    sendData = [[] for _ in firstLine.split(' ')]
+
+                    for line in reportData:
+                        index = 0
+                        for val in line.split(' '):
+                            sendData[index].append(float(val))
+                            index += 1
+
+                print(sendData, file=sys.stderr)
+
+                return jsonify({'success' : True, 'reportData' : sendData, 'type' : reportType})
+
+    return jsonify({'success' : False, 'reason' : 'Method not a POST'})
 
 def worker(num):
     if not num in reports:
@@ -688,6 +755,10 @@ def is_response_successful(daemon_response):
 def delete_session():
     if 'model' in session:
         del session['model']
+
+def is_neuron_fire(line):
+    regex = re.compile('[01]+')
+    return regex.match(line)
 
 # If we're running this script directly (eg. 'python server.py')
 # run the Flask application to start accepting connections

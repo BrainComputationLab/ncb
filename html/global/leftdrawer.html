@@ -51,7 +51,7 @@
             </div>
 
             <span class="label label-default" style="display:block;" data-ng-show="(drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)) && dbFiltered.length > 0">Database</span>
-            <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)" data-ng-repeat="model in dbFiltered = (drawerCtrl.lab | filter : searchText)">
+            <div class="list-group ncb-no-margins" data-ng-show="drawerCtrl.isSelected(0) || drawerCtrl.isSelected(2)" data-ng-repeat="model in dbFiltered = (databaseModels | filter : searchText)">
 
                 <div data-ng-style="drawerCtrl.styleElement(model)" class="list-group-item ncb-cell-list-item" data-ng-dblclick="drawerCtrl.addToModel(model)">
                     <div class="row">

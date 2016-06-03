@@ -1,0 +1,22 @@
+<!-- NEW CELL GROUP MODAL BEGIN -->
+<!-- Modal -->
+<div class="modal fade" id="reportUploadModal" tabindex="-1" role="dialog" data-ng-controller="ReportUploadModalController">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Upload Report</h4>
+            </div>
+            <div class="modal-body">
+                <form id="reportUploadForm" class="form-horizontal" role="form" method="POST" enctype="multipart/form-data">
+                    <input type="file" id="reportUploadFile" name="reportUploadFile">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clearInput()">Cancel</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" data-ng-click="uploadReport()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- NEW CELL GROUP MODAL END -->

@@ -32,9 +32,7 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
   this.tab = 0;
 
   $scope.localModels = myModels;
-  $scope.personal = [];
-  $scope.lab = [];
-  $scope.global = [];
+  $scope.databaseModels = [];
 
   this.colorPickerPopover = {
       "title": "Title",
@@ -77,12 +75,22 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
     $http.get('/get-models')
       .success(function(data, status, headers, config) {
         if(data.success) {
-          $scope.personal = data.models.personal;
-          $scope.lab = data.models.lab;
-          $scope.global = data.models.global;
+          for(var i = 0; i < data.models.personal.length; i++) {
+            $scope.databaseModels.push(data.models.personal[i].model);
+          }
+
+          for(var i = 0; i < data.models.lab.length; i++) {
+            $scope.databaseModels.push(data.models.lab[i].model);
+          }
+
+          for(var i = 0; i < data.models.global.length; i++) {
+            $scope.databaseModels.push(data.models.global[i].model);
+          }
+          // Array.prototype.push.apply($scope.localModels, data.models.lab);
+          // Array.prototype.push.apply($scope.localModels, data.models.global);
 
           console.log("Get Models Successful");
-          console.log(data);
+          console.log($scope.databaseModels);
         }
 
         else {
@@ -108,7 +116,7 @@ ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'C
     }
     else if (listType == "database"){
       // add model to database list
-      $scope.dbModels.push(angular.copy(m));
+      $scope.databaseModels.push(angular.copy(m));
     }
 
   });
@@ -887,7 +895,10 @@ ncbApp.controller("ImportModelController", ['$rootScope', '$scope', '$http', 'Si
 
       // send a broadcast with the import data to add to model list
       $rootScope.$broadcast('AddModelToList', data, type);
+      $rootScope.$broadcast('model-imported', data);
 
+      console.log("IMPORT FROM FILE");
+      console.log(data);
 
     }).
     error(function(data, status, headers, config) {

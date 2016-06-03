@@ -7,6 +7,12 @@ var Highcharts = require('highcharts/highstock');
 var ncbApp = app.ncbApp;
 require('highcharts/modules/exporting')(Highcharts);
 
+Highcharts.setOptions({
+    global : {
+        useUTC : false
+    }
+});
+
 function Socket(id) {
     this.id = id;
 }
@@ -189,20 +195,24 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
         }
     };
 
-    $scope.$watch('selectedReport.plotlines', $scope.updatePlotlines, true);
+    $scope.$watch(function() {
+        return $scope.reports.map(function(report) {
+            return report.plotlines;
+        })
+    }, $scope.updatePlotlines, true);
 
-    $interval(function() {
-        //if($scope.selectedReport != null) {
-        for(var i = 0; i < $scope.reports.length; i++) {
-            var series = $scope.reports[i].chart.series[0];
-            for(var j = 0; j < 1; j++) {
-                series.addPoint((Math.random() * 141) - 60, false);
-            }
+    // $interval(function() {
+    //     //if($scope.selectedReport != null) {
+    //     for(var i = 0; i < $scope.reports.length; i++) {
+    //         var series = $scope.reports[i].chart.series[0];
+    //         for(var j = 0; j < 10; j++) {
+    //             series.addPoint((Math.random() * 141) - 60, false);
+    //         }
 
-            $scope.reports[i].chart.redraw();
-        }
-        //}
-    }, 1000, 0, false);
+    //         $scope.reports[i].chart.redraw();
+    //     }
+    //     //}
+    // }, 5000, 0, false);
 
 
 
@@ -218,19 +228,6 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
 
     var callback = function() {
 
-        $scope.intervals.push($interval(function() {
-            var request = $http.get('/stream-' + $scope.selectedSim.name + '-' + $scope.selectedReport.name);
-
-            request.success(function(data, status, headers, config) {
-                var arr = $scope.selectedReport.data;
-                arr.push.apply(arr, data.data);
-            });
-
-            request.error(function(data, status, headers, config) {
-                console.log("Error!!!!");
-                $interval.cancel($scope.intervals[simid]);
-            });
-        }, 1000, 0, false));
     };
 
     $scope.initialized = false;
@@ -238,67 +235,134 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
     $scope.start = function() {
         console.log("Reports Started");
 
-        $scope.simulations = [{
-            name : 'Sim 1',
-            reports : [
-                {
-                    data : [],
+        // $scope.simulations = [{
+        //     name : 'Sim 1',
+        //     reports : [
+        //         {
+        //             data : [[]],
+        //             chart : null,
+        //             name : 'Neuron Voltage Report',
+        //             minGradient : 'rgb(255,0,0)',
+        //             maxGradient : 'rgb(0,0,255)',
+        //             thresholds : [{
+        //                 pos : 0.5,
+        //                 gradient : 'rgb(0,255,0)'
+        //             }],
+        //             plotlines : [],
+        //             displayed : true,
+        //             reportType : 'Voltage'
+        //         },
+        //         {
+        //             data : [[]],
+        //             chart : null,
+        //             name : 'Synaptic Current Report',
+        //             minGradient : 'rgb(0,0,255)',
+        //             maxGradient : 'rgb(0,255,0)',
+        //             thresholds : [],
+        //             plotlines : [],
+        //             displayed : true,
+        //             reportType : 'Current'
+        //         }
+        //     ]
+        // }];
+
+        $http.get('/get-report-specs')
+            .success(function(data, status, headers, config) {
+                console.log('get-report-specs');
+
+                if(data.success) {
+                    $scope.simulations = data.simulations;
+                }
+
+                console.log("reports");
+                console.log($scope.simulations);
+
+                if($scope.simulations.length > 0) {
+                    $scope.setActiveSim(0, false);
+
+                    // for(var i = 0; i < $scope.reports.length; i++) {
+                    //     var reort = $scope.reports[i];
+                    //     $scope.intervals.push($interval(function() {
+                    //         var request = $http.get('/stream-' + $scope.simulations[0].name + '-' + report.name);
+
+                    //         request.success(function(data, status, headers, config) {
+                    //             if(data.success) {
+                    //                 for(var j = 0; j < data.data.length; j++) {
+                    //                     report.chart.series[j].addPoint()
+                    //                 }
+                    //             }
+                    //             else {
+                    //                 console.log("Stream unsuccessful: " + data.reason);
+                    //                 $interval.cancel($scope.intervals[i]);
+                    //                 $scope.intervals.splice(i, 1);
+                    //             }
+                    //         });
+
+                    //         request.error(function(data, status, headers, config) {
+                    //             console.log("Stream Error");
+                    //             $interval.cancel($scope.intervals[i]);
+                    //         });
+                    //     }, 250, 0, false));
+                    // }
+
+                    $scope.initialized = true;
+                }
+          }).
+          error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            console.error(status);
+          });
+    };
+
+    $scope.startFromUpload = function(reportDataObj) {
+        console.log("UPLOAD");
+        console.log(reportDataObj);
+
+        if($scope.simulations.length == 0) {
+            $scope.simulations = [{
+                name : reportDataObj.filename + ' Simulation',
+                reports : [{
+                    data : reportDataObj.data,
                     chart : null,
-                    name : 'Synapse Report',
+                    name : reportDataObj.filename,
                     minGradient : 'rgb(255,0,0)',
                     maxGradient : 'rgb(0,0,255)',
-                    thresholds : [{
-                        pos : 0.5,
-                        gradient : 'rgb(0,255,0)'
-                    }],
-                    plotlines : [],
-                    displayed : true
-                },
-                {
-                    data : [],
-                    chart : null,
-                    name : 'Current Report',
-                    minGradient : 'rgb(0,0,255)',
-                    maxGradient : 'rgb(0,255,0)',
                     thresholds : [],
                     plotlines : [],
-                    displayed : true
-                }
-            ]
-        }];
+                    displayed : true,
+                    reportType : reportDataObj.type
+                }]
+            }];
+        }
+        else {
+            $scope.simulations[0].reports.push({
+                data : reportDataObj.data,
+                chart : null,
+                name : reportDataObj.filename,
+                minGradient : 'rgb(255,0,0)',
+                maxGradient : 'rgb(0,0,255)',
+                thresholds : [],
+                plotlines : [],
+                displayed : true,
+                reportType : reportDataObj.type
+            });
+        }
 
-        // $http.get('/get-report-specs')
-        //     .success(function(data, status, headers, config) {
-        //         console.log('get-report-specs');
-
-        //         if(data.success) {
-        //             $scope.simulations = data.simulations;
-        //         }
-
-        //         console.log("reports");
-        //         console.log($scope.simulations);
-
-        //         if($scope.simulations.length > 0) {
-        //             $scope.setActiveSim(0);
-        //         }
-        //   }).
-        //   error(function(data, status, headers, config) {
-        //     // called asynchronously if an error occurs
-        //     // or server returns response with an error status.
-        //     console.error(status);
-        //   });
-
-        // callback();
-        $scope.setActiveSim(0);
+        $scope.setActiveSim(0, true);
         $scope.initialized = true;
     };
+
+    $scope.$on('start-report-upload', function(event, reportObj) {
+        $scope.startFromUpload(reportObj);
+    });
 
     $scope.isActiveSim = function(index) {
         return index === $scope.activeSim;
     };
 
-    $scope.setActiveSim = function(index) {
-        if(index !== $scope.activeSim) {
+    $scope.setActiveSim = function(index, upload) {
+        if(index < $scope.simulations.length) {
             $scope.activeSim = index;
             $scope.activeReport = 0;
 
@@ -309,9 +373,50 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                 $scope.selectedReport = $scope.reports[$scope.activeReport];
             }
 
+            // found on stackoverflow: http://stackoverflow.com/questions/894860/set-a-default-parameter-value-for-a-javascript-function
+            var defaultFor = function(arg, val) {
+                return (typeof arg !== 'undefined') ? arg : val;
+            };
+
+            //             data : [[]],
+            //             chart : null,
+            //             name : 'Neuron Voltage Report',
+            //             minGradient : 'rgb(255,0,0)',
+            //             maxGradient : 'rgb(0,0,255)',
+            //             thresholds : [{
+            //                 pos : 0.5,
+            //                 gradient : 'rgb(0,255,0)'
+            //             }],
+            //             plotlines : [],
+            //             displayed : true,
+            //             reportType : 'Voltage'
+
+            upload = defaultFor(upload, false);
+
             $timeout(function() {
                 for(var i = 0; i < $scope.reports.length; i++) {
                     var report = $scope.reports[i];
+
+                    console.log(report.chart);
+
+                    if(report.chart != null) {
+                        console.log("SKIPPING");
+                        continue;
+                    }
+
+                    // set default values if not present
+                    report.minGradient = defaultFor(report.minGradient, 'rgb(255,0,0)');
+                    report.maxGradient = defaultFor(report.maxGradient, 'rgb(0,0,255)');
+                    report.thresholds  = defaultFor(report.thresholds, []);
+                    report.plotlines   = defaultFor(report.plotlines, []);
+                    report.displayed   = defaultFor(report.displayed, true);
+
+                    console.log("REPORT BUILDER");
+                    console.log(report);
+
+                    if(!upload) {
+                        report.data = [report.data];
+                    }
 
                     var gradients = [[0, report.minGradient]];
 
@@ -325,12 +430,35 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
 
                     gradients.sort(thresholdSort);
 
+                    // for(var z = 0; z < report.data.length; z++) {
+                    //     report.data[z] = Math.floor(report.data[z]);
+                    // }
+                    var axisTitle = 'Data';
+                    var neuron_fire = false;
+                    if(report.reportType) {
+                        if(report.reportType.includes('Voltage')) {
+                            axisTitle = 'Voltage (mV)';
+                        }
+
+                        else if(report.reportType.includes('Current')) {
+                            axisTitle = 'Current (mA)';
+                        }
+
+                        else if(report.reportType.includes('Fire')){
+                            axisTitle = 'Cell Count';
+                            neuron_fire = true;
+                        }
+                    }
+
                     report.chart = new Highcharts.StockChart({
                         chart : {
                             renderTo : 'reportchart-' + report.name,
-                            type : 'line'
+                            type : neuron_fire ? 'scatter' : 'line'
                         },
 
+                        exporting : {
+                            filename : report.name
+                        },
                         // title: {
                         //     text : report.name
                         // },
@@ -351,13 +479,12 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
 
                         yAxis : {
                             title : {
-                                text : 'Synapse Voltage'
+                                text : axisTitle
                             },
 
                             offset : 50,
 
-                            min: -80,
-                            max: 65
+                            allowDecimals : !neuron_fire
                         },
 
                         rangeSelector : {
@@ -378,31 +505,82 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
                             // trackBorderWidth: 1,
                             // trackBorderRadius: 8,
                             // trackBorderColor: '#CCC'
-                        },
+                        }
+                    });
 
-                        series : [
-                            {
+                    if(neuron_fire) {
+                        // var fireData = [];
+                        // for(var j = 0; j < report.data.length; j++) {
+                        //     fireData.push({
+
+                        //     });
+                        // }
+                        report.chart.addSeries({
+                            color : 'rgb(0,0,0)',
+                            name : 'Cells Fired',
+
+                            marker : {
+                                enabled : true,
+                                radius : 3
+                            },
+
+                            tooltip : {
+                                headerFormat : '<span style="font-size: 10px">Time: {point.x}ms</span><br/>',
+                                pointFormat: '<span style="color:{point.color}">\u25CF</span> Cells Fired: <b>{point.y}</b><br/>'
+                            },
+
+                            data : report.data//[30, 40, 50, 40, 30]
+                            //pointStart : new Date(),
+                            //pointInterval : 1
+                        }, false);
+                    }
+
+                    else {
+                        for(var j = 0; j < report.data.length; j++) {
+
+                            // for(var k = 0; k < report.data[j].length; k++) {
+                            //     report.data[j][k] = parseFloat(report.data[j][k]);
+                            // }
+                            report.chart.addSeries({
                                 color : {
                                     linearGradient: {x1: 0, y1: 1, x2: 0, y2: 0},
                                     stops: gradients
                                 },
-                                name : 'Voltage',
+                                name : 'Voltage' + (j + 1),
 
-                                marker : {
-                                    enabled : true,
-                                    radius : 3
+                                // marker : {
+                                //     enabled : true,
+                                //     radius : 3
+                                // },
+                                tooltip : {
+                                    headerFormat : '<span style="font-size: 10px">Time: {point.x}ms</span><br/>'
                                 },
 
-                                data : report.data//[30, 40, 50, 40, 30]
+                                data : report.data[j]//[30, 40, 50, 40, 30]
                                 //pointStart : new Date(),
                                 //pointInterval : 1
-                            }
-                        ]
-                    });
+                            }, false);
+
+                            console.log("CALLED");
+                        }
+                    }
+
+                    //if(upload) {
+                        report.chart.redraw();
+                    //}
                 }
+
+                console.log("SERIES");
+                console.log(report.chart.series);
             });
 
-
+            if(!upload) {
+                $timeout(function() {
+                    for(var j = 0; j < $scope.reports.length; j++) {
+                        $scope.reports[j].chart.reflow();
+                    }
+                }, 100);
+            }
         }
     };
 
@@ -486,6 +664,46 @@ ncbApp.controller('ReportsController', ['$scope', '$http', '$interval', '$timeou
     //     }
     // };
 
+}]);
+
+ncbApp.controller('ReportUploadModalController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http) {
+
+    $scope.uploadReport = function() {
+        var fileInput = document.getElementById('reportUploadFile').files[0];
+        var file = new FormData();
+        file.append('report-upload-file', fileInput);
+
+        $http({
+            method: 'POST',
+            url: '/upload-report',
+            transformRequest: false,
+            headers: {'Content-Type': undefined},
+            data: file
+        }).
+        success(function(data, status, headers, config) {
+            if(data.success) {
+                var obj = {
+                    type : data.type,
+                    data : data.reportData,
+                    filename : fileInput.name
+                };
+
+                $rootScope.$broadcast('start-report-upload', obj);
+            }
+        }).
+        error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            console.error(status);
+        });
+
+        $scope.clearInput();
+    };
+
+    $scope.clearInput = function() {
+        var form = document.getElementById('reportUploadForm');
+        form.reset();
+    };
 }]);
 
 // found on stackoverflow.com http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript

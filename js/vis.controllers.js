@@ -372,6 +372,10 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
             $scope.objects.forEach(function(obj) {
                 obj.visible = $scope.renderNeurons;
             });
+
+            $scope.boundingBoxes.forEach(function(bb) {
+                bb.visible = $scope.renderNeurons;
+            });
         }
 
         else if(type === 'conn') {
@@ -434,7 +438,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
         canvas.addEventListener('mouseup', handleMouseUp);
         canvas.addEventListener('mousemove', handleMouseMove);
 
-        $scope.loadModel();
+        //$scope.loadModel();
 
         $scope.render();
     };
@@ -446,10 +450,15 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
         $scope.columns = [];
         $scope.boundingBoxes = [];
 
+        for(var i = $scope.scene.children.length - 1; i >= 0; i--) {
+            $scope.scene.remove($scope.scene.children[i]);
+        }
+
         var conn_map = {};
 
-        $scope.model = exampleModel;//generateRandomModel(15, 0.4, 3, 30);
-        var cells = $scope.model.model.cellGroups.cellGroups;
+        var model = currentModelService.getCurrentModel();
+        $scope.model = generateRandomModel(50, 0.2, 0, 45);//generatePositionsFromModel(model, 10); //exampleModel;
+        var cells = $scope.model.cellGroups.cellGroups;
         console.log(cells);
         for(var i = 0; i < cells.length; i++) {
             var darker_color = (0x00ff00 & 0xfefefe) >> 1;
@@ -476,7 +485,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
             $scope.objects.push(cube);
         }
 
-        var connections = $scope.model.model.synapses;
+        var connections = $scope.model.synapses;
         for(var i = 0; i < connections.length; i++) {
             var conn = connections[i];
             var pre = conn_map[conn.pre];
@@ -498,7 +507,7 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
             post.connections.push(cylinder);
         }
 
-        var columns = $scope.model.model.columns;
+        var columns = $scope.model.columns;
         for(var i = 0; i < columns.length; i++) {
             var col = columns[i];
 
@@ -573,22 +582,20 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
 
     function generateRandomModel(numCells, connProbability, numColumns, spread) {
         var obj = {
-            model : {
-                cellGroups : {
-                    cellGroups : []
-                },
+            cellGroups : {
+                cellGroups : []
+            },
 
-                synapses : [],
+            synapses : [],
 
-                columns : []
-            }
+            columns : []
+
         };
 
-        var groups = obj.model.cellGroups.cellGroups;
-        var synapses = obj.model.synapses;
-        var columns = obj.model.columns;
+        var groups = obj.cellGroups.cellGroups;
+        var synapses = obj.synapses;
+        var columns = obj.columns;
         spread = spread || 50;
-        numColumns = numColumns || 3;
 
         var adjustedRand = function() {
             return ((Math.random() * 2.0) - 1.0) * spread;
@@ -621,6 +628,16 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
             }
         }
 
+        if(numColumns == undefined || numColumns == 0) {
+            columns.push({
+                name : 'Column1',
+                position : { x : 0, y : 0, z : 0 },
+                width : spread * 2,
+                height : spread * 2,
+                depth : spread * 2
+            });
+        }
+
         for(var i = 0; i < numColumns; i++) {
             var xPos = adjustedRand();
             var yPos = adjustedRand();
@@ -636,6 +653,54 @@ ncbApp.controller('VisualizationController', ['$scope', '$http', 'CurrentModelSe
         }
 
         return obj;
+    }
+
+    function generatePositionsFromModel(model, spread) {
+        var groups = model.cellGroups.cellGroups;
+        var synapses = model.synapses;
+        var columns = model.columns;
+        spread = spread || 50;
+
+        var adjustedRand = function() {
+            return ((Math.random() * 2.0) - 1.0) * spread;
+        };
+
+        var randRange = function(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        };
+
+        for(var i = 0; i < groups.length; i++) {
+            var cell = groups[i];
+            if(cell.column == 'None') {
+                var xPos = adjustedRand();
+                var yPos = adjustedRand();
+                var zPos = adjustedRand();
+
+                cell.position = {x : xPos, y : yPos, z : zPos};
+            }
+            else {
+                var col = null;
+                console.log(columns);
+                for(var j = 0; j < columns.length; j++) {
+                    if(columns[j].name === cell.column) {
+                        col = columns[j];
+                        break;
+                    }
+                }
+
+                if(col != null) {
+                    var pos = col.position;
+                    var xPos = randRange(pos.x - (col.width / 2) + 0.5, pos.x + (col.width / 2) - 0.5);
+                    var yPos = randRange(pos.y - (col.height / 2) + 0.5, pos.y + (col.height / 2) - 0.5);
+                    var zPos = randRange(pos.z - (col.depth / 2) + 0.5, pos.z + (col.depth / 2) - 0.5);
+
+                    cell.position = {x: xPos, y : yPos, z : zPos};
+                }
+
+            }
+        }
+
+        return model;
     }
 
 }]);
