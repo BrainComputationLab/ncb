@@ -9,38 +9,62 @@ function model() {
     this.columns = [];
 }
 
+// from stackoverflow 
+// http://stackoverflow.com/questions/894860/set-a-default-parameter-value-for-a-javascript-function
+function defaultFor(arg, val) {
+	return typeof arg !== 'undefined' ? arg : val;
+}
+
+var InputType = Object.freeze({
+	TEXT : "string",
+	NUMBER : "number",
+	SELECT : "select",
+	NONE : "none"
+});
+
+function ParameterValue(t, v, min, max, m, std, it) {
+	this.type = defaultFor(t, "exact");
+	this.value = defaultFor(v, 0.0);
+	this.minValue = defaultFor(min, 0.0);
+	this.maxValue = defaultFor(max, 0.0);
+	this.mean = defaultFor(m, 0.0);
+	this.stddev = defaultFor(std, 0.0);
+
+	//this.inputType = defaultFor(it, InputType.TEXT);
+}
+
 function izhikevichParam() {
 	this.type = "Izhikevich";
-	this.a = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.b = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.c = {type: "exact", value: -65.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.d = {type: "exact", value: 8.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.u = {type: "uniform", value: 0.0, minValue: -15.0, maxValue: -11.0, mean: 0.0, stddev: 0.0};
-	this.v = {type: "uniform", value: 0.0, minValue: -75.0, maxValue: -55.0, mean: 0.0, stddev: 0.0};
-	this.threshold = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.a = new ParameterValue();
+	this.b = new ParameterValue();
+	this.c = new ParameterValue();
+	this.d = new ParameterValue();
+	this.u = new ParameterValue();
+	this.v = new ParameterValue();
+	this.threshold = new ParameterValue();
 }
 
 function ncsParam() {
 	this.type = "NCS";
-	this.threshold = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.restingPotential = {type: "exact", value: 0.2, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.calcium = {type: "exact", value: -65.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.calciumSpikeIncrement = {type: "exact", value: 8.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.tauCalcium = {type: "uniform", value: 0.0, minValue: -15.0, maxValue: -11.0, mean: 0.0, stddev: 0.0};
-	this.leakReversalPotential = {type: "uniform", value: 0.0, minValue: -75.0, maxValue: -55.0, mean: 0.0, stddev: 0.0};
-	this.tauMembrane = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.rMembrane = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-    this.leakConductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-    this.capacitance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.threshold = new ParameterValue();
+	this.restingPotential = new ParameterValue();
+	this.calcium = new ParameterValue();
+	this.calciumSpikeIncrement = new ParameterValue();
+	this.tauCalcium = new ParameterValue();
+	this.leakReversalPotential = new ParameterValue();
+	this.tauMembrane = new ParameterValue();
+	this.rMembrane = new ParameterValue();
+    this.leakConductance = new ParameterValue();
+    this.capacitance = new ParameterValue();
 	this.spikeShape = [0.0];		      //list of doubles
 	this.channel = [];				  														  //list of parameters for channel
 }
 
 function hodgkinHuxleyParam() {
 	this.type = "HodgkinHuxley";
-	this.threshold = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.restingPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.capacitance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.threshold = new ParameterValue();
+	this.restingPotential = new ParameterValue();
+	this.capacitance = new ParameterValue();
 	this.channel = [];																//list of parameters for channel
 }
 
@@ -48,28 +72,28 @@ function voltageGatedIonChannel() {
 	this.className = "voltageGatedIonChannel";
 	this.name="Voltage Gated Ion Channel";
 	this.description = "Description";
-	this.vHalf = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.r = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.activationSlope = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.deactivationSlope = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.equilibriumSlope = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.conductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.mInitial = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.vHalf = new ParameterValue();
+	this.r = new ParameterValue();
+	this.activationSlope = new ParameterValue();
+	this.deactivationSlope = new ParameterValue();
+	this.equilibriumSlope = new ParameterValue();
+	this.conductance = new ParameterValue();
+	this.reversalPotential = new ParameterValue();
+	this.mInitial = new ParameterValue();
 }
 
 function calciumDependantChannel() {
 	this.className = "calciumDependantChannel";
 	this.name="Calcium Dependant Channel";
 	this.description = "Description";
-	this.mInitial = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.backwardsRate = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.forwardScale = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.forwardExponent = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.tauScale = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-    this.mPower = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-    this.conductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.mInitial = new ParameterValue();
+	this.reversalPotential = new ParameterValue();
+	this.backwardsRate = new ParameterValue();
+	this.forwardScale = new ParameterValue();
+	this.forwardExponent = new ParameterValue();
+	this.tauScale = new ParameterValue();
+    this.mPower = new ParameterValue();
+    this.conductance = new ParameterValue();
 }
 
 function voltageGatedChannel(particle) {
@@ -77,34 +101,34 @@ function voltageGatedChannel(particle) {
 	this.name="Voltage Gated Channel";
 	this.description = "Description";
 	this.particles = [particle];															//list of parameters for particles
-	this.conductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.conductance = new ParameterValue();
+	this.reversalPotential = new ParameterValue();
 }
 
 function voltageGatedParticle(alpha, beta) {
 	this.className = "voltageGatedParticle";
 	this.alpha = alpha;															//list of constants for alpha particle
 	this.beta = beta;															//list of constants for beta particle
-	this.power = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.xInitial = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-    this.mPower = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.power = new ParameterValue();
+	this.xInitial = new ParameterValue();
+    this.mPower = new ParameterValue();
 }
 
 function particleVariableConstants() {
-	this.a = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.b = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.c = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.d = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.f = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.h = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.a = new ParameterValue();
+	this.b = new ParameterValue();
+	this.c = new ParameterValue();
+	this.d = new ParameterValue();
+	this.f = new ParameterValue();
+	this.h = new ParameterValue();
 }
 
 var flatSynapseCount = 0;
 function flatSynapse() {
 	this.name = "flatSynapse-" + flatSynapseCount;
 	flatSynapseCount += 1;
-	this.delay = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.current = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.delay = new ParameterValue();
+	this.current = new ParameterValue();
 	this.type = 'Flat'
 }
 
@@ -112,21 +136,21 @@ var ncsSynapseCount = 0
 function ncsSynapse() {
 	this.name = "ncsSynapse-" + ncsSynapseCount;
 	ncsSynapseCount += 1;
-	this.utilization = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.redistribution = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.lastPrefireTime = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.lastPostfireTime = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.tauFacilitation = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.tauDepression = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.tauLtp = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.tauLtd = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.aLtpMinimum = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.aLtdMinimum = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.maxConductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.reversalPotential = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.tauPostSynapticConductance = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.psgWaveformDuration = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.delay = {type: "exact", value: 30.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.utilization = new ParameterValue();
+	this.redistribution = new ParameterValue();
+	this.lastPrefireTime = new ParameterValue();
+	this.lastPostfireTime = new ParameterValue();
+	this.tauFacilitation = new ParameterValue();
+	this.tauDepression = new ParameterValue();
+	this.tauLtp = new ParameterValue();
+	this.tauLtd = new ParameterValue();
+	this.aLtpMinimum = new ParameterValue();
+	this.aLtdMinimum = new ParameterValue();
+	this.maxConductance = new ParameterValue();
+	this.reversalPotential = new ParameterValue();
+	this.tauPostSynapticConductance = new ParameterValue();
+	this.psgWaveformDuration = new ParameterValue();
+	this.delay = new ParameterValue();
 	this.type = 'NCS'
 }
 
@@ -181,17 +205,17 @@ function synapseAlias(synapseGroup, synAlias) {
 }
 
 function inputParameters() {
-	this.amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.starting_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.ending_amplitude = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.amplitude_scale = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.amplitude_shift = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.delay = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.time_scale = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.current = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.phase = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.width = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
-	this.frequency = {type: "exact", value: 0.0, minValue: 0.0, maxValue: 0.0, mean: 0.0, stddev: 0.0};
+	this.amplitude = new ParameterValue();
+	this.starting_amplitude = new ParameterValue();
+	this.ending_amplitude = new ParameterValue();
+	this.amplitude_scale = new ParameterValue();
+	this.amplitude_shift = new ParameterValue();
+	this.delay = new ParameterValue();
+	this.time_scale = new ParameterValue();
+	this.current = new ParameterValue();
+	this.phase = new ParameterValue();
+	this.width = new ParameterValue();
+	this.frequency = new ParameterValue();
 	this.probability = 0.5;
 	this.startTime = 0;
 	this.endTime = 0;
@@ -228,11 +252,11 @@ function report() {
 
 var columnCount = 1;
 function column(name, pos, w, h, d) {
-    this.name = name || 'Column ' + columnCount;
-    this.position = pos || { x : 0, y : 0, z : 0};
-    this.width = w || 10;
-    this.height = h || 10;
-    this.depth = d || 10;
+    this.name = defaultFor(name, 'Column ' + columnCount);
+    this.position = defaultFor(pos, { x : 0, y : 0, z : 0});
+    this.width = defaultFor(w, 10);
+    this.height = defaultFor(h, 10);
+    this.depth = defaultFor(d, 10);
 
     this.classification = 'column';
 
@@ -250,6 +274,7 @@ module.exports = {
     model: model,
     ncsParam: ncsParam,
     ncsSynapse: ncsSynapse,
+    ParameterValue: ParameterValue,
     particleVariableConstants: particleVariableConstants,
     inputParameters: inputParameters,
     simulationInput: simulationInput,

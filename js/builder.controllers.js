@@ -22,6 +22,19 @@ var voltageGatedChannel = parameters.voltageGatedChannel;
 var voltageGatedIonChannel = parameters.voltageGatedIonChannel;
 var voltageGatedParticle = parameters.voltageGatedParticle;
 var column = parameters.column;
+var ParameterValue = parameters.ParameterValue;
+
+// from stackoverflow
+// http://stackoverflow.com/questions/1026069/capitalize-the-first-letter-of-string-in-javascript
+String.prototype.capitalizeFirstLetter = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+// from stackoverflow
+// http://stackoverflow.com/questions/10064683/split-by-caps-in-javascript
+String.prototype.splitOnCapitalLetters = function() {
+  return this.split(/(?=[A-Z])/).join(' ');
+};
 
 // controller for the model import/export drawer
 ncbApp.controller("DrawerController", ['$scope', '$http', 'SidePanelService', 'ColorService', 'CurrentModelService',
@@ -647,6 +660,30 @@ ncbApp.controller("ModelParametersController", ['$rootScope', '$scope', 'Current
     {value: "Flat", text: "Flat"},
     {value: "NCS", text: "NCS"}
   ];
+
+  $scope.isInputTypeText = function(key) {
+    return key == 'name' || key == 'description';
+  };
+
+  $scope.isInputTypeOption = function(key) {
+    return key == 'column' || key == 'type';
+  };
+
+  $scope.isInputTypeNumber = function(key) {
+    return key == 'num' ||
+           key == 'value' ||
+           key == 'minValue' ||
+           key == 'maxValue' ||
+           key == 'mean' ||
+           key == 'stddev';
+  };
+
+  $scope.getKeysForObject = function(obj) {
+    if(obj) {
+      return Object.keys(obj);
+    }
+    return [];
+  };
 
   $scope.possibleColumns = [new column('None')];
 

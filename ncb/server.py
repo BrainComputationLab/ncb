@@ -8,7 +8,7 @@ from db import MongoSessionInterface, MongoAuthenticator
 import json, os, time, threading, struct, random, datetime, copy, re
 import pika
 
-DAEMON_CONNECTED = True
+DAEMON_CONNECTED = False
 DAEMON_HOST = '10.0.1.32'
 
 # Create new application
@@ -300,7 +300,7 @@ def serve_static_resource(resource):
 
 reports = []
 #fileIn = open('reg_voltage_report.txt')
-logfile = open('log.txt', 'w')
+#logfile = open('log.txt', 'w')
 
 @app.route('/report-<slug>')
 def transfer_report(slug):
@@ -308,7 +308,7 @@ def transfer_report(slug):
     if request.environ.get('wsgi.websocket'):
         ws = request.environ['wsgi.websocket']
         reports.append({"number": int(slug), "socket": ws})
-        logfile.write(str(dir(ws)) + '\n')
+        #logfile.write(str(dir(ws)) + '\n')
         message = ws.receive()
         oldTime = time.time()
 
@@ -390,7 +390,7 @@ def transfer_report(slug):
 
         dataSocket.close()
         fileIn.seek(0)
-        logfile.flush()
+        #logfile.flush()
         ws.close()
         del reports[:]
 

@@ -2,7 +2,7 @@ var app = require('./app');
 var ncbApp = app.ncbApp;
 var THREE = require('three.js');
 
-var MersenneTwister = require('mersenne-twister');
+//var MersenneTwister = require('mersenne-twister');
 
 var exampleModel = {
     model : {
